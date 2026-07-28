@@ -37,9 +37,7 @@ export function WordReveal({
         duration: 0.85,
         delay,
         ease: "expo.out",
-        ...(onLoad
-          ? {}
-          : { scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
+        ...(onLoad ? {} : { scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
       });
     }, el);
     return () => ctx.revert();

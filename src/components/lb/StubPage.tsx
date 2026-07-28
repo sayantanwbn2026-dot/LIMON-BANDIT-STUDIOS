@@ -11,7 +11,7 @@ export function StubPage({ label, blurb }: { label: string; blurb: string }) {
       <Nav />
       <main className="relative flex min-h-screen items-center bg-surface-deep">
         <GridRules tone="dark" />
-        <div className="shell relative z-[2] py-[200px]">
+        <div className="shell relative z-[2] py-[160px]">
           <div className="flex items-center gap-3">
             <span className="h-[10px] w-[10px] bg-acid" />
             <span className="t-eyebrow text-mute">Limon Bandit</span>

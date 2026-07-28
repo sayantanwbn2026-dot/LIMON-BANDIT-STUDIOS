@@ -12,11 +12,7 @@ export function JoinList() {
     const gsap = ensureGsap();
     const el = fieldRef.current;
     if (!gsap || !el || prefersReducedMotion()) return;
-    gsap.fromTo(
-      el,
-      { x: -6 },
-      { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" },
-    );
+    gsap.fromTo(el, { x: -6 }, { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
   };
 
   const onSubmit = (e: FormEvent) => {
@@ -30,14 +26,15 @@ export function JoinList() {
 
   return (
     <Section id="list" tone="dark" surface="bg-surface-deep" index="18" name="Join The List">
-      <div className="py-[110px] md:py-[140px]">
+      {/* slim band */}
+      <div className="py-[80px] md:py-[96px]">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <Eyebrow tone="dark" surface="bg-surface-deep">
               One mail a month
             </Eyebrow>
             <h2 className="t-h2 mt-6 max-w-[14ch] text-text">Join the list</h2>
-            <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.65] text-mute">
+            <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">
               Drop dates, open studio nights, merch runs before they go public. No forwarding, no
               selling, one unsubscribe link that actually works.
             </p>

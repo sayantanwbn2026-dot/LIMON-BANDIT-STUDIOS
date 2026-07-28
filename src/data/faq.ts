@@ -24,7 +24,6 @@ export const faq: FaqItem[] = [
   },
   {
     question: "Can I hire only the crew?",
-    answer:
-      "Yes. Directors, cover artists, and engineers can be booked without recording here.",
+    answer: "Yes. Directors, cover artists, and engineers can be booked without recording here.",
   },
 ];

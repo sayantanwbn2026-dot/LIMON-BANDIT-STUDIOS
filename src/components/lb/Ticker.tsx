@@ -67,9 +67,7 @@ export function TickerItem({ label, tone = "dark" }: { label: string; tone?: Ton
     tone === "dark" ? "text-mute" : tone === "light" ? "text-alt-text" : "text-accent-text";
   return (
     <span className="flex shrink-0 items-center gap-6 pr-6">
-      <span className={`t-label whitespace-nowrap ${tint}`}>
-        {label}
-      </span>
+      <span className={`t-label whitespace-nowrap ${tint}`}>{label}</span>
       <span className="h-[9px] w-[9px] shrink-0 border border-acid-type" />
     </span>
   );

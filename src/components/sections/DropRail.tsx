@@ -42,27 +42,21 @@ export function DropRail() {
   }, []);
 
   return (
-    <section
-      ref={root}
-      id="drops"
-      className="relative w-full overflow-hidden bg-surface-deep"
-    >
+    <section ref={root} id="drops" className="relative w-full overflow-hidden bg-surface-deep">
       <BoundaryRule tone="dark" className="top-0" />
       <GridRules tone="dark" />
       <MarginNotes index="10" name="The Drop Rail" />
 
-      <div className="relative z-[2] flex min-h-screen flex-col justify-center py-[100px]">
+      <div className="relative z-[2] flex min-h-screen flex-col justify-center py-[96px]">
         <div className="shell flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark">Label output</Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[18ch] text-text">
-              Everything the house has pressed
-            </h2>
+            <h2 className="t-h2 mt-6 max-w-[18ch] text-text">Everything the house has pressed</h2>
           </div>
           <GhostLink label="Full catalogue" to="/label" className="text-mute" />
         </div>
 
-        <div className="mt-14 w-full overflow-hidden">
+        <div className="mt-12 w-full overflow-hidden">
           <div
             ref={track}
             className="flex w-max gap-6 px-[var(--page-margin)] max-md:w-full max-md:snap-x max-md:overflow-x-auto"
@@ -80,7 +74,9 @@ export function DropRail() {
                     height={1024}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-[1.05]"
-                    style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.05)" }}
+                    style={{
+                      filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.05)",
+                    }}
                   />
                   <span className="absolute left-0 top-0 bg-surface-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] tnum text-acid-type">
                     {d.index}

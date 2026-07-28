@@ -6,8 +6,10 @@ import roomA from "@/assets/room-a.jpg";
 
 export function Founder() {
   return (
-    <Section tone="dark" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+    <Section tone="dark" className="py-[120px]">
+      {/* the section's heading is carried visually by the statement itself */}
+      <h2 className="sr-only">Who&apos;s behind it</h2>
+      <div className="section-head">
         <div className="flex gap-4 md:col-span-2">
           <div className="relative w-full max-w-[420px]">
             <img
@@ -59,9 +61,7 @@ export function Founder() {
               Arko Dasgupta
             </div>
 
-            <div className="mt-1 font-ui text-[12px] text-mute">
-              Founder &amp; Head Engineer
-            </div>
+            <div className="mt-1 font-ui text-[12px] text-mute">Founder &amp; Head Engineer</div>
           </div>
         </div>
       </div>

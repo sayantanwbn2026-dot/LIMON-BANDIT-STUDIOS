@@ -342,9 +342,16 @@
 }
 
 @keyframes lb-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 @utility shake-x {
@@ -352,10 +359,22 @@
 }
 
 @keyframes lb-scrollcue {
-  0% { transform: scaleY(0); transform-origin: top; }
-  45% { transform: scaleY(1); transform-origin: top; }
-  55% { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
 }
 
 @utility scroll-cue {
@@ -363,8 +382,13 @@
 }
 
 @keyframes lb-pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
 @utility pulse-dot {
@@ -379,6 +403,37 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ---------------- section header row ----------------
+ * Eyebrow / H2 / supporting copy, on the four-column drafting grid.
+ *
+ * A `gap` cannot align to the dashed rules: with N equal columns and
+ * gutter g, inner boundary i lands at i*(W+g)/N, drifting i*g/N from the
+ * rule at i*W/N. At gap-10 on four columns that put every H2 10px right
+ * of its rule — visible, because the rules are drawn. So the columns run
+ * edge to edge and the gutter lives inside the cell instead.
+ * ---------------------------------------------------------------- */
+
+.section-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 40px;
+}
+
+@media (min-width: 768px) {
+  .section-head {
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 0;
+    row-gap: 0;
+  }
+  .section-head > * {
+    padding-right: 40px;
+  }
+  /* the last column's content must still reach the outer rule */
+  .section-head > *:last-child {
+    padding-right: 0;
+  }
 }
 
 /* ---------------- site menu ----------------

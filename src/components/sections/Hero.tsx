@@ -109,11 +109,31 @@ export function Hero() {
         0.2,
       );
 
-      tl.from("[data-hero-measure]", { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 0.75);
-      tl.from(glowWrapRef.current, { opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.45);
-      tl.from(limonWrapRef.current, { y: 50, opacity: 0, duration: 1.0, ease: "expo.out", immediateRender: false }, 0.6);
-      tl.from("[data-hero-station]", { y: 16, opacity: 0, duration: 0.6, ease: "expo.out", immediateRender: false }, 0.95);
-      tl.from("[data-hero-micro]", { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 1.2);
+      tl.from(
+        "[data-hero-measure]",
+        { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false },
+        0.75,
+      );
+      tl.from(
+        glowWrapRef.current,
+        { opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false },
+        0.45,
+      );
+      tl.from(
+        limonWrapRef.current,
+        { y: 50, opacity: 0, duration: 1.0, ease: "expo.out", immediateRender: false },
+        0.6,
+      );
+      tl.from(
+        "[data-hero-station]",
+        { y: 16, opacity: 0, duration: 0.6, ease: "expo.out", immediateRender: false },
+        0.95,
+      );
+      tl.from(
+        "[data-hero-micro]",
+        { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false },
+        1.2,
+      );
 
       /* Atmosphere, not action — the one thing that moves at rest.
        * Lives on a child of the element the scene scales. */
@@ -181,8 +201,16 @@ export function Hero() {
       /* Timed so the last crosshair reverts exactly on 4.0 — the revert
        * must finish as the pin releases, not after it:
        * 3.68 + (4 x 0.06 stagger) + 0.08 = 4.00 */
-      tl.to("[data-hero-rule] [data-crosshair-tick]", { opacity: 1, duration: 0.08, stagger: 0.06 }, 3.32);
-      tl.to("[data-hero-rule] [data-crosshair-tick]", { opacity: 0, duration: 0.08, stagger: 0.06 }, 3.68);
+      tl.to(
+        "[data-hero-rule] [data-crosshair-tick]",
+        { opacity: 1, duration: 0.08, stagger: 0.06 },
+        3.32,
+      );
+      tl.to(
+        "[data-hero-rule] [data-crosshair-tick]",
+        { opacity: 0, duration: 0.08, stagger: 0.06 },
+        3.68,
+      );
 
       const st = ScrollTrigger.create({
         animation: tl,
@@ -316,7 +344,10 @@ export function Hero() {
                   aria-hidden="true"
                   className="flex w-full items-center justify-between"
                 >
-                  <span data-measure-side="left" className="block h-[8px] w-[8px] shrink-0 bg-acid" />
+                  <span
+                    data-measure-side="left"
+                    className="block h-[8px] w-[8px] shrink-0 bg-acid"
+                  />
                   <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
                     {"LIMON".split("").map((c, i) => (
                       <span key={i} data-measure-side={i < 2 ? "left" : i > 2 ? "right" : "centre"}>
@@ -324,7 +355,10 @@ export function Hero() {
                       </span>
                     ))}
                   </span>
-                  <span data-measure-side="right" className="block h-[8px] w-[8px] shrink-0 bg-acid" />
+                  <span
+                    data-measure-side="right"
+                    className="block h-[8px] w-[8px] shrink-0 bg-acid"
+                  />
                 </span>
                 <span className="sr-only">Limon Bandit</span>
 
@@ -351,7 +385,11 @@ export function Hero() {
                         className="inline-block overflow-hidden align-bottom"
                         style={{ lineHeight: 0.82 }}
                       >
-                        <span data-hero-letter data-order={staggerIndex[i]} className="hero-wall inline-block">
+                        <span
+                          data-hero-letter
+                          data-order={staggerIndex[i]}
+                          className="hero-wall inline-block"
+                        >
                           {c}
                         </span>
                       </span>
@@ -441,7 +479,7 @@ export function Hero() {
 
       {/* ---------------- micro-lines on the bottom rule ---------------- */}
       <div ref={ruleRef} data-hero-rule className="absolute inset-x-0 bottom-0 z-[8]">
-        <div className="shell flex items-center justify-between pb-[14px]">
+        <div className="shell flex items-center justify-between pb-[12px]">
           <span
             data-hero-micro
             className="font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute"

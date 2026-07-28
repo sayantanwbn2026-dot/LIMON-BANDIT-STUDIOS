@@ -4,8 +4,8 @@ import { processSteps } from "@/data/process";
 
 export function Process() {
   return (
-    <Section tone="dark" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section tone="dark" className="py-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>How it runs</Eyebrow>
         </div>

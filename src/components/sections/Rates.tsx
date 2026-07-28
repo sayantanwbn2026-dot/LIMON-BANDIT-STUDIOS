@@ -10,8 +10,8 @@ export function Rates() {
   const [mode, setMode] = useState<Mode>("hourly");
 
   return (
-    <Section tone="dark" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section tone="dark" className="py-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>Rates</Eyebrow>
         </div>
@@ -25,19 +25,18 @@ export function Rates() {
         <div className="flex items-end md:col-span-1">
           <p className="font-ui text-[16px] leading-[1.5] text-mute">
             Need something custom?{" "}
-            <a href="/contact" className="text-text underline decoration-acid-type underline-offset-4">
+            <a
+              href="/contact"
+              className="text-text underline decoration-acid-type underline-offset-4"
+            >
               Let&apos;s talk →
             </a>
           </p>
         </div>
       </div>
 
-      <div className="mt-14 flex flex-wrap items-center gap-4">
-        <div
-          role="radiogroup"
-          aria-label="Rate type"
-          className="relative flex border border-line"
-        >
+      <div className="mt-12 flex flex-wrap items-center gap-4">
+        <div role="radiogroup" aria-label="Rate type" className="relative flex border border-line">
           {(["hourly", "package"] as Mode[]).map((m) => (
             <button
               key={m}
@@ -49,7 +48,8 @@ export function Rates() {
               style={{
                 backgroundColor: mode === m ? "var(--accent)" : "transparent",
                 color: mode === m ? "var(--accent-text)" : "var(--mute)",
-                transition: "background-color 0.35s var(--ease-in-out-quart), color 0.35s var(--ease-in-out-quart)",
+                transition:
+                  "background-color 0.35s var(--ease-in-out-quart), color 0.35s var(--ease-in-out-quart)",
               }}
             >
               {m === "hourly" ? "Hourly" : "Package"}
@@ -66,7 +66,9 @@ export function Rates() {
             <RiseIn key={r.plan} delay={i * 0.1}>
               <article
                 className={`relative flex flex-col border p-10 ${
-                  r.featured ? "border-acid-type bg-surface-raised py-[64px]" : "border-line bg-surface"
+                  r.featured
+                    ? "border-acid-type bg-surface-raised py-[64px]"
+                    : "border-line bg-surface"
                 }`}
               >
                 {r.featured && (

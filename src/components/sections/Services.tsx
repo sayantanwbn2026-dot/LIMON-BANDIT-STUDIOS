@@ -4,8 +4,8 @@ import { services } from "@/data/services";
 
 export function Services() {
   return (
-    <Section surface="bg-surface" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section surface="bg-surface" className="py-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>What we run</Eyebrow>
         </div>
@@ -26,7 +26,12 @@ export function Services() {
 
       <div className="mt-20 grid grid-cols-1 gap-px bg-line md:grid-cols-2">
         {services.map((s, i) => (
-          <PushIn key={s.index} className="h-full" delay={i * 0.12} dir={i % 2 === 0 ? "left" : "right"}>
+          <PushIn
+            key={s.index}
+            className="h-full"
+            delay={i * 0.12}
+            dir={i % 2 === 0 ? "left" : "right"}
+          >
             <article className="group relative flex h-full min-h-[340px] flex-col bg-surface-raised p-10 transition-colors duration-300 hover:border-line-strong">
               <span
                 aria-hidden="true"
@@ -43,7 +48,7 @@ export function Services() {
                 {s.tags.map((t) => (
                   <span
                     key={t}
-                    className="t-label rounded-[2px] border border-line px-[14px] py-2 text-mute"
+                    className="t-label rounded-[2px] border border-line px-3 py-2 text-mute"
                   >
                     {t}
                   </span>

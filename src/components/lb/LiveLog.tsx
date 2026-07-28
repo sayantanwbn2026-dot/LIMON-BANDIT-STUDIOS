@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Clock, MapPin, Play } from "lucide-react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 
-
 const entries = [
   { Icon: Check, title: "Session confirmed", sub: "Room A · Fri 22:00 → 06:00" },
   { Icon: Clock, title: "Master in progress", sub: "Rusted Gold · rev 2 of 3" },
@@ -29,11 +28,7 @@ export function LiveLog() {
     const gsap = ensureGsap();
     if (!gsap || prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" },
-      );
+      gsap.fromTo(el, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" });
     }, el);
     return () => ctx.revert();
   }, [i]);

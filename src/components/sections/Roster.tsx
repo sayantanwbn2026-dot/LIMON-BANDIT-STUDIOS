@@ -38,8 +38,8 @@ export function Roster() {
   }, []);
 
   return (
-    <Section tone="dark" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section tone="dark" className="py-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>The roster</Eyebrow>
         </div>
@@ -52,7 +52,10 @@ export function Roster() {
             className="group flex items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
             <span className="t-eyebrow text-text">Hear the label</span>
-            <ArrowRight size={15} className="text-acid-type transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight
+              size={15}
+              className="text-acid-type transition-transform duration-300 group-hover:translate-x-1"
+            />
           </a>
         </div>
       </div>
@@ -73,11 +76,21 @@ export function Roster() {
               height={900}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06]"
-              style={{ filter: "grayscale(1) brightness(var(--img-brightness))", transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0.15) brightness(var(--img-brightness))")}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")}
+              style={{
+                filter: "grayscale(1) brightness(var(--img-brightness))",
+                transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.filter = "grayscale(0.15) brightness(var(--img-brightness))")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")
+              }
             />
-            <span aria-hidden="true" className="absolute left-0 top-0 h-[20px] w-[20px] border-l border-t border-acid-type" />
+            <span
+              aria-hidden="true"
+              className="absolute left-0 top-0 h-[20px] w-[20px] border-l border-t border-acid-type"
+            />
             <div
               className="absolute inset-x-0 bottom-0 border-t border-line p-5"
               style={{ background: "var(--scrim)" }}

@@ -38,7 +38,7 @@ export function Testimonials() {
     <section ref={ref} className="relative w-full bg-acid pt-[160px]">
       <GridRules tone="acid" />
       <div className="shell relative z-[2] pb-[160px]">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+        <div className="section-head">
           <div className="md:col-span-1">
             <div className="flex items-center gap-3">
               <span className="h-[10px] w-[10px] bg-accent-text" />
@@ -76,7 +76,10 @@ export function Testimonials() {
               <span className="t-eyebrow text-accent-text transition-colors duration-300 group-hover:text-acid">
                 See the roster
               </span>
-              <ArrowRight size={15} className="text-accent-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-acid" />
+              <ArrowRight
+                size={15}
+                className="text-accent-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-acid"
+              />
             </a>
           </div>
         </div>
@@ -86,8 +89,11 @@ export function Testimonials() {
             <div key={ci} data-col={ci === 0 ? "left" : "right"} className="flex flex-col gap-6">
               {col.map((t, i) => (
                 <RiseIn key={t.name} delay={i * 0.08}>
-                  <article className="bg-surface-deep p-9">
-                    <span aria-hidden="true" className="block font-display text-[40px] font-extrabold leading-none text-acid-type">
+                  <article className="bg-surface-deep p-8">
+                    <span
+                      aria-hidden="true"
+                      className="block font-display text-[40px] font-extrabold leading-none text-acid-type"
+                    >
                       &ldquo;
                     </span>
                     <blockquote className="mt-4 font-display text-[22px] font-bold uppercase leading-[1.2] tracking-[-0.02em] text-text">
@@ -116,7 +122,10 @@ export function Testimonials() {
                         <div className="t-label text-mute">// Room</div>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {t.rooms.map((r) => (
-                            <span key={r} className="t-label rounded-[2px] border border-line px-2 py-1 text-mute">
+                            <span
+                              key={r}
+                              className="t-label rounded-[2px] border border-line px-3 py-2 text-mute"
+                            >
                               {r}
                             </span>
                           ))}

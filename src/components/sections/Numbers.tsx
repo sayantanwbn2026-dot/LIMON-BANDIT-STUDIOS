@@ -31,7 +31,7 @@ export function Numbers() {
   }, []);
 
   return (
-    <Section surface="bg-surface" className="py-[100px]">
+    <Section surface="bg-surface" className="py-[96px]">
       <h2 className="sr-only">The numbers</h2>
       <div ref={ref} className="grid grid-cols-2 gap-px bg-line md:grid-cols-4">
         {metrics.map((m) => (

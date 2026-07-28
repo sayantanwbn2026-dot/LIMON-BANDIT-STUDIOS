@@ -13,6 +13,7 @@ export function ProofBand() {
   return (
     <section className="relative w-full bg-surface-deep" aria-label="Studio facts and partners">
       <GridRules tone="dark" />
+      <h2 className="sr-only">Studio facts and partners</h2>
       <div className="relative z-[2]">
         <div className="flex h-[56px] items-center border-y border-line">
           <Ticker duration={45}>
@@ -33,7 +34,10 @@ export function ProofBand() {
                 height={72}
                 loading="lazy"
                 className="h-9 w-9 border border-surface-deep object-cover"
-                style={{ marginLeft: i === 0 ? 0 : -10, filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.1)" }}
+                style={{
+                  marginLeft: i === 0 ? 0 : -10,
+                  filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.1)",
+                }}
               />
             ))}
           </div>

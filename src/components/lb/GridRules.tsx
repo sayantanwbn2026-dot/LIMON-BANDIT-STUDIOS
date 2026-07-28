@@ -43,7 +43,6 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
                 left: `${left}%`,
                 backgroundImage: `repeating-linear-gradient(to bottom, ${color} 0 4px, transparent 4px 10px)`,
               }}
-
             />
           ))}
         </div>
@@ -70,8 +69,14 @@ export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; acti
         transition: "color 0.4s var(--ease-out-expo)",
       }}
     >
-      <span className="absolute left-0 top-1/2 h-px w-full" style={{ background: "currentColor" }} />
-      <span className="absolute left-1/2 top-0 h-full w-px" style={{ background: "currentColor" }} />
+      <span
+        className="absolute left-0 top-1/2 h-px w-full"
+        style={{ background: "currentColor" }}
+      />
+      <span
+        className="absolute left-1/2 top-0 h-full w-px"
+        style={{ background: "currentColor" }}
+      />
       {/* Acid tick layer. Kept as a separate element driven by opacity so a
        * scrubbed timeline can stagger it — animating `color` would both
        * break scrubbing (GSAP cannot tween to a var()) and step outside
@@ -101,8 +106,14 @@ export function BoundaryRule({
   className?: string;
 }) {
   return (
-    <div aria-hidden="true" className={`pointer-events-none absolute left-0 right-0 z-[3] ${className ?? ""}`}>
-      <span className="absolute left-0 right-0 top-0 block h-px" style={{ background: solidRuleColor[tone] }} />
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none absolute left-0 right-0 z-[3] ${className ?? ""}`}
+    >
+      <span
+        className="absolute left-0 right-0 top-0 block h-px"
+        style={{ background: solidRuleColor[tone] }}
+      />
       {ticks ? (
         <div className="absolute left-0 right-0 top-0 h-[9px]">
           {Array.from({ length: 21 }, (_, i) => (

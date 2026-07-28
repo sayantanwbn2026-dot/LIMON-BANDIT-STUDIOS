@@ -124,10 +124,12 @@ export function Rooms() {
                   height={1280}
                   loading="lazy"
                   className="mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
-                  style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
+                  style={{
+                    filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
+                  }}
                 />
 
-                <p className="mt-5 max-w-[46ch] font-ui text-[15px] leading-[1.65] text-mute">
+                <p className="mt-5 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
                   {r.blurb}
                 </p>
 

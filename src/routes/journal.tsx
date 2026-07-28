@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StubPage } from "@/components/lb/StubPage";
 
-const title = 'Journal — Notes from the Limon Bandit Room';
-const description = 'Writing on gear, label splits, recording in Kolkata, and how a print run actually gets made.';
+const title = "Journal — Notes from the Limon Bandit Room";
+const description =
+  "Writing on gear, label splits, recording in Kolkata, and how a print run actually gets made.";
 
 export const Route = createFileRoute("/journal")({
   head: () => ({
@@ -15,5 +16,10 @@ export const Route = createFileRoute("/journal")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <StubPage label={'Journal'} blurb={'Notes from the room. Gear, splits, the city, print runs.'} />,
+  component: () => (
+    <StubPage
+      label={"Journal"}
+      blurb={"Notes from the room. Gear, splits, the city, print runs."}
+    />
+  ),
 });

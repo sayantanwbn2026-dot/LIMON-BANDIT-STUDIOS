@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { StubPage } from "@/components/lb/StubPage";
 
-const title = 'Limon Bandit Label — Independent Records from Kolkata';
-const description = 'An independent label with a roster streaming direct. Splits 70/30, paid monthly, artist first.';
+const title = "Limon Bandit Label — Independent Records from Kolkata";
+const description =
+  "An independent label with a roster streaming direct. Splits 70/30, paid monthly, artist first.";
 
 export const Route = createFileRoute("/label")({
   head: () => ({
@@ -15,5 +16,10 @@ export const Route = createFileRoute("/label")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <StubPage label={'The Label'} blurb={'We sign, release, and distribute — splits 70/30, artist first.'} />,
+  component: () => (
+    <StubPage
+      label={"The Label"}
+      blurb={"We sign, release, and distribute — splits 70/30, artist first."}
+    />
+  ),
 });

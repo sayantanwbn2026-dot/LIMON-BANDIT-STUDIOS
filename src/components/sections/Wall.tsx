@@ -17,7 +17,7 @@ export function Wall() {
           <LocalTime className="text-mute" />
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4">
           {wall.map((shot, i) => (
             <figure
               key={shot.src}

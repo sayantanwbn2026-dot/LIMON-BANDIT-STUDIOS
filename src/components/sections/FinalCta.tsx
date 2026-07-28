@@ -43,11 +43,7 @@ export function FinalCta() {
             <span className="t-eyebrow text-mute">{site.rating}</span>
           </div>
 
-          <WordReveal
-            as="h2"
-            className="t-hero mt-8 text-text"
-            text={"The room's already warm."}
-          />
+          <WordReveal as="h2" className="t-hero mt-8 text-text" text={"The room's already warm."} />
 
           <p className="t-lead mt-8 max-w-[520px] text-mute">
             Bring the songs. We&apos;ll handle the room, the master, the print run, and the people
@@ -74,9 +70,7 @@ export function FinalCta() {
               <div className="font-display text-[14px] font-bold uppercase text-text">
                 Rana, Kaalo &amp; Shona
               </div>
-              <div className="font-ui text-[12px] text-mute">
-                Booked the room this month.
-              </div>
+              <div className="font-ui text-[12px] text-mute">Booked the room this month.</div>
             </div>
           </div>
 
@@ -84,10 +78,13 @@ export function FinalCta() {
             href="/contact"
             className="group mt-10 flex h-[62px] w-full max-w-[320px] items-center justify-between bg-acid transition-colors duration-300 hover:bg-acid-dim"
           >
-            <span className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
+            <span className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
               Book the room
             </span>
-            <ArrowRight size={18} className="mr-7 text-accent-text transition-transform duration-300 group-hover:translate-x-1.5" />
+            <ArrowRight
+              size={18}
+              className="mr-6 text-accent-text transition-transform duration-300 group-hover:translate-x-1.5"
+            />
           </a>
 
           <div className="mt-12 flex flex-wrap items-start justify-between gap-10">

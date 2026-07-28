@@ -9,9 +9,10 @@ export function Faq() {
   const [open, setOpen] = useState(0);
   const uid = useId();
 
+  /* 160px top: this is where the page changes chapter, dark to light. */
   return (
-    <Section tone="light" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+    <Section tone="light" className="pt-[160px] pb-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
             <span className="h-[10px] w-[10px] bg-alt-acid-type" />
@@ -47,7 +48,7 @@ export function Faq() {
             text={"The things people ask\nbefore they book."}
           />
 
-          <div className="mt-14">
+          <div className="mt-12">
             {faq.map((item, i) => {
               const isOpen = open === i;
               return (
@@ -84,7 +85,7 @@ export function Faq() {
                   >
                     <div className="overflow-hidden">
                       <p
-                        className="max-w-[60ch] pb-8 pl-[52px] font-ui text-[16px] leading-[1.5] text-alt-mute"
+                        className="max-w-[60ch] pb-8 pl-[48px] font-ui text-[16px] leading-[1.5] text-alt-mute"
                         style={{
                           opacity: isOpen ? 1 : 0,
                           transition: "opacity 0.35s ease 0.08s",

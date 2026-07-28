@@ -81,8 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Limon Bandit — Kolkata Music House" },
       {
         name: "description",
-        content:
-          "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
+        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
       },
       { name: "author", content: "Limon Bandit" },
       /* overwritten per-theme by THEME_INIT_SCRIPT before first paint */
@@ -91,10 +90,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "Limon Bandit — Kolkata Music House" },
       { name: "twitter:title", content: "Limon Bandit — Kolkata Music House" },
-      { property: "og:description", content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata." },
-      { name: "twitter:description", content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png" },
+      {
+        property: "og:description",
+        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
+      },
+      {
+        name: "twitter:description",
+        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png",
+      },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

@@ -12,7 +12,7 @@ export function Footer() {
       <GridRules tone="dark" />
 
       <div className="shell relative z-[2] pt-24">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+        <div className="section-head">
           <div>
             <div className="text-text">
               <Logotype />
@@ -25,7 +25,10 @@ export function Footer() {
               className="group mt-8 flex w-fit items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
             >
               <span className="t-eyebrow text-text">Let&apos;s collaborate</span>
-              <ArrowRight size={15} className="text-acid-type transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight
+                size={15}
+                className="text-acid-type transition-transform duration-300 group-hover:translate-x-1"
+              />
             </a>
           </div>
 
@@ -101,7 +104,7 @@ export function Footer() {
       </div>
 
       <div className="relative z-[2] border-t border-line">
-        <div className="shell flex flex-wrap items-center justify-between gap-4 py-7 font-ui text-[12px] text-mute">
+        <div className="shell flex flex-wrap items-center justify-between gap-4 py-6 font-ui text-[12px] text-mute">
           <span>©2026 Limon Bandit. All rights reserved.</span>
           <span className="flex gap-6">
             <a href="/contact" className="transition-colors duration-300 hover:text-text">

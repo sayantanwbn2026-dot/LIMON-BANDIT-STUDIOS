@@ -4,9 +4,10 @@ import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { posts } from "@/data/journal";
 
 export function Journal() {
+  /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
-    <Section tone="light" className="border-t border-alt-line py-[120px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section tone="light" className="border-t border-alt-line pt-[120px] pb-[160px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
             <span className="h-[10px] w-[10px] bg-alt-acid-type" />
@@ -24,7 +25,10 @@ export function Journal() {
             <span className="t-eyebrow text-alt-text transition-colors duration-300 group-hover:text-alt-surface">
               Read everything
             </span>
-            <ArrowRight size={15} className="text-alt-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-alt-surface" />
+            <ArrowRight
+              size={15}
+              className="text-alt-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-alt-surface"
+            />
           </a>
         </div>
       </div>
@@ -41,8 +45,13 @@ export function Journal() {
                 loading="lazy"
                 className="aspect-[4/3] w-full border border-alt-line object-cover transition-all duration-500"
                 style={{ filter: "grayscale(1) brightness(var(--img-brightness))" }}
-                onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0.2) brightness(var(--img-brightness))")}
-                onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.filter =
+                    "grayscale(0.2) brightness(var(--img-brightness))")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")
+                }
               />
               <div className="t-label mt-5 text-alt-mute">
                 {p.category} · {p.readTime}

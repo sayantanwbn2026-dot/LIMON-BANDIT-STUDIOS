@@ -67,8 +67,8 @@ export function Bento() {
   }, []);
 
   return (
-    <Section surface="bg-surface" className="py-[140px]">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+    <Section surface="bg-surface" className="py-[120px]">
+      <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>What&apos;s inside</Eyebrow>
         </div>
@@ -88,16 +88,30 @@ export function Bento() {
             className="group flex w-fit items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
             <span className="t-eyebrow text-text">See everything</span>
-            <ArrowRight size={15} className="text-acid-type transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight
+              size={15}
+              className="text-acid-type transition-transform duration-300 group-hover:translate-x-1"
+            />
           </a>
         </div>
       </div>
 
-      <div ref={ref} className="mt-20 grid grid-cols-1 gap-px bg-line md:grid-cols-2 lg:grid-cols-4">
+      <div
+        ref={ref}
+        className="mt-20 grid grid-cols-1 gap-px bg-line md:grid-cols-2 lg:grid-cols-4"
+      >
         {/* 1 — player */}
         <div data-tile className="bg-surface-raised p-8 lg:col-span-2">
           <div className="flex items-center gap-4">
-            <img src={c1} alt="" aria-hidden="true" width={64} height={64} loading="lazy" className="h-16 w-16 object-cover mono" />
+            <img
+              src={c1}
+              alt=""
+              aria-hidden="true"
+              width={64}
+              height={64}
+              loading="lazy"
+              className="h-16 w-16 object-cover mono"
+            />
             <div className="min-w-0 flex-1">
               <div className="truncate font-display text-[16px] font-bold uppercase text-text">
                 Rusted Gold
@@ -183,7 +197,10 @@ export function Bento() {
           <div className="relative flex h-full flex-col justify-between p-8">
             <div className="flex flex-wrap gap-2">
               {["Room A", "Room B", "Lockout"].map((c) => (
-                <span key={c} className="t-label rounded-[2px] border border-line bg-surface-deep px-3 py-2 text-text">
+                <span
+                  key={c}
+                  className="t-label rounded-[2px] border border-line bg-surface-deep px-3 py-2 text-text"
+                >
                   {c}
                 </span>
               ))}
@@ -195,7 +212,10 @@ export function Bento() {
         </div>
 
         {/* 4 — roster */}
-        <div data-tile className="flex min-h-[280px] flex-col justify-between bg-surface-raised p-8">
+        <div
+          data-tile
+          className="flex min-h-[280px] flex-col justify-between bg-surface-raised p-8"
+        >
           <div className="flex">
             {avatars.map((a, i) => (
               <img

@@ -48,7 +48,9 @@ export function Cursor() {
       const el = ringRef.current;
       const dot = dotRef.current;
       if (el) {
-        el.style.borderColor = v ? "var(--accent)" : "color-mix(in srgb, var(--text) 35%, transparent)";
+        el.style.borderColor = v
+          ? "var(--accent)"
+          : "color-mix(in srgb, var(--text) 35%, transparent)";
       }
       if (dot) dot.style.opacity = v ? "0" : "1";
     };

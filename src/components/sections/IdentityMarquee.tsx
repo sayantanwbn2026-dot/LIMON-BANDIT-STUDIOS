@@ -29,7 +29,7 @@ export function IdentityMarquee() {
   }, []);
 
   return (
-    <section ref={ref} className="relative w-full bg-surface py-[100px]" aria-hidden="true">
+    <section ref={ref} className="relative w-full bg-surface py-[96px]" aria-hidden="true">
       <GridRules tone="dark" />
       <div className="relative z-[2]">
         <Ticker duration={30} reverse>

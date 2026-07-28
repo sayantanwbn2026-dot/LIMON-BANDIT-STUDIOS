@@ -103,7 +103,8 @@ export function Eyebrow({
   surface?: string;
 }) {
   const surface =
-    surfaceOverride ?? (tone === "light" ? "bg-alt-surface" : tone === "acid" ? "bg-acid" : "bg-surface");
+    surfaceOverride ??
+    (tone === "light" ? "bg-alt-surface" : tone === "acid" ? "bg-acid" : "bg-surface");
   /* Type on the opposite pole must follow that pole (it inverts with the
    * theme); type on acid must not (acid is fixed in both themes). */
   const tint =

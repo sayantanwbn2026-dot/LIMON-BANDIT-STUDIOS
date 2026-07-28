@@ -46,13 +46,13 @@ export function CtaButton({
     <>
       <span
         data-mag-label
-        className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 group-hover:text-accent-text"
+        className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 group-hover:text-accent-text"
       >
         <RollLabel label={label} />
       </span>
       <ArrowRight
         size={18}
-        className="mr-7 shrink-0 text-text transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-accent-text"
+        className="mr-6 shrink-0 text-text transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-accent-text"
       />
     </>
   );
