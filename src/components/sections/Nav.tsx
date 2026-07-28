@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { navItems, site } from "@/data/site";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import mascot from "@/assets/limon-mascot.png";
 
-const chipCls =
-  "rounded-[2px] border border-line px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-[250ms] hover:border-line-strong hover:text-text";
+/** Home lives on the logotype, so the menu carries the remaining six. */
+const menuLinks = navItems.slice(1);
 
 export function Logotype({ size = 18 }: { size?: number }) {
   return (
@@ -22,6 +23,11 @@ export function Logotype({ size = 18 }: { size?: number }) {
   );
 }
 
+/**
+ * The hamburger is the navigation. The bar carries exactly three things:
+ * logotype, theme toggle, menu button — the latter two 12px apart so they
+ * read as one control cluster.
+ */
 export function Nav() {
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -52,6 +58,7 @@ export function Nav() {
   useEffect(() => {
     if (!open) return;
     const el = menuRef.current;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -71,12 +78,13 @@ export function Nav() {
         first.focus();
       }
     };
+
     document.addEventListener("keydown", onKey);
     el?.querySelector<HTMLElement>("a")?.focus();
-    document.body.style.overflow = "hidden";
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlockScroll();
     };
   }, [open]);
 
@@ -86,54 +94,31 @@ export function Nav() {
         ref={navRef}
         className="fixed inset-x-0 top-0 z-[9990] h-[88px]"
         style={{
-          backgroundColor: solid ? "rgba(5,5,5,0.88)" : "transparent",
+          backgroundColor: solid ? "var(--nav-solid)" : "transparent",
           borderBottom: solid ? "1px solid var(--line)" : "1px solid transparent",
           backdropFilter: solid ? "blur(6px)" : "none",
           transition: "background-color 0.4s var(--ease-out-expo), border-color 0.4s linear",
         }}
       >
         <div className="shell flex h-full items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-text" aria-label={`${site.name} home`}>
-              <Logotype />
-            </Link>
-            <div className="hidden items-center gap-2 xl:flex">
-              {[
-                { label: "Rooms", to: "/rooms" },
-                { label: "Label", to: "/label" },
-                { label: "Shop", to: "/shop" },
-              ].map((c) => (
-                <Link key={c.to} to={c.to} className={chipCls}>
-                  {c.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+          <Link to="/" className="text-text" aria-label={`${site.name} home`}>
+            <Logotype />
+          </Link>
+
           <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2 xl:flex">
-              <Link to="/journal" className={chipCls}>
-                Journal
-              </Link>
-              <Link
-                to="/contact"
-                className="rounded-[2px] bg-alt-surface px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-alt-text transition-colors duration-[250ms] hover:bg-acid hover:text-accent-text"
-              >
-                Contact
-              </Link>
-            </div>
-          <ThemeToggle />
-          <button
-            ref={triggerRef}
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-expanded={open}
-            aria-label="Open menu"
-            className="flex h-12 w-12 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type"
-          >
-            <span className="block h-[2px] w-[20px] bg-text" />
-            <span className="block h-[2px] w-[14px] bg-text" />
-            <span className="block h-[2px] w-[20px] bg-text" />
-          </button>
+            <ThemeToggle />
+            <button
+              ref={triggerRef}
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-expanded={open}
+              aria-label="Open menu"
+              className="flex h-12 w-12 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type"
+            >
+              <span className="block h-[2px] w-[20px] bg-text" />
+              <span className="block h-[2px] w-[14px] bg-text" />
+              <span className="block h-[2px] w-[20px] bg-text" />
+            </button>
           </div>
         </div>
       </header>
@@ -143,15 +128,17 @@ export function Nav() {
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className="fixed inset-0 z-[9995] bg-surface-deep"
+        /* keeps the six links out of the tab order while closed */
+        inert={!open}
+        className="lb-menu fixed inset-0 z-[9995] overflow-hidden bg-surface-deep"
         style={{
           clipPath: open ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
           transition: "clip-path 0.7s var(--ease-in-out-quart)",
           pointerEvents: open ? "auto" : "none",
         }}
       >
-        <div className="shell flex h-full flex-col justify-between py-8">
-          <div className="flex items-center justify-between">
+        <div className="flex h-[100svh] flex-col">
+          <div className="lb-menu-header shell flex shrink-0 items-center justify-between">
             <Logotype />
             <button
               type="button"
@@ -166,13 +153,13 @@ export function Nav() {
             </button>
           </div>
 
-          <nav className="flex flex-col">
-            {navItems.slice(1).map((item, i) => (
+          <nav aria-label="Site" className="shell flex min-h-0 flex-1 flex-col">
+            {menuLinks.map((item, i) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className="group flex items-center justify-between border-t border-line py-4"
+                className="lb-menu-row group flex items-center justify-between border-t border-line"
                 style={{
                   transitionDelay: `${i * 0.06}s`,
                   opacity: open ? 1 : 0,
@@ -181,29 +168,37 @@ export function Nav() {
                     "opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo)",
                 }}
               >
-                <span
-                  className="font-display font-extrabold uppercase leading-none tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4"
-                  style={{ fontSize: "clamp(40px, 6vw, 84px)" }}
-                >
+                <span className="lb-menu-link font-display font-extrabold uppercase tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
                   {item.label}
                 </span>
-                <span className="t-label text-acid-type transition-colors duration-300 group-hover:text-text">
+                <span className="t-label tnum text-acid-type transition-colors duration-300 group-hover:text-text">
                   [0{i + 1}]
                 </span>
               </Link>
             ))}
           </nav>
 
-          <div className="relative flex flex-wrap items-end justify-between gap-6 border-t border-line pt-6">
-            <div className="t-label space-y-1 text-mute">
-              {site.address.map((l) => (
-                <div key={l}>{l}</div>
-              ))}
+          <div className="lb-menu-footer shell relative flex shrink-0 items-center border-t border-line">
+            <div className="lb-menu-stack flex w-full flex-wrap items-end justify-between gap-6">
+              <div className="t-label space-y-1 text-mute">
+                {site.address.map((l) => (
+                  <div key={l}>{l}</div>
+                ))}
+              </div>
+              <div className="t-label space-y-1 text-mute">
+                <div>{site.phone}</div>
+                <div>{site.instagram}</div>
+              </div>
             </div>
-            <div className="t-label space-y-1 text-mute">
-              <div>{site.phone}</div>
-              <div>{site.instagram}</div>
+
+            <div className="lb-menu-compact t-label w-full items-center gap-3 text-mute">
+              <span className="truncate">{site.address.join(", ")}</span>
+              <span aria-hidden="true">·</span>
+              <span className="shrink-0">{site.phone}</span>
+              <span aria-hidden="true">·</span>
+              <span className="shrink-0">{site.instagram}</span>
             </div>
+
             <img
               src={mascot}
               alt=""
@@ -211,7 +206,7 @@ export function Nav() {
               width={1024}
               height={1280}
               loading="lazy"
-              className="pointer-events-none absolute bottom-0 right-0 h-[160px] w-auto opacity-15"
+              className="lb-menu-mascot pointer-events-none absolute bottom-0 right-[var(--page-margin)] w-auto opacity-15"
             />
           </div>
         </div>

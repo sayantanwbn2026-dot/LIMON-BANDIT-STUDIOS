@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { lockScroll, unlockScroll } from "@/lib/smooth";
 
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
@@ -18,15 +19,32 @@ export function Preloader() {
     }
 
     document.documentElement.classList.add("is-loading");
+    lockScroll();
+
+    /* Release the scroll lock exactly once — completion, the safety timer
+     * and unmount can all reach for it. */
+    let released = false;
+    const release = () => {
+      if (released) return;
+      released = true;
+      unlockScroll();
+    };
+
+    let safety = 0;
+    const finish = () => {
+      window.clearTimeout(safety);
+      setGone(true);
+      document.documentElement.classList.remove("is-loading");
+      release();
+      window.dispatchEvent(new Event("lb:loaded"));
+    };
 
     const counter = { v: 0 };
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setGone(true);
-        document.documentElement.classList.remove("is-loading");
-        window.dispatchEvent(new Event("lb:loaded"));
-      },
-    });
+    const tl = gsap.timeline({ onComplete: finish });
+
+    /* requestAnimationFrame is throttled in background tabs, which stalls
+     * the timeline and would strand the page scroll-locked behind it. */
+    safety = window.setTimeout(finish, 6000);
 
     tl.to(counter, {
       v: 100,
@@ -48,6 +66,8 @@ export function Preloader() {
 
     return () => {
       tl.kill();
+      window.clearTimeout(safety);
+      release();
       document.documentElement.classList.remove("is-loading");
     };
   }, []);

@@ -40,6 +40,9 @@
   /* caption scrim over photography — follows the primary pole so the
    * primary-pole type sitting on it stays legible */
   --scrim: rgba(7, 7, 7, 0.85);
+
+  /* translucent navbar once it leaves the hero */
+  --nav-solid: rgba(5, 5, 5, 0.88);
 }
 
 [data-theme="light"] {
@@ -72,6 +75,8 @@
   --placeholder: #6b6b68;
 
   --scrim: rgba(241, 241, 239, 0.88);
+
+  --nav-solid: rgba(237, 237, 234, 0.88);
 }
 
 /* ---- 6 — consumed by the `mono` utility in styles.css, and by the few

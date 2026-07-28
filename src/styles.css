@@ -381,6 +381,56 @@
   color: transparent;
 }
 
+/* ---------------- site menu ----------------
+ * Six links plus a header and footer zone must fit 100svh exactly, with
+ * no internal scrolling, down to a 667px-tall phone. Rows are sized from
+ * the viewport rather than the type, and the type is derived back off the
+ * row — 0.52 keeps cap-height clear of the 1px dividers (border-box, so
+ * the dividers are already inside the row height).
+ * ------------------------------------------------------------------- */
+
+.lb-menu {
+  --menu-header: 88px; /* mirrors the navbar */
+  --menu-footer: 96px;
+  --menu-row: calc((100svh - var(--menu-header) - var(--menu-footer)) / 6);
+  --menu-link: clamp(26px, min(5.2vw, calc(var(--menu-row) * 0.52)), 76px);
+}
+
+.lb-menu-header {
+  height: var(--menu-header);
+}
+.lb-menu-footer {
+  height: var(--menu-footer);
+}
+.lb-menu-row {
+  height: var(--menu-row);
+}
+.lb-menu-link {
+  font-size: var(--menu-link);
+  line-height: 1;
+}
+.lb-menu-mascot {
+  height: calc(var(--menu-footer) - 8px);
+}
+.lb-menu-compact {
+  display: none;
+}
+
+/* Under 700px tall the footer can't hold three stacked lines and still
+ * leave usable rows, so it collapses to one line. */
+@media (max-height: 699px) {
+  .lb-menu {
+    --menu-footer: 44px;
+  }
+  .lb-menu-stack,
+  .lb-menu-mascot {
+    display: none;
+  }
+  .lb-menu-compact {
+    display: flex;
+  }
+}
+
 /* ---------------- split panels (desktop only 3D) ---------------- */
 
 .lb-back {
