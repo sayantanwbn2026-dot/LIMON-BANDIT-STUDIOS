@@ -4,24 +4,43 @@ import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { Decode } from "@/components/lb/Decode";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import mascot from "@/assets/limon-mascot.png";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
-/* outside-in stagger order: B,T then A,I then N,D */
+/* outside-in stagger order for the entrance: B,T then A,I then N,D */
 const staggerIndex = [0, 1, 2, 2, 1, 0];
+/* phase 1 — the wall parts around the figure */
+const LETTER_X = ["-4vw", "-2.5vw", "-1vw", "1vw", "2.5vw", "4vw"];
 
 /**
- * Hero v3 — "The Poster".
- * One wall-sized wordmark, one backlit lemon, four small corner stations.
+ * Hero v4 — "The Scrubbed Poster".
+ *
+ * At rest it is a still poster: nothing moves but the backlight's 7s
+ * breathing and the clock. Scrolling plays a four-second scene, driven
+ * entirely by scroll position, that ends by handing the page to the
+ * proof ticker.
+ *
+ * Layering matters here. The pointer parallax and the scrubbed scene both
+ * want to transform Limon and the lockup, so they are given separate
+ * elements — parallax on the outer wrapper, scene on the inner. Likewise
+ * the backlight's infinite breathing sits on a child of the element the
+ * scene scales, so the two never write the same property.
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const lockupRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
+  /* wordRef must stay on the element that carries font-size — the fitting
+   * routine measures its intrinsic width. The scene animates the wrapper. */
   const wordRef = useRef<HTMLSpanElement>(null);
+  const wordWrapRef = useRef<HTMLSpanElement>(null);
+  const glowWrapRef = useRef<HTMLSpanElement>(null);
   const glowRef = useRef<HTMLSpanElement>(null);
+  const medallionRef = useRef<HTMLSpanElement>(null);
+  const limonWrapRef = useRef<HTMLDivElement>(null);
   const limonRef = useRef<HTMLDivElement>(null);
+  const ruleRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(220);
 
   /* ---- fitting routine: BANDIT spans the measure exactly ---- */
@@ -52,7 +71,7 @@ export function Hero() {
     };
   }, []);
 
-  /* ---- entrance + scroll exit ---- */
+  /* ---- entrance (one-shot) + the breathing light ---- */
   useEffect(() => {
     const el = root.current;
     if (!el) return;
@@ -60,32 +79,44 @@ export function Hero() {
     if (!gsap || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
+      gsap.set(glowWrapRef.current, { xPercent: -50, yPercent: -50, opacity: 0.84 });
+      gsap.set(medallionRef.current, { xPercent: -50, yPercent: -50 });
+
       const tl = gsap.timeline({ delay: 0.1 });
 
-      tl.from("[data-col-rule]", {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: 0.8,
-        stagger: 0.05,
-        ease: "power4.out",
-        immediateRender: false,
-      }, 0.1);
+      tl.from(
+        "[data-col-rule]",
+        {
+          scaleY: 0,
+          transformOrigin: "top",
+          duration: 0.8,
+          stagger: 0.05,
+          ease: "power4.out",
+          immediateRender: false,
+        },
+        0.1,
+      );
 
-      tl.from("[data-hero-letter]", {
-        yPercent: 105,
-        duration: 0.9,
-        ease: "expo.out",
-        immediateRender: false,
-        stagger: { each: 0.055, from: "edges" },
-      }, 0.2);
+      tl.from(
+        "[data-hero-letter]",
+        {
+          yPercent: 105,
+          duration: 0.9,
+          ease: "expo.out",
+          immediateRender: false,
+          stagger: { each: 0.055, from: "edges" },
+        },
+        0.2,
+      );
 
       tl.from("[data-hero-measure]", { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 0.75);
-      tl.from(glowRef.current, { opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.45);
-      tl.from(limonRef.current, { y: 50, opacity: 0, duration: 1.0, ease: "expo.out", immediateRender: false }, 0.6);
+      tl.from(glowWrapRef.current, { opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, 0.45);
+      tl.from(limonWrapRef.current, { y: 50, opacity: 0, duration: 1.0, ease: "expo.out", immediateRender: false }, 0.6);
       tl.from("[data-hero-station]", { y: 16, opacity: 0, duration: 0.6, ease: "expo.out", immediateRender: false }, 0.95);
       tl.from("[data-hero-micro]", { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 1.2);
 
-      /* backlight breathing */
+      /* Atmosphere, not action — the one thing that moves at rest.
+       * Lives on a child of the element the scene scales. */
       gsap.to(glowRef.current, {
         opacity: 0.82,
         duration: 3.5,
@@ -94,30 +125,113 @@ export function Hero() {
         ease: "sine.inOut",
         delay: 1.8,
       });
-
-      /* idle float */
-      gsap.to(limonRef.current, { y: 5, duration: 5.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
-      /* scroll exit */
-      const st = { trigger: el, start: "top top", end: "bottom top", scrub: 0.6 } as const;
-      gsap.to(lockupRef.current, { y: 60, opacity: 0.25, ease: "none", scrollTrigger: st });
-      gsap.to(limonRef.current, { y: -70, scale: 0.96, ease: "none", scrollTrigger: st });
-      gsap.to(glowRef.current, {
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: { trigger: el, start: "top top", end: "50% top", scrub: 0.6 },
-      });
-      gsap.to("[data-hero-station], [data-hero-micro]", {
-        y: -20,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: { trigger: el, start: "top top", end: "40% top", scrub: 0.6 },
-      });
     }, el);
     return () => ctx.revert();
   }, []);
 
-  /* ---- two-layer pointer parallax ---- */
+  /* ---- the scrubbed scene (desktop, motion-allowed only) ---- */
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const gsap = ensureGsap();
+    if (!gsap) return;
+
+    const mm = gsap.matchMedia(el);
+
+    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const letterBoxes = gsap.utils.toArray<HTMLElement>("[data-hero-letter-box]", el);
+      const willChange = [limonRef.current, ...letterBoxes].filter(Boolean) as HTMLElement[];
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power4.inOut" } });
+
+      /* ---- phase 1 — the wall opens (0.0 → 1.1) ---- */
+      tl.to(letterBoxes, { x: (i: number) => LETTER_X[i], duration: 1.1 }, 0);
+      tl.to(wordWrapRef.current, { opacity: 0.35, duration: 1.1 }, 0);
+      tl.to("[data-measure-side='left']", { x: "-6vw", opacity: 0, duration: 1.0 }, 0);
+      tl.to("[data-measure-side='right']", { x: "6vw", opacity: 0, duration: 1.0 }, 0);
+      tl.to("[data-measure-side='centre']", { opacity: 0, duration: 0.7 }, 0);
+
+      /* ---- phase 2 — the figure steps forward (0.9 → 2.4) ---- */
+      tl.to(limonRef.current, { scale: 1.34, y: "4vh", rotate: -1.6, duration: 1.5 }, 0.9);
+      /* the light collapses onto him as he approaches camera */
+      tl.to(glowWrapRef.current, { scale: 0.57, opacity: 1, duration: 1.5 }, 0.9);
+      /* the scene's only acid event */
+      tl.to(medallionRef.current, { scale: 2, duration: 0.2, ease: "power2.out" }, 2.0);
+      tl.to(medallionRef.current, { scale: 1, duration: 0.2, ease: "power2.in" }, 2.2);
+
+      /* ---- phase 3 — the poster concedes (2.2 → 3.2) ---- */
+      tl.to(
+        "[data-hero-station], [data-hero-micro]",
+        { y: -24, opacity: 0, duration: 0.7, stagger: 0.08 },
+        2.2,
+      );
+      tl.to(wordWrapRef.current, { opacity: 0.12, y: "6vh", duration: 1.0 }, 2.2);
+      tl.to(limonRef.current, { scale: 1.5, duration: 1.0 }, 2.2);
+      /* he passes the camera plane */
+      tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.8 }, 2.8);
+      /* the rule drops with the rest of the poster so phase 4 can raise it */
+      tl.to(ruleRef.current, { y: "8vh", duration: 0.8 }, 2.4);
+
+      /* ---- phase 4 — the handover (3.2 → 4.0) ---- */
+      tl.to(glowWrapRef.current, { opacity: 0, duration: 0.6 }, 3.2);
+      tl.to(ruleRef.current, { y: 0, duration: 0.8, ease: "power4.out" }, 3.2);
+      /* five crosshairs tick to acid in sequence, then revert as the pin
+       * releases — opacity on a dedicated acid layer, so it scrubs and
+       * reverses cleanly and stays theme-agnostic */
+      /* Timed so the last crosshair reverts exactly on 4.0 — the revert
+       * must finish as the pin releases, not after it:
+       * 3.68 + (4 x 0.06 stagger) + 0.08 = 4.00 */
+      tl.to("[data-hero-rule] [data-crosshair-tick]", { opacity: 1, duration: 0.08, stagger: 0.06 }, 3.32);
+      tl.to("[data-hero-rule] [data-crosshair-tick]", { opacity: 0, duration: 0.08, stagger: 0.06 }, 3.68);
+
+      const st = ScrollTrigger.create({
+        animation: tl,
+        trigger: el,
+        start: "top top",
+        /* Function form, in px: ScrollTrigger does not parse `vh` inside an
+         * end string — "+=280vh" silently resolves to 280 *pixels*, which
+         * runs the whole scene in a third of a screen. Functions are
+         * re-evaluated on refresh, so this survives resize. */
+        end: () => "+=" + window.innerHeight * 2.8,
+        scrub: 0.75,
+        pin: true,
+        anticipatePin: 1,
+        /* re-resolve the vw/vh distances in the tweens on resize */
+        invalidateOnRefresh: true,
+        onToggle: (self) => {
+          gsap.set(willChange, { willChange: self.isActive ? "transform" : "auto" });
+        },
+      });
+
+      /* Dev-only handle: the scene is scroll-driven, so this is the only way
+       * to step it deterministically (and it is stripped from prod builds). */
+      if (import.meta.env.DEV) Object.assign(window, { __heroScene: { st, tl } });
+
+      return () => {
+        st.kill();
+        tl.kill();
+        gsap.set(willChange, { willChange: "auto" });
+        if (import.meta.env.DEV) Reflect.deleteProperty(window, "__heroScene");
+      };
+    });
+
+    /* Pin geometry depends on final layout: fonts swap, the mascot decodes,
+     * and the preloader releases scroll — refresh after each. */
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refresh);
+    window.addEventListener("lb:loaded", refresh);
+    if (typeof document !== "undefined" && "fonts" in document) {
+      document.fonts.ready.then(refresh).catch(() => {});
+    }
+
+    return () => {
+      window.removeEventListener("load", refresh);
+      window.removeEventListener("lb:loaded", refresh);
+      mm.revert();
+    };
+  }, []);
+
+  /* ---- two-layer pointer parallax (outer wrappers only) ---- */
   useEffect(() => {
     const el = root.current;
     if (!el) return;
@@ -127,8 +241,8 @@ export function Hero() {
 
     const opts = { duration: 0.8, ease: "power3.out" };
     const lx = lockupRef.current ? gsap.quickTo(lockupRef.current, "x", opts) : null;
-    const mx = limonRef.current ? gsap.quickTo(limonRef.current, "x", opts) : null;
-    const my = limonRef.current ? gsap.quickTo(limonRef.current, "y", opts) : null;
+    const mx = limonWrapRef.current ? gsap.quickTo(limonWrapRef.current, "x", opts) : null;
+    const my = limonWrapRef.current ? gsap.quickTo(limonWrapRef.current, "y", opts) : null;
 
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
@@ -161,20 +275,31 @@ export function Hero() {
       <GridRules tone="dark" />
       <MarginNotes index="01" name="Hero" />
 
-      {/* backlight */}
+      {/* backlight — sized element so the scene can scale it (transform only) */}
       <span
-        ref={glowRef}
+        ref={glowWrapRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[4]"
+        className="pointer-events-none absolute left-1/2 top-[46%] z-[4] h-[52vh] w-[46vw]"
+        style={{ transform: "translate(-50%, -50%)" }}
+      >
+        <span
+          ref={glowRef}
+          className="block h-full w-full"
+          style={{
+            background: "radial-gradient(ellipse at center, var(--backlight), transparent 62%)",
+          }}
+        />
+      </span>
+
+      {/* acid medallion glow */}
+      <span
+        ref={medallionRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[52%] z-[4] h-[320px] w-[320px]"
         style={{
-          background:
-            "radial-gradient(ellipse 46vw 52vh at 50% 46%, var(--backlight), transparent 62%)",
+          transform: "translate(-50%, -50%)",
+          background: "radial-gradient(circle, rgba(233,255,0,0.06), transparent 70%)",
         }}
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[52%] z-[4] h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2"
-        style={{ background: "radial-gradient(circle, rgba(233,255,0,0.06), transparent 70%)" }}
       />
 
       {/* ---------------- the giant lockup ---------------- */}
@@ -182,69 +307,80 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 top-[34vh] z-[3] md:top-[46vh]"
         style={{ transform: "translateY(-50%)" }}
       >
-      <div ref={lockupRef} className="flex flex-col items-center">
-        <div className="shell w-full">
-          <div ref={measureRef} className="w-full">
-            <h1 className="m-0 w-full">
-              <span
-                data-hero-measure
-                aria-hidden="true"
-                className="flex w-full items-center justify-between"
-              >
-                <span className="block h-[8px] w-[8px] shrink-0 bg-acid" />
-                <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
-                  {"LIMON".split("").map((c, i) => (
-                    <span key={i}>{c}</span>
-                  ))}
-                </span>
-                <span className="block h-[8px] w-[8px] shrink-0 bg-acid" />
-              </span>
-              <span className="sr-only">Limon Bandit</span>
-
-              <span
-                aria-hidden="true"
-                className="mt-3 block w-full overflow-hidden"
-                style={{ lineHeight: 0.82 }}
-              >
+        <div ref={lockupRef} className="flex flex-col items-center">
+          <div className="shell w-full">
+            <div ref={measureRef} className="w-full">
+              <h1 className="m-0 w-full">
                 <span
-                  ref={wordRef}
-                  className="inline-block whitespace-nowrap font-display font-extrabold uppercase"
-                  style={{
-                    fontSize: size,
-                    letterSpacing: "-0.045em",
-                    marginRight: "-0.045em",
-                    lineHeight: 0.82,
-                  }}
+                  data-hero-measure
+                  aria-hidden="true"
+                  className="flex w-full items-center justify-between"
                 >
-                  {BANDIT.map((c, i) => (
-                    <span key={i} className="inline-block overflow-hidden align-bottom" style={{ lineHeight: 0.82 }}>
-                      <span data-hero-letter data-order={staggerIndex[i]} className="hero-wall inline-block">
+                  <span data-measure-side="left" className="block h-[8px] w-[8px] shrink-0 bg-acid" />
+                  <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
+                    {"LIMON".split("").map((c, i) => (
+                      <span key={i} data-measure-side={i < 2 ? "left" : i > 2 ? "right" : "centre"}>
                         {c}
                       </span>
-                    </span>
-                  ))}
+                    ))}
+                  </span>
+                  <span data-measure-side="right" className="block h-[8px] w-[8px] shrink-0 bg-acid" />
                 </span>
-              </span>
-            </h1>
+                <span className="sr-only">Limon Bandit</span>
+
+                <span
+                  ref={wordWrapRef}
+                  aria-hidden="true"
+                  className="mt-3 block w-full"
+                  style={{ lineHeight: 0.82 }}
+                >
+                  <span
+                    ref={wordRef}
+                    className="inline-block whitespace-nowrap font-display font-extrabold uppercase"
+                    style={{
+                      fontSize: size,
+                      letterSpacing: "-0.045em",
+                      marginRight: "-0.045em",
+                      lineHeight: 0.82,
+                    }}
+                  >
+                    {BANDIT.map((c, i) => (
+                      <span
+                        key={i}
+                        data-hero-letter-box
+                        className="inline-block overflow-hidden align-bottom"
+                        style={{ lineHeight: 0.82 }}
+                      >
+                        <span data-hero-letter data-order={staggerIndex[i]} className="hero-wall inline-block">
+                          {c}
+                        </span>
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              </h1>
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* ---------------- Limon ---------------- */}
       <div
-        ref={limonRef}
+        ref={limonWrapRef}
         className="pointer-events-none absolute bottom-[35svh] left-1/2 z-[5] h-[26vh] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] lg:h-[62vh] 2xl:h-[68vh]"
       >
-        <img
-          src={mascot}
-          alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
-          width={1024}
-          height={1280}
-          fetchPriority="high"
-          className="block h-full w-auto max-w-none object-contain"
-          style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
-        />
+        {/* scene layer — grows from his stance, not his centre */}
+        <div ref={limonRef} className="h-full w-full" style={{ transformOrigin: "50% 85%" }}>
+          <img
+            src={mascot}
+            alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
+            width={1024}
+            height={1280}
+            fetchPriority="high"
+            className="block h-full w-auto max-w-none object-contain"
+            style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
+          />
+        </div>
       </div>
 
       {/* ---------------- corner stations ---------------- */}
@@ -304,7 +440,7 @@ export function Hero() {
       </div>
 
       {/* ---------------- micro-lines on the bottom rule ---------------- */}
-      <div className="absolute inset-x-0 bottom-0 z-[8]">
+      <div ref={ruleRef} data-hero-rule className="absolute inset-x-0 bottom-0 z-[8]">
         <div className="shell flex items-center justify-between pb-[14px]">
           <span
             data-hero-micro

@@ -55,16 +55,31 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
 /** A single drafting crosshair: two crossing 9px strokes. */
 export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; active?: boolean }) {
   const c = active ? "var(--accent)" : crosshairColor[tone];
+  /* Strokes inherit `currentColor` so the whole crosshair can be ticked by
+   * animating one property on the root — the hero scrubs these in sequence,
+   * and keeping it a var() (not a resolved hex) means a mid-scene theme
+   * switch still resolves live. */
   return (
-    <span aria-hidden="true" className="pointer-events-none absolute block h-[9px] w-[9px]" style={{ transform: "translate(-4.5px, -4.5px)" }}>
-      <span
-        className="absolute left-0 top-1/2 h-px w-full"
-        style={{ background: c, transition: "background 0.4s var(--ease-out-expo)" }}
-      />
-      <span
-        className="absolute left-1/2 top-0 h-full w-px"
-        style={{ background: c, transition: "background 0.4s var(--ease-out-expo)" }}
-      />
+    <span
+      data-crosshair
+      aria-hidden="true"
+      className="pointer-events-none absolute block h-[9px] w-[9px]"
+      style={{
+        color: c,
+        transform: "translate(-4.5px, -4.5px)",
+        transition: "color 0.4s var(--ease-out-expo)",
+      }}
+    >
+      <span className="absolute left-0 top-1/2 h-px w-full" style={{ background: "currentColor" }} />
+      <span className="absolute left-1/2 top-0 h-full w-px" style={{ background: "currentColor" }} />
+      {/* Acid tick layer. Kept as a separate element driven by opacity so a
+       * scrubbed timeline can stagger it — animating `color` would both
+       * break scrubbing (GSAP cannot tween to a var()) and step outside
+       * transform/opacity/filter. */}
+      <span data-crosshair-tick className="absolute inset-0 block opacity-0">
+        <span className="absolute left-0 top-1/2 h-px w-full bg-acid" />
+        <span className="absolute left-1/2 top-0 h-full w-px bg-acid" />
+      </span>
     </span>
   );
 }
