@@ -48,7 +48,7 @@ export function Cursor() {
       const el = ringRef.current;
       const dot = dotRef.current;
       if (el) {
-        el.style.borderColor = v ? "var(--acid)" : "rgba(244,244,240,0.35)";
+        el.style.borderColor = v ? "var(--accent)" : "color-mix(in srgb, var(--text) 35%, transparent)";
       }
       if (dot) dot.style.opacity = v ? "0" : "1";
     };
@@ -85,12 +85,12 @@ export function Cursor() {
         ref={ringRef}
         className="pointer-events-none fixed left-0 top-0 z-[9999] flex h-[36px] w-[36px] items-center justify-center border will-change-transform"
         style={{
-          borderColor: "rgba(244,244,240,0.35)",
+          borderColor: "color-mix(in srgb, var(--text) 35%, transparent)",
           transition: "border-color 0.25s var(--ease-out-expo)",
         }}
       >
         {label ? (
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.12em] text-acid">
+          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.12em] text-acid-type">
             {label}
           </span>
         ) : null}

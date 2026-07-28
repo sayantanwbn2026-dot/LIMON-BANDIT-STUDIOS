@@ -1,0 +1,107 @@
+/* ------------------------------------------------------------------
+ * LIMON BANDIT — theme overrides
+ *
+ * The ONLY places light mode needs bespoke values. Everything else
+ * inverts automatically via the semantic pole tokens in styles.css.
+ * Each token below is consumed by exactly one mechanic; keep this
+ * list short and auditable.
+ * ------------------------------------------------------------------ */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* 1 — grain overlay */
+  --noise-opacity: 0.045;
+  --noise-blend: overlay;
+
+  /* 2 — hero vignette (lit centre falling off to the deep surface) */
+  --hero-vignette: #0d0d0d;
+
+  /* 3 — hero wordmark background-clip fill */
+  --wordmark-from: #f4f4f0;
+  --wordmark-to: #8a8a86;
+
+  /* 4 — hero backlight behind Limon: bone-white bloom */
+  --backlight: rgba(244, 244, 240, 0.16);
+
+  /* 5 — Limon's drop shadow */
+  --limon-shadow: rgba(0, 0, 0, 0.55);
+
+  /* 6 — monochrome photography */
+  --img-brightness: 1;
+
+  /* 7 — giant embossed wordmark (marquee + footer) */
+  --emboss: #111111;
+
+  /* 8 — form placeholder (AA against the surface it sits on) */
+  --placeholder: #787878;
+
+  /* caption scrim over photography — follows the primary pole so the
+   * primary-pole type sitting on it stays legible */
+  --scrim: rgba(7, 7, 7, 0.85);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* 1 — grain sits lighter and multiplies into bone */
+  --noise-opacity: 0.035;
+  --noise-blend: multiply;
+
+  /* 2 */
+  --hero-vignette: #f5f5f2;
+
+  /* 3 */
+  --wordmark-from: #080808;
+  --wordmark-to: #4a4a48;
+
+  /* 4 — the bloom becomes a soft dark grounding field */
+  --backlight: rgba(8, 8, 8, 0.1);
+
+  /* 5 */
+  --limon-shadow: rgba(0, 0, 0, 0.22);
+
+  /* 6 — lift greyscale so photography doesn't sit heavier than bone */
+  --img-brightness: 1.04;
+
+  /* 7 — embossed into bone instead of into ink */
+  --emboss: #e4e4e0;
+
+  /* 8 */
+  --placeholder: #6b6b68;
+
+  --scrim: rgba(241, 241, 239, 0.88);
+}
+
+/* ---- 6 — consumed by the `mono` utility in styles.css, and by the few
+ * images that compose their own filter (grayscale + contrast). ---- */
+
+/* ---- 1 — grain overlay ---- */
+.lb-noise {
+  opacity: var(--noise-opacity);
+  mix-blend-mode: var(--noise-blend);
+}
+
+/* ---- theme crossfade -------------------------------------------------
+ * Added on toggle only, removed after 450ms. Never present on first
+ * paint, so the initial theme lands instantly with no transition.
+ * -------------------------------------------------------------------- */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 0.4s var(--ease-out-expo),
+    color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo),
+    fill 0.4s var(--ease-out-expo),
+    stroke 0.4s var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition: none;
+  }
+}

@@ -29,21 +29,21 @@ export function IdentityMarquee() {
   }, []);
 
   return (
-    <section ref={ref} className="relative w-full bg-ink py-[100px]" aria-hidden="true">
+    <section ref={ref} className="relative w-full bg-surface py-[100px]" aria-hidden="true">
       <GridRules tone="dark" />
       <div className="relative z-[2]">
         <Ticker duration={30} reverse>
-          <span className="t-giant flex shrink-0 items-center gap-8 pr-8 text-ink-raised">
-            Limon Bandit <span className="text-acid">✱</span>
+          <span className="t-giant flex shrink-0 items-center gap-8 pr-8 text-[color:var(--emboss)]">
+            Limon Bandit <span className="text-acid-type">✱</span>
           </span>
         </Ticker>
 
         <div className="shell mt-10 flex flex-wrap items-center gap-8">
           {metaChips.map((chip) => (
-            <span key={chip} data-chip className="t-eyebrow text-mute-dark">
-              <span className="text-acid">[</span>
+            <span key={chip} data-chip className="t-eyebrow text-mute">
+              <span className="text-acid-type">[</span>
               {chip}
-              <span className="text-acid">]</span>
+              <span className="text-acid-type">]</span>
             </span>
           ))}
         </div>

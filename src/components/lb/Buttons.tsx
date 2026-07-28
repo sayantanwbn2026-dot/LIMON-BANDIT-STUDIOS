@@ -46,18 +46,18 @@ export function CtaButton({
     <>
       <span
         data-mag-label
-        className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text-dark transition-colors duration-300 group-hover:text-text-light"
+        className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 group-hover:text-accent-text"
       >
         <RollLabel label={label} />
       </span>
       <ArrowRight
         size={18}
-        className="mr-7 shrink-0 text-text-dark transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-text-light"
+        className="mr-7 shrink-0 text-text transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-accent-text"
       />
     </>
   );
 
-  const cls = `group flex h-[60px] items-center justify-between border border-ink-line bg-ink-raised transition-colors duration-300 hover:bg-acid ${rollCss} ${className ?? ""}`;
+  const cls = `group flex h-[60px] items-center justify-between border border-line bg-surface-raised transition-colors duration-300 hover:bg-acid ${rollCss} ${className ?? ""}`;
 
   return (
     <Magnetic className="inline-block">
@@ -97,7 +97,7 @@ export function GhostLink({
       />
     </>
   );
-  const cls = `group inline-flex items-center gap-2 font-ui text-[13px] font-bold uppercase tracking-[0.14em] ${className ?? "text-text-dark"}`;
+  const cls = `group inline-flex items-center gap-2 font-ui text-[13px] font-bold uppercase tracking-[0.14em] ${className ?? "text-text"}`;
   return to ? (
     <Link to={to} className={cls}>
       {inner}

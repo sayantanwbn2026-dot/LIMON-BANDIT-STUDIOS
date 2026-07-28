@@ -31,29 +31,29 @@ export function Numbers() {
   }, []);
 
   return (
-    <Section surface="bg-ink" className="py-[100px]">
+    <Section surface="bg-surface" className="py-[100px]">
       <h2 className="sr-only">The numbers</h2>
-      <div ref={ref} className="grid grid-cols-2 gap-px bg-ink-line md:grid-cols-4">
+      <div ref={ref} className="grid grid-cols-2 gap-px bg-line md:grid-cols-4">
         {metrics.map((m) => (
-          <div key={m.label} className="bg-ink px-0 py-2 md:px-8 md:first:pl-0">
-            <div className="t-label text-mute-dark">{m.label}</div>
+          <div key={m.label} className="bg-surface px-0 py-2 md:px-8 md:first:pl-0">
+            <div className="t-label text-mute">{m.label}</div>
             <div className="mt-5 flex items-baseline gap-1">
               <span
                 data-count={m.value}
                 data-decimals={m.decimals}
-                className="tnum font-display font-extrabold tracking-[-0.04em] text-text-dark"
+                className="tnum font-display font-extrabold tracking-[-0.04em] text-text"
                 style={{ fontSize: "clamp(52px, 5vw, 76px)" }}
               >
                 {m.value.toFixed(m.decimals)}
               </span>
               <span
-                className="font-display font-extrabold text-acid"
+                className="font-display font-extrabold text-acid-type"
                 style={{ fontSize: "clamp(31px, 3vw, 46px)" }}
               >
                 {m.unit}
               </span>
             </div>
-            <p className="mt-4 max-w-[28ch] font-ui text-[14px] leading-[1.45] text-mute-dark">
+            <p className="mt-4 max-w-[28ch] font-ui text-[14px] leading-[1.45] text-mute">
               {m.sentence}
             </p>
           </div>

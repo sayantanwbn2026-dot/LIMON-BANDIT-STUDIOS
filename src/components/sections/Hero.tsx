@@ -146,14 +146,17 @@ export function Hero() {
     <section
       ref={root}
       data-hero
-      className="relative w-full overflow-hidden bg-ink-deep"
+      className="relative w-full overflow-hidden bg-surface-deep"
       style={{ height: "100svh", minHeight: 680 }}
     >
       {/* soft lit centre */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
-        style={{ background: "radial-gradient(circle at 50% 46%, #0D0D0D 0%, var(--ink-deep) 70%)" }}
+        style={{
+          background:
+            "radial-gradient(circle at 50% 46%, var(--hero-vignette) 0%, var(--surface-deep) 70%)",
+        }}
       />
       <GridRules tone="dark" />
       <MarginNotes index="01" name="Hero" />
@@ -165,7 +168,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            "radial-gradient(ellipse 46vw 52vh at 50% 46%, rgba(244,244,240,0.16), transparent 62%)",
+            "radial-gradient(ellipse 46vw 52vh at 50% 46%, var(--backlight), transparent 62%)",
         }}
       />
       <span
@@ -189,7 +192,7 @@ export function Hero() {
                 className="flex w-full items-center justify-between"
               >
                 <span className="block h-[8px] w-[8px] shrink-0 bg-acid" />
-                <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute-dark">
+                <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
                   {"LIMON".split("").map((c, i) => (
                     <span key={i}>{c}</span>
                   ))}
@@ -240,7 +243,7 @@ export function Hero() {
           height={1280}
           fetchPriority="high"
           className="block h-full w-auto max-w-none object-contain"
-          style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px rgba(0,0,0,0.55))" }}
+          style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
         />
       </div>
 
@@ -256,11 +259,11 @@ export function Hero() {
                   onLoad
                   delay={1.0}
                   text="Kolkata Music House — Est. 2021"
-                  className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute-dark"
+                  className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute"
                 />
               </div>
-              <p className="mt-3 font-ui text-[13px] leading-[1.55] text-mute-dark">
-                <strong className="font-semibold text-text-dark">
+              <p className="mt-3 font-ui text-[13px] leading-[1.55] text-mute">
+                <strong className="font-semibold text-text">
                   Four rooms, one label, and a merch line
                 </strong>{" "}
                 — run out of one building in Kolkata. Book a night, sign a record, or print a run.
@@ -270,7 +273,7 @@ export function Hero() {
 
             {/* bottom-centre */}
             <div data-hero-station className="hidden lg:block">
-              <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute-dark">
+              <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
                 <span className="mr-2 inline-block h-[7px] w-[7px] bg-acid align-middle" />
                 limonbandit.com
               </span>
@@ -278,21 +281,21 @@ export function Hero() {
 
             {/* bottom-right */}
             <div data-hero-station className="md:text-right">
-              <p className="font-ui text-[13px] font-medium leading-[1.5] text-mute-dark">
+              <p className="font-ui text-[13px] font-medium leading-[1.5] text-mute">
                 music studio &amp;
                 <br />
                 creative house
               </p>
               <a
                 href="/contact"
-                className="group mt-4 inline-flex h-[54px] w-full max-w-[240px] items-center justify-between border border-ink-line bg-transparent transition-colors duration-300 hover:border-[#2A2A2A] hover:bg-ink-raised md:w-[240px]"
+                className="group mt-4 inline-flex h-[54px] w-full max-w-[240px] items-center justify-between border border-line bg-transparent transition-colors duration-300 hover:border-line-strong hover:bg-surface-raised md:w-[240px]"
               >
-                <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text-dark">
+                <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
                   Book the room
                 </span>
                 <ArrowRight
                   size={16}
-                  className="mr-6 text-text-dark transition-transform duration-300 group-hover:translate-x-1"
+                  className="mr-6 text-text transition-transform duration-300 group-hover:translate-x-1"
                 />
               </a>
             </div>
@@ -305,14 +308,14 @@ export function Hero() {
         <div className="shell flex items-center justify-between pb-[14px]">
           <span
             data-hero-micro
-            className="font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute-dark"
+            className="font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute"
             style={{ opacity: 0.7 }}
           >
             Scroll ↓ — the house opens below
           </span>
           <span
             data-hero-micro
-            className="hidden items-center gap-4 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] tnum text-mute-dark sm:flex"
+            className="hidden items-center gap-4 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] tnum text-mute sm:flex"
             style={{ opacity: 0.7 }}
           >
             <LocalTime className="!text-[10px] !tracking-[0.16em]" />

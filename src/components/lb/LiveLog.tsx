@@ -42,29 +42,29 @@ export function LiveLog() {
 
   return (
     <div
-      className="w-[300px] max-w-full border border-ink-line bg-ink-raised p-4"
+      className="w-[300px] max-w-full border border-line bg-surface-raised p-4"
       onPointerEnter={() => setPaused(true)}
       onPointerLeave={() => setPaused(false)}
     >
       <div className="flex items-center gap-2">
         <span className="h-[7px] w-[7px] bg-acid pulse-dot" />
-        <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-text-dark">
+        <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-text">
           House log
         </span>
-        <span className="ml-auto font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute-dark">
+        <span className="ml-auto font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
           Live
         </span>
       </div>
       <div className="mt-4 h-[42px] overflow-hidden">
         <div ref={rowRef} className="flex items-center gap-3">
           <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center bg-acid">
-            <Icon size={12} className="text-text-light" />
+            <Icon size={12} className="text-accent-text" />
           </span>
           <span className="min-w-0">
-            <span className="block truncate font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text-dark">
+            <span className="block truncate font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text">
               {title}
             </span>
-            <span className="block truncate font-ui text-[11px] text-mute-dark">{sub}</span>
+            <span className="block truncate font-ui text-[11px] text-mute">{sub}</span>
           </span>
         </div>
       </div>

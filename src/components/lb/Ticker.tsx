@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import type { Tone } from "./GridRules";
 
 export function Ticker({
   children,
@@ -61,15 +62,15 @@ export function Ticker({
   );
 }
 
-export function TickerItem({ label, tone = "dark" }: { label: string; tone?: "dark" | "light" }) {
+export function TickerItem({ label, tone = "dark" }: { label: string; tone?: Tone }) {
+  const tint =
+    tone === "dark" ? "text-mute" : tone === "light" ? "text-alt-text" : "text-accent-text";
   return (
     <span className="flex shrink-0 items-center gap-6 pr-6">
-      <span
-        className={`t-label whitespace-nowrap ${tone === "dark" ? "text-mute-dark" : "text-text-light"}`}
-      >
+      <span className={`t-label whitespace-nowrap ${tint}`}>
         {label}
       </span>
-      <span className="h-[9px] w-[9px] shrink-0 border border-acid" />
+      <span className="h-[9px] w-[9px] shrink-0 border border-acid-type" />
     </span>
   );
 }

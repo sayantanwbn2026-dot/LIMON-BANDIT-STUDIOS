@@ -41,12 +41,12 @@ export function Testimonials() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
             <div className="flex items-center gap-3">
-              <span className="h-[10px] w-[10px] bg-text-light" />
-              <span className="t-eyebrow text-text-light">What they say</span>
+              <span className="h-[10px] w-[10px] bg-accent-text" />
+              <span className="t-eyebrow text-accent-text">What they say</span>
             </div>
           </div>
           <div className="md:col-span-2">
-            <WordReveal as="h2" className="t-h2 text-text-light" text={"The roster talks."} />
+            <WordReveal as="h2" className="t-h2 text-accent-text" text={"The roster talks."} />
           </div>
           <div className="flex flex-col justify-end gap-6 md:col-span-1">
             <div className="flex items-center gap-4">
@@ -60,23 +60,23 @@ export function Testimonials() {
                     width={40}
                     height={40}
                     loading="lazy"
-                    className="h-10 w-10 border border-acid object-cover grayscale"
+                    className="h-10 w-10 border border-acid object-cover mono"
                     style={{ marginLeft: i === 0 ? 0 : -10 }}
                   />
                 ))}
               </div>
-              <span className="font-ui text-[12px] text-text-light">
+              <span className="font-ui text-[12px] text-accent-text">
                 Artists · Producers · Engineers
               </span>
             </div>
             <a
               href="/label"
-              className="group flex w-fit items-center gap-3 border border-text-light px-6 py-4 transition-colors duration-300 hover:bg-text-light"
+              className="group flex w-fit items-center gap-3 border border-accent-text px-6 py-4 transition-colors duration-300 hover:bg-accent-text"
             >
-              <span className="t-eyebrow text-text-light transition-colors duration-300 group-hover:text-acid">
+              <span className="t-eyebrow text-accent-text transition-colors duration-300 group-hover:text-acid">
                 See the roster
               </span>
-              <ArrowRight size={15} className="text-text-light transition-all duration-300 group-hover:translate-x-1 group-hover:text-acid" />
+              <ArrowRight size={15} className="text-accent-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-acid" />
             </a>
           </div>
         </div>
@@ -86,14 +86,14 @@ export function Testimonials() {
             <div key={ci} data-col={ci === 0 ? "left" : "right"} className="flex flex-col gap-6">
               {col.map((t, i) => (
                 <RiseIn key={t.name} delay={i * 0.08}>
-                  <article className="bg-ink-deep p-9">
-                    <span aria-hidden="true" className="block font-display text-[40px] font-extrabold leading-none text-acid">
+                  <article className="bg-surface-deep p-9">
+                    <span aria-hidden="true" className="block font-display text-[40px] font-extrabold leading-none text-acid-type">
                       &ldquo;
                     </span>
-                    <blockquote className="mt-4 font-display text-[22px] font-bold uppercase leading-[1.2] tracking-[-0.02em] text-text-dark">
+                    <blockquote className="mt-4 font-display text-[22px] font-bold uppercase leading-[1.2] tracking-[-0.02em] text-text">
                       {t.quote}
                     </blockquote>
-                    <div className="mt-8 h-px w-full bg-ink-line" />
+                    <div className="mt-8 h-px w-full bg-line" />
                     <div className="mt-6 flex items-center gap-4">
                       <img
                         src={t.photo}
@@ -101,33 +101,33 @@ export function Testimonials() {
                         width={44}
                         height={44}
                         loading="lazy"
-                        className="h-11 w-11 object-cover grayscale"
+                        className="h-11 w-11 object-cover mono"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="font-display text-[14px] font-bold uppercase text-text-dark">
+                        <div className="font-display text-[14px] font-bold uppercase text-text">
                           {t.name}
                         </div>
-                        <div className="font-ui text-[11px] text-mute-dark">{t.role}</div>
+                        <div className="font-ui text-[11px] text-mute">{t.role}</div>
                       </div>
-                      <span className="t-label text-mute-dark">LB</span>
+                      <span className="t-label text-mute">LB</span>
                     </div>
-                    <div className="mt-8 grid grid-cols-2 gap-6 border-t border-ink-line pt-6">
+                    <div className="mt-8 grid grid-cols-2 gap-6 border-t border-line pt-6">
                       <div>
-                        <div className="t-label text-mute-dark">// Room</div>
+                        <div className="t-label text-mute">// Room</div>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {t.rooms.map((r) => (
-                            <span key={r} className="t-label rounded-[2px] border border-ink-line px-2 py-1 text-mute-dark">
+                            <span key={r} className="t-label rounded-[2px] border border-line px-2 py-1 text-mute">
                               {r}
                             </span>
                           ))}
                         </div>
                       </div>
-                      <div className="border-l border-ink-line pl-6">
-                        <div className="t-label text-mute-dark">// Result</div>
-                        <div className="tnum mt-3 font-display text-[24px] font-extrabold tracking-[-0.03em] text-acid">
+                      <div className="border-l border-line pl-6">
+                        <div className="t-label text-mute">// Result</div>
+                        <div className="tnum mt-3 font-display text-[24px] font-extrabold tracking-[-0.03em] text-acid-type">
                           {t.resultValue}
                         </div>
-                        <div className="t-label mt-1 text-mute-dark">{t.resultLabel}</div>
+                        <div className="t-label mt-1 text-mute">{t.resultLabel}</div>
                       </div>
                     </div>
                   </article>
@@ -138,11 +138,11 @@ export function Testimonials() {
         </div>
       </div>
 
-      <div className="relative z-[2] flex h-[52px] items-center bg-ink-deep">
+      <div className="relative z-[2] flex h-[52px] items-center bg-surface-deep">
         <Ticker duration={38} reverse>
           {testimonialTicker.map((t) => (
             <span key={t} className="flex shrink-0 items-center gap-6 pr-6">
-              <span className="t-label whitespace-nowrap text-mute-dark">{t}</span>
+              <span className="t-label whitespace-nowrap text-mute">{t}</span>
               <span className="h-[9px] w-[9px] shrink-0 bg-acid" />
             </span>
           ))}

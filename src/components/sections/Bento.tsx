@@ -67,7 +67,7 @@ export function Bento() {
   }, []);
 
   return (
-    <Section surface="bg-ink" className="py-[140px]">
+    <Section surface="bg-surface" className="py-[140px]">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
         <div className="md:col-span-1">
           <Eyebrow>What&apos;s inside</Eyebrow>
@@ -75,34 +75,34 @@ export function Bento() {
         <div className="md:col-span-2">
           <WordReveal
             as="h2"
-            className="t-h2 text-text-dark"
+            className="t-h2 text-text"
             text={"A label, a shop,\nand a crew —\non one site."}
           />
         </div>
         <div className="flex flex-col justify-end gap-6 md:col-span-1">
-          <p className="font-ui text-[16px] leading-[1.5] text-mute-dark">
+          <p className="font-ui text-[16px] leading-[1.5] text-mute">
             Everything the roster needs sits behind one login. Nothing is farmed out.
           </p>
           <a
             href="/label"
-            className="group flex w-fit items-center gap-3 border border-ink-line px-6 py-4 transition-colors duration-300 hover:border-acid"
+            className="group flex w-fit items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
-            <span className="t-eyebrow text-text-dark">See everything</span>
-            <ArrowRight size={15} className="text-acid transition-transform duration-300 group-hover:translate-x-1" />
+            <span className="t-eyebrow text-text">See everything</span>
+            <ArrowRight size={15} className="text-acid-type transition-transform duration-300 group-hover:translate-x-1" />
           </a>
         </div>
       </div>
 
-      <div ref={ref} className="mt-20 grid grid-cols-1 gap-px bg-ink-line md:grid-cols-2 lg:grid-cols-4">
+      <div ref={ref} className="mt-20 grid grid-cols-1 gap-px bg-line md:grid-cols-2 lg:grid-cols-4">
         {/* 1 — player */}
-        <div data-tile className="bg-ink-raised p-8 lg:col-span-2">
+        <div data-tile className="bg-surface-raised p-8 lg:col-span-2">
           <div className="flex items-center gap-4">
-            <img src={c1} alt="" aria-hidden="true" width={64} height={64} loading="lazy" className="h-16 w-16 object-cover grayscale" />
+            <img src={c1} alt="" aria-hidden="true" width={64} height={64} loading="lazy" className="h-16 w-16 object-cover mono" />
             <div className="min-w-0 flex-1">
-              <div className="truncate font-display text-[16px] font-bold uppercase text-text-dark">
+              <div className="truncate font-display text-[16px] font-bold uppercase text-text">
                 Rusted Gold
               </div>
-              <div className="mt-1 font-ui text-[12px] text-mute-dark">Rana &amp; The Strays</div>
+              <div className="mt-1 font-ui text-[12px] text-mute">Rana &amp; The Strays</div>
             </div>
             <button
               type="button"
@@ -112,9 +112,9 @@ export function Bento() {
               className="flex h-11 w-11 items-center justify-center bg-acid"
             >
               {playing ? (
-                <Pause size={16} className="fill-text-light text-text-light" />
+                <Pause size={16} className="fill-accent-text text-accent-text" />
               ) : (
-                <Play size={16} className="fill-text-light text-text-light" />
+                <Play size={16} className="fill-accent-text text-accent-text" />
               )}
             </button>
           </div>
@@ -124,7 +124,7 @@ export function Bento() {
               <span
                 key={i}
                 data-bar={i < 19 ? "" : undefined}
-                className={`w-[3px] ${i < 19 ? "bg-acid" : "bg-ink-line"}`}
+                className={`w-[3px] ${i < 19 ? "bg-acid" : "bg-line"}`}
                 style={{ height: `${20 + ((i * 37) % 60)}%` }}
               />
             ))}
@@ -134,7 +134,7 @@ export function Bento() {
             {queue.map((q) => (
               <li
                 key={q.title}
-                className="flex items-center justify-between border-t border-ink-line py-3 font-ui text-[14px] text-mute-dark"
+                className="flex items-center justify-between border-t border-line py-3 font-ui text-[14px] text-mute"
               >
                 <span>{q.title}</span>
                 <span className="tnum">{q.time}</span>
@@ -144,8 +144,8 @@ export function Bento() {
         </div>
 
         {/* 2 — merch */}
-        <div data-tile className="relative flex flex-col bg-ink-raised lg:row-span-2">
-          <span className="t-label absolute left-6 top-6 z-[2] bg-acid px-3 py-1 text-text-light">
+        <div data-tile className="relative flex flex-col bg-surface-raised lg:row-span-2">
+          <span className="t-label absolute left-6 top-6 z-[2] bg-acid px-3 py-1 text-accent-text">
             Sold direct
           </span>
           <img
@@ -154,48 +154,48 @@ export function Bento() {
             width={1000}
             height={1250}
             loading="lazy"
-            className="h-full min-h-[320px] w-full flex-1 object-cover grayscale"
+            className="h-full min-h-[320px] w-full flex-1 object-cover mono"
           />
           <div className="p-8">
-            <div className="font-display text-[16px] font-bold uppercase text-text-dark">
+            <div className="font-display text-[16px] font-bold uppercase text-text">
               House Tee — Black
             </div>
-            <div className="tnum mt-2 font-ui text-[14px] text-mute-dark">₹1,299</div>
+            <div className="tnum mt-2 font-ui text-[14px] text-mute">₹1,299</div>
             <a
               href="/shop"
-              className="mt-6 flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.12em] text-text-dark"
+              className="mt-6 flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.12em] text-text"
             >
-              Shop the drop <ArrowRight size={14} className="text-acid" />
+              Shop the drop <ArrowRight size={14} className="text-acid-type" />
             </a>
           </div>
         </div>
 
         {/* 3 — rooms */}
-        <div data-tile className="relative min-h-[280px] overflow-hidden bg-ink-raised">
+        <div data-tile className="relative min-h-[280px] overflow-hidden bg-surface-raised">
           <img
             src={roomA}
             alt="Room A set up for a live session"
             width={1600}
             height={900}
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-45 grayscale"
+            className="absolute inset-0 h-full w-full object-cover opacity-45 mono"
           />
           <div className="relative flex h-full flex-col justify-between p-8">
             <div className="flex flex-wrap gap-2">
               {["Room A", "Room B", "Lockout"].map((c) => (
-                <span key={c} className="t-label rounded-[2px] border border-ink-line bg-ink-deep px-3 py-2 text-text-dark">
+                <span key={c} className="t-label rounded-[2px] border border-line bg-surface-deep px-3 py-2 text-text">
                   {c}
                 </span>
               ))}
             </div>
-            <p className="font-ui text-[14px] text-mute-dark">
+            <p className="font-ui text-[14px] text-mute">
               4 rooms, booked by the hour or the night.
             </p>
           </div>
         </div>
 
         {/* 4 — roster */}
-        <div data-tile className="flex min-h-[280px] flex-col justify-between bg-ink-raised p-8">
+        <div data-tile className="flex min-h-[280px] flex-col justify-between bg-surface-raised p-8">
           <div className="flex">
             {avatars.map((a, i) => (
               <img
@@ -206,37 +206,37 @@ export function Bento() {
                 width={40}
                 height={40}
                 loading="lazy"
-                className="h-10 w-10 border border-ink-raised object-cover grayscale"
+                className="h-10 w-10 border border-surface-raised object-cover mono"
                 style={{ marginLeft: i === 0 ? 0 : -10 }}
               />
             ))}
             <span
-              className="flex h-10 w-10 items-center justify-center border border-ink-raised bg-acid font-ui text-[10px] font-bold uppercase text-text-light"
+              className="flex h-10 w-10 items-center justify-center border border-surface-raised bg-acid font-ui text-[10px] font-bold uppercase text-accent-text"
               style={{ marginLeft: -10 }}
             >
               +You
             </span>
           </div>
-          <div className="font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text-dark">
+          <div className="font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
             40+ artists on the roster
           </div>
         </div>
 
         {/* 5 — crew */}
-        <div data-tile className="bg-ink-raised p-8 lg:col-span-3">
+        <div data-tile className="bg-surface-raised p-8 lg:col-span-3">
           <div className="grid grid-cols-3 gap-6 sm:grid-cols-6">
             {crew.map((c) => (
               <div key={c} className="flex flex-col items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center border border-ink-line">
-                  <span className="h-[10px] w-[10px] bg-mute-dark" />
+                <span className="flex h-12 w-12 items-center justify-center border border-line">
+                  <span className="h-[10px] w-[10px] bg-mute" />
                 </span>
-                <span className="t-label text-center text-mute-dark">{c}</span>
+                <span className="t-label text-center text-mute">{c}</span>
               </div>
             ))}
           </div>
           <div data-connector aria-hidden="true" className="mt-8 h-px w-full origin-left bg-acid" />
           <RiseIn className="mt-8">
-            <p className="t-h3 text-text-dark">Hire the crew by the project.</p>
+            <p className="t-h3 text-text">Hire the crew by the project.</p>
           </RiseIn>
         </div>
       </div>

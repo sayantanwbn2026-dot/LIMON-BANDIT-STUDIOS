@@ -44,15 +44,15 @@ export function Roster() {
           <Eyebrow>The roster</Eyebrow>
         </div>
         <div className="md:col-span-2">
-          <WordReveal as="h2" className="t-h2 text-text-dark" text={"Real rooms.\nReal records."} />
+          <WordReveal as="h2" className="t-h2 text-text" text={"Real rooms.\nReal records."} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
           <a
             href="/label"
-            className="group flex items-center gap-3 border border-ink-line px-6 py-4 transition-colors duration-300 hover:border-acid"
+            className="group flex items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
-            <span className="t-eyebrow text-text-dark">Hear the label</span>
-            <ArrowRight size={15} className="text-acid transition-transform duration-300 group-hover:translate-x-1" />
+            <span className="t-eyebrow text-text">Hear the label</span>
+            <ArrowRight size={15} className="text-acid-type transition-transform duration-300 group-hover:translate-x-1" />
           </a>
         </div>
       </div>
@@ -64,7 +64,7 @@ export function Roster() {
             href="/label"
             data-release
             data-cursor="play"
-            className={`group relative block overflow-hidden border border-ink-line ${r.span} ${r.height}`}
+            className={`group relative block overflow-hidden border border-line ${r.span} ${r.height}`}
           >
             <img
               src={r.cover}
@@ -73,25 +73,25 @@ export function Roster() {
               height={900}
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06]"
-              style={{ filter: "grayscale(1)", transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0.15)")}
-              onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(1)")}
+              style={{ filter: "grayscale(1) brightness(var(--img-brightness))", transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0.15) brightness(var(--img-brightness))")}
+              onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")}
             />
-            <span aria-hidden="true" className="absolute left-0 top-0 h-[20px] w-[20px] border-l border-t border-acid" />
+            <span aria-hidden="true" className="absolute left-0 top-0 h-[20px] w-[20px] border-l border-t border-acid-type" />
             <div
-              className="absolute inset-x-0 bottom-0 border-t border-ink-line p-5"
-              style={{ background: "rgba(7,7,7,0.85)" }}
+              className="absolute inset-x-0 bottom-0 border-t border-line p-5"
+              style={{ background: "var(--scrim)" }}
             >
-              <div className="t-label text-mute-dark">
+              <div className="t-label text-mute">
                 {r.genre} · {r.runtime} · {r.year}
               </div>
               <div className="mt-3 flex items-center justify-between gap-4">
-                <span className="font-display text-[18px] font-bold uppercase leading-none tracking-[-0.02em] text-text-dark">
+                <span className="font-display text-[18px] font-bold uppercase leading-none tracking-[-0.02em] text-text">
                   {r.artist}
                 </span>
-                <ArrowUpRight size={18} className="shrink-0 text-acid" />
+                <ArrowUpRight size={18} className="shrink-0 text-acid-type" />
               </div>
-              <div className="mt-1 font-ui text-[12px] text-mute-dark">{r.title}</div>
+              <div className="mt-1 font-ui text-[12px] text-mute">{r.title}</div>
             </div>
           </a>
         ))}

@@ -12,7 +12,7 @@ import a3 from "@/assets/release-06.jpg";
 
 export function FinalCta() {
   return (
-    <section className="relative w-full overflow-hidden bg-ink-deep">
+    <section className="relative w-full overflow-hidden bg-surface-deep">
       <img
         src={roomA}
         alt=""
@@ -20,14 +20,14 @@ export function FinalCta() {
         width={1600}
         height={900}
         loading="lazy"
-        className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 grayscale"
+        className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 mono"
       />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(90deg, var(--ink-deep) 0%, var(--ink-deep) 42%, rgba(5,5,5,0.4) 75%, rgba(5,5,5,0.2) 100%)",
+            "linear-gradient(90deg, var(--surface-deep) 0%, var(--surface-deep) 42%, color-mix(in srgb, var(--surface-deep) 40%, transparent) 75%, color-mix(in srgb, var(--surface-deep) 20%, transparent) 100%)",
         }}
       />
       <GridRules tone="dark" />
@@ -37,19 +37,19 @@ export function FinalCta() {
           <div className="flex items-center gap-4">
             <span className="flex gap-1" aria-hidden="true">
               {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} size={14} className="fill-acid text-acid" />
+                <Star key={i} size={14} className="fill-acid-type text-acid-type" />
               ))}
             </span>
-            <span className="t-eyebrow text-mute-dark">{site.rating}</span>
+            <span className="t-eyebrow text-mute">{site.rating}</span>
           </div>
 
           <WordReveal
             as="h2"
-            className="t-hero mt-8 text-text-dark"
+            className="t-hero mt-8 text-text"
             text={"The room's already warm."}
           />
 
-          <p className="t-lead mt-8 max-w-[520px] text-mute-dark">
+          <p className="t-lead mt-8 max-w-[520px] text-mute">
             Bring the songs. We&apos;ll handle the room, the master, the print run, and the people
             who shoot the video.
           </p>
@@ -65,16 +65,16 @@ export function FinalCta() {
                   width={44}
                   height={44}
                   loading="lazy"
-                  className="h-11 w-11 border border-ink-deep object-cover grayscale"
+                  className="h-11 w-11 border border-surface-deep object-cover mono"
                   style={{ marginLeft: i === 0 ? 0 : -10 }}
                 />
               ))}
             </div>
             <div>
-              <div className="font-display text-[14px] font-bold uppercase text-text-dark">
+              <div className="font-display text-[14px] font-bold uppercase text-text">
                 Rana, Kaalo &amp; Shona
               </div>
-              <div className="font-ui text-[12px] text-mute-dark">
+              <div className="font-ui text-[12px] text-mute">
                 Booked the room this month.
               </div>
             </div>
@@ -84,17 +84,17 @@ export function FinalCta() {
             href="/contact"
             className="group mt-10 flex h-[62px] w-full max-w-[320px] items-center justify-between bg-acid transition-colors duration-300 hover:bg-acid-dim"
           >
-            <span className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text-light">
+            <span className="pl-7 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
               Book the room
             </span>
-            <ArrowRight size={18} className="mr-7 text-text-light transition-transform duration-300 group-hover:translate-x-1.5" />
+            <ArrowRight size={18} className="mr-7 text-accent-text transition-transform duration-300 group-hover:translate-x-1.5" />
           </a>
 
           <div className="mt-12 flex flex-wrap items-start justify-between gap-10">
             <ul className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
               {ctaChecklist.map((c) => (
-                <li key={c} className="flex items-center gap-3 font-ui text-[15px] text-text-dark">
-                  <Check size={14} className="shrink-0 text-acid" />
+                <li key={c} className="flex items-center gap-3 font-ui text-[15px] text-text">
+                  <Check size={14} className="shrink-0 text-acid-type" />
                   {c}
                 </li>
               ))}
@@ -104,12 +104,12 @@ export function FinalCta() {
         </div>
       </div>
 
-      <div className="relative z-[2] flex h-[52px] items-center border-y border-ink-line">
+      <div className="relative z-[2] flex h-[52px] items-center border-y border-line">
         <Ticker duration={40}>
           {ctaChecklist.map((c) => (
             <span key={c} className="flex shrink-0 items-center gap-6 pr-6">
-              <span className="t-label whitespace-nowrap text-mute-dark">{c}</span>
-              <span className="h-[9px] w-[9px] shrink-0 border border-acid" />
+              <span className="t-label whitespace-nowrap text-mute">{c}</span>
+              <span className="h-[9px] w-[9px] shrink-0 border border-acid-type" />
             </span>
           ))}
         </Ticker>

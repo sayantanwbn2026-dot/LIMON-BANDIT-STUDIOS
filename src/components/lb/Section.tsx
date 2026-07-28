@@ -4,8 +4,8 @@ import { ensureGsap } from "@/lib/motion";
 import { Decode } from "./Decode";
 
 const bg: Record<Tone, string> = {
-  dark: "bg-ink-deep",
-  light: "bg-bone",
+  dark: "bg-surface-deep",
+  light: "bg-alt-surface",
   acid: "bg-acid",
 };
 
@@ -21,7 +21,7 @@ export function Section({
 }: {
   children: ReactNode;
   tone?: Tone;
-  /** override the background class (e.g. bg-ink for the mid-dark surface) */
+  /** override the background class (e.g. bg-surface for the mid-dark surface) */
   surface?: string;
   className?: string;
   id?: string;
@@ -69,7 +69,7 @@ export function Section({
 /** Rotated drafting annotations in the outer margins. */
 export function MarginNotes({ index, name }: { index: string; name: string }) {
   const base =
-    "pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute-dark xl:block";
+    "pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute xl:block";
   const style: React.CSSProperties = {
     writingMode: "vertical-rl",
     transform: "translateY(-50%) rotate(180deg)",
@@ -103,23 +103,21 @@ export function Eyebrow({
   surface?: string;
 }) {
   const surface =
-    surfaceOverride ?? (tone === "light" ? "bg-bone" : tone === "acid" ? "bg-acid" : "bg-ink");
+    surfaceOverride ?? (tone === "light" ? "bg-alt-surface" : tone === "acid" ? "bg-acid" : "bg-surface");
+  /* Type on the opposite pole must follow that pole (it inverts with the
+   * theme); type on acid must not (acid is fixed in both themes). */
+  const tint =
+    tone === "dark" ? "text-mute" : tone === "light" ? "text-alt-text" : "text-accent-text";
   return (
     <div
       className={`inline-flex items-center gap-3 ${notch ? `${surface} -ml-4 px-4 -mt-[0.5em]` : ""}`}
     >
       <span className="h-[10px] w-[10px] shrink-0 bg-acid" />
       {typeof children === "string" ? (
-        <Decode
-          text={children}
-          className={`t-eyebrow ${tone === "dark" ? "text-mute-dark" : "text-text-light"}`}
-        />
+        <Decode text={children} className={`t-eyebrow ${tint}`} />
       ) : (
-        <span className={`t-eyebrow ${tone === "dark" ? "text-mute-dark" : "text-text-light"}`}>
-          {children}
-        </span>
+        <span className={`t-eyebrow ${tint}`}>{children}</span>
       )}
-
     </div>
   );
 }

@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { navItems, site } from "@/data/site";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import mascot from "@/assets/limon-mascot.png";
 
 const chipCls =
-  "rounded-[2px] border border-ink-line px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute-dark transition-colors duration-[250ms] hover:border-[#2A2A2A] hover:text-text-dark";
+  "rounded-[2px] border border-line px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-[250ms] hover:border-line-strong hover:text-text";
 
 export function Logotype({ size = 18 }: { size?: number }) {
   return (
@@ -86,14 +87,14 @@ export function Nav() {
         className="fixed inset-x-0 top-0 z-[9990] h-[88px]"
         style={{
           backgroundColor: solid ? "rgba(5,5,5,0.88)" : "transparent",
-          borderBottom: solid ? "1px solid var(--ink-line)" : "1px solid transparent",
+          borderBottom: solid ? "1px solid var(--line)" : "1px solid transparent",
           backdropFilter: solid ? "blur(6px)" : "none",
           transition: "background-color 0.4s var(--ease-out-expo), border-color 0.4s linear",
         }}
       >
         <div className="shell flex h-full items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-text-dark" aria-label={`${site.name} home`}>
+            <Link to="/" className="text-text" aria-label={`${site.name} home`}>
               <Logotype />
             </Link>
             <div className="hidden items-center gap-2 xl:flex">
@@ -115,22 +116,23 @@ export function Nav() {
               </Link>
               <Link
                 to="/contact"
-                className="rounded-[2px] bg-bone px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-text-light transition-colors duration-[250ms] hover:bg-acid"
+                className="rounded-[2px] bg-alt-surface px-[18px] py-[10px] font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-alt-text transition-colors duration-[250ms] hover:bg-acid hover:text-accent-text"
               >
                 Contact
               </Link>
             </div>
+          <ThemeToggle />
           <button
             ref={triggerRef}
             type="button"
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-label="Open menu"
-            className="flex h-12 w-12 flex-col items-center justify-center gap-[4px] border border-ink-line transition-colors duration-300 hover:border-acid"
+            className="flex h-12 w-12 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type"
           >
-            <span className="block h-[2px] w-[20px] bg-text-dark" />
-            <span className="block h-[2px] w-[14px] bg-text-dark" />
-            <span className="block h-[2px] w-[20px] bg-text-dark" />
+            <span className="block h-[2px] w-[20px] bg-text" />
+            <span className="block h-[2px] w-[14px] bg-text" />
+            <span className="block h-[2px] w-[20px] bg-text" />
           </button>
           </div>
         </div>
@@ -141,7 +143,7 @@ export function Nav() {
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className="fixed inset-0 z-[9995] bg-ink-deep"
+        className="fixed inset-0 z-[9995] bg-surface-deep"
         style={{
           clipPath: open ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
           transition: "clip-path 0.7s var(--ease-in-out-quart)",
@@ -158,7 +160,7 @@ export function Nav() {
                 triggerRef.current?.focus();
               }}
               aria-label="Close menu"
-              className="t-label border border-ink-line px-4 py-3 text-mute-dark transition-colors duration-300 hover:border-acid hover:text-text-dark"
+              className="t-label border border-line px-4 py-3 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
             >
               Close
             </button>
@@ -170,7 +172,7 @@ export function Nav() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className="group flex items-center justify-between border-t border-ink-line py-4"
+                className="group flex items-center justify-between border-t border-line py-4"
                 style={{
                   transitionDelay: `${i * 0.06}s`,
                   opacity: open ? 1 : 0,
@@ -180,25 +182,25 @@ export function Nav() {
                 }}
               >
                 <span
-                  className="font-display font-extrabold uppercase leading-none tracking-[-0.04em] text-text-dark transition-transform duration-300 group-hover:translate-x-4"
+                  className="font-display font-extrabold uppercase leading-none tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4"
                   style={{ fontSize: "clamp(40px, 6vw, 84px)" }}
                 >
                   {item.label}
                 </span>
-                <span className="t-label text-acid transition-colors duration-300 group-hover:text-text-dark">
+                <span className="t-label text-acid-type transition-colors duration-300 group-hover:text-text">
                   [0{i + 1}]
                 </span>
               </Link>
             ))}
           </nav>
 
-          <div className="relative flex flex-wrap items-end justify-between gap-6 border-t border-ink-line pt-6">
-            <div className="t-label space-y-1 text-mute-dark">
+          <div className="relative flex flex-wrap items-end justify-between gap-6 border-t border-line pt-6">
+            <div className="t-label space-y-1 text-mute">
               {site.address.map((l) => (
                 <div key={l}>{l}</div>
               ))}
             </div>
-            <div className="t-label space-y-1 text-mute-dark">
+            <div className="t-label space-y-1 text-mute">
               <div>{site.phone}</div>
               <div>{site.instagram}</div>
             </div>

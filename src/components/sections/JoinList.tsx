@@ -29,15 +29,15 @@ export function JoinList() {
   };
 
   return (
-    <Section id="list" tone="dark" surface="bg-ink-deep" index="18" name="Join The List">
+    <Section id="list" tone="dark" surface="bg-surface-deep" index="18" name="Join The List">
       <div className="py-[110px] md:py-[140px]">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <Eyebrow tone="dark" surface="bg-ink-deep">
+            <Eyebrow tone="dark" surface="bg-surface-deep">
               One mail a month
             </Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[14ch] text-text-dark">Join the list</h2>
-            <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.65] text-mute-dark">
+            <h2 className="t-h2 mt-6 max-w-[14ch] text-text">Join the list</h2>
+            <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.65] text-mute">
               Drop dates, open studio nights, merch runs before they go public. No forwarding, no
               selling, one unsubscribe link that actually works.
             </p>
@@ -45,11 +45,11 @@ export function JoinList() {
 
           <div className="flex flex-col justify-end">
             {done ? (
-              <div className="border border-acid bg-ink-raised p-8">
-                <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid">
+              <div className="border border-acid-type bg-surface-raised p-8">
+                <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                   On the list
                 </span>
-                <p className="mt-3 font-ui text-[15px] text-text-dark">
+                <p className="mt-3 font-ui text-[15px] text-text">
                   You are in. Next mail goes out with the following drop.
                 </p>
               </div>
@@ -57,13 +57,13 @@ export function JoinList() {
               <form onSubmit={onSubmit} noValidate>
                 <label
                   htmlFor="join-email"
-                  className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute-dark"
+                  className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
                 >
                   Email address
                 </label>
                 <div
                   ref={fieldRef}
-                  className="group mt-3 flex items-center border-b border-ink-line transition-colors duration-300 focus-within:border-acid"
+                  className="group mt-3 flex items-center border-b border-line transition-colors duration-300 focus-within:border-acid-type"
                 >
                   <input
                     id="join-email"
@@ -71,17 +71,17 @@ export function JoinList() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@somewhere.in"
-                    className="h-[64px] w-full bg-transparent font-display text-[22px] font-bold uppercase tracking-[-0.01em] text-text-dark outline-none placeholder:text-[#4A4A4A] md:text-[28px]"
+                    className="h-[64px] w-full bg-transparent font-display text-[22px] font-bold uppercase tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] md:text-[28px]"
                   />
                   <button
                     type="submit"
                     aria-label="Join the mailing list"
                     className="flex h-[46px] w-[46px] shrink-0 items-center justify-center bg-acid transition-transform duration-300 hover:scale-[1.06]"
                   >
-                    <ArrowRight size={18} className="text-text-light" />
+                    <ArrowRight size={18} className="text-accent-text" />
                   </button>
                 </div>
-                <p className="mt-4 font-ui text-[11px] uppercase tracking-[0.12em] text-mute-dark">
+                <p className="mt-4 font-ui text-[11px] uppercase tracking-[0.12em] text-mute">
                   We mail once a month. Nothing else, ever.
                 </p>
               </form>

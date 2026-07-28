@@ -1,15 +1,23 @@
 export type Tone = "dark" | "light" | "acid";
 
+/* Acid is theme-independent, so its rules stay literal. The other two
+ * tones read their pole's token and therefore invert with the theme. */
 export const ruleColor: Record<Tone, string> = {
-  dark: "rgba(255,255,255,0.12)",
-  light: "rgba(0,0,0,0.12)",
+  dark: "var(--grid-rule)",
+  light: "var(--alt-grid-rule)",
   acid: "rgba(0,0,0,0.16)",
 };
 
 export const solidRuleColor: Record<Tone, string> = {
-  dark: "var(--ink-line)",
-  light: "var(--bone-line)",
+  dark: "var(--line)",
+  light: "var(--alt-line)",
   acid: "rgba(0,0,0,0.28)",
+};
+
+const crosshairColor: Record<Tone, string> = {
+  dark: "var(--line-strong)",
+  light: "var(--alt-line-strong)",
+  acid: "rgba(0,0,0,0.45)",
 };
 
 /**
@@ -46,7 +54,7 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
 
 /** A single drafting crosshair: two crossing 9px strokes. */
 export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; active?: boolean }) {
-  const c = active ? "var(--acid)" : tone === "dark" ? "#2A2A2A" : "rgba(0,0,0,0.45)";
+  const c = active ? "var(--accent)" : crosshairColor[tone];
   return (
     <span aria-hidden="true" className="pointer-events-none absolute block h-[9px] w-[9px]" style={{ transform: "translate(-4.5px, -4.5px)" }}>
       <span

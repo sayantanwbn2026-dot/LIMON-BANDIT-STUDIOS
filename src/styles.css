@@ -1,25 +1,84 @@
 @import "tailwindcss" source(none);
+@import "./theme-overrides.css";
 @source "../src";
 
 /* ------------------------------------------------------------------
  * LIMON BANDIT — design tokens
  * Editorial-brutalist. Square corners, hairline borders, no shadows.
+ *
+ * TWO POLES, NOT TWO THEMES.
+ * A section declares which pole it sits on — the primary set
+ * (--surface/--text/--line) or the opposite set (--alt-*). Flipping
+ * the theme inverts both poles at once, so the page's editorial
+ * rhythm survives inversion: in light mode the document is
+ * bone-dominant and FAQ + Journal become its two dark chapters.
+ *
+ * Components must never branch on the theme — only on their pole.
  * ------------------------------------------------------------------ */
 
-:root {
-  --ink: #070707;
-  --ink-deep: #050505;
-  --ink-raised: #0f0f0f;
-  --ink-line: #1e1e1e;
-  --bone: #f1f1ef;
-  --bone-line: #dbdbd7;
-  --text-dark: #f4f4f0;
-  --text-light: #080808;
-  --mute-dark: #9c9c9c;
-  --mute-light: #8d8d8d;
-  --acid: #e9ff00;
-  --acid-dim: #b8c900;
+:root,
+[data-theme="dark"] {
+  --surface-deep: #050505;
+  --surface: #070707;
+  --surface-raised: #0f0f0f;
+  --line: #1e1e1e;
+  --line-strong: #2a2a2a;
+  --text: #f4f4f0;
+  --mute: #9c9c9c;
 
+  /* the opposite pole */
+  --alt-surface: #f1f1ef;
+  --alt-surface-deep: #ededea;
+  --alt-line: #dbdbd7;
+  --alt-line-strong: #c6c6c1;
+  --alt-text: #080808;
+  --alt-mute: #6b6b68;
+
+  /* accent is theme-independent */
+  --accent: #e9ff00;
+  --accent-text: #080808; /* type ON acid, both themes */
+  --accent-dim: #b8c900; /* dimmed acid — decorative marks only, see note */
+
+  /* Acid as SURFACE is always #E9FF00. Acid as TYPE or fine stroke must
+   * dim whenever the surface under it is bone — so these follow the pole,
+   * not the theme: whichever pole is currently light gets the dim value.
+   *
+   * NOTE: the dim value here is #5F6B00, not --accent-dim (#B8C900).
+   * #B8C900 measures 1.63:1 on bone, which fails AA and even the 3:1
+   * large-text floor, and these tokens carry real numerals (metrics, room
+   * numbers, catalogue indices). #5F6B00 measures 5.17:1 and stays in the
+   * acid family (zero blue, green-dominant). */
+  --accent-type: #e9ff00;
+  --alt-accent-type: #5f6b00;
+
+  --grid-rule: rgba(255, 255, 255, 0.12);
+  --alt-grid-rule: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] {
+  --surface-deep: #ededea;
+  --surface: #f1f1ef;
+  --surface-raised: #f7f7f4;
+  --line: #dbdbd7;
+  --line-strong: #c6c6c1;
+  --text: #080808;
+  --mute: #6b6b68;
+
+  --alt-surface: #070707;
+  --alt-surface-deep: #050505;
+  --alt-line: #1e1e1e;
+  --alt-line-strong: #2a2a2a;
+  --alt-text: #f4f4f0;
+  --alt-mute: #9c9c9c;
+
+  --accent-type: #5f6b00;
+  --alt-accent-type: #e9ff00;
+
+  --grid-rule: rgba(0, 0, 0, 0.12);
+  --alt-grid-rule: rgba(255, 255, 255, 0.12);
+}
+
+:root {
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-mech: cubic-bezier(0.62, 0.05, 0.01, 0.99);
@@ -32,26 +91,37 @@
 
   /* shadcn compatibility shims (unused chrome, kept square) */
   --radius: 0px;
-  --background: #070707;
-  --foreground: #f4f4f0;
-  --border: #1e1e1e;
-  --input: #1e1e1e;
-  --ring: #e9ff00;
+  --background: var(--surface);
+  --foreground: var(--text);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--accent);
 }
 
 @theme inline {
-  --color-ink: var(--ink);
-  --color-ink-deep: var(--ink-deep);
-  --color-ink-raised: var(--ink-raised);
-  --color-ink-line: var(--ink-line);
-  --color-bone: var(--bone);
-  --color-bone-line: var(--bone-line);
-  --color-text-dark: var(--text-dark);
-  --color-text-light: var(--text-light);
-  --color-mute-dark: var(--mute-dark);
-  --color-mute-light: var(--mute-light);
-  --color-acid: var(--acid);
-  --color-acid-dim: var(--acid-dim);
+  /* primary pole */
+  --color-surface-deep: var(--surface-deep);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text: var(--text);
+  --color-mute: var(--mute);
+
+  /* opposite pole */
+  --color-alt-surface: var(--alt-surface);
+  --color-alt-surface-deep: var(--alt-surface-deep);
+  --color-alt-line: var(--alt-line);
+  --color-alt-line-strong: var(--alt-line-strong);
+  --color-alt-text: var(--alt-text);
+  --color-alt-mute: var(--alt-mute);
+
+  /* accent — kept under the `acid` utility name, the design vocabulary */
+  --color-acid: var(--accent); /* surfaces only — never dims */
+  --color-acid-type: var(--accent-type); /* type + fine strokes, primary pole */
+  --color-alt-acid-type: var(--alt-accent-type); /* type + fine strokes, alt pole */
+  --color-acid-dim: var(--accent-dim);
+  --color-accent-text: var(--accent-text);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -67,29 +137,29 @@
 
 @layer base {
   * {
-    border-color: var(--ink-line);
+    border-color: var(--line);
     border-radius: 0;
   }
 
   html {
-    background-color: var(--ink-deep);
+    background-color: var(--surface-deep);
   }
 
   body {
-    background-color: var(--ink-deep);
-    color: var(--text-dark);
+    background-color: var(--surface-deep);
+    color: var(--text);
     font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--acid);
-    color: var(--text-light);
+    background: var(--accent);
+    color: var(--accent-text);
   }
 
   :focus-visible {
-    outline: 2px solid var(--acid);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
 
@@ -192,6 +262,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Monochrome photography. In light mode --img-brightness lifts the image
+ * so it doesn't sit heavier than the bone surface around it. */
+@utility mono {
+  filter: grayscale(1) brightness(var(--img-brightness));
+}
+
 /* ---------------- reveal primitives ---------------- */
 
 @utility word-mask {
@@ -253,7 +329,7 @@
     right: 2px;
     bottom: -0.06em;
     height: 4px;
-    background: var(--acid);
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
   }
@@ -261,7 +337,7 @@
 
 @utility outline-type {
   color: transparent;
-  -webkit-text-stroke: 2px var(--text-dark);
+  -webkit-text-stroke: 2px var(--text);
   transition: color 0.4s var(--ease-out-expo);
 }
 
@@ -295,11 +371,11 @@
   animation: lb-pulse-dot 1.2s ease-in-out infinite;
 }
 
-/* ---------------- hero v3 poster wall ---------------- */
+/* ---------------- hero poster wall ---------------- */
 
 @utility hero-wall {
   position: relative;
-  background-image: linear-gradient(180deg, var(--text-dark) 0%, #8a8a86 100%);
+  background-image: linear-gradient(180deg, var(--wordmark-from) 0%, var(--wordmark-to) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

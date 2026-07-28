@@ -45,7 +45,7 @@ export function DropRail() {
     <section
       ref={root}
       id="drops"
-      className="relative w-full overflow-hidden bg-ink-deep"
+      className="relative w-full overflow-hidden bg-surface-deep"
     >
       <BoundaryRule tone="dark" className="top-0" />
       <GridRules tone="dark" />
@@ -55,11 +55,11 @@ export function DropRail() {
         <div className="shell flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark">Label output</Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[18ch] text-text-dark">
+            <h2 className="t-h2 mt-6 max-w-[18ch] text-text">
               Everything the house has pressed
             </h2>
           </div>
-          <GhostLink label="Full catalogue" to="/label" className="text-mute-dark" />
+          <GhostLink label="Full catalogue" to="/label" className="text-mute" />
         </div>
 
         <div className="mt-14 w-full overflow-hidden">
@@ -70,7 +70,7 @@ export function DropRail() {
             {drops.map((d) => (
               <article
                 key={d.id}
-                className="group w-[280px] shrink-0 snap-start border border-ink-line bg-ink md:w-[340px]"
+                className="group w-[280px] shrink-0 snap-start border border-line bg-surface md:w-[340px]"
               >
                 <div className="relative overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
                   <img
@@ -80,31 +80,31 @@ export function DropRail() {
                     height={1024}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-[1.05]"
-                    style={{ filter: "grayscale(1) contrast(1.05)" }}
+                    style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.05)" }}
                   />
-                  <span className="absolute left-0 top-0 bg-ink-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] tnum text-acid">
+                  <span className="absolute left-0 top-0 bg-surface-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] tnum text-acid-type">
                     {d.index}
                   </span>
                   <span
                     className={`absolute bottom-0 right-0 px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] ${
                       d.status === "Out now"
-                        ? "bg-acid text-text-light"
-                        : "bg-ink-deep text-mute-dark"
+                        ? "bg-acid text-accent-text"
+                        : "bg-surface-deep text-mute"
                     }`}
                   >
                     {d.status}
                   </span>
                 </div>
-                <div className="border-t border-ink-line p-5">
-                  <h3 className="font-display text-[22px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text-dark">
+                <div className="border-t border-line p-5">
+                  <h3 className="font-display text-[22px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text">
                     {d.title}
                   </h3>
-                  <p className="mt-2 font-ui text-[13px] text-mute-dark">{d.artist}</p>
-                  <div className="mt-5 flex items-center justify-between border-t border-ink-line pt-4">
-                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] text-mute-dark">
+                  <p className="mt-2 font-ui text-[13px] text-mute">{d.artist}</p>
+                  <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
+                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] text-mute">
                       {d.format}
                     </span>
-                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] tnum text-mute-dark">
+                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] tnum text-mute">
                       {d.date}
                     </span>
                   </div>
@@ -115,17 +115,17 @@ export function DropRail() {
         </div>
 
         <div className="shell mt-12 flex items-center gap-5">
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute-dark">
+          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
             Drag / Scroll
           </span>
-          <span className="relative h-px flex-1 bg-ink-line">
+          <span className="relative h-px flex-1 bg-line">
             <span
               ref={bar}
               className="absolute inset-0 origin-left bg-acid"
               style={{ transform: "scaleX(0)" }}
             />
           </span>
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] tnum text-mute-dark">
+          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] tnum text-mute">
             {String(drops.length).padStart(2, "0")} releases
           </span>
         </div>

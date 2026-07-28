@@ -14,11 +14,11 @@ export function Faq() {
       <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
-            <span className="h-[10px] w-[10px] bg-acid-dim" />
-            <span className="t-eyebrow text-text-light">Questions</span>
+            <span className="h-[10px] w-[10px] bg-alt-acid-type" />
+            <span className="t-eyebrow text-alt-text">Questions</span>
           </div>
 
-          <div className="mt-10 border border-bone-line p-8">
+          <div className="mt-10 border border-alt-line p-8">
             <img
               src={mascot}
               alt=""
@@ -28,12 +28,12 @@ export function Faq() {
               loading="lazy"
               className="h-[120px] w-auto opacity-25"
             />
-            <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text-light">
+            <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
               Still stuck?
             </div>
             <a
               href="/contact"
-              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-text-light font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-bone"
+              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface"
             >
               Message us <ArrowRight size={14} />
             </a>
@@ -43,7 +43,7 @@ export function Faq() {
         <div className="md:col-span-3">
           <WordReveal
             as="h2"
-            className="t-h2 text-text-light"
+            className="t-h2 text-alt-text"
             text={"The things people ask\nbefore they book."}
           />
 
@@ -51,7 +51,7 @@ export function Faq() {
             {faq.map((item, i) => {
               const isOpen = open === i;
               return (
-                <div key={item.question} className="border-t border-bone-line">
+                <div key={item.question} className="border-t border-alt-line">
                   <h3>
                     <button
                       type="button"
@@ -61,13 +61,13 @@ export function Faq() {
                       onClick={() => setOpen(isOpen ? -1 : i)}
                       className="flex w-full items-center gap-6 py-8 text-left"
                     >
-                      <span className="tnum font-ui text-[13px] text-mute-light">
+                      <span className="tnum font-ui text-[13px] text-alt-mute">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="flex-1 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text-light">
+                      <span className="flex-1 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
                         {item.question}
                       </span>
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center text-text-light">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center text-alt-text">
                         {isOpen ? <Minus size={20} /> : <Plus size={20} />}
                       </span>
                     </button>
@@ -84,7 +84,7 @@ export function Faq() {
                   >
                     <div className="overflow-hidden">
                       <p
-                        className="max-w-[60ch] pb-8 pl-[52px] font-ui text-[16px] leading-[1.5] text-mute-light"
+                        className="max-w-[60ch] pb-8 pl-[52px] font-ui text-[16px] leading-[1.5] text-alt-mute"
                         style={{
                           opacity: isOpen ? 1 : 0,
                           transition: "opacity 0.35s ease 0.08s",

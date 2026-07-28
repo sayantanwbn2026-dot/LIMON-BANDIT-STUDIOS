@@ -44,23 +44,23 @@ export function Rooms() {
   }, [active]);
 
   return (
-    <Section id="rooms" tone="dark" surface="bg-ink" index="06" name="The Rooms">
+    <Section id="rooms" tone="dark" surface="bg-surface" index="06" name="The Rooms">
       <div ref={root} className="py-[120px] md:py-[160px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <Eyebrow tone="dark" surface="bg-ink">
+            <Eyebrow tone="dark" surface="bg-surface">
               Four rooms, one building
             </Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[16ch] text-text-dark">The rooms, room by room</h2>
+            <h2 className="t-h2 mt-6 max-w-[16ch] text-text">The rooms, room by room</h2>
           </div>
-          <GhostLink label="See availability" to="/rooms" className="text-mute-dark" />
+          <GhostLink label="See availability" to="/rooms" className="text-mute" />
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           {/* sticky visual */}
           <div className="hidden lg:block">
             <div className="sticky top-[14vh]">
-              <div className="relative border border-ink-line" style={{ aspectRatio: "4 / 5" }}>
+              <div className="relative border border-line" style={{ aspectRatio: "4 / 5" }}>
                 {rooms.map((r, i) => (
                   <img
                     key={r.id}
@@ -74,14 +74,14 @@ export function Rooms() {
                     style={{
                       opacity: i === active ? 1 : 0,
                       zIndex: i === active ? 2 : 1,
-                      filter: "grayscale(1) contrast(1.08)",
+                      filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
                     }}
                   />
                 ))}
-                <span className="absolute left-0 top-0 z-[3] bg-acid px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-text-light">
+                <span className="absolute left-0 top-0 z-[3] bg-acid px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-accent-text">
                   Fig. {rooms[active].index} — {rooms[active].name}
                 </span>
-                <span className="absolute bottom-0 right-0 z-[3] bg-ink-deep px-3 py-1 font-ui text-[11px] font-bold uppercase tracking-[0.14em] tnum text-acid">
+                <span className="absolute bottom-0 right-0 z-[3] bg-surface-deep px-3 py-1 font-ui text-[11px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                   {rooms[active].rate}
                 </span>
               </div>
@@ -90,7 +90,7 @@ export function Rooms() {
                   <span
                     key={r.id}
                     className="h-px flex-1 transition-colors duration-500"
-                    style={{ background: i === active ? "var(--acid)" : "var(--ink-line)" }}
+                    style={{ background: i === active ? "var(--accent)" : "var(--line)" }}
                   />
                 ))}
               </div>
@@ -103,16 +103,16 @@ export function Rooms() {
               <article
                 key={r.id}
                 data-room-item
-                className="border-t border-ink-line py-10 first:border-t-0 first:pt-0"
+                className="border-t border-line py-10 first:border-t-0 first:pt-0"
               >
                 <div className="flex items-baseline gap-4">
-                  <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid">
+                  <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
                     {r.index}
                   </span>
-                  <h3 className="font-display text-[32px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text-dark md:text-[40px]">
+                  <h3 className="font-display text-[32px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[40px]">
                     {r.name}
                   </h3>
-                  <span className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute-dark">
+                  <span className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute">
                     {r.kind}
                   </span>
                 </div>
@@ -123,21 +123,21 @@ export function Rooms() {
                   width={1024}
                   height={1280}
                   loading="lazy"
-                  className="mt-6 block h-[220px] w-full border border-ink-line object-cover lg:hidden"
-                  style={{ filter: "grayscale(1) contrast(1.08)" }}
+                  className="mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
+                  style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
                 />
 
-                <p className="mt-5 max-w-[46ch] font-ui text-[15px] leading-[1.65] text-mute-dark">
+                <p className="mt-5 max-w-[46ch] font-ui text-[15px] leading-[1.65] text-mute">
                   {r.blurb}
                 </p>
 
                 <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3">
                   {r.specs.map((s) => (
-                    <div key={s.k} className="flex items-baseline gap-2 border-b border-ink-line pb-2">
-                      <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute-dark">
+                    <div key={s.k} className="flex items-baseline gap-2 border-b border-line pb-2">
+                      <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
                         {s.k}
                       </dt>
-                      <dd className="ml-auto font-ui text-[12px] font-semibold uppercase tracking-[0.08em] tnum text-text-dark">
+                      <dd className="ml-auto font-ui text-[12px] font-semibold uppercase tracking-[0.08em] tnum text-text">
                         {s.v}
                       </dd>
                     </div>
@@ -145,10 +145,10 @@ export function Rooms() {
                 </dl>
 
                 <div className="mt-6 flex items-center justify-between">
-                  <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid">
+                  <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                     {r.rate}
                   </span>
-                  <GhostLink label="Book this room" to="/contact" className="text-text-dark" />
+                  <GhostLink label="Book this room" to="/contact" className="text-text" />
                 </div>
               </article>
             ))}

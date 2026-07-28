@@ -58,22 +58,22 @@ export function Preloader() {
     <div
       ref={root}
       aria-hidden="true"
-      className="fixed inset-0 z-[10000] flex items-end bg-ink-deep"
+      className="fixed inset-0 z-[10000] flex items-end bg-surface-deep"
       style={{ clipPath: "inset(0 0 0% 0)" }}
     >
       <div data-pre-inner className="shell w-full pb-[10vh]">
         <div className="flex items-end justify-between">
-          <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-mute-dark">
+          <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-mute">
             Limon Bandit — Kolkata
           </span>
           <span
-            className="font-display font-extrabold leading-[0.8] tnum text-text-dark"
+            className="font-display font-extrabold leading-[0.8] tnum text-text"
             style={{ fontSize: "clamp(72px, 12vw, 180px)", letterSpacing: "-0.04em" }}
           >
             {String(n).padStart(3, "0")}
           </span>
         </div>
-        <span className="mt-6 block h-px w-full bg-ink-line">
+        <span className="mt-6 block h-px w-full bg-line">
           <span
             data-pre-bar
             className="block h-px w-full origin-left bg-acid"

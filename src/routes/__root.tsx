@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { THEME_INIT_SCRIPT } from "../lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -84,6 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
       },
       { name: "author", content: "Limon Bandit" },
+      /* overwritten per-theme by THEME_INIT_SCRIPT before first paint */
+      { name: "theme-color", content: "#050505" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "Limon Bandit — Kolkata Music House" },
@@ -120,9 +123,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    /* THEME_INIT_SCRIPT sets data-theme on <html> before React hydrates, so
+       the client DOM legitimately differs from the server markup here. */
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* Must stay in <head> and stay blocking — it sets data-theme before
+            the first paint, which is what prevents a flash of the wrong
+            theme on load. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
         {children}

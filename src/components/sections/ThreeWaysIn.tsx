@@ -92,14 +92,14 @@ export function ThreeWaysIn() {
   }, []);
 
   return (
-    <Section id="doors" tone="dark" surface="bg-ink-deep" index="05" name="Three Ways In">
+    <Section id="doors" tone="dark" surface="bg-surface-deep" index="05" name="Three Ways In">
       <div className="pt-[140px]">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
-            <Eyebrow surface="bg-ink-deep">Three ways in</Eyebrow>
+            <Eyebrow surface="bg-surface-deep">Three ways in</Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <WordReveal as="h2" className="t-h2 text-text-dark" text={"Pick your door."} />
+            <WordReveal as="h2" className="t-h2 text-text" text={"Pick your door."} />
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@ export function ThreeWaysIn() {
               imgClassName="h-full w-full object-cover"
               width={1792}
               height={768}
-              style={{ filter: "grayscale(1) contrast(1.08)" }}
+              style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
             />
 
             <div className="relative mx-auto w-full max-w-[1400px] lg:w-[84vw]">
@@ -139,18 +139,18 @@ export function ThreeWaysIn() {
                   {/* front — photograph slice */}
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 hidden border border-ink-line lg:block"
+                    className="absolute inset-0 hidden border border-line lg:block"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       backgroundImage: `url(${corridor})`,
                       backgroundSize: "300% 100%",
                       backgroundPosition: `${i * 50}% 50%`,
-                      filter: "grayscale(1) contrast(1.08)",
+                      filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
                     }}
                   >
                     {i === 1 ? (
-                      <span className="absolute left-0 top-0 block h-[22px] w-[22px] border-l-2 border-t-2 border-acid" />
+                      <span className="absolute left-0 top-0 block h-[22px] w-[22px] border-l-2 border-t-2 border-acid-type" />
                     ) : null}
                   </div>
 
@@ -219,7 +219,7 @@ export function ThreeWaysIn() {
             {/* progress rail */}
             <div className="mx-auto mt-8 hidden w-[84vw] max-w-[1400px] grid-cols-3 gap-6 lg:grid">
               {[0, 1, 2].map((i) => (
-                <span key={i} className="relative block h-px w-full bg-ink-line">
+                <span key={i} className="relative block h-px w-full bg-line">
                   <span
                     data-rail={i}
                     className="absolute inset-0 block origin-left bg-acid"
