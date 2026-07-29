@@ -6,6 +6,7 @@ import { Ticker } from "@/components/lb/Ticker";
 import { testimonials } from "@/data/testimonials";
 import { testimonialTicker } from "@/data/tickers";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { Picture } from "@/components/lb/Picture";
 
 export function Testimonials() {
   const ref = useRef<HTMLElement>(null);
@@ -52,14 +53,11 @@ export function Testimonials() {
             <div className="flex items-center gap-4">
               <div className="flex">
                 {testimonials.slice(0, 3).map((t, i) => (
-                  <img
+                  <Picture
                     key={t.name}
                     src={t.photo}
+                    sizes="44px"
                     alt=""
-                    aria-hidden="true"
-                    width={40}
-                    height={40}
-                    loading="lazy"
                     className="h-10 w-10 border border-acid object-cover mono"
                     style={{ marginLeft: i === 0 ? 0 : -10 }}
                   />
@@ -101,12 +99,10 @@ export function Testimonials() {
                     </blockquote>
                     <div className="mt-8 h-px w-full bg-line" />
                     <div className="mt-6 flex items-center gap-4">
-                      <img
+                      <Picture
                         src={t.photo}
+                        sizes="44px"
                         alt={`Portrait of ${t.name}`}
-                        width={44}
-                        height={44}
-                        loading="lazy"
                         className="h-11 w-11 object-cover mono"
                       />
                       <div className="min-w-0 flex-1">

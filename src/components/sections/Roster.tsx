@@ -4,6 +4,7 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { releases } from "@/data/releases";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { Picture } from "@/components/lb/Picture";
 
 export function Roster() {
   const ref = useRef<HTMLDivElement>(null);
@@ -69,12 +70,10 @@ export function Roster() {
             data-cursor="play"
             className={`group relative block overflow-hidden border border-line ${r.span} ${r.height}`}
           >
-            <img
+            <Picture
               src={r.cover}
+              sizes="(max-width: 767px) 100vw, 33vw"
               alt={r.alt}
-              width={900}
-              height={900}
-              loading="lazy"
               className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06]"
               style={{
                 filter: "grayscale(1) brightness(var(--img-brightness))",

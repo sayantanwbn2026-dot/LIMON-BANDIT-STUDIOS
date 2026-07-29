@@ -3,7 +3,7 @@ import { ArrowRight, Minus, Plus } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { faq } from "@/data/faq";
-import mascot from "@/assets/limon-mascot.png";
+import { Picture } from "@/components/lb/Picture";
 
 export function Faq() {
   const [open, setOpen] = useState(0);
@@ -20,13 +20,10 @@ export function Faq() {
           </div>
 
           <div className="mt-10 border border-alt-line p-8">
-            <img
-              src={mascot}
+            <Picture
+              src="limon-mascot"
+              sizes="120px"
               alt=""
-              aria-hidden="true"
-              width={1024}
-              height={1280}
-              loading="lazy"
               className="h-[120px] w-auto opacity-25"
             />
             <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">

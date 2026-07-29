@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { posts } from "@/data/journal";
+import { Picture } from "@/components/lb/Picture";
 
 export function Journal() {
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
@@ -37,12 +38,10 @@ export function Journal() {
         {posts.map((p, i) => (
           <RiseIn key={p.title} delay={i * 0.08}>
             <a href="/journal" className="group block">
-              <img
+              <Picture
                 src={p.image}
+                sizes="(max-width: 767px) 100vw, 30vw"
                 alt={p.alt}
-                width={1000}
-                height={750}
-                loading="lazy"
                 className="aspect-[4/3] w-full border border-alt-line object-cover transition-all duration-500"
                 style={{ filter: "grayscale(1) brightness(var(--img-brightness))" }}
                 onMouseEnter={(e) =>

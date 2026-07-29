@@ -148,7 +148,7 @@ the results:
   and must be silent. The proof band and marquee must not be read as content.
 - **Reduced motion**: with the OS preference set, load every page and scroll
   it end to end. No pin, no scrub, no marquee, no decode effect, no reveal
-  offsets left stranded. The site must be *complete* without motion, not
+  offsets left stranded. The site must be _complete_ without motion, not
   merely still.
 - **400% zoom** at 1280 width, per WCAG 1.4.10 reflow: no horizontal scroll,
   no clipped content, no overlapped text.

@@ -4,7 +4,7 @@ import { navItems, site } from "@/data/site";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { ThemeToggle } from "@/components/lb/ThemeToggle";
-import mascot from "@/assets/limon-mascot.png";
+import { Picture } from "@/components/lb/Picture";
 
 /** Home lives on the logotype, so the menu carries the remaining six. */
 const menuLinks = navItems.slice(1);
@@ -199,13 +199,10 @@ export function Nav() {
               <span className="shrink-0">{site.instagram}</span>
             </div>
 
-            <img
-              src={mascot}
+            <Picture
+              src="limon-mascot"
+              sizes="88px"
               alt=""
-              aria-hidden="true"
-              width={1024}
-              height={1280}
-              loading="lazy"
               className="lb-menu-mascot pointer-events-none absolute bottom-0 right-[var(--page-margin)] w-auto opacity-15"
             />
           </div>

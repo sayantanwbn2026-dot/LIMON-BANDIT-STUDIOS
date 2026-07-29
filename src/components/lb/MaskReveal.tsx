@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { Picture } from "./Picture";
+import type { ImageKey } from "@/generated/images";
 
 /**
  * MaskReveal — plotter-style left-to-right clip reveal for images.
@@ -12,19 +14,17 @@ export function MaskReveal({
   imgClassName,
   style,
   delay = 0,
-  loading = "lazy",
-  width,
-  height,
+  sizes = "(max-width: 767px) 50vw, 25vw",
+  priority = false,
 }: {
-  src: string;
+  src: ImageKey;
   alt: string;
   className?: string;
   imgClassName?: string;
   style?: React.CSSProperties;
   delay?: number;
-  loading?: "lazy" | "eager";
-  width?: number;
-  height?: number;
+  sizes?: string;
+  priority?: boolean;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
 
@@ -49,12 +49,11 @@ export function MaskReveal({
 
   return (
     <div ref={wrap} className={`overflow-hidden ${className ?? ""}`} style={style}>
-      <img
+      <Picture
         src={src}
         alt={alt}
-        width={width}
-        height={height}
-        loading={loading}
+        sizes={sizes}
+        priority={priority}
         className={imgClassName ?? "h-full w-full object-cover"}
       />
     </div>

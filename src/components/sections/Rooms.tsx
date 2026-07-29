@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { rooms } from "@/data/rooms";
+import { Picture } from "@/components/lb/Picture";
 
 export function Rooms() {
   const root = useRef<HTMLDivElement>(null);
@@ -62,14 +63,12 @@ export function Rooms() {
             <div className="sticky top-[14vh]">
               <div className="relative border border-line" style={{ aspectRatio: "4 / 5" }}>
                 {rooms.map((r, i) => (
-                  <img
+                  <Picture
                     key={r.id}
                     data-room-img={i}
                     src={r.image}
+                    sizes="(max-width: 1023px) 100vw, 45vw"
                     alt={`${r.name} — ${r.kind} at Limon Bandit`}
-                    width={1024}
-                    height={1280}
-                    loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover"
                     style={{
                       opacity: i === active ? 1 : 0,
@@ -117,12 +116,10 @@ export function Rooms() {
                   </span>
                 </div>
 
-                <img
+                <Picture
                   src={r.image}
+                  sizes="(max-width: 1023px) 100vw, 45vw"
                   alt={`${r.name} — ${r.kind} at Limon Bandit`}
-                  width={1024}
-                  height={1280}
-                  loading="lazy"
                   className="mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
                   style={{
                     filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",

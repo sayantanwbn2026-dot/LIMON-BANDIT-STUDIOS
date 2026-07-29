@@ -5,7 +5,7 @@ import { MarginNotes } from "@/components/lb/Section";
 import { Decode } from "@/components/lb/Decode";
 import { LocalTime } from "@/components/lb/LocalTime";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import mascot from "@/assets/limon-mascot.png";
+import { Picture } from "@/components/lb/Picture";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
@@ -409,12 +409,12 @@ export function Hero() {
       >
         {/* scene layer — grows from his stance, not his centre */}
         <div ref={limonRef} className="h-full w-full" style={{ transformOrigin: "50% 85%" }}>
-          <img
-            src={mascot}
+          {/* The one priority image on the site — it is the LCP. */}
+          <Picture
+            src="limon-mascot"
             alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
-            width={1024}
-            height={1280}
-            fetchPriority="high"
+            sizes="(max-width: 767px) 45vw, (max-width: 1023px) 360px, 660px"
+            priority
             className="block h-full w-auto max-w-none object-contain"
             style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
           />

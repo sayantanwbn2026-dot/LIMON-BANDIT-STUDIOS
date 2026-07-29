@@ -6,7 +6,10 @@ import { WordReveal } from "@/components/lb/Reveal";
 import { MaskReveal } from "@/components/lb/MaskReveal";
 import { doors } from "@/data/doors";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import corridor from "@/assets/split-corridor.jpg";
+/* The three door plates are CSS background slices of one photograph, so this
+ * one needs a plain URL rather than a <picture>. Points at the generated
+ * AVIF — same pipeline, just consumed as a background. */
+const CORRIDOR = "/img/split-corridor-1440.avif";
 
 /**
  * Three Ways In — one photograph that splits into three plates and flips
@@ -119,12 +122,11 @@ export function ThreeWaysIn() {
           <div className="w-full">
             {/* mobile / reduced-motion photograph */}
             <MaskReveal
-              src={corridor}
+              src="split-corridor"
               alt="The corridor outside the three rooms at the Limon Bandit house"
               className="mb-10 aspect-[21/9] w-full lg:hidden"
               imgClassName="h-full w-full object-cover"
-              width={1792}
-              height={768}
+              sizes="100vw"
               style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
             />
 
@@ -148,7 +150,7 @@ export function ThreeWaysIn() {
                       style={{
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
-                        backgroundImage: `url(${corridor})`,
+                        backgroundImage: `url(${CORRIDOR})`,
                         backgroundSize: "300% 100%",
                         backgroundPosition: `${i * 50}% 50%`,
                         filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",

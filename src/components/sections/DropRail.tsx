@@ -5,6 +5,7 @@ import { MarginNotes } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { drops } from "@/data/drops";
+import { Picture } from "@/components/lb/Picture";
 
 export function DropRail() {
   const root = useRef<HTMLElement>(null);
@@ -67,12 +68,10 @@ export function DropRail() {
                 className="group w-[280px] shrink-0 snap-start border border-line bg-surface md:w-[340px]"
               >
                 <div className="relative overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
-                  <img
+                  <Picture
                     src={d.image}
+                    sizes="(max-width: 767px) 280px, 340px"
                     alt={`${d.title} by ${d.artist} — cover art`}
-                    width={1024}
-                    height={1024}
-                    loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-[1.05]"
                     style={{
                       filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.05)",

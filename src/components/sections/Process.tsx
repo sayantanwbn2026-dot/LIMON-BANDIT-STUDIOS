@@ -1,6 +1,7 @@
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { PushIn, WordReveal } from "@/components/lb/Reveal";
 import { processSteps } from "@/data/process";
+import { Picture } from "@/components/lb/Picture";
 
 export function Process() {
   return (
@@ -26,12 +27,10 @@ export function Process() {
               </h3>
               <p className="font-ui text-[16px] leading-[1.5] text-mute">{s.description}</p>
               <div className="flex md:justify-end">
-                <img
+                <Picture
                   src={s.thumb}
+                  sizes="120px"
                   alt={s.alt}
-                  width={120}
-                  height={120}
-                  loading="lazy"
                   className="h-[120px] w-[120px] scale-90 border border-line object-cover opacity-0 mono transition-all duration-[400ms] group-hover:scale-100 group-hover:opacity-100"
                 />
               </div>

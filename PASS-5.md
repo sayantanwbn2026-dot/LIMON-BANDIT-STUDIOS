@@ -327,11 +327,11 @@ The only page where the site asks the user to do work. It gets the most care.
    monochrome map image, on the grid, not an embedded third-party map iframe
    (it would break the aesthetic, the theme, and the performance budget).
 2. **The form.** One column, 640px, generous.
-   - Intent selector first — *Book a room / Submit a demo / Hire the crew /
-     Something else* — as four large radio panels, because it changes which
+   - Intent selector first — _Book a room / Submit a demo / Hire the crew /
+     Something else_ — as four large radio panels, because it changes which
      fields follow.
    - Conditional fields per intent (room + date + duration; track links; brief
-     + budget; free text).
+     - budget; free text).
    - Validation is **on blur, then on change once touched** — never on every
      keystroke from empty. Errors are stated in words beneath the field, in
      `--accent-type` on the primary pole, and the field's border goes to

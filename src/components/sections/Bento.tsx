@@ -3,14 +3,7 @@ import { ArrowRight, Pause, Play } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import tee from "@/assets/merch-tee.jpg";
-import roomA from "@/assets/room-a.jpg";
-import c1 from "@/assets/release-01.jpg";
-import c2 from "@/assets/release-02.jpg";
-import c3 from "@/assets/release-03.jpg";
-import c4 from "@/assets/release-04.jpg";
-import c5 from "@/assets/release-05.jpg";
-import c6 from "@/assets/release-06.jpg";
+import { Picture } from "@/components/lb/Picture";
 
 const queue = [
   { title: "Rusted Gold", time: "3:41" },
@@ -19,7 +12,14 @@ const queue = [
 ];
 
 const crew = ["Video", "Cover art", "Photo", "Mixing", "Mastering", "Press"];
-const avatars = [c1, c2, c3, c4, c5, c6];
+const avatars = [
+  "release-01",
+  "release-02",
+  "release-03",
+  "release-04",
+  "release-05",
+  "release-06",
+] as const;
 
 export function Bento() {
   const ref = useRef<HTMLDivElement>(null);
@@ -103,13 +103,10 @@ export function Bento() {
         {/* 1 — player */}
         <div data-tile className="bg-surface-raised p-8 lg:col-span-2">
           <div className="flex items-center gap-4">
-            <img
-              src={c1}
+            <Picture
+              src={"release-01"}
+              sizes="(max-width: 767px) 100vw, 50vw"
               alt=""
-              aria-hidden="true"
-              width={64}
-              height={64}
-              loading="lazy"
               className="h-16 w-16 object-cover mono"
             />
             <div className="min-w-0 flex-1">
@@ -162,12 +159,10 @@ export function Bento() {
           <span className="t-label absolute left-6 top-6 z-[2] bg-acid px-3 py-1 text-accent-text">
             Sold direct
           </span>
-          <img
-            src={tee}
+          <Picture
+            src={"merch-tee"}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="The house tee hanging against a concrete wall"
-            width={1000}
-            height={1250}
-            loading="lazy"
             className="h-full min-h-[320px] w-full flex-1 object-cover mono"
           />
           <div className="p-8">
@@ -186,12 +181,10 @@ export function Bento() {
 
         {/* 3 — rooms */}
         <div data-tile className="relative min-h-[280px] overflow-hidden bg-surface-raised">
-          <img
-            src={roomA}
+          <Picture
+            src={"room-a"}
+            sizes="(max-width: 767px) 100vw, 50vw"
             alt="Room A set up for a live session"
-            width={1600}
-            height={900}
-            loading="lazy"
             className="absolute inset-0 h-full w-full object-cover opacity-45 mono"
           />
           <div className="relative flex h-full flex-col justify-between p-8">
@@ -218,14 +211,11 @@ export function Bento() {
         >
           <div className="flex">
             {avatars.map((a, i) => (
-              <img
+              <Picture
                 key={i}
                 src={a}
+                sizes="(max-width: 767px) 100vw, 50vw"
                 alt=""
-                aria-hidden="true"
-                width={40}
-                height={40}
-                loading="lazy"
                 className="h-10 w-10 border border-surface-raised object-cover mono"
                 style={{ marginLeft: i === 0 ? 0 : -10 }}
               />

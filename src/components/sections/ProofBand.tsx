@@ -2,12 +2,9 @@ import { Ticker, TickerItem } from "@/components/lb/Ticker";
 import { GridRules } from "@/components/lb/GridRules";
 import { partners, proofTicker } from "@/data/tickers";
 import { Star } from "lucide-react";
-import a1 from "@/assets/release-01.jpg";
-import a2 from "@/assets/release-02.jpg";
-import a3 from "@/assets/release-03.jpg";
-import a4 from "@/assets/release-06.jpg";
+import { Picture } from "@/components/lb/Picture";
 
-const avatars = [a1, a2, a3, a4];
+const avatars = ["release-01", "release-02", "release-03", "release-06"] as const;
 
 export function ProofBand() {
   return (
@@ -25,14 +22,11 @@ export function ProofBand() {
         <div className="shell flex h-[64px] flex-wrap items-center justify-center gap-5 border-b border-line">
           <div className="flex">
             {avatars.map((a, i) => (
-              <img
+              <Picture
                 key={i}
                 src={a}
+                sizes="36px"
                 alt=""
-                aria-hidden="true"
-                width={72}
-                height={72}
-                loading="lazy"
                 className="h-9 w-9 border border-surface-deep object-cover"
                 style={{
                   marginLeft: i === 0 ? 0 : -10,

@@ -4,7 +4,7 @@ import { GridRules } from "@/components/lb/GridRules";
 import { Logotype } from "./Nav";
 import { navItems, site } from "@/data/site";
 import { releases } from "@/data/releases";
-import mascot from "@/assets/limon-mascot.png";
+import { Picture } from "@/components/lb/Picture";
 
 export function Footer() {
   return (
@@ -92,13 +92,10 @@ export function Footer() {
         >
           Limon Bandit
         </span>
-        <img
-          src={mascot}
+        <Picture
+          src="limon-mascot"
+          sizes="120px"
           alt=""
-          aria-hidden="true"
-          width={1024}
-          height={1280}
-          loading="lazy"
           className="pointer-events-none absolute bottom-0 right-[var(--page-margin)] h-[8vw] max-h-[120px] w-auto opacity-[0.12]"
         />
       </div>

@@ -1,17 +1,11 @@
-import cover1 from "@/assets/release-01.jpg";
-import cover2 from "@/assets/release-02.jpg";
-import cover3 from "@/assets/release-03.jpg";
-import cover4 from "@/assets/release-04.jpg";
-import cover5 from "@/assets/release-05.jpg";
-import cover6 from "@/assets/release-06.jpg";
-
+import type { ImageKey } from "@/generated/images";
 export type Release = {
   artist: string;
   title: string;
   genre: string;
   runtime: string;
   year: string;
-  cover: string;
+  cover: ImageKey;
   alt: string;
   /** tailwind grid span classes for the asymmetric grid */
   span: string;
@@ -26,7 +20,7 @@ export const releases: Release[] = [
     genre: "Post-punk",
     runtime: "34 min",
     year: "2025",
-    cover: cover1,
+    cover: "release-01",
     alt: "Cover art for Rusted Gold by Rana & The Strays",
     span: "lg:col-span-2",
     height: "h-[460px]",
@@ -37,7 +31,7 @@ export const releases: Release[] = [
     genre: "Bengali hip-hop",
     runtime: "41 min",
     year: "2025",
-    cover: cover2,
+    cover: "release-02",
     alt: "Cover art for Basement Tapes Vol. 2 by Kaalo",
     span: "lg:col-span-2",
     height: "h-[420px]",
@@ -48,7 +42,7 @@ export const releases: Release[] = [
     genre: "Lo-fi soul",
     runtime: "28 min",
     year: "2024",
-    cover: cover3,
+    cover: "release-03",
     alt: "Cover art for Late Fee by Misfit Mohan",
     span: "lg:col-span-1",
     height: "h-[560px]",
@@ -59,7 +53,7 @@ export const releases: Release[] = [
     genre: "Instrumental",
     runtime: "52 min",
     year: "2024",
-    cover: cover4,
+    cover: "release-04",
     alt: "Cover art for Terminus by Tram No. 12",
     span: "lg:col-span-3",
     height: "h-[560px]",
@@ -70,7 +64,7 @@ export const releases: Release[] = [
     genre: "Shoegaze",
     runtime: "37 min",
     year: "2024",
-    cover: cover5,
+    cover: "release-05",
     alt: "Cover art for Sodium Light by Neel Dust",
     span: "lg:col-span-3",
     height: "h-[440px]",
@@ -81,7 +75,7 @@ export const releases: Release[] = [
     genre: "Club",
     runtime: "46 min",
     year: "2023",
-    cover: cover6,
+    cover: "release-06",
     alt: "Cover art for Park Circus Edits by DJ Shona",
     span: "lg:col-span-1",
     height: "h-[440px]",

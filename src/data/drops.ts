@@ -1,11 +1,4 @@
-import r1 from "@/assets/release-01.jpg";
-import r2 from "@/assets/release-02.jpg";
-import r3 from "@/assets/release-03.jpg";
-import r4 from "@/assets/release-04.jpg";
-import r5 from "@/assets/release-05.jpg";
-import r6 from "@/assets/release-06.jpg";
-import tee from "@/assets/merch-tee.jpg";
-
+import type { ImageKey } from "@/generated/images";
 export type Drop = {
   id: string;
   index: string;
@@ -14,7 +7,7 @@ export type Drop = {
   format: string;
   date: string;
   status: "Out now" | "Pre-order" | "Sold out";
-  image: string;
+  image: ImageKey;
 };
 
 export const drops: Drop[] = [
@@ -26,7 +19,7 @@ export const drops: Drop[] = [
     format: '12" + digital',
     date: "Mar 2026",
     status: "Out now",
-    image: r1,
+    image: "release-01",
   },
   {
     id: "d2",
@@ -36,7 +29,7 @@ export const drops: Drop[] = [
     format: "Digital single",
     date: "Feb 2026",
     status: "Out now",
-    image: r2,
+    image: "release-02",
   },
   {
     id: "d3",
@@ -46,7 +39,7 @@ export const drops: Drop[] = [
     format: "Cassette · 100",
     date: "Jan 2026",
     status: "Sold out",
-    image: r3,
+    image: "release-03",
   },
   {
     id: "d4",
@@ -56,7 +49,7 @@ export const drops: Drop[] = [
     format: "2LP",
     date: "Dec 2025",
     status: "Out now",
-    image: r4,
+    image: "release-04",
   },
   {
     id: "d5",
@@ -66,7 +59,7 @@ export const drops: Drop[] = [
     format: "EP",
     date: "Nov 2025",
     status: "Out now",
-    image: r5,
+    image: "release-05",
   },
   {
     id: "d6",
@@ -76,7 +69,7 @@ export const drops: Drop[] = [
     format: '12" clear',
     date: "Oct 2026",
     status: "Pre-order",
-    image: r6,
+    image: "release-06",
   },
   {
     id: "d7",
@@ -86,6 +79,6 @@ export const drops: Drop[] = [
     format: "Screen print · 150",
     date: "Sep 2026",
     status: "Pre-order",
-    image: tee,
+    image: "merch-tee",
   },
 ];

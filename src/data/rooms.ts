@@ -1,14 +1,10 @@
-import roomA from "@/assets/room-a.jpg";
-import roomB from "@/assets/room-b.jpg";
-import booth from "@/assets/room-booth.jpg";
-import lockout from "@/assets/room-lockout.jpg";
-
+import type { ImageKey } from "@/generated/images";
 export type Room = {
   id: string;
   index: string;
   name: string;
   kind: string;
-  image: string;
+  image: ImageKey;
   blurb: string;
   specs: { k: string; v: string }[];
   rate: string;
@@ -20,7 +16,7 @@ export const rooms: Room[] = [
     index: "01",
     name: "Room A",
     kind: "Live tracking",
-    image: roomA,
+    image: "room-a",
     blurb:
       "The loud one. Twenty-two feet of untreated brick down one wall so drums keep their tail. Full backline lives here permanently.",
     specs: [
@@ -36,7 +32,7 @@ export const rooms: Room[] = [
     index: "02",
     name: "Room B",
     kind: "Mix + overdub",
-    image: roomB,
+    image: "room-b",
     blurb:
       "Dry, tight, and honest. Where records get finished at 4am. Tuned to fail loudly if the mix does not translate.",
     specs: [
@@ -52,7 +48,7 @@ export const rooms: Room[] = [
     index: "03",
     name: "The Booth",
     kind: "Vocals",
-    image: booth,
+    image: "room-booth",
     blurb:
       "One chain, no menu. U87 into a Neve pre into tape emulation. Sightline into Room B so nobody shouts through glass.",
     specs: [
@@ -68,7 +64,7 @@ export const rooms: Room[] = [
     index: "04",
     name: "The Lockout",
     kind: "Overnight",
-    image: lockout,
+    image: "room-lockout",
     blurb:
       "Doors close at 22:00 and the building is yours until sunrise. Engineer included, clock switched off, kitchen open.",
     specs: [

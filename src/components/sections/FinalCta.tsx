@@ -5,21 +5,15 @@ import { Ticker } from "@/components/lb/Ticker";
 import { LiveLog } from "@/components/lb/LiveLog";
 import { ctaChecklist } from "@/data/tickers";
 import { site } from "@/data/site";
-import roomA from "@/assets/room-a.jpg";
-import a1 from "@/assets/release-01.jpg";
-import a2 from "@/assets/release-02.jpg";
-import a3 from "@/assets/release-06.jpg";
+import { Picture } from "@/components/lb/Picture";
 
 export function FinalCta() {
   return (
     <section className="relative w-full overflow-hidden bg-surface-deep">
-      <img
-        src={roomA}
+      <Picture
+        src={"room-a"}
+        sizes="(max-width: 767px) 100vw, 62vw"
         alt=""
-        aria-hidden="true"
-        width={1600}
-        height={900}
-        loading="lazy"
         className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 mono"
       />
       <div
@@ -52,15 +46,12 @@ export function FinalCta() {
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <div className="flex">
-              {[a1, a2, a3].map((a, i) => (
-                <img
+              {(["release-01", "release-02", "release-06"] as const).map((a, i) => (
+                <Picture
                   key={i}
                   src={a}
+                  sizes="(max-width: 767px) 100vw, 62vw"
                   alt=""
-                  aria-hidden="true"
-                  width={44}
-                  height={44}
-                  loading="lazy"
                   className="h-11 w-11 border border-surface-deep object-cover mono"
                   style={{ marginLeft: i === 0 ? 0 : -10 }}
                 />

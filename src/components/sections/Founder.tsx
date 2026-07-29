@@ -1,8 +1,7 @@
 import { Play, Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn } from "@/components/lb/Reveal";
-import founder from "@/assets/founder.jpg";
-import roomA from "@/assets/room-a.jpg";
+import { Picture } from "@/components/lb/Picture";
 
 export function Founder() {
   return (
@@ -12,12 +11,10 @@ export function Founder() {
       <div className="section-head">
         <div className="flex gap-4 md:col-span-2">
           <div className="relative w-full max-w-[420px]">
-            <img
-              src={founder}
+            <Picture
+              src={"founder"}
+              sizes="(max-width: 767px) 100vw, 420px"
               alt="The founder of Limon Bandit standing in the control room"
-              width={1000}
-              height={1250}
-              loading="lazy"
               className="aspect-[4/5] w-full border border-line object-cover"
               style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
             />
@@ -76,12 +73,10 @@ export function Founder() {
           <p className="t-eyebrow mt-3 text-mute">4.9/5 across 230+ sessions</p>
         </div>
         <div className="relative md:col-span-3">
-          <img
-            src={roomA}
+          <Picture
+            src={"room-a"}
+            sizes="(max-width: 767px) 100vw, 420px"
             alt="A night session running in Room A"
-            width={1600}
-            height={900}
-            loading="lazy"
             className="aspect-video w-full border border-line object-cover mono"
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">

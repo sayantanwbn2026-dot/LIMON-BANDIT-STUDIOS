@@ -28,21 +28,21 @@ Scale: `8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 120, 160`.
 
 **29 off-scale values found → 27 fixed, 2 accepted.**
 
-| Section | Issue | Fix | Commit |
-| --- | --- | --- | --- |
-| Bento, Founder, Process, Rates, Roster, Services, ThreeWaysIn | Section vertical `140px` — off scale | `120px` | Job 4 |
-| Faq | Section vertical `140px`, and this is the dark→light chapter change | `pt-160 pb-120` | Job 4 |
-| Journal | `120px` both sides, but the light chapter ends here | `pt-120 pb-160` | Job 4 |
-| JoinList | `110px / 140px` — off scale, and it is a slim band | `80px / 96px` | Job 4 |
-| DropRail, IdentityMarquee, Numbers | Slim-band vertical `100px` | `96px` | Job 4 |
-| StubPage | `200px` | `160px` | Job 4 |
-| DropRail, Faq, Rates, Wall | `mt-14` (56px) | `mt-12` (48px) | Job 4 |
-| Buttons, FinalCta | `pl-7` / `mr-7` (28px) | `pl-6` / `mr-6` (24px) | Job 4 |
-| Footer | `py-7` (28px) | `py-6` (24px) | Job 4 |
-| Faq | `pl-[52px]` answer indent | `pl-[48px]` | Job 4 |
-| Hero | `pb-[14px]` micro-line | `pb-[12px]` | Job 4 |
-| Services | chip `px-[14px]` | `px-3` | Job 4 |
-| Testimonials | card `p-9` (36px) | `p-8` (32px) | Job 4 |
+| Section                                                       | Issue                                                               | Fix                    | Commit |
+| ------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------- | ------ |
+| Bento, Founder, Process, Rates, Roster, Services, ThreeWaysIn | Section vertical `140px` — off scale                                | `120px`                | Job 4  |
+| Faq                                                           | Section vertical `140px`, and this is the dark→light chapter change | `pt-160 pb-120`        | Job 4  |
+| Journal                                                       | `120px` both sides, but the light chapter ends here                 | `pt-120 pb-160`        | Job 4  |
+| JoinList                                                      | `110px / 140px` — off scale, and it is a slim band                  | `80px / 96px`          | Job 4  |
+| DropRail, IdentityMarquee, Numbers                            | Slim-band vertical `100px`                                          | `96px`                 | Job 4  |
+| StubPage                                                      | `200px`                                                             | `160px`                | Job 4  |
+| DropRail, Faq, Rates, Wall                                    | `mt-14` (56px)                                                      | `mt-12` (48px)         | Job 4  |
+| Buttons, FinalCta                                             | `pl-7` / `mr-7` (28px)                                              | `pl-6` / `mr-6` (24px) | Job 4  |
+| Footer                                                        | `py-7` (28px)                                                       | `py-6` (24px)          | Job 4  |
+| Faq                                                           | `pl-[52px]` answer indent                                           | `pl-[48px]`            | Job 4  |
+| Hero                                                          | `pb-[14px]` micro-line                                              | `pb-[12px]`            | Job 4  |
+| Services                                                      | chip `px-[14px]`                                                    | `px-3`                 | Job 4  |
+| Testimonials                                                  | card `p-9` (36px)                                                   | `p-8` (32px)           | Job 4  |
 
 **Accepted exceptions (2):**
 
@@ -71,10 +71,10 @@ unpadded so its content still reaches the outer rule. Migrated 11 section
 header rows (Bento, Faq, Footer, Founder, Journal, Process, Rates, Roster,
 Services, Testimonials, ThreeWaysIn).
 
-| Check | Before | After |
-| --- | --- | --- |
-| H2 offset from column rule | +10.0px (10 sections) | **0.0px** (10 sections) |
-| Top-level card grids on outer rules | — | **11/11 within tolerance** |
+| Check                               | Before                | After                      |
+| ----------------------------------- | --------------------- | -------------------------- |
+| H2 offset from column rule          | +10.0px (10 sections) | **0.0px** (10 sections)    |
+| Top-level card grids on outer rules | —                     | **11/11 within tolerance** |
 
 Eyebrows were verified as correctly notched at column 1; the earlier reading
 of +22px was the measurement catching the label text rather than the eyebrow
@@ -84,12 +84,12 @@ block, which starts on the rule.
 
 ## 4.3 — Typography hierarchy
 
-| Section | Issue | Fix | Commit |
-| --- | --- | --- | --- |
-| ThreeWaysIn | Door titles: display type at 24–32px with **default tracking** | `tracking-[-0.02em]` | Job 4 |
-| JoinList, Rooms | Body copy at `line-height 1.65`, over the 1.6 ceiling | `1.5` | Job 4 |
-| Founder | Section had no `<h2>` | `sr-only` h2 | Job 4 |
-| ProofBand | Section had no `<h2>` | `sr-only` h2 | Job 4 |
+| Section         | Issue                                                          | Fix                  | Commit |
+| --------------- | -------------------------------------------------------------- | -------------------- | ------ |
+| ThreeWaysIn     | Door titles: display type at 24–32px with **default tracking** | `tracking-[-0.02em]` | Job 4  |
+| JoinList, Rooms | Body copy at `line-height 1.65`, over the 1.6 ceiling          | `1.5`                | Job 4  |
+| Founder         | Section had no `<h2>`                                          | `sr-only` h2         | Job 4  |
+| ProofBand       | Section had no `<h2>`                                          | `sr-only` h2         | Job 4  |
 
 Verified clean: exactly one `<h1>` (the hero lockup); no lowercase display
 type; no paragraph over four lines at 1440; all 33 numeric elements
@@ -111,7 +111,7 @@ styled children carry the type (`<h1>`, the FAQ `<h3>` buttons, and Numbers'
 - **Button labels** — all four already `12–13px / 700 / uppercase / 0.14em`
   with the arrow on the right. No change.
 - **Chips** — three different paddings existed (`px-3 py-2`, `px-[14px]
-  py-2`, `px-2 py-1`). Unified to `px-3 py-2`, radius `2px`.
+py-2`, `px-2 py-1`). Unified to `px-3 py-2`, radius `2px`.
 - **Hairlines** — no literal greys survive the Job 1 migration; re-grepped
   clean. All borders resolve through `--line` / `--alt-line`.
 - **Formatting** — `prettier` had been failing repo-wide. `bun run lint`
@@ -141,13 +141,13 @@ styled children carry the type (`<h1>`, the FAQ `<h3>` buttons, and Numbers'
 Two values in the brief do not survive measurement, and DoD #6 (AA in both
 themes) is the stronger constraint, so the measured values won.
 
-| Brief | Measured | Used instead |
-| --- | --- | --- |
-| "`--mute` on `--surface` remains AA in both modes (the values above do)" | `#8D8D8D` on bone = **2.93:1** — fails AA at 14px | Bone-pole mute `#6B6B68` = **4.73:1** |
-| "substitute `--accent-dim`" for acid type on light surfaces | `#B8C900` on bone = **1.63:1** — fails even the 3:1 large-text floor, while carrying real numerals | Acid-as-type `#5F6B00` = **5.17:1**, still zero-blue and green-dominant |
+| Brief                                                                    | Measured                                                                                           | Used instead                                                            |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| "`--mute` on `--surface` remains AA in both modes (the values above do)" | `#8D8D8D` on bone = **2.93:1** — fails AA at 14px                                                  | Bone-pole mute `#6B6B68` = **4.73:1**                                   |
+| "substitute `--accent-dim`" for acid type on light surfaces              | `#B8C900` on bone = **1.63:1** — fails even the 3:1 large-text floor, while carrying real numerals | Acid-as-type `#5F6B00` = **5.17:1**, still zero-blue and green-dominant |
 
 `--accent-dim` is retained in the token set for decorative marks. Acid as a
-*surface* is untouched at `#E9FF00` in both themes, per the brief.
+_surface_ is untouched at `#E9FF00` in both themes, per the brief.
 
 Two further contrast defects were pre-existing and are now fixed: form
 placeholders failed in both themes (`2.30:1` dark, `1.85:1` light), and
