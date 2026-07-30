@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { ProofBand } from "@/components/sections/ProofBand";
 import { IdentityMarquee } from "@/components/sections/IdentityMarquee";
@@ -19,27 +18,11 @@ import { Faq } from "@/components/sections/Faq";
 import { Journal } from "@/components/sections/Journal";
 import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
-import { Footer } from "@/components/sections/Footer";
-import { Noise } from "@/components/lb/Noise";
-import { Cursor } from "@/components/lb/Cursor";
 import { Preloader } from "@/components/lb/Preloader";
-import { SmoothScroll } from "@/components/lb/SmoothScroll";
-
-const title = "Limon Bandit — Kolkata Music House, Studio Rooms & Label";
-const description =
-  "Four recording rooms, an independent label, a Kolkata-printed merch line, and a crew of vetted directors and engineers. Book a night, sign a record, print a run.";
+import { chapterHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => chapterHead("home"),
   component: Index,
 });
 
@@ -47,11 +30,9 @@ function Index() {
   return (
     <>
       <Preloader />
-      <SmoothScroll />
-      <Noise />
-      <Cursor />
-      <Nav />
-      <main>
+      {/* Nav, Footer, Noise, Cursor and Lenis live in __root — mounted once
+          above the router so they survive navigation. */}
+      <main id="main">
         <Hero />
         <ProofBand />
         <IdentityMarquee />
@@ -72,7 +53,6 @@ function Index() {
         <JoinList />
         <FinalCta />
       </main>
-      <Footer />
     </>
   );
 }

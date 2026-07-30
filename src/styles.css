@@ -443,6 +443,46 @@
   }
 }
 
+/* ---------------- skip link ----------------
+ * First focusable element on the page, hidden until focused. */
+
+.lb-skip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  padding: 16px 24px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateY(-120%);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+.lb-skip:focus {
+  transform: translateY(0);
+}
+
+/* ---------------- route transition ---------------- */
+
+.lb-wipe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ---------------- site menu ----------------
  * Six links plus a header and footer zone must fit 100svh exactly, with
  * no internal scrolling, down to a 667px-tall phone. Rows are sized from

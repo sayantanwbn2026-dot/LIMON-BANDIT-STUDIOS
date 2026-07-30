@@ -8,6 +8,10 @@ export const site = {
   email: "room@limonbandit.com",
   instagram: "@limonbandit",
   rating: "4.9/5 ACROSS 230+ SESSIONS",
+  // REPLACE — the production origin, used for canonical and og:url
+  url: "https://limonbandit.com",
+  ogImage:
+    "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png",
 } as const;
 
 export type NavItem = { label: string; to: string };
