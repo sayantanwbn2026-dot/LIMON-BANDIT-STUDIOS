@@ -110,15 +110,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two
+         faces that render above the fold — the hero wordmark and the corner
+         stations. Preloading more would compete with the LCP image. */
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap",
+        rel: "preload",
+        href: "/fonts/sora-800.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
       {
-        rel: "stylesheet",
-        href: "https://api.fontshare.com/v2/css?f%5B%5D=switzer@400,500,600,700&display=swap",
+        rel: "preload",
+        href: "/fonts/switzer-500.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
       },
       {
         rel: "stylesheet",

@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@import "./generated/fonts.css";
 @import "./theme-overrides.css";
 @source "../src";
 
@@ -129,8 +130,10 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-ui: "Switzer", "Sora", ui-sans-serif, system-ui, sans-serif;
+  /* The *-Fallback faces are metric-adjusted local Arial, so the swap from
+   * fallback to webfont does not move the line box. */
+  --font-display: "Sora", "Sora Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Switzer", "Switzer Fallback", ui-sans-serif, system-ui, sans-serif;
 
   --radius-none: 0px;
 }
@@ -169,6 +172,10 @@
   h4 {
     font-family: var(--font-display);
     text-transform: uppercase;
+    /* Tailwind's preflight makes headings inherit weight, which would land
+     * them on 400 — a Sora weight the site otherwise never uses and would
+     * have to ship purely for these. 700 is the ladder's heading weight. */
+    font-weight: 700;
   }
 }
 
