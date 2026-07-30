@@ -1,8 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/lb/PageShell";
+import { RoomsRail } from "@/components/rooms/RoomsRail";
+import { RoomsFloor } from "@/components/rooms/RoomsFloor";
+import { RoomsBooking } from "@/components/rooms/RoomsBooking";
 import { chapterHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/rooms")({
   head: () => chapterHead("rooms"),
-  component: () => <PageShell chapter="rooms" />,
+  component: Rooms,
 });
+
+function Rooms() {
+  return (
+    <PageShell chapter="rooms">
+      {/* the decision first, the atmosphere after */}
+      <RoomsRail />
+      <RoomsFloor />
+      <RoomsBooking />
+    </PageShell>
+  );
+}
