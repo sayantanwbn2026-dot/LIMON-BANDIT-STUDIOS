@@ -80,6 +80,32 @@ Eyebrows were verified as correctly notched at column 1; the earlier reading
 of +22px was the measurement catching the label text rather than the eyebrow
 block, which starts on the rule.
 
+### Pass 5 amendment — content insets from the rules
+
+Pass 4 aligned content to the rules **exactly**, at 0.0px. Looked at rather
+than measured, that turned out to be wrong: type sat directly on the drawn
+line and read as though it were crossing it, worst at narrow widths where the
+line runs through the first character.
+
+The model is now two boxes, not one:
+
+- `.shell-rules` — where the grid is **drawn** (column rules, boundary rules,
+  crosshairs). Unchanged: `padding-inline: var(--page-margin)`.
+- `.shell` — where content **lives**, inset by `--grid-gutter` (16px, 12px
+  below 768px).
+
+`.section-head` cancels the gutter with a negative inline margin so its four
+columns still span the rules box and their boundaries still land on the rules
+exactly; the gutter is then re-applied as `padding-left` inside each cell, and
+as `padding-right` on the last one.
+
+So the rule marks the structure and the words sit inside it. Measured after:
+every column boundary still lands on its rule (0.0px), and every piece of
+content insets 15.8–16px from the rule that governs it.
+
+The pass-4 assertion "card grids align their outer edges to the rules exactly"
+is superseded: they now align to the rules **inset by the gutter**.
+
 ---
 
 ## 4.3 — Typography hierarchy

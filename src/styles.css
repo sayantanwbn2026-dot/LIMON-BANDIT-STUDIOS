@@ -89,6 +89,8 @@
   --dur-tween: 2s;
 
   --page-margin: 40px;
+  /* optical gap between a drawn rule and the type inside it */
+  --grid-gutter: 16px;
 
   /* shadcn compatibility shims (unused chrome, kept square) */
   --radius: 0px;
@@ -181,11 +183,28 @@
 
 /* ---------------- layout ---------------- */
 
-@utility shell {
+/**
+ * Two boxes, not one.
+ *
+ * `shell-rules` is where the drafting grid is DRAWN — the column rules,
+ * the boundary rules and their crosshairs.
+ *
+ * `shell` is where content LIVES, inset from that by --grid-gutter. Type
+ * must never touch a drawn line: the rule marks the structure, the words
+ * sit inside it.
+ */
+@utility shell-rules {
   width: 100%;
   max-width: 1600px;
   margin-inline: auto;
   padding-inline: var(--page-margin);
+}
+
+@utility shell {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: calc(var(--page-margin) + var(--grid-gutter));
 }
 
 @media (max-width: 1439px) {
@@ -196,6 +215,7 @@
 @media (max-width: 767px) {
   :root {
     --page-margin: 20px;
+    --grid-gutter: 12px;
   }
 }
 
@@ -433,13 +453,18 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 0;
     row-gap: 0;
+    /* Cancel the shell's gutter so the four columns span the RULES box and
+     * their boundaries land on the rules exactly. The gutter is then
+     * re-applied inside each cell, below. */
+    margin-inline: calc(var(--grid-gutter) * -1);
   }
   .section-head > * {
+    padding-left: var(--grid-gutter);
     padding-right: 40px;
   }
-  /* the last column's content must still reach the outer rule */
+  /* the last column stops short of the outer rule by the same gutter */
   .section-head > *:last-child {
-    padding-right: 0;
+    padding-right: var(--grid-gutter);
   }
 }
 

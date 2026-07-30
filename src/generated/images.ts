@@ -13,816 +13,816 @@ export type ImageEntry = {
 export type ImageKey = keyof typeof images;
 
 export const images = {
-  "founder": {
-    "width": 1000,
-    "height": 1250,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+  founder: {
+    width: 1000,
+    height: 1250,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/founder-480.avif",
-        "size": 10183
+        w: 480,
+        url: "/img/founder-480.avif",
+        size: 10183,
       },
       {
-        "w": 768,
-        "url": "/img/founder-768.avif",
-        "size": 18169
-      }
+        w: 768,
+        url: "/img/founder-768.avif",
+        size: 18169,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/founder-480.webp",
-        "size": 15464
+        w: 480,
+        url: "/img/founder-480.webp",
+        size: 15464,
       },
       {
-        "w": 768,
-        "url": "/img/founder-768.webp",
-        "size": 28872
-      }
+        w: 768,
+        url: "/img/founder-768.webp",
+        size: 28872,
+      },
     ],
-    "fallback": "/img/founder-768.jpg"
+    fallback: "/img/founder-768.jpg",
   },
   "journal-01": {
-    "width": 1000,
-    "height": 750,
-    "aspect": 1.3333,
-    "alpha": false,
-    "avif": [
+    width: 1000,
+    height: 750,
+    aspect: 1.3333,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/journal-01-480.avif",
-        "size": 7860
+        w: 480,
+        url: "/img/journal-01-480.avif",
+        size: 7860,
       },
       {
-        "w": 768,
-        "url": "/img/journal-01-768.avif",
-        "size": 12909
-      }
+        w: 768,
+        url: "/img/journal-01-768.avif",
+        size: 12909,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/journal-01-480.webp",
-        "size": 12130
+        w: 480,
+        url: "/img/journal-01-480.webp",
+        size: 12130,
       },
       {
-        "w": 768,
-        "url": "/img/journal-01-768.webp",
-        "size": 20684
-      }
+        w: 768,
+        url: "/img/journal-01-768.webp",
+        size: 20684,
+      },
     ],
-    "fallback": "/img/journal-01-768.jpg"
+    fallback: "/img/journal-01-768.jpg",
   },
   "journal-02": {
-    "width": 1000,
-    "height": 750,
-    "aspect": 1.3333,
-    "alpha": false,
-    "avif": [
+    width: 1000,
+    height: 750,
+    aspect: 1.3333,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/journal-02-480.avif",
-        "size": 8630
+        w: 480,
+        url: "/img/journal-02-480.avif",
+        size: 8630,
       },
       {
-        "w": 768,
-        "url": "/img/journal-02-768.avif",
-        "size": 15051
-      }
+        w: 768,
+        url: "/img/journal-02-768.avif",
+        size: 15051,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/journal-02-480.webp",
-        "size": 18976
+        w: 480,
+        url: "/img/journal-02-480.webp",
+        size: 18976,
       },
       {
-        "w": 768,
-        "url": "/img/journal-02-768.webp",
-        "size": 35376
-      }
+        w: 768,
+        url: "/img/journal-02-768.webp",
+        size: 35376,
+      },
     ],
-    "fallback": "/img/journal-02-768.jpg"
+    fallback: "/img/journal-02-768.jpg",
   },
   "journal-03": {
-    "width": 1000,
-    "height": 750,
-    "aspect": 1.3333,
-    "alpha": false,
-    "avif": [
+    width: 1000,
+    height: 750,
+    aspect: 1.3333,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/journal-03-480.avif",
-        "size": 7961
+        w: 480,
+        url: "/img/journal-03-480.avif",
+        size: 7961,
       },
       {
-        "w": 768,
-        "url": "/img/journal-03-768.avif",
-        "size": 14419
-      }
+        w: 768,
+        url: "/img/journal-03-768.avif",
+        size: 14419,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/journal-03-480.webp",
-        "size": 10732
+        w: 480,
+        url: "/img/journal-03-480.webp",
+        size: 10732,
       },
       {
-        "w": 768,
-        "url": "/img/journal-03-768.webp",
-        "size": 21152
-      }
+        w: 768,
+        url: "/img/journal-03-768.webp",
+        size: 21152,
+      },
     ],
-    "fallback": "/img/journal-03-768.jpg"
+    fallback: "/img/journal-03-768.jpg",
   },
   "limon-mascot": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": true,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: true,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/limon-mascot-480.avif",
-        "size": 23925
+        w: 480,
+        url: "/img/limon-mascot-480.avif",
+        size: 23925,
       },
       {
-        "w": 768,
-        "url": "/img/limon-mascot-768.avif",
-        "size": 45302
+        w: 768,
+        url: "/img/limon-mascot-768.avif",
+        size: 45302,
       },
       {
-        "w": 1024,
-        "url": "/img/limon-mascot-1024.avif",
-        "size": 56525
-      }
+        w: 1024,
+        url: "/img/limon-mascot-1024.avif",
+        size: 56525,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/limon-mascot-480.webp",
-        "size": 38740
+        w: 480,
+        url: "/img/limon-mascot-480.webp",
+        size: 38740,
       },
       {
-        "w": 768,
-        "url": "/img/limon-mascot-768.webp",
-        "size": 76388
+        w: 768,
+        url: "/img/limon-mascot-768.webp",
+        size: 76388,
       },
       {
-        "w": 1024,
-        "url": "/img/limon-mascot-1024.webp",
-        "size": 107494
-      }
+        w: 1024,
+        url: "/img/limon-mascot-1024.webp",
+        size: 107494,
+      },
     ],
-    "fallback": "/img/limon-mascot-1024.webp"
+    fallback: "/img/limon-mascot-1024.webp",
   },
   "merch-tee": {
-    "width": 1000,
-    "height": 1250,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1000,
+    height: 1250,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/merch-tee-480.avif",
-        "size": 9257
+        w: 480,
+        url: "/img/merch-tee-480.avif",
+        size: 9257,
       },
       {
-        "w": 768,
-        "url": "/img/merch-tee-768.avif",
-        "size": 19339
-      }
+        w: 768,
+        url: "/img/merch-tee-768.avif",
+        size: 19339,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/merch-tee-480.webp",
-        "size": 9838
+        w: 480,
+        url: "/img/merch-tee-480.webp",
+        size: 9838,
       },
       {
-        "w": 768,
-        "url": "/img/merch-tee-768.webp",
-        "size": 19410
-      }
+        w: 768,
+        url: "/img/merch-tee-768.webp",
+        size: 19410,
+      },
     ],
-    "fallback": "/img/merch-tee-768.jpg"
+    fallback: "/img/merch-tee-768.jpg",
   },
   "release-01": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-01-480.avif",
-        "size": 5252
+        w: 480,
+        url: "/img/release-01-480.avif",
+        size: 5252,
       },
       {
-        "w": 768,
-        "url": "/img/release-01-768.avif",
-        "size": 11293
-      }
+        w: 768,
+        url: "/img/release-01-768.avif",
+        size: 11293,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-01-480.webp",
-        "size": 4786
+        w: 480,
+        url: "/img/release-01-480.webp",
+        size: 4786,
       },
       {
-        "w": 768,
-        "url": "/img/release-01-768.webp",
-        "size": 9664
-      }
+        w: 768,
+        url: "/img/release-01-768.webp",
+        size: 9664,
+      },
     ],
-    "fallback": "/img/release-01-768.jpg"
+    fallback: "/img/release-01-768.jpg",
   },
   "release-02": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-02-480.avif",
-        "size": 1682
+        w: 480,
+        url: "/img/release-02-480.avif",
+        size: 1682,
       },
       {
-        "w": 768,
-        "url": "/img/release-02-768.avif",
-        "size": 2745
-      }
+        w: 768,
+        url: "/img/release-02-768.avif",
+        size: 2745,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-02-480.webp",
-        "size": 1800
+        w: 480,
+        url: "/img/release-02-480.webp",
+        size: 1800,
       },
       {
-        "w": 768,
-        "url": "/img/release-02-768.webp",
-        "size": 3340
-      }
+        w: 768,
+        url: "/img/release-02-768.webp",
+        size: 3340,
+      },
     ],
-    "fallback": "/img/release-02-768.jpg"
+    fallback: "/img/release-02-768.jpg",
   },
   "release-03": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-03-480.avif",
-        "size": 4564
+        w: 480,
+        url: "/img/release-03-480.avif",
+        size: 4564,
       },
       {
-        "w": 768,
-        "url": "/img/release-03-768.avif",
-        "size": 8725
-      }
+        w: 768,
+        url: "/img/release-03-768.avif",
+        size: 8725,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-03-480.webp",
-        "size": 5588
+        w: 480,
+        url: "/img/release-03-480.webp",
+        size: 5588,
       },
       {
-        "w": 768,
-        "url": "/img/release-03-768.webp",
-        "size": 11010
-      }
+        w: 768,
+        url: "/img/release-03-768.webp",
+        size: 11010,
+      },
     ],
-    "fallback": "/img/release-03-768.jpg"
+    fallback: "/img/release-03-768.jpg",
   },
   "release-04": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-04-480.avif",
-        "size": 9595
+        w: 480,
+        url: "/img/release-04-480.avif",
+        size: 9595,
       },
       {
-        "w": 768,
-        "url": "/img/release-04-768.avif",
-        "size": 17242
-      }
+        w: 768,
+        url: "/img/release-04-768.avif",
+        size: 17242,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-04-480.webp",
-        "size": 12762
+        w: 480,
+        url: "/img/release-04-480.webp",
+        size: 12762,
       },
       {
-        "w": 768,
-        "url": "/img/release-04-768.webp",
-        "size": 23324
-      }
+        w: 768,
+        url: "/img/release-04-768.webp",
+        size: 23324,
+      },
     ],
-    "fallback": "/img/release-04-768.jpg"
+    fallback: "/img/release-04-768.jpg",
   },
   "release-05": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-05-480.avif",
-        "size": 3004
+        w: 480,
+        url: "/img/release-05-480.avif",
+        size: 3004,
       },
       {
-        "w": 768,
-        "url": "/img/release-05-768.avif",
-        "size": 4608
-      }
+        w: 768,
+        url: "/img/release-05-768.avif",
+        size: 4608,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-05-480.webp",
-        "size": 3190
+        w: 480,
+        url: "/img/release-05-480.webp",
+        size: 3190,
       },
       {
-        "w": 768,
-        "url": "/img/release-05-768.webp",
-        "size": 5504
-      }
+        w: 768,
+        url: "/img/release-05-768.webp",
+        size: 5504,
+      },
     ],
-    "fallback": "/img/release-05-768.jpg"
+    fallback: "/img/release-05-768.jpg",
   },
   "release-06": {
-    "width": 900,
-    "height": 900,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 900,
+    height: 900,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/release-06-480.avif",
-        "size": 6975
+        w: 480,
+        url: "/img/release-06-480.avif",
+        size: 6975,
       },
       {
-        "w": 768,
-        "url": "/img/release-06-768.avif",
-        "size": 11527
-      }
+        w: 768,
+        url: "/img/release-06-768.avif",
+        size: 11527,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/release-06-480.webp",
-        "size": 8930
+        w: 480,
+        url: "/img/release-06-480.webp",
+        size: 8930,
       },
       {
-        "w": 768,
-        "url": "/img/release-06-768.webp",
-        "size": 15000
-      }
+        w: 768,
+        url: "/img/release-06-768.webp",
+        size: 15000,
+      },
     ],
-    "fallback": "/img/release-06-768.jpg"
+    fallback: "/img/release-06-768.jpg",
   },
   "room-a": {
-    "width": 1600,
-    "height": 900,
-    "aspect": 1.7778,
-    "alpha": false,
-    "avif": [
+    width: 1600,
+    height: 900,
+    aspect: 1.7778,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/room-a-480.avif",
-        "size": 7464
+        w: 480,
+        url: "/img/room-a-480.avif",
+        size: 7464,
       },
       {
-        "w": 768,
-        "url": "/img/room-a-768.avif",
-        "size": 14842
+        w: 768,
+        url: "/img/room-a-768.avif",
+        size: 14842,
       },
       {
-        "w": 1024,
-        "url": "/img/room-a-1024.avif",
-        "size": 22212
+        w: 1024,
+        url: "/img/room-a-1024.avif",
+        size: 22212,
       },
       {
-        "w": 1440,
-        "url": "/img/room-a-1440.avif",
-        "size": 34959
-      }
+        w: 1440,
+        url: "/img/room-a-1440.avif",
+        size: 34959,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/room-a-480.webp",
-        "size": 9990
+        w: 480,
+        url: "/img/room-a-480.webp",
+        size: 9990,
       },
       {
-        "w": 768,
-        "url": "/img/room-a-768.webp",
-        "size": 20138
+        w: 768,
+        url: "/img/room-a-768.webp",
+        size: 20138,
       },
       {
-        "w": 1024,
-        "url": "/img/room-a-1024.webp",
-        "size": 30088
+        w: 1024,
+        url: "/img/room-a-1024.webp",
+        size: 30088,
       },
       {
-        "w": 1440,
-        "url": "/img/room-a-1440.webp",
-        "size": 48704
-      }
+        w: 1440,
+        url: "/img/room-a-1440.webp",
+        size: 48704,
+      },
     ],
-    "fallback": "/img/room-a-1024.jpg"
+    fallback: "/img/room-a-1024.jpg",
   },
   "room-b": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/room-b-480.avif",
-        "size": 13246
+        w: 480,
+        url: "/img/room-b-480.avif",
+        size: 13246,
       },
       {
-        "w": 768,
-        "url": "/img/room-b-768.avif",
-        "size": 29028
+        w: 768,
+        url: "/img/room-b-768.avif",
+        size: 29028,
       },
       {
-        "w": 1024,
-        "url": "/img/room-b-1024.avif",
-        "size": 60218
-      }
+        w: 1024,
+        url: "/img/room-b-1024.avif",
+        size: 60218,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/room-b-480.webp",
-        "size": 18754
+        w: 480,
+        url: "/img/room-b-480.webp",
+        size: 18754,
       },
       {
-        "w": 768,
-        "url": "/img/room-b-768.webp",
-        "size": 42872
+        w: 768,
+        url: "/img/room-b-768.webp",
+        size: 42872,
       },
       {
-        "w": 1024,
-        "url": "/img/room-b-1024.webp",
-        "size": 80182
-      }
+        w: 1024,
+        url: "/img/room-b-1024.webp",
+        size: 80182,
+      },
     ],
-    "fallback": "/img/room-b-1024.jpg"
+    fallback: "/img/room-b-1024.jpg",
   },
   "room-booth": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/room-booth-480.avif",
-        "size": 3798
+        w: 480,
+        url: "/img/room-booth-480.avif",
+        size: 3798,
       },
       {
-        "w": 768,
-        "url": "/img/room-booth-768.avif",
-        "size": 7310
+        w: 768,
+        url: "/img/room-booth-768.avif",
+        size: 7310,
       },
       {
-        "w": 1024,
-        "url": "/img/room-booth-1024.avif",
-        "size": 12224
-      }
+        w: 1024,
+        url: "/img/room-booth-1024.avif",
+        size: 12224,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/room-booth-480.webp",
-        "size": 4940
+        w: 480,
+        url: "/img/room-booth-480.webp",
+        size: 4940,
       },
       {
-        "w": 768,
-        "url": "/img/room-booth-768.webp",
-        "size": 10158
+        w: 768,
+        url: "/img/room-booth-768.webp",
+        size: 10158,
       },
       {
-        "w": 1024,
-        "url": "/img/room-booth-1024.webp",
-        "size": 17510
-      }
+        w: 1024,
+        url: "/img/room-booth-1024.webp",
+        size: 17510,
+      },
     ],
-    "fallback": "/img/room-booth-1024.jpg"
+    fallback: "/img/room-booth-1024.jpg",
   },
   "room-lockout": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/room-lockout-480.avif",
-        "size": 10306
+        w: 480,
+        url: "/img/room-lockout-480.avif",
+        size: 10306,
       },
       {
-        "w": 768,
-        "url": "/img/room-lockout-768.avif",
-        "size": 21705
+        w: 768,
+        url: "/img/room-lockout-768.avif",
+        size: 21705,
       },
       {
-        "w": 1024,
-        "url": "/img/room-lockout-1024.avif",
-        "size": 39789
-      }
+        w: 1024,
+        url: "/img/room-lockout-1024.avif",
+        size: 39789,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/room-lockout-480.webp",
-        "size": 14578
+        w: 480,
+        url: "/img/room-lockout-480.webp",
+        size: 14578,
       },
       {
-        "w": 768,
-        "url": "/img/room-lockout-768.webp",
-        "size": 32620
+        w: 768,
+        url: "/img/room-lockout-768.webp",
+        size: 32620,
       },
       {
-        "w": 1024,
-        "url": "/img/room-lockout-1024.webp",
-        "size": 56230
-      }
+        w: 1024,
+        url: "/img/room-lockout-1024.webp",
+        size: 56230,
+      },
     ],
-    "fallback": "/img/room-lockout-1024.jpg"
+    fallback: "/img/room-lockout-1024.jpg",
   },
   "split-corridor": {
-    "width": 1792,
-    "height": 768,
-    "aspect": 2.3333,
-    "alpha": false,
-    "avif": [
+    width: 1792,
+    height: 768,
+    aspect: 2.3333,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/split-corridor-480.avif",
-        "size": 4628
+        w: 480,
+        url: "/img/split-corridor-480.avif",
+        size: 4628,
       },
       {
-        "w": 768,
-        "url": "/img/split-corridor-768.avif",
-        "size": 10471
+        w: 768,
+        url: "/img/split-corridor-768.avif",
+        size: 10471,
       },
       {
-        "w": 1024,
-        "url": "/img/split-corridor-1024.avif",
-        "size": 17738
+        w: 1024,
+        url: "/img/split-corridor-1024.avif",
+        size: 17738,
       },
       {
-        "w": 1440,
-        "url": "/img/split-corridor-1440.avif",
-        "size": 35428
-      }
+        w: 1440,
+        url: "/img/split-corridor-1440.avif",
+        size: 35428,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/split-corridor-480.webp",
-        "size": 6116
+        w: 480,
+        url: "/img/split-corridor-480.webp",
+        size: 6116,
       },
       {
-        "w": 768,
-        "url": "/img/split-corridor-768.webp",
-        "size": 14148
+        w: 768,
+        url: "/img/split-corridor-768.webp",
+        size: 14148,
       },
       {
-        "w": 1024,
-        "url": "/img/split-corridor-1024.webp",
-        "size": 24350
+        w: 1024,
+        url: "/img/split-corridor-1024.webp",
+        size: 24350,
       },
       {
-        "w": 1440,
-        "url": "/img/split-corridor-1440.webp",
-        "size": 44192
-      }
+        w: 1440,
+        url: "/img/split-corridor-1440.webp",
+        size: 44192,
+      },
     ],
-    "fallback": "/img/split-corridor-1024.jpg"
+    fallback: "/img/split-corridor-1024.jpg",
   },
   "wall-01": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/wall-01-480.avif",
-        "size": 9699
+        w: 480,
+        url: "/img/wall-01-480.avif",
+        size: 9699,
       },
       {
-        "w": 768,
-        "url": "/img/wall-01-768.avif",
-        "size": 16952
+        w: 768,
+        url: "/img/wall-01-768.avif",
+        size: 16952,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-01-1024.avif",
-        "size": 25523
-      }
+        w: 1024,
+        url: "/img/wall-01-1024.avif",
+        size: 25523,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/wall-01-480.webp",
-        "size": 14414
+        w: 480,
+        url: "/img/wall-01-480.webp",
+        size: 14414,
       },
       {
-        "w": 768,
-        "url": "/img/wall-01-768.webp",
-        "size": 26254
+        w: 768,
+        url: "/img/wall-01-768.webp",
+        size: 26254,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-01-1024.webp",
-        "size": 38172
-      }
+        w: 1024,
+        url: "/img/wall-01-1024.webp",
+        size: 38172,
+      },
     ],
-    "fallback": "/img/wall-01-1024.jpg"
+    fallback: "/img/wall-01-1024.jpg",
   },
   "wall-02": {
-    "width": 1024,
-    "height": 1024,
-    "aspect": 1,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1024,
+    aspect: 1,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/wall-02-480.avif",
-        "size": 10516
+        w: 480,
+        url: "/img/wall-02-480.avif",
+        size: 10516,
       },
       {
-        "w": 768,
-        "url": "/img/wall-02-768.avif",
-        "size": 19809
+        w: 768,
+        url: "/img/wall-02-768.avif",
+        size: 19809,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-02-1024.avif",
-        "size": 32534
-      }
+        w: 1024,
+        url: "/img/wall-02-1024.avif",
+        size: 32534,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/wall-02-480.webp",
-        "size": 14664
+        w: 480,
+        url: "/img/wall-02-480.webp",
+        size: 14664,
       },
       {
-        "w": 768,
-        "url": "/img/wall-02-768.webp",
-        "size": 27716
+        w: 768,
+        url: "/img/wall-02-768.webp",
+        size: 27716,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-02-1024.webp",
-        "size": 43166
-      }
+        w: 1024,
+        url: "/img/wall-02-1024.webp",
+        size: 43166,
+      },
     ],
-    "fallback": "/img/wall-02-1024.jpg"
+    fallback: "/img/wall-02-1024.jpg",
   },
   "wall-03": {
-    "width": 1024,
-    "height": 1365,
-    "aspect": 0.7502,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1365,
+    aspect: 0.7502,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/wall-03-480.avif",
-        "size": 4230
+        w: 480,
+        url: "/img/wall-03-480.avif",
+        size: 4230,
       },
       {
-        "w": 768,
-        "url": "/img/wall-03-768.avif",
-        "size": 7306
+        w: 768,
+        url: "/img/wall-03-768.avif",
+        size: 7306,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-03-1024.avif",
-        "size": 11462
-      }
+        w: 1024,
+        url: "/img/wall-03-1024.avif",
+        size: 11462,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/wall-03-480.webp",
-        "size": 4730
+        w: 480,
+        url: "/img/wall-03-480.webp",
+        size: 4730,
       },
       {
-        "w": 768,
-        "url": "/img/wall-03-768.webp",
-        "size": 8932
+        w: 768,
+        url: "/img/wall-03-768.webp",
+        size: 8932,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-03-1024.webp",
-        "size": 14568
-      }
+        w: 1024,
+        url: "/img/wall-03-1024.webp",
+        size: 14568,
+      },
     ],
-    "fallback": "/img/wall-03-1024.jpg"
+    fallback: "/img/wall-03-1024.jpg",
   },
   "wall-04": {
-    "width": 1280,
-    "height": 800,
-    "aspect": 1.6,
-    "alpha": false,
-    "avif": [
+    width: 1280,
+    height: 800,
+    aspect: 1.6,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/wall-04-480.avif",
-        "size": 6306
+        w: 480,
+        url: "/img/wall-04-480.avif",
+        size: 6306,
       },
       {
-        "w": 768,
-        "url": "/img/wall-04-768.avif",
-        "size": 12728
+        w: 768,
+        url: "/img/wall-04-768.avif",
+        size: 12728,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-04-1024.avif",
-        "size": 19945
-      }
+        w: 1024,
+        url: "/img/wall-04-1024.avif",
+        size: 19945,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/wall-04-480.webp",
-        "size": 8210
+        w: 480,
+        url: "/img/wall-04-480.webp",
+        size: 8210,
       },
       {
-        "w": 768,
-        "url": "/img/wall-04-768.webp",
-        "size": 17174
+        w: 768,
+        url: "/img/wall-04-768.webp",
+        size: 17174,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-04-1024.webp",
-        "size": 26606
-      }
+        w: 1024,
+        url: "/img/wall-04-1024.webp",
+        size: 26606,
+      },
     ],
-    "fallback": "/img/wall-04-1024.jpg"
+    fallback: "/img/wall-04-1024.jpg",
   },
   "wall-05": {
-    "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
-    "alpha": false,
-    "avif": [
+    width: 1024,
+    height: 1280,
+    aspect: 0.8,
+    alpha: false,
+    avif: [
       {
-        "w": 480,
-        "url": "/img/wall-05-480.avif",
-        "size": 9561
+        w: 480,
+        url: "/img/wall-05-480.avif",
+        size: 9561,
       },
       {
-        "w": 768,
-        "url": "/img/wall-05-768.avif",
-        "size": 17343
+        w: 768,
+        url: "/img/wall-05-768.avif",
+        size: 17343,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-05-1024.avif",
-        "size": 28915
-      }
+        w: 1024,
+        url: "/img/wall-05-1024.avif",
+        size: 28915,
+      },
     ],
-    "webp": [
+    webp: [
       {
-        "w": 480,
-        "url": "/img/wall-05-480.webp",
-        "size": 12754
+        w: 480,
+        url: "/img/wall-05-480.webp",
+        size: 12754,
       },
       {
-        "w": 768,
-        "url": "/img/wall-05-768.webp",
-        "size": 23716
+        w: 768,
+        url: "/img/wall-05-768.webp",
+        size: 23716,
       },
       {
-        "w": 1024,
-        "url": "/img/wall-05-1024.webp",
-        "size": 37294
-      }
+        w: 1024,
+        url: "/img/wall-05-1024.webp",
+        size: 37294,
+      },
     ],
-    "fallback": "/img/wall-05-1024.jpg"
-  }
+    fallback: "/img/wall-05-1024.jpg",
+  },
 } as const satisfies Record<string, ImageEntry>;

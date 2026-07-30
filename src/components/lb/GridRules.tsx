@@ -28,7 +28,7 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
-      <div className="shell mx-auto h-full">
+      <div className="shell-rules mx-auto h-full">
         <div className="relative h-full">
           {[0, 25, 50, 75, 100].map((left, i) => (
             <span
@@ -130,7 +130,7 @@ export function BoundaryRule({
           ))}
         </div>
       ) : null}
-      <div className="shell mx-auto">
+      <div className="shell-rules mx-auto">
         <div className="relative">
           {[0, 25, 50, 75, 100].map((left, i) => (
             <span
