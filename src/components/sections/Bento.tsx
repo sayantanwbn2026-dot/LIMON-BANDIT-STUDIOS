@@ -1,15 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight, Pause, Play } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { Picture } from "@/components/lb/Picture";
-
-const queue = [
-  { title: "Rusted Gold", time: "3:41" },
-  { title: "Late Fee", time: "2:58" },
-  { title: "Terminus", time: "5:12" },
-];
+import { Waveform } from "@/components/lb/Waveform";
+import { clock, usePlayer } from "@/lib/player";
+import { tracks } from "@/data/tracks";
 
 const crew = ["Video", "Cover art", "Photo", "Mixing", "Mastering", "Press"];
 const avatars = [
@@ -23,7 +20,12 @@ const avatars = [
 
 export function Bento() {
   const ref = useRef<HTMLDivElement>(null);
-  const [playing, setPlaying] = useState(false);
+  /* The same player the /label page drives — this tile used to fake it with
+   * 48 hard-coded bar heights and a boolean. */
+  const { track, playing, time, duration, play, toggle, seek } = usePlayer();
+  const shown = track ?? tracks[0];
+  const isLive = track?.id === shown.id;
+  const progress = isLive && duration > 0 ? time / duration : 0;
 
   useEffect(() => {
     const el = ref.current;
@@ -43,15 +45,8 @@ export function Bento() {
           scrollTrigger: { trigger: el, start: "top 85%", once: true },
         },
       );
-      gsap.to(el.querySelectorAll("[data-bar]"), {
-        scaleY: 0.35,
-        transformOrigin: "center",
-        duration: 1.8,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        stagger: { each: 0.04, from: "start" },
-      });
+      /* the [data-bar] loop that used to live here animated the faked
+         waveform; the real one is drawn from the audio and needs no help */
       gsap.fromTo(
         el.querySelector("[data-connector]"),
         { scaleX: 0 },
@@ -104,25 +99,24 @@ export function Bento() {
         <div data-tile className="bg-surface-raised p-8 lg:col-span-2">
           <div className="flex items-center gap-4">
             <Picture
-              src={"release-01"}
+              src={shown.cover}
               sizes="(max-width: 767px) 100vw, 50vw"
               alt=""
               className="h-16 w-16 object-cover mono"
             />
             <div className="min-w-0 flex-1">
               <div className="truncate font-display text-[16px] font-bold uppercase text-text">
-                Rusted Gold
+                {shown.title}
               </div>
-              <div className="mt-1 font-ui text-[12px] text-mute">Rana &amp; The Strays</div>
+              <div className="mt-1 truncate font-ui text-[12px] text-mute">{shown.artist}</div>
             </div>
             <button
               type="button"
-              aria-label={playing ? "Pause preview" : "Play preview"}
-              aria-pressed={playing}
-              onClick={() => setPlaying((p) => !p)}
-              className="flex h-11 w-11 items-center justify-center bg-acid"
+              aria-label={playing && isLive ? `Pause ${shown.title}` : `Play ${shown.title}`}
+              onClick={() => (isLive ? toggle() : play(shown.id))}
+              className="flex h-11 w-11 items-center justify-center bg-acid transition-colors duration-300 hover:bg-acid-dim"
             >
-              {playing ? (
+              {playing && isLive ? (
                 <Pause size={16} className="fill-accent-text text-accent-text" />
               ) : (
                 <Play size={16} className="fill-accent-text text-accent-text" />
@@ -130,27 +124,33 @@ export function Bento() {
             </button>
           </div>
 
-          <div className="mt-8 flex h-16 items-center gap-[3px]" aria-hidden="true">
-            {Array.from({ length: 48 }).map((_, i) => (
-              <span
-                key={i}
-                data-bar={i < 19 ? "" : undefined}
-                className={`w-[3px] ${i < 19 ? "bg-acid" : "bg-line"}`}
-                style={{ height: `${20 + ((i * 37) % 60)}%` }}
-              />
-            ))}
-          </div>
+          <Waveform
+            src={shown.src}
+            progress={progress}
+            height={64}
+            onSeek={(f) => {
+              if (!isLive) play(shown.id);
+              if (duration > 0) seek(f * duration);
+            }}
+            className="mt-8 w-full"
+          />
 
           <ul className="mt-8">
-            {queue.map((q) => (
-              <li
-                key={q.title}
-                className="flex items-center justify-between border-t border-line py-3 font-ui text-[14px] text-mute"
-              >
-                <span>{q.title}</span>
-                <span className="tnum">{q.time}</span>
-              </li>
-            ))}
+            {tracks.map((t) => {
+              const on = track?.id === t.id;
+              return (
+                <li key={t.id}>
+                  <button
+                    type="button"
+                    onClick={() => play(t.id)}
+                    className="flex w-full items-center justify-between border-t border-line py-3 text-left font-ui text-[14px] transition-colors duration-300 hover:text-text"
+                  >
+                    <span className={on ? "text-acid-type" : "text-mute"}>{t.title}</span>
+                    <span className="tnum text-mute">{on ? clock(duration) : t.genre}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

@@ -19,6 +19,8 @@ import { Cursor } from "@/components/lb/Cursor";
 import { SmoothScroll } from "@/components/lb/SmoothScroll";
 import { SkipLink } from "@/components/lb/SkipLink";
 import { RouteTransition } from "@/components/lb/RouteTransition";
+import { MiniTransport } from "@/components/lb/MiniTransport";
+import { PlayerProvider } from "@/lib/player";
 
 function NotFoundComponent() {
   return (
@@ -176,15 +178,20 @@ function RootComponent() {
       {/* Global chrome, mounted once above the router so it survives
           navigation — the nav and footer never remount, and Lenis is not torn
           down and rebuilt between routes. */}
-      <SkipLink />
-      <SmoothScroll />
-      <Noise />
-      <Cursor />
-      <RouteTransition />
-      <Nav />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-      <Footer />
+      {/* The audio element lives here, above the router, so playing a track
+          on /label and then navigating does not stop the music. */}
+      <PlayerProvider>
+        <SkipLink />
+        <SmoothScroll />
+        <Noise />
+        <Cursor />
+        <RouteTransition />
+        <Nav />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <Footer />
+        <MiniTransport />
+      </PlayerProvider>
     </QueryClientProvider>
   );
 }

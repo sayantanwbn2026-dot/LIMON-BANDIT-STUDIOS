@@ -10,7 +10,7 @@ marked outstanding rather than guessed.
 | Hero mascot (LCP candidate)                 |                **1,432.7 KB** PNG |       **55.2 KB** AVIF @1024 |
 | Largest photographic asset @1440            |                     166.5 KB JPEG |             **34.6 KB** AVIF |
 | Source images on disk                       |               3,032 KB / 22 files | unchanged (sources retained) |
-| JS + CSS, gzipped, production build         |                          191.1 KB |                     192.5 KB |
+| JS + CSS, gzipped, production build         |                          191.1 KB |     206.2 KB (see Bundle) |
 | Font delivery                               |             2 third-party origins |              **self-hosted** |
 | Font payload                                |           ~118 KB, 2 blocking CSS |            **89.9 KB**, none |
 | Render-blocking requests before first glyph | **2 stylesheets + 2 DNS + 2 TLS** |                        **0** |
@@ -136,6 +136,12 @@ Against the brief's 180 KB budget this is **12 KB over**. The dominant cost is
 GSAP (251 KB raw on the server build). Closing it means deferring
 GSAP/ScrollTrigger off the critical path — real work, not a tweak, and it
 belongs with the route-splitting in Job 2 rather than being rushed here.
+
+**Update after Jobs 2–4: 206.2 KB — 26 KB over.** The page shell, route
+transition, audio player and waveform each added a few KB, and none of it has
+been split out yet. The budget has now been missed three passes running and is
+getting worse, not better; deferring GSAP and route-splitting the player is
+the outstanding fix and should be done before any more pages are added.
 
 ## Outstanding
 

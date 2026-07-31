@@ -11,9 +11,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "images": "node scripts/images.mjs",
-    "predev": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing",
-    "prebuild": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing",
-    "fonts": "node scripts/fonts.mjs"
+    "predev": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing && node scripts/audio.mjs --if-missing",
+    "prebuild": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing && node scripts/audio.mjs --if-missing",
+    "fonts": "node scripts/fonts.mjs",
+    "audio": "node scripts/audio.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
