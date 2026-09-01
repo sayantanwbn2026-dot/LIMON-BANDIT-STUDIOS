@@ -62,7 +62,7 @@ export function LabelPlayer() {
             src={shown.cover}
             alt={`Cover art for ${shown.title} by ${shown.artist}`}
             sizes="(max-width: 1023px) 100vw, 280px"
-            className="aspect-square w-full border border-line object-cover mono"
+            className="aspect-square w-full border border-line object-cover chroma"
           />
 
           <div

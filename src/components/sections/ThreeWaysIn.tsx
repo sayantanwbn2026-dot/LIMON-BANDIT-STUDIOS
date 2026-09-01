@@ -26,6 +26,34 @@ export function ThreeWaysIn() {
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
+
+      /* ---- phones: the doors open ----
+       * One pair of leaves per card, each pair triggered by its own card so
+       * they open as you come to them rather than all at once off-screen.
+       * `once` because a door that shuts itself every time you scroll back
+       * up stops being a door and becomes a flicker. */
+      mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+        const panels = gsap.utils.toArray<HTMLElement>("[data-panel]", el);
+        const kills: Array<() => void> = [];
+
+        panels.forEach((panel) => {
+          const leaves = panel.querySelectorAll<HTMLElement>("[data-leaf]");
+          if (leaves.length !== 2) return;
+
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: panel, start: "top 72%", once: true },
+          });
+          /* 101%, not 100 — a hairline of the leaf stays visible at exactly
+           * 100% on fractional-DPR screens. */
+          tl.to(leaves[0], { xPercent: -101, duration: 0.9, ease: "expo.inOut" }, 0);
+          tl.to(leaves[1], { xPercent: 101, duration: 0.9, ease: "expo.inOut" }, 0);
+          kills.push(() => tl.scrollTrigger?.kill());
+          kills.push(() => tl.kill());
+        });
+
+        return () => kills.forEach((k) => k());
+      });
+
       mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
         const panels = gsap.utils.toArray<HTMLElement>("[data-panel]");
         const assembly = el.querySelector<HTMLElement>("[data-assembly]");
@@ -112,25 +140,37 @@ export function ThreeWaysIn() {
         </div>
       </div>
 
-      {/* pin container */}
-      <div ref={root} className="relative mt-16 lg:h-[380vh]">
+      {/* Pin container. 200vh, down from 380: the split-and-flip is four
+       * short phases and at 380 each one was stretched over most of a
+       * screen, so the plates crawled. The timeline is expressed in
+       * fractions of the scroll range, so a shorter container plays the
+       * same scene at a pace that reads as choreography rather than as the
+       * page refusing to move. */}
+      <div ref={root} className="relative mt-16 lg:h-[200vh]">
         <div
           data-stage
-          className="relative flex w-full items-center justify-center lg:h-[100svh]"
+          /* pt reserves the fixed navbar: the stage is pinned to the top of
+           * the viewport, so without it the centred assembly rides up under
+           * the bar as the plates flip. */
+          className="relative flex w-full items-center justify-center lg:h-[100svh] lg:pt-[var(--nav-h)]"
           style={{ perspective: 1400 }}
         >
           <div className="w-full">
-            {/* mobile / reduced-motion photograph */}
+            {/* Reduced motion only. On a phone the corridor is no longer a
+             * separate picture above the cards — it is on the doors, which
+             * open. This stays for anyone who has asked for no animation,
+             * because for them the doors never open and the photograph
+             * would otherwise be missing entirely. */}
             <MaskReveal
               src="split-corridor"
               alt="The corridor outside the three rooms at the Limon Bandit house"
-              className="mb-10 aspect-[21/9] w-full lg:hidden"
+              className="lb-doors-still mb-10 aspect-[21/9] w-full lg:hidden"
               imgClassName="h-full w-full object-cover"
               sizes="100vw"
-              style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
+              style={{ filter: "brightness(var(--img-brightness)) contrast(1.08)" }}
             />
 
-            <div className="relative mx-auto w-full max-w-[1400px] lg:w-[84vw]">
+            <div className="lb-doors-box relative">
               <div
                 data-assembly
                 className="flex w-full flex-col gap-6 lg:flex-row lg:gap-0"
@@ -153,7 +193,7 @@ export function ThreeWaysIn() {
                         backgroundImage: `url(${CORRIDOR})`,
                         backgroundSize: "300% 100%",
                         backgroundPosition: `${i * 50}% 50%`,
-                        filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
+                        filter: "brightness(var(--img-brightness)) contrast(1.08)",
                       }}
                     >
                       {i === 1 ? (
@@ -206,6 +246,44 @@ export function ThreeWaysIn() {
                         </Link>
                       </div>
                     </article>
+
+                    {/* ---- the door, on phones ----
+                     * Two leaves carrying this card's slice of the corridor,
+                     * which slide apart when the card arrives and leave the
+                     * offer behind them. The desktop plate flip is gated to
+                     * 1024px and mobile got nothing at all — a static photo
+                     * above three plain cards.
+                     *
+                     * The maths: the corridor spans three card widths, each
+                     * leaf is half a card, so the image is six leaf widths —
+                     * 600% — and leaf k sits at k*20%. Card i owns leaves 2i
+                     * and 2i+1, so the seam falls exactly where the picture
+                     * would have been cut anyway.
+                     *
+                     * transform only, so the whole thing composites. */}
+                    <span
+                      aria-hidden="true"
+                      data-leaf
+                      className="absolute inset-y-0 left-0 z-[3] w-1/2 lg:hidden"
+                      style={{
+                        backgroundImage: `url(${CORRIDOR})`,
+                        backgroundSize: "600% 100%",
+                        backgroundPosition: `${i * 2 * 20}% 50%`,
+                        filter: "brightness(var(--img-brightness)) contrast(1.08)",
+                        borderRight: "1px solid var(--accent)",
+                      }}
+                    />
+                    <span
+                      aria-hidden="true"
+                      data-leaf
+                      className="absolute inset-y-0 right-0 z-[3] w-1/2 lg:hidden"
+                      style={{
+                        backgroundImage: `url(${CORRIDOR})`,
+                        backgroundSize: "600% 100%",
+                        backgroundPosition: `${(i * 2 + 1) * 20}% 50%`,
+                        filter: "brightness(var(--img-brightness)) contrast(1.08)",
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -227,7 +305,7 @@ export function ThreeWaysIn() {
             </div>
 
             {/* progress rail */}
-            <div className="mx-auto mt-8 hidden w-[84vw] max-w-[1400px] grid-cols-3 gap-6 lg:grid">
+            <div className="lb-doors-box mt-8 hidden grid-cols-3 gap-6 lg:grid">
               {[0, 1, 2].map((i) => (
                 <span key={i} className="relative block h-px w-full bg-line">
                   <span

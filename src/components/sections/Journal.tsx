@@ -42,15 +42,7 @@ export function Journal() {
                 src={p.image}
                 sizes="(max-width: 767px) 100vw, 30vw"
                 alt={p.alt}
-                className="aspect-[4/3] w-full border border-alt-line object-cover transition-all duration-500"
-                style={{ filter: "grayscale(1) brightness(var(--img-brightness))" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.filter =
-                    "grayscale(0.2) brightness(var(--img-brightness))")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")
-                }
+                className="chroma aspect-[4/3] w-full border border-alt-line object-cover"
               />
               <div className="t-label mt-5 text-alt-mute">
                 {p.category} · {p.readTime}

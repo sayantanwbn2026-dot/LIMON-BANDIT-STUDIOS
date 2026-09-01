@@ -1,43 +1,34 @@
-import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { GridRules } from "@/components/lb/GridRules";
-import { RiseIn, WordReveal } from "@/components/lb/Reveal";
+import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
 import { testimonials } from "@/data/testimonials";
 import { testimonialTicker } from "@/data/tickers";
-import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { Picture } from "@/components/lb/Picture";
+
+/**
+ * The roster talks — set the way the hero is set.
+ *
+ * Was two parallax columns of bordered cards, each carrying a display quote
+ * glyph, a portrait, a name block, an "LB" mark, a row of room chips and a
+ * nested result grid. Eight pieces of chrome around one sentence.
+ *
+ * Now the sentence is the section. One ruled column, the quote at display
+ * scale, attribution and result on a single meta line beneath it. Nothing is
+ * boxed; the hairline does the separating, exactly as it does on the Rooms
+ * ledger and the Crew directory.
+ *
+ * ON THE ACID SURFACE, NOTHING IS DIMMED
+ * There is no muted token for the acid pole, and dropping --accent-text to
+ * 60% would land it under AA on #E9FF00. Hierarchy here comes from size and
+ * weight only — every piece of type is full-strength ink.
+ */
+const RULE = "rgba(0,0,0,0.22)";
 
 export function Testimonials() {
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const gsap = ensureGsap();
-    if (!gsap || prefersReducedMotion()) return;
-    if (!window.matchMedia("(min-width: 1024px)").matches) return;
-    const ctx = gsap.context(() => {
-      gsap.to("[data-col='left']", {
-        y: -60,
-        ease: "none",
-        scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 1 },
-      });
-      gsap.to("[data-col='right']", {
-        y: -110,
-        ease: "none",
-        scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 1 },
-      });
-    }, el);
-    return () => ctx.revert();
-  }, []);
-
-  const left = testimonials.filter((_, i) => i % 2 === 0);
-  const right = testimonials.filter((_, i) => i % 2 === 1);
-
   return (
-    <section ref={ref} className="relative w-full bg-acid pt-[160px]">
+    <section className="relative w-full bg-acid pt-[160px]">
       <GridRules tone="acid" />
+
       <div className="shell relative z-[2] pb-[160px]">
         <div className="section-head">
           <div className="md:col-span-1">
@@ -49,98 +40,53 @@ export function Testimonials() {
           <div className="md:col-span-2">
             <WordReveal as="h2" className="t-h2 text-accent-text" text={"The roster talks."} />
           </div>
-          <div className="flex flex-col justify-end gap-6 md:col-span-1">
-            <div className="flex items-center gap-4">
-              <div className="flex">
-                {testimonials.slice(0, 3).map((t, i) => (
-                  <Picture
-                    key={t.name}
-                    src={t.photo}
-                    sizes="44px"
-                    alt=""
-                    className="h-10 w-10 border border-acid object-cover mono"
-                    style={{ marginLeft: i === 0 ? 0 : -10 }}
-                  />
-                ))}
-              </div>
-              <span className="font-ui text-[12px] text-accent-text">
-                Artists · Producers · Engineers
-              </span>
-            </div>
+          <div className="flex items-end md:col-span-1">
             <a
               href="/label"
-              className="group flex w-fit items-center gap-3 border border-accent-text px-6 py-4 transition-colors duration-300 hover:bg-accent-text"
+              className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text"
             >
-              <span className="t-eyebrow text-accent-text transition-colors duration-300 group-hover:text-acid">
-                See the roster
-              </span>
+              <span className="wipe-underline">See the roster</span>
               <ArrowRight
-                size={15}
-                className="text-accent-text transition-all duration-300 group-hover:translate-x-1 group-hover:text-acid"
+                size={14}
+                className="transition-transform duration-300 group-hover:translate-x-1"
               />
             </a>
           </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {[left, right].map((col, ci) => (
-            <div key={ci} data-col={ci === 0 ? "left" : "right"} className="flex flex-col gap-6">
-              {col.map((t, i) => (
-                <RiseIn key={t.name} delay={i * 0.08}>
-                  <article className="bg-surface-deep p-8">
-                    <span
-                      aria-hidden="true"
-                      className="block font-display text-[40px] font-extrabold leading-none text-acid-type"
-                    >
-                      &ldquo;
-                    </span>
-                    <blockquote className="mt-4 font-display text-[22px] font-bold uppercase leading-[1.2] tracking-[-0.02em] text-text">
+        <ul className="mt-20" style={{ borderTop: `1px solid ${RULE}` }}>
+          {testimonials.map((t, i) => (
+            <li key={t.name} style={{ borderBottom: `1px solid ${RULE}` }}>
+              <RiseIn delay={i * 0.05}>
+                <article className="grid grid-cols-1 gap-x-10 gap-y-6 py-12 lg:grid-cols-12 lg:items-baseline">
+                  <blockquote className="lg:col-span-8">
+                    <p className="max-w-[26ch] font-display text-[26px] font-extrabold uppercase leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
                       {t.quote}
-                    </blockquote>
-                    <div className="mt-8 h-px w-full bg-line" />
-                    <div className="mt-6 flex items-center gap-4">
-                      <Picture
-                        src={t.photo}
-                        sizes="44px"
-                        alt={`Portrait of ${t.name}`}
-                        className="h-11 w-11 object-cover mono"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="font-display text-[14px] font-bold uppercase text-text">
-                          {t.name}
-                        </div>
-                        <div className="font-ui text-[11px] text-mute">{t.role}</div>
-                      </div>
-                      <span className="t-label text-mute">LB</span>
-                    </div>
-                    <div className="mt-8 grid grid-cols-2 gap-6 border-t border-line pt-6">
-                      <div>
-                        <div className="t-label text-mute">// Room</div>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {t.rooms.map((r) => (
-                            <span
-                              key={r}
-                              className="t-label rounded-[2px] border border-line px-3 py-2 text-mute"
-                            >
-                              {r}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="border-l border-line pl-6">
-                        <div className="t-label text-mute">// Result</div>
-                        <div className="tnum mt-3 font-display text-[24px] font-extrabold tracking-[-0.03em] text-acid-type">
-                          {t.resultValue}
-                        </div>
-                        <div className="t-label mt-1 text-mute">{t.resultLabel}</div>
-                      </div>
-                    </div>
-                  </article>
-                </RiseIn>
-              ))}
-            </div>
+                    </p>
+                  </blockquote>
+
+                  <div className="lg:col-span-2">
+                    <span className="block font-ui text-[14px] font-bold uppercase tracking-[0.06em] text-accent-text">
+                      {t.name}
+                    </span>
+                    <span className="mt-1 block font-ui text-[13px] text-accent-text">
+                      {t.role}
+                    </span>
+                  </div>
+
+                  <div className="lg:col-span-2 lg:text-right">
+                    <span className="tnum block font-display text-[22px] font-extrabold tracking-[-0.03em] text-accent-text">
+                      {t.resultValue}
+                    </span>
+                    <span className="t-label mt-1 block text-accent-text">
+                      {t.resultLabel.replace("#", "")}
+                    </span>
+                  </div>
+                </article>
+              </RiseIn>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
 
       <div className="relative z-[2] flex h-[52px] items-center bg-surface-deep">

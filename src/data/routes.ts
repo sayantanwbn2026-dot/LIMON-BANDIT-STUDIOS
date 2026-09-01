@@ -18,6 +18,18 @@ export type Chapter = {
   name: string;
   /** page H1 */
   heading: string;
+  /**
+   * The hero poster lockup: a short word letter-spread across the measure
+   * with `word` fitted to span that same measure exactly underneath. Read
+   * together they are a phrase — "LIMON BANDIT", "STUDIO ROOMS" — which is
+   * what makes every page's hero the landing page's hero in a new context
+   * rather than a different design wearing the same grid.
+   *
+   * Keep `spread` around five or six letters. It is set with
+   * justify-between across the full measure, so three letters tear apart
+   * into three lonely glyphs and nine crush the tracking flat.
+   */
+  poster: { spread: string; word: string };
   /** one line under the H1, in --mute */
   standfirst: string;
   title: string;
@@ -31,6 +43,7 @@ export const chapters: Chapter[] = [
     to: "/",
     name: "House",
     heading: "Limon Bandit",
+    poster: { spread: "Limon", word: "Bandit" },
     standfirst: "Four rooms, one label, and a merch line. Run out of one building in Kolkata.",
     title: "Limon Bandit — Kolkata Music House, Studio Rooms & Label",
     description:
@@ -42,6 +55,7 @@ export const chapters: Chapter[] = [
     to: "/rooms",
     name: "Rooms",
     heading: "Four rooms, one building",
+    poster: { spread: "Studio", word: "Rooms" },
     standfirst:
       "Live room, vocal booth, and overnight lockouts. Engineer included, rates on the wall, masters go home with you.",
     title: "The Rooms — Studio Hire in Kolkata | Limon Bandit",
@@ -54,6 +68,7 @@ export const chapters: Chapter[] = [
     to: "/label",
     name: "Label",
     heading: "The label",
+    poster: { spread: "Record", word: "Label" },
     standfirst:
       "Seventy-thirty, paid monthly, artist first. We sign records we would play ourselves.",
     title: "The Label — Independent Records from Kolkata | Limon Bandit",
@@ -66,6 +81,7 @@ export const chapters: Chapter[] = [
     to: "/shop",
     name: "Shop",
     heading: "The drop",
+    poster: { spread: "Merch", word: "Drop" },
     standfirst:
       "Tees, outerwear, caps and vinyl. Small runs printed in Kolkata and sold direct. No restocks.",
     title: "The Drop — Merch Printed in Kolkata | Limon Bandit",
@@ -78,6 +94,7 @@ export const chapters: Chapter[] = [
     to: "/crew",
     name: "Crew",
     heading: "The crew",
+    poster: { spread: "House", word: "Crew" },
     standfirst:
       "Directors, engineers, cover artists and photographers. Vetted, rated, and hired by the project.",
     title: "The Crew — Directors, Engineers & Artists for Hire | Limon Bandit",
@@ -90,6 +107,7 @@ export const chapters: Chapter[] = [
     to: "/journal",
     name: "Journal",
     heading: "Notes from the room",
+    poster: { spread: "Field", word: "Notes" },
     standfirst:
       "Gear, label splits, recording in this city, and how a print run actually gets made.",
     title: "Journal — Notes from the Limon Bandit Room",
@@ -102,6 +120,7 @@ export const chapters: Chapter[] = [
     to: "/contact",
     name: "Contact",
     heading: "Start something",
+    poster: { spread: "Start", word: "Something" },
     standfirst: "Book a room, submit a demo, hire the crew. One form, and a person reads it.",
     title: "Contact — Book a Room or Submit a Demo | Limon Bandit",
     description:

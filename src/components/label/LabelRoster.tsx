@@ -94,7 +94,7 @@ export function LabelRoster() {
                 src={shown.cover}
                 alt={shown.alt}
                 sizes="360px"
-                className="aspect-square w-full border border-line object-cover mono"
+                className="aspect-square w-full border border-line object-cover chroma"
               />
               <div className="mt-4 flex items-baseline justify-between gap-4">
                 <span className="font-display text-[15px] font-bold uppercase tracking-[-0.01em] text-text">

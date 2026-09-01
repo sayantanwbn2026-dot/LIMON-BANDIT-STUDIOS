@@ -42,6 +42,48 @@ export function DropRail() {
     return () => ctx.revert();
   }, []);
 
+  /* On a phone the rail is a native scroller and the pinned ScrollTrigger
+   * above never runs — which left the progress bar parked at scaleX(0)
+   * forever, an empty meter sitting next to a "Drag / Scroll" label that
+   * never filled no matter how far you swiped. Drive it from the scroller
+   * itself so the affordance tells the truth on touch.
+   *
+   * Reads are coalesced into a rAF because scroll fires far faster than
+   * paint, and the listener is only attached while the media query holds
+   * so GSAP keeps sole ownership of the bar on desktop. */
+  useEffect(() => {
+    const tr = track.current;
+    const b = bar.current;
+    if (!tr || !b) return;
+
+    const mq = window.matchMedia("(max-width: 767px)");
+    let raf = 0;
+
+    const paint = () => {
+      raf = 0;
+      const max = tr.scrollWidth - tr.clientWidth;
+      b.style.transform = `scaleX(${max > 0 ? tr.scrollLeft / max : 0})`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+    const sync = () => {
+      tr.removeEventListener("scroll", onScroll);
+      if (mq.matches) {
+        tr.addEventListener("scroll", onScroll, { passive: true });
+        paint();
+      }
+    };
+
+    sync();
+    mq.addEventListener("change", sync);
+    return () => {
+      tr.removeEventListener("scroll", onScroll);
+      mq.removeEventListener("change", sync);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <section ref={root} id="drops" className="relative w-full overflow-hidden bg-surface-deep">
       <BoundaryRule tone="dark" className="top-0" />
@@ -60,7 +102,12 @@ export function DropRail() {
         <div className="mt-12 w-full overflow-hidden">
           <div
             ref={track}
-            className="flex w-max gap-6 px-[var(--page-margin)] max-md:w-full max-md:snap-x max-md:overflow-x-auto"
+            /* snap-mandatory, not the default proximity: a loose snap on a
+             * 280px card leaves it parked half off-screen as often as not.
+             * scroll-padding-inline matches the track's own padding so a
+             * snapped card lands on the page margin rather than flush to
+             * the viewport edge, off the grid everything else sits on. */
+            className="flex w-max gap-6 px-[var(--page-margin)] max-md:w-full max-md:snap-x max-md:snap-mandatory max-md:scroll-px-[var(--page-margin)] max-md:overflow-x-auto"
           >
             {drops.map((d) => (
               <article
@@ -74,7 +121,7 @@ export function DropRail() {
                     alt={`${d.title} by ${d.artist} — cover art`}
                     className="h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-[1.05]"
                     style={{
-                      filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.05)",
+                      filter: "brightness(var(--img-brightness)) contrast(1.03) saturate(1.06)",
                     }}
                   />
                   <span className="absolute left-0 top-0 bg-surface-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] tnum text-acid-type">

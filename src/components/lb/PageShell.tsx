@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
+import { setNavPole, type NavPole } from "@/lib/nav-pole";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "./GridRules";
 import { MarginNotes } from "./Section";
@@ -13,52 +14,77 @@ import { chapter, neighbours, type ChapterKey } from "@/data/routes";
  */
 export function PageShell({
   chapter: key,
+  hero,
+  pole = "primary",
   children,
 }: {
   chapter: ChapterKey;
+  /** Page-specific hero. Falls back to the plain band when omitted. */
+  hero?: ReactNode;
+  /**
+   * Which pole the page's surfaces sit on. An inverted page has to declare
+   * it so the fixed navbar stops being transparent over it — see nav-pole.
+   */
+  pole?: NavPole;
   children?: ReactNode;
 }) {
-  const c = chapter(key);
+  useEffect(() => {
+    setNavPole(pole);
+    return () => setNavPole("primary");
+  }, [pole]);
 
   return (
     <main id="main" className="relative w-full bg-surface-deep">
-      <header className="relative w-full overflow-hidden">
-        <GridRules tone="dark" />
-        <MarginNotes index={c.index} name={c.name} />
-
-        {/* 160px top: the band follows the fixed navbar, which is a chapter
-            change in its own right. */}
-        <div className="shell relative z-[2] pb-[120px] pt-[160px]">
-          <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
-              <li>
-                <Link to="/" className="transition-colors duration-300 hover:text-text">
-                  LMN&middot;BNDT
-                </Link>
-              </li>
-              <li aria-hidden="true" className="opacity-50">
-                /
-              </li>
-              <li aria-current="page" className="text-text">
-                {c.name}
-              </li>
-            </ol>
-          </nav>
-
-          {/* focus lands here on navigation — see RouteTransition */}
-          <h1 data-page-h1 tabIndex={-1} className="t-h2 mt-8 max-w-[18ch] text-text outline-none">
-            {c.heading}
-          </h1>
-          <p className="t-lead mt-6 max-w-[54ch] text-mute">{c.standfirst}</p>
-        </div>
-
-        <BoundaryRule tone="dark" ticks className="bottom-0" />
-      </header>
+      {hero ?? <DefaultHero chapter={key} />}
 
       {children}
 
       <ChapterNav current={key} />
     </main>
+  );
+}
+
+/**
+ * The original band, kept as the fallback for any page that has not been
+ * given a hero of its own. Every interior page now supplies one; this exists
+ * so adding a route never lands on a broken header.
+ */
+function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
+  const c = chapter(key);
+
+  return (
+    <header className="relative w-full overflow-hidden">
+      <GridRules tone="dark" />
+      <MarginNotes index={c.index} name={c.name} />
+
+      {/* 160px top: the band follows the fixed navbar, which is a chapter
+          change in its own right. */}
+      <div className="shell relative z-[2] pb-[120px] pt-[160px]">
+        <nav aria-label="Breadcrumb">
+          <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
+            <li>
+              <Link to="/" className="transition-colors duration-300 hover:text-text">
+                LMN&middot;BNDT
+              </Link>
+            </li>
+            <li aria-hidden="true" className="opacity-50">
+              /
+            </li>
+            <li aria-current="page" className="text-text">
+              {c.name}
+            </li>
+          </ol>
+        </nav>
+
+        {/* focus lands here on navigation — see RouteTransition */}
+        <h1 data-page-h1 tabIndex={-1} className="t-h2 mt-8 max-w-[18ch] text-text outline-none">
+          {c.heading}
+        </h1>
+        <p className="t-lead mt-6 max-w-[54ch] text-mute">{c.standfirst}</p>
+      </div>
+
+      <BoundaryRule tone="dark" ticks className="bottom-0" />
+    </header>
   );
 }
 

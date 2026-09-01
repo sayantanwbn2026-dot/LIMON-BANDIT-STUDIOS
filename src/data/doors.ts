@@ -51,6 +51,9 @@ export const doors: Door[] = [
     text: "var(--text)",
     muted: "var(--mute)",
     border: "var(--line)",
-    indexColor: "var(--accent)",
+    /* --accent-type, not --accent: this is acid used as TYPE, so it has to
+     * follow the pole and dim to #5F6B00 on bone. Raw --accent measured
+     * 1.04:1 against --surface-raised in light mode. */
+    indexColor: "var(--accent-type)",
   },
 ];

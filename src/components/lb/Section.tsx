@@ -60,16 +60,27 @@ export function Section({
     >
       <BoundaryRule tone={tone} active={active} className="top-0" />
       <GridRules tone={tone} />
-      {index && name ? <MarginNotes index={index} name={name} /> : null}
+      {index && name ? <MarginNotes index={index} name={name} tone={tone} /> : null}
       <div className="shell relative z-[2]">{children}</div>
     </Tag>
   );
 }
 
 /** Rotated drafting annotations in the outer margins. */
-export function MarginNotes({ index, name }: { index: string; name: string }) {
-  const base =
-    "pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute xl:block";
+export function MarginNotes({
+  index,
+  name,
+  tone = "dark",
+}: {
+  index: string;
+  name: string;
+  tone?: Tone;
+}) {
+  /* The notes sit on the section's own pole, so on an inverted chapter they
+   * have to follow it — primary-pole mute on a bone surface is unreadable. */
+  const tint =
+    tone === "light" ? "text-alt-mute" : tone === "acid" ? "text-accent-text" : "text-mute";
+  const base = `pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint} xl:block`;
   const style: React.CSSProperties = {
     writingMode: "vertical-rl",
     transform: "translateY(-50%) rotate(180deg)",
@@ -113,7 +124,11 @@ export function Eyebrow({
     <div
       className={`inline-flex items-center gap-3 ${notch ? `${surface} -ml-4 px-4 -mt-[0.5em]` : ""}`}
     >
-      <span className="h-[10px] w-[10px] shrink-0 bg-acid" />
+      {/* The acid mark carries the halo. It is the one element that appears
+       * at the top of every section, so glowing it is what makes the neon
+       * layer feel systematic rather than sprinkled — and it is a 10px
+       * square, so the glow reads without lighting up the page. */}
+      <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
       {typeof children === "string" ? (
         <Decode text={children} className={`t-eyebrow ${tint}`} />
       ) : (

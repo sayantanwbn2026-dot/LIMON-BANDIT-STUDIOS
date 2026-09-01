@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { MotionConfig } from "motion/react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -18,6 +19,7 @@ import { Noise } from "@/components/lb/Noise";
 import { Cursor } from "@/components/lb/Cursor";
 import { SmoothScroll } from "@/components/lb/SmoothScroll";
 import { SkipLink } from "@/components/lb/SkipLink";
+import { SectionRule } from "@/components/lb/SectionRule";
 import { RouteTransition } from "@/components/lb/RouteTransition";
 import { MiniTransport } from "@/components/lb/MiniTransport";
 import { PlayerProvider } from "@/lib/player";
@@ -86,7 +88,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {
+        name: "viewport",
+        /* viewport-fit=cover is what makes env(safe-area-inset-*) resolve to
+         * anything but 0. Without it iOS letterboxes the page and the
+         * full-bleed surfaces stop short of the screen edge. */
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
       { title: "Limon Bandit — Kolkata Music House" },
       {
         name: "description",
@@ -180,18 +188,27 @@ function RootComponent() {
           down and rebuilt between routes. */}
       {/* The audio element lives here, above the router, so playing a track
           on /label and then navigating does not stop the music. */}
-      <PlayerProvider>
-        <SkipLink />
-        <SmoothScroll />
-        <Noise />
-        <Cursor />
-        <RouteTransition />
-        <Nav />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <Footer />
-        <MiniTransport />
-      </PlayerProvider>
+      {/* Framer Motion honours prefers-reduced-motion from here, matching what
+          every GSAP effect on the site already checks via prefersReducedMotion().
+          Without this the two systems disagree: the scroll choreography would
+          stand still while the component transitions kept animating. `user`
+          reduces transforms and keeps opacity, which is the intent — nothing
+          moves, things still appear. */}
+      <MotionConfig reducedMotion="user">
+        <PlayerProvider>
+          <SkipLink />
+          <SmoothScroll />
+          <SectionRule />
+          <Noise />
+          <Cursor />
+          <RouteTransition />
+          <Nav />
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <Footer />
+          <MiniTransport />
+        </PlayerProvider>
+      </MotionConfig>
     </QueryClientProvider>
   );
 }

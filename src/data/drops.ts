@@ -8,6 +8,10 @@ export type Drop = {
   date: string;
   status: "Out now" | "Pre-order" | "Sold out";
   image: ImageKey;
+  /** shelf price. Sold-out runs keep theirs — the shop states what it was. */
+  price: string;
+  /** how many were made. Nothing is repressed, so this is the whole run. */
+  run: string;
 };
 
 export const drops: Drop[] = [
@@ -20,6 +24,8 @@ export const drops: Drop[] = [
     date: "Mar 2026",
     status: "Out now",
     image: "release-01",
+    price: "₹1,800",
+    run: "300 pressed",
   },
   {
     id: "d2",
@@ -30,6 +36,8 @@ export const drops: Drop[] = [
     date: "Feb 2026",
     status: "Out now",
     image: "release-02",
+    price: "₹180",
+    run: "Digital",
   },
   {
     id: "d3",
@@ -40,6 +48,8 @@ export const drops: Drop[] = [
     date: "Jan 2026",
     status: "Sold out",
     image: "release-03",
+    price: "₹900",
+    run: "100 dubbed",
   },
   {
     id: "d4",
@@ -50,6 +60,8 @@ export const drops: Drop[] = [
     date: "Dec 2025",
     status: "Out now",
     image: "release-04",
+    price: "₹2,600",
+    run: "500 pressed",
   },
   {
     id: "d5",
@@ -60,6 +72,8 @@ export const drops: Drop[] = [
     date: "Nov 2025",
     status: "Out now",
     image: "release-05",
+    price: "₹450",
+    run: "Digital + 50 CD",
   },
   {
     id: "d6",
@@ -70,6 +84,8 @@ export const drops: Drop[] = [
     date: "Oct 2026",
     status: "Pre-order",
     image: "release-06",
+    price: "₹2,200",
+    run: "250 pressed",
   },
   {
     id: "d7",
@@ -80,5 +96,7 @@ export const drops: Drop[] = [
     date: "Sep 2026",
     status: "Pre-order",
     image: "merch-tee",
+    price: "₹1,400",
+    run: "150 printed",
   },
 ];

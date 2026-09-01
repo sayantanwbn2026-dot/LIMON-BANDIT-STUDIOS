@@ -73,7 +73,7 @@ export function Rooms() {
                     style={{
                       opacity: i === active ? 1 : 0,
                       zIndex: i === active ? 2 : 1,
-                      filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
+                      filter: "brightness(var(--img-brightness)) contrast(1.08)",
                     }}
                   />
                 ))}
@@ -122,7 +122,7 @@ export function Rooms() {
                   alt={`${r.name} — ${r.kind} at Limon Bandit`}
                   className="mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
                   style={{
-                    filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
+                    filter: "brightness(var(--img-brightness)) contrast(1.08)",
                   }}
                 />
 
@@ -130,7 +130,13 @@ export function Rooms() {
                   {r.blurb}
                 </p>
 
-                <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3">
+                {/* One column on a phone. Two columns of a label/value pair
+                 * inside 390px leaves ~150px for the value, which broke
+                 * "Four cue mixes" over three lines and "One + engineer"
+                 * over two — a spec sheet that reads as damaged text. Full
+                 * width gives every row its label left, value right, on one
+                 * line, which is how the shop and contact rows already set. */}
+                <dl className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
                   {r.specs.map((s) => (
                     <div key={s.k} className="flex items-baseline gap-2 border-b border-line pb-2">
                       <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">

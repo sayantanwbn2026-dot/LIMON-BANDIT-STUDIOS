@@ -47,8 +47,12 @@ export function WordReveal({
 
   return (
     <Tag ref={ref} className={className}>
+      {/* data-line so a narrow screen can let these run together. The breaks
+       * in the copy are set for a desktop measure — on a phone they stack on
+       * top of the natural wrapping and turn a three-line heading into
+       * seven. See the mobile section-head block in styles.css. */}
       {lines.map((line, li) => (
-        <span key={li} className="block">
+        <span key={li} data-line className="block">
           {line.split(" ").map((w, i) => (
             <span key={i} className="word-mask">
               <span data-word className="inline-block">

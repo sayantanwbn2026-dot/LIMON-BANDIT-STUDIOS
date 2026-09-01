@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { navItems, site } from "@/data/site";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
+import { useNavPole } from "@/lib/nav-pole";
 import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import { Picture } from "@/components/lb/Picture";
 
@@ -33,7 +34,8 @@ export function Nav() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [solid, setSolid] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navPole = useNavPole();
 
   useEffect(() => {
     const gsap = ensureGsap();
@@ -49,11 +51,17 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 600);
+    const onScroll = () => setScrolled(window.scrollY > 600);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /* On an inverted page the bar can never be transparent: the logotype and
+   * burger are primary-pole, so they would sit bone-on-bone until the 600px
+   * scroll threshold. Going solid immediately keeps them legible and reads
+   * as a deliberate fixed bar over the chapter. */
+  const solid = scrolled || navPole === "alt";
 
   useEffect(() => {
     if (!open) return;
@@ -92,7 +100,7 @@ export function Nav() {
     <>
       <header
         ref={navRef}
-        className="fixed inset-x-0 top-0 z-[9990] h-[88px]"
+        className="fixed inset-x-0 top-0 z-[9990] h-[var(--nav-h)]"
         style={{
           backgroundColor: solid ? "var(--nav-solid)" : "transparent",
           borderBottom: solid ? "1px solid var(--line)" : "1px solid transparent",
@@ -101,7 +109,7 @@ export function Nav() {
         }}
       >
         <div className="shell flex h-full items-center justify-between">
-          <Link to="/" className="text-text" aria-label={`${site.name} home`}>
+          <Link to="/" className="tap text-text" aria-label={`${site.name} home`}>
             <Logotype />
           </Link>
 

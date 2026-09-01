@@ -19,34 +19,46 @@ export function ProofBand() {
             ))}
           </Ticker>
         </div>
-        <div className="shell flex h-[64px] flex-wrap items-center justify-center gap-5 border-b border-line">
-          <div className="flex">
-            {avatars.map((a, i) => (
-              <Picture
-                key={i}
-                src={a}
-                sizes="36px"
-                alt=""
-                className="h-9 w-9 border border-surface-deep object-cover"
-                style={{
-                  marginLeft: i === 0 ? 0 : -10,
-                  filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.1)",
-                }}
-              />
-            ))}
+        {/* A fixed height around wrapping content is a collision waiting for
+         * a narrow screen. Both rows below used to be h-[64px] / h-[88px]
+         * with flex-wrap: on a 390px phone the partner row needed 168px and
+         * got 88, so three of the five partners were clipped out of the
+         * section entirely and "Trusted by 100+ artists" printed on top of
+         * "Radio Misfit". The heights are now the desktop case only, and
+         * the phone gets padding and whatever height the content asks for. */}
+        <div className="shell flex flex-col items-center justify-center gap-4 border-b border-line py-6 sm:h-[64px] sm:flex-row sm:gap-5 sm:py-0">
+          <div className="flex items-center gap-4">
+            <div className="flex">
+              {avatars.map((a, i) => (
+                <Picture
+                  key={i}
+                  src={a}
+                  sizes="36px"
+                  alt=""
+                  className="h-9 w-9 border border-surface-deep object-cover"
+                  style={{
+                    marginLeft: i === 0 ? 0 : -10,
+                    filter: "brightness(var(--img-brightness)) contrast(1.03) saturate(1.06)",
+                  }}
+                />
+              ))}
+            </div>
+            <span className="flex gap-1" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Star key={i} size={13} className="fill-acid-type text-acid-type" />
+              ))}
+            </span>
           </div>
-          <span className="flex gap-1" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <Star key={i} size={13} className="fill-acid-type text-acid-type" />
-            ))}
-          </span>
           <span className="t-eyebrow text-mute">Trusted by 100+ artists</span>
         </div>
-        <div className="shell flex h-[88px] flex-wrap items-center justify-between gap-6">
+        {/* justify-between is right for one row and wrong for a wrapped one —
+         * it strands the last line against the left edge with a hole beside
+         * it. Centred while wrapping, spread once it fits on a single line. */}
+        <div className="shell flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-7 sm:h-[88px] sm:justify-between sm:gap-6 sm:py-0">
           {partners.map((p) => (
             <span
               key={p}
-              className="font-ui text-[16px] font-bold uppercase text-mute opacity-60 transition-all duration-300 hover:text-text hover:opacity-100"
+              className="font-ui text-[13px] font-bold uppercase text-mute opacity-60 transition-all duration-300 hover:text-text hover:opacity-100 sm:text-[16px]"
             >
               {p}
             </span>

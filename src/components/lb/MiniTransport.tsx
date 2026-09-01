@@ -34,7 +34,7 @@ export function MiniTransport() {
           src={track.cover}
           alt=""
           sizes="36px"
-          className="h-9 w-9 shrink-0 border border-line object-cover mono"
+          className="h-9 w-9 shrink-0 border border-line object-cover chroma"
         />
 
         <button

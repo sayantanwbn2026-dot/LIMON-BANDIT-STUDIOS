@@ -1,98 +1,147 @@
-import { Play, Star } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
-import { RiseIn } from "@/components/lb/Reveal";
+import { WordReveal } from "@/components/lb/Reveal";
 import { Picture } from "@/components/lb/Picture";
+import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 
+/**
+ * Who's behind it — the founder, quoted rather than reported.
+ *
+ * This was a portrait beside three paragraphs of body copy under a
+ * heading: a bio, correct and completely formal, and on a phone it read
+ * as an About page dropped into the middle of a studio site.
+ *
+ * The lead line is now set as a statement at display scale — it is a
+ * quote, and it should look like someone said it — with the supporting
+ * copy stepped down behind it and the name set as a sign-off rather than
+ * a job title in a box. The portrait carries a slow parallax so the block
+ * is alive while you read it.
+ */
 export function Founder() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const gsap = ensureGsap();
+    if (!gsap || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      /* A short, slow drift — the portrait moves about a sixth as far as
+       * the page does. Enough that the block is not static while you read
+       * it, not so much that it reads as a separate moving object. */
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const img = el.querySelector<HTMLElement>("[data-portrait]");
+        if (!img) return;
+        gsap.fromTo(
+          img,
+          { yPercent: -6 },
+          {
+            yPercent: 6,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+            },
+          },
+        );
+      });
+
+      return () => mm.revert();
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <Section tone="dark" className="py-[120px]">
-      {/* the section's heading is carried visually by the statement itself */}
       <h2 className="sr-only">Who&apos;s behind it</h2>
-      <div className="section-head">
-        <div className="flex gap-4 md:col-span-2">
-          <div className="relative w-full max-w-[420px]">
-            <Picture
-              src={"founder"}
-              sizes="(max-width: 767px) 100vw, 420px"
-              alt="The founder of Limon Bandit standing in the control room"
-              className="aspect-[4/5] w-full border border-line object-cover"
-              style={{ filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)" }}
+
+      <div ref={ref} className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-x-10">
+        {/* the portrait */}
+        <div className="lg:col-span-5">
+          <div className="relative overflow-hidden border border-line">
+            {/* The parallax needs somewhere to travel, so the picture is
+             * taller than its window and the window does the cropping. */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden">
+              <Picture
+                data-portrait
+                src={"founder"}
+                sizes="(max-width: 1023px) 100vw, 460px"
+                alt="Arko Dasgupta in the Limon Bandit control room"
+                className="absolute inset-x-0 top-[-8%] h-[116%] w-full object-cover"
+                style={{ filter: "brightness(var(--img-brightness)) contrast(1.08)" }}
+              />
+            </div>
+
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(to bottom, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, transparent 1px, transparent 3px)",
+              }}
             />
             <span
               aria-hidden="true"
-              className="absolute bottom-0 left-0 h-[20px] w-[20px] border-b border-l border-acid-type"
+              className="pointer-events-none absolute bottom-0 left-0 h-[24px] w-[24px] border-b-2 border-l-2 border-acid"
             />
-          </div>
-          <div
-            aria-hidden="true"
-            className="t-label hidden select-none whitespace-nowrap text-mute sm:block"
-            style={{ writingMode: "vertical-rl" }}
-          >
-            From the floor · From the floor · From the floor ·
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        {/* the statement */}
+        <div className="lg:col-span-7">
           <Eyebrow>Who&apos;s behind it</Eyebrow>
-          <div className="mt-8 space-y-6 font-ui text-[20px] leading-[1.5] text-text">
-            {/* REPLACE */}
+
+          {/* The quote, at display scale. WordReveal so it arrives a word at
+           * a time — it is someone talking, not a paragraph. */}
+          <WordReveal
+            as="blockquote"
+            className="mt-7 font-display text-[27px] font-extrabold uppercase leading-[1.06] tracking-[-0.03em] text-text md:text-[40px]"
+            text={
+              "I started Limon Bandit because the good rooms in this city were always booked by people who weren't making anything."
+            }
+          />
+
+          <div className="mt-8 space-y-4 font-ui text-[15px] leading-[1.55] text-mute md:text-[16px]">
             <p>
-              <strong className="font-semibold">
-                I started Limon Bandit because the good rooms in this city were always booked by
-                people who weren&apos;t making anything.
-              </strong>
-            </p>
-            <p className="text-mute">
               The idea was straightforward: keep the room open late, keep the rates readable, and
               let the artist walk out owning the record.
             </p>
-            <p className="text-mute">
-              <strong className="font-semibold text-text">
+            <p>
+              <span className="text-text">
                 Everything else — the label, the merch, the crew — grew out of that one room
-              </strong>{" "}
+              </span>{" "}
               because the people using it kept needing the next thing.
             </p>
           </div>
-          <div className="mt-10 border-t border-line pt-6">
-            <div className="font-display text-[15px] font-bold uppercase text-text">
-              Arko Dasgupta
+
+          {/* the sign-off */}
+          <div className="mt-9 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-6">
+            <div>
+              <div className="font-display text-[17px] font-extrabold uppercase tracking-[-0.02em] text-text">
+                Arko Dasgupta
+              </div>
+              <div className="mt-1 t-label text-mute">Founder &amp; head engineer</div>
             </div>
 
-            <div className="mt-1 font-ui text-[12px] text-mute">Founder &amp; Head Engineer</div>
+            <div className="flex items-center gap-3">
+              <span className="flex gap-1" aria-hidden="true">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <Star key={i} size={13} className="fill-acid-type text-acid-type" />
+                ))}
+              </span>
+              <span className="t-label tnum text-mute">4.9 / 230+ sessions</span>
+            </div>
           </div>
         </div>
       </div>
-
-      <RiseIn className="mt-20 grid grid-cols-1 items-center gap-8 md:grid-cols-4">
-        <div className="md:col-span-1">
-          <div className="flex gap-1" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <Star key={i} size={14} className="fill-acid-type text-acid-type" />
-            ))}
-          </div>
-          <p className="t-eyebrow mt-3 text-mute">4.9/5 across 230+ sessions</p>
-        </div>
-        <div className="relative md:col-span-3">
-          <Picture
-            src={"room-a"}
-            sizes="(max-width: 767px) 100vw, 420px"
-            alt="A night session running in Room A"
-            className="aspect-video w-full border border-line object-cover mono"
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-            <button
-              type="button"
-              aria-label="Play the Room A film"
-              className="flex h-[72px] w-[72px] items-center justify-center bg-acid transition-transform duration-300 hover:scale-105"
-            >
-              <Play size={24} className="fill-accent-text text-accent-text" />
-            </button>
-            <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text">
-              Watch a night in Room A
-            </span>
-          </div>
-        </div>
-      </RiseIn>
     </Section>
   );
 }

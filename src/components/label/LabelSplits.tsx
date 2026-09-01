@@ -50,13 +50,16 @@ export function LabelSplits() {
           </div>
         </div>
 
-        <dl className="mt-16 grid grid-cols-1 border-t border-line md:grid-cols-3">
+        {/* lg, not md: at 768 the 44px value "Monthly" ran 39px past its own
+         * cell into the neighbouring column. Same pattern and same fix as
+         * ShopPrint and CrewHiring. */}
+        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3">
           {SPLITS.map((s, i) => (
             <div
               key={s.k}
-              className={`border-b border-line py-10 md:border-b-0 ${
-                i > 0 ? "md:border-l md:pl-10" : "md:pr-10"
-              } ${i === 1 ? "md:pr-10" : ""}`}
+              className={`border-b border-line py-10 lg:border-b-0 ${
+                i > 0 ? "lg:border-l lg:pl-10" : "lg:pr-10"
+              } ${i === 1 ? "lg:pr-10" : ""}`}
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>

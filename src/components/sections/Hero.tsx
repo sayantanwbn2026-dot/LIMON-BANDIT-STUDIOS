@@ -2,8 +2,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
-import { Decode } from "@/components/lb/Decode";
-import { LocalTime } from "@/components/lb/LocalTime";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { Picture } from "@/components/lb/Picture";
 
@@ -171,8 +169,11 @@ export function Hero() {
       tl.to("[data-measure-side='right']", { x: "6vw", opacity: 0, duration: 1.0 }, 0);
       tl.to("[data-measure-side='centre']", { opacity: 0, duration: 0.7 }, 0);
 
-      /* ---- phase 2 — the figure steps forward (0.9 → 2.4) ---- */
-      tl.to(limonRef.current, { scale: 1.34, y: "4vh", rotate: -1.6, duration: 1.5 }, 0.9);
+      /* ---- phase 2 — the figure settles (0.9 → 2.4) ----
+       * He drops and tilts but never scales: the growth read as the image
+       * inflating rather than approaching, so it is gone. The light still
+       * collapses, which is what carries the depth now. */
+      tl.to(limonRef.current, { y: "4vh", rotate: -1.6, duration: 1.5 }, 0.9);
       /* the light collapses onto him as he approaches camera */
       tl.to(glowWrapRef.current, { scale: 0.57, opacity: 1, duration: 1.5 }, 0.9);
       /* the scene's only acid event */
@@ -186,8 +187,7 @@ export function Hero() {
         2.2,
       );
       tl.to(wordWrapRef.current, { opacity: 0.12, y: "6vh", duration: 1.0 }, 2.2);
-      tl.to(limonRef.current, { scale: 1.5, duration: 1.0 }, 2.2);
-      /* he passes the camera plane */
+      /* he leaves without growing — the exit is blur and fade only */
       tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.8 }, 2.8);
       /* the rule drops with the rest of the poster so phase 4 can raise it */
       tl.to(ruleRef.current, { y: "8vh", duration: 0.8 }, 2.4);
@@ -219,9 +219,22 @@ export function Hero() {
         /* Function form, in px: ScrollTrigger does not parse `vh` inside an
          * end string — "+=280vh" silently resolves to 280 *pixels*, which
          * runs the whole scene in a third of a screen. Functions are
-         * re-evaluated on refresh, so this survives resize. */
-        end: () => "+=" + window.innerHeight * 2.8,
-        scrub: 0.75,
+         * re-evaluated on refresh, so this survives resize.
+         *
+         * 1.3 viewports, down from 2.8. At 2.8 the hero held the page for
+         * ~2500px — four or five trackpad gestures before the site would
+         * let you past the first screen, which reads as the site being
+         * slow rather than as a scene being played. The scene itself did
+         * not need the room: every phase is a fraction of the timeline, so
+         * halving the distance plays the same choreography twice as fast
+         * rather than truncating it.
+         *
+         * scrub is tighter for the same reason. Lenis already adds its own
+         * lerp, and 0.75 on top of that meant the scene visibly trailed
+         * the finger; 0.4 tracks closely enough to feel direct while still
+         * smoothing the wheel's steps. */
+        end: () => "+=" + window.innerHeight * 1.3,
+        scrub: 0.4,
         pin: true,
         anticipatePin: 1,
         /* re-resolve the vw/vh distances in the tweens on resize */
@@ -303,11 +316,15 @@ export function Hero() {
       <GridRules tone="dark" />
       <MarginNotes index="01" name="Hero" />
 
-      {/* backlight — sized element so the scene can scale it (transform only) */}
+      {/* backlight — sized element so the scene can scale it (transform only).
+       * The phone values are not the desktop ones scaled down: 46vw is 179px
+       * on a 390 screen, which lit a band narrower than the figure standing
+       * in front of it and read as a spotlight on his chest. It tracks the
+       * mascot's own box (~90vw) and sits lower to match his new centre. */}
       <span
         ref={glowWrapRef}
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[46%] z-[4] h-[52vh] w-[46vw]"
+        className="pointer-events-none absolute left-1/2 top-[52%] z-[4] h-[46svh] w-[92vw] md:top-[46%] md:h-[52vh] md:w-[46vw]"
         style={{ transform: "translate(-50%, -50%)" }}
       >
         <span
@@ -330,9 +347,15 @@ export function Hero() {
         }}
       />
 
-      {/* ---------------- the giant lockup ---------------- */}
+      {/* ---------------- the giant lockup ----------------
+       * The phone anchor is higher than the desktop one for two reasons at
+       * once: it spends the empty band under the navbar, and it lifts the
+       * wordmark clear of the mascot's head. At the old 34vh his crown
+       * landed mid-letter and swallowed the N whole; the type now rides
+       * above him and he overlaps its baseline, which is the desktop
+       * relationship rather than an accident of the phone's proportions. */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-[34vh] z-[3] md:top-[46vh]"
+        className="pointer-events-none absolute inset-x-0 top-[28vh] z-[3] md:top-[46vh]"
         style={{ transform: "translateY(-50%)" }}
       >
         <div ref={lockupRef} className="flex flex-col items-center">
@@ -402,18 +425,31 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ---------------- Limon ---------------- */}
+      {/* ---------------- Limon ----------------
+       * Phone sizing is svh throughout, never vh: `vh` is the *large*
+       * viewport, so a figure sized in vh and anchored in svh grows and
+       * slides apart from its own footing as the URL bar retracts.
+       *
+       * He is the poster on a phone, not a prop in it — 52svh, roughly
+       * double what he was, which puts his head just over the top of the
+       * wordmark exactly as it reads on desktop. Anchored in svh rather
+       * than px so the composition holds from a 667pt SE to a 932pt Max. */}
       <div
         ref={limonWrapRef}
-        className="pointer-events-none absolute bottom-[35svh] left-1/2 z-[5] h-[26vh] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] lg:h-[62vh] 2xl:h-[68vh]"
+        data-limon
+        className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] lg:h-[62vh] 2xl:h-[68vh]"
       >
-        {/* scene layer — grows from his stance, not his centre */}
+        {/* scene layer — the tilt pivots on his stance, not his centre */}
         <div ref={limonRef} className="h-full w-full" style={{ transformOrigin: "50% 85%" }}>
-          {/* The one priority image on the site — it is the LCP. */}
+          {/* The one priority image on the site — it is the LCP.
+           * `sizes` has to track the box: at 52svh his frame is ~90vw on a
+           * phone, and the old 45vw hint picked a source half the width it
+           * now needs, which reads as a soft mascot at exactly the moment
+           * he became the largest thing on the screen. */}
           <Picture
             src="limon-mascot"
             alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
-            sizes="(max-width: 767px) 45vw, (max-width: 1023px) 360px, 660px"
+            sizes="(max-width: 767px) 90vw, (max-width: 1023px) 360px, 660px"
             priority
             className="block h-full w-auto max-w-none object-contain"
             style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
@@ -422,47 +458,18 @@ export function Hero() {
       </div>
 
       {/* ---------------- corner stations ---------------- */}
-      <div className="absolute inset-x-0 bottom-[52px] z-[7]">
+      <div className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7]">
         <div className="shell">
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            {/* bottom-left */}
-            <div data-hero-station className="max-w-[280px]">
-              <div className="flex items-center gap-3">
-                <span className="h-[8px] w-[8px] shrink-0 bg-acid" />
-                <Decode
-                  onLoad
-                  delay={1.0}
-                  text="Kolkata Music House — Est. 2021"
-                  className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute"
-                />
-              </div>
-              <p className="mt-3 font-ui text-[13px] leading-[1.55] text-mute">
-                <strong className="font-semibold text-text">
-                  Four rooms, one label, and a merch line
-                </strong>{" "}
-                — run out of one building in Kolkata. Book a night, sign a record, or print a run.
-                No middlemen.
-              </p>
-            </div>
-
-            {/* bottom-centre */}
-            <div data-hero-station className="hidden lg:block">
-              <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
-                <span className="mr-2 inline-block h-[7px] w-[7px] bg-acid align-middle" />
-                limonbandit.com
-              </span>
-            </div>
-
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-end">
             {/* bottom-right */}
             <div data-hero-station className="md:text-right">
-              <p className="font-ui text-[13px] font-medium leading-[1.5] text-mute">
-                music studio &amp;
-                <br />
-                creative house
-              </p>
+              {/* Full-bleed on a phone. A 240px box pinned to one corner left
+               * the bottom of the frame unresolved and the eye with nowhere
+               * to land; run to the measure it becomes the base the poster
+               * stands on, and the touch target doubles for free. */}
               <a
                 href="/contact"
-                className="group mt-4 inline-flex h-[54px] w-full max-w-[240px] items-center justify-between border border-line bg-transparent transition-colors duration-300 hover:border-line-strong hover:bg-surface-raised md:w-[240px]"
+                className="group fill-acid inline-flex h-[60px] w-full items-center justify-between border border-line bg-transparent transition-colors duration-300 md:h-[54px] md:w-[240px]"
               >
                 <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
                   Book the room
@@ -477,25 +484,8 @@ export function Hero() {
         </div>
       </div>
 
-      {/* ---------------- micro-lines on the bottom rule ---------------- */}
+      {/* ---------------- bottom rule ---------------- */}
       <div ref={ruleRef} data-hero-rule className="absolute inset-x-0 bottom-0 z-[8]">
-        <div className="shell flex items-center justify-between pb-[12px]">
-          <span
-            data-hero-micro
-            className="font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute"
-            style={{ opacity: 0.7 }}
-          >
-            Scroll ↓ — the house opens below
-          </span>
-          <span
-            data-hero-micro
-            className="hidden items-center gap-4 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] tnum text-mute sm:flex"
-            style={{ opacity: 0.7 }}
-          >
-            <LocalTime className="!text-[10px] !tracking-[0.16em]" />
-            <span className="hidden lg:inline">22.5726° N / 88.3639° E</span>
-          </span>
-        </div>
         <BoundaryRule tone="dark" ticks className="bottom-0" />
       </div>
     </section>

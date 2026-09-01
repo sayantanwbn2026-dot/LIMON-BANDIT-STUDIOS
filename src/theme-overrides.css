@@ -22,6 +22,13 @@
   --wordmark-from: #f4f4f0;
   --wordmark-to: #8a8a86;
 
+  /* 3b — the same fill for a hero sitting on the ALT pole (Journal). These
+   * two follow the theme, not the pole, so a hero-wall on an inverted panel
+   * paints a bone gradient onto a bone surface and disappears. The alt pair
+   * is the primary pair swapped, and it swaps again with the theme. */
+  --alt-wordmark-from: #080808;
+  --alt-wordmark-to: #4a4a48;
+
   /* 4 — hero backlight behind Limon: bone-white bloom */
   --backlight: rgba(244, 244, 240, 0.16);
 
@@ -58,6 +65,10 @@
   /* 3 */
   --wordmark-from: #080808;
   --wordmark-to: #4a4a48;
+
+  /* 3b */
+  --alt-wordmark-from: #f4f4f0;
+  --alt-wordmark-to: #8a8a86;
 
   /* 4 — the bloom becomes a soft dark grounding field */
   --backlight: rgba(8, 8, 8, 0.1);

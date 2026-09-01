@@ -6,6 +6,7 @@ import { Services } from "@/components/sections/Services";
 import { ThreeWaysIn } from "@/components/sections/ThreeWaysIn";
 import { Rooms } from "@/components/sections/Rooms";
 import { Founder } from "@/components/sections/Founder";
+import { RoomFilm } from "@/components/sections/RoomFilm";
 import { Numbers } from "@/components/sections/Numbers";
 import { Roster } from "@/components/sections/Roster";
 import { DropRail } from "@/components/sections/DropRail";
@@ -18,6 +19,7 @@ import { Faq } from "@/components/sections/Faq";
 import { Journal } from "@/components/sections/Journal";
 import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
+import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
 import { chapterHead } from "@/lib/seo";
 
@@ -26,6 +28,20 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/**
+ * The house, top to bottom.
+ *
+ * Sections wrapped in <ScrollDepth> arrive from depth and are passed through
+ * as the camera moves on. Four are deliberately NOT wrapped, and the reason
+ * is the same in every case: a transformed ancestor breaks `position: fixed`
+ * descendants and re-bases `position: sticky`.
+ *
+ *   Hero, ThreeWaysIn, DropRail — each pins with ScrollTrigger
+ *   Rooms, Services, RoomFilm   — sticky visual column
+ *
+ * Wrapping any of those would kill the pin, not merely restyle it. Leave
+ * them bare; they already carry their own scroll choreography.
+ */
 function Index() {
   return (
     <>
@@ -34,24 +50,58 @@ function Index() {
           above the router so they survive navigation. */}
       <main id="main">
         <Hero />
-        <ProofBand />
-        <IdentityMarquee />
+
+        <ScrollDepth>
+          <ProofBand />
+        </ScrollDepth>
+        <ScrollDepth>
+          <IdentityMarquee />
+        </ScrollDepth>
         <Services />
         <ThreeWaysIn />
         <Rooms />
-        <Founder />
-        <Numbers />
-        <Roster />
+
+        <ScrollDepth>
+          <Founder />
+        </ScrollDepth>
+
+        <RoomFilm />
+        <ScrollDepth>
+          <Numbers />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Roster />
+        </ScrollDepth>
+
         <DropRail />
-        <Bento />
-        <Rates />
-        <Testimonials />
-        <Process />
-        <Wall />
-        <Faq />
-        <Journal />
-        <JoinList />
-        <FinalCta />
+
+        <ScrollDepth>
+          <Bento />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Rates />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Testimonials />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Process />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Wall />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Faq />
+        </ScrollDepth>
+        <ScrollDepth>
+          <Journal />
+        </ScrollDepth>
+        <ScrollDepth>
+          <JoinList />
+        </ScrollDepth>
+        <ScrollDepth>
+          <FinalCta />
+        </ScrollDepth>
       </main>
     </>
   );

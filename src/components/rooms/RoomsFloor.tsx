@@ -141,7 +141,7 @@ function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
           className="w-full border border-line object-cover"
           style={{
             aspectRatio: reverse ? "16 / 9" : "4 / 3",
-            filter: "grayscale(1) brightness(var(--img-brightness)) contrast(1.08)",
+            filter: "brightness(var(--img-brightness)) contrast(1.08)",
           }}
         />
 
@@ -171,7 +171,7 @@ function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
             src={c}
             alt=""
             sizes="(max-width: 1023px) 33vw, 20vw"
-            className="aspect-square w-full border border-line object-cover mono"
+            className="aspect-square w-full border border-line object-cover chroma"
           />
         ))}
       </div>

@@ -104,10 +104,10 @@ export function Footer() {
         <div className="shell flex flex-wrap items-center justify-between gap-4 py-6 font-ui text-[12px] text-mute">
           <span>©2026 Limon Bandit. All rights reserved.</span>
           <span className="flex gap-6">
-            <a href="/contact" className="transition-colors duration-300 hover:text-text">
+            <a href="/contact" className="tap transition-colors duration-300 hover:text-text">
               Terms
             </a>
-            <a href="/contact" className="transition-colors duration-300 hover:text-text">
+            <a href="/contact" className="tap transition-colors duration-300 hover:text-text">
               Privacy
             </a>
           </span>

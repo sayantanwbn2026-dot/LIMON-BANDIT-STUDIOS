@@ -5,7 +5,10 @@ import { Picture } from "@/components/lb/Picture";
 
 export function Process() {
   return (
-    <Section tone="dark" className="py-[120px]">
+    /* bg-surface: --mute at 16px measures 4.39:1 on --surface-deep in light
+     * mode, just under AA. Same one-step-lighter fix as Rates. The token
+     * pairing itself is the real issue — see the note in AUDIT. */
+    <Section tone="dark" surface="bg-surface" className="py-[120px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>How it runs</Eyebrow>
@@ -31,7 +34,7 @@ export function Process() {
                   src={s.thumb}
                   sizes="120px"
                   alt={s.alt}
-                  className="h-[120px] w-[120px] scale-90 border border-line object-cover opacity-0 mono transition-all duration-[400ms] group-hover:scale-100 group-hover:opacity-100"
+                  className="h-[120px] w-[120px] scale-90 border border-line object-cover opacity-0 chroma transition-all duration-[400ms] group-hover:scale-100 group-hover:opacity-100"
                 />
               </div>
             </div>

@@ -14,7 +14,7 @@ export function FinalCta() {
         src={"room-a"}
         sizes="(max-width: 767px) 100vw, 62vw"
         alt=""
-        className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 mono"
+        className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 chroma"
       />
       <div
         aria-hidden="true"
@@ -52,7 +52,7 @@ export function FinalCta() {
                   src={a}
                   sizes="(max-width: 767px) 100vw, 62vw"
                   alt=""
-                  className="h-11 w-11 border border-surface-deep object-cover mono"
+                  className="h-11 w-11 border border-surface-deep object-cover chroma"
                   style={{ marginLeft: i === 0 ? 0 : -10 }}
                 />
               ))}

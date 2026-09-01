@@ -74,17 +74,8 @@ export function Roster() {
               src={r.cover}
               sizes="(max-width: 767px) 100vw, 33vw"
               alt={r.alt}
-              className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06]"
-              style={{
-                filter: "grayscale(1) brightness(var(--img-brightness))",
-                transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.filter = "grayscale(0.15) brightness(var(--img-brightness))")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.filter = "grayscale(1) brightness(var(--img-brightness))")
-              }
+              className="chroma absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+              style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
             />
             <span
               aria-hidden="true"

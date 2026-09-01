@@ -34,9 +34,33 @@ export const faq: FaqItem[] = [
       "Yes, across India. Runs are small and we don't restock, so a sold-out size stays sold out.",
   },
   {
+    topic: "shop",
+    question: "Why don't you repress anything?",
+    answer:
+      "A run is priced to break even at the number we print. Repressing means holding stock we haven't sold, and that money is better spent on the next record.",
+  },
+  {
+    topic: "shop",
+    question: "Can I return a record?",
+    answer:
+      "If it arrives damaged or plays badly, send a photo and we replace it or refund you. We don't take returns on a change of mind — the run is too small to absorb it.",
+  },
+  {
     topic: "crew",
     question: "Can I hire only the crew?",
     answer: "Yes. Directors, cover artists, and engineers can be booked without recording here.",
+  },
+  {
+    topic: "crew",
+    question: "Who sets the rate?",
+    answer:
+      "They do. The rates on this page are theirs, we don't mark them up, and the house takes nothing from a crew booking.",
+  },
+  {
+    topic: "crew",
+    question: "What does vetted actually mean?",
+    answer:
+      "They have finished at least one project through this building and the artist would work with them again. That's the whole bar, and it's why the list is short.",
   },
 ];
 

@@ -22,24 +22,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/founder-480.avif",
-        "size": 10183
+        "size": 11328
       },
       {
         "w": 768,
         "url": "/img/founder-768.avif",
-        "size": 18169
+        "size": 20577
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/founder-480.webp",
-        "size": 15464
+        "size": 17460
       },
       {
         "w": 768,
         "url": "/img/founder-768.webp",
-        "size": 28872
+        "size": 32920
       }
     ],
     "fallback": "/img/founder-768.jpg"
@@ -53,24 +53,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/journal-01-480.avif",
-        "size": 7860
+        "size": 8695
       },
       {
         "w": 768,
         "url": "/img/journal-01-768.avif",
-        "size": 12909
+        "size": 14496
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/journal-01-480.webp",
-        "size": 12130
+        "size": 13464
       },
       {
         "w": 768,
         "url": "/img/journal-01-768.webp",
-        "size": 20684
+        "size": 22936
       }
     ],
     "fallback": "/img/journal-01-768.jpg"
@@ -84,24 +84,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/journal-02-480.avif",
-        "size": 8630
+        "size": 9664
       },
       {
         "w": 768,
         "url": "/img/journal-02-768.avif",
-        "size": 15051
+        "size": 17300
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/journal-02-480.webp",
-        "size": 18976
+        "size": 21252
       },
       {
         "w": 768,
         "url": "/img/journal-02-768.webp",
-        "size": 35376
+        "size": 39858
       }
     ],
     "fallback": "/img/journal-02-768.jpg"
@@ -115,24 +115,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/journal-03-480.avif",
-        "size": 7961
+        "size": 8603
       },
       {
         "w": 768,
         "url": "/img/journal-03-768.avif",
-        "size": 14419
+        "size": 15714
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/journal-03-480.webp",
-        "size": 10732
+        "size": 11498
       },
       {
         "w": 768,
         "url": "/img/journal-03-768.webp",
-        "size": 21152
+        "size": 22960
       }
     ],
     "fallback": "/img/journal-03-768.jpg"
@@ -187,24 +187,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/merch-tee-480.avif",
-        "size": 9257
+        "size": 9845
       },
       {
         "w": 768,
         "url": "/img/merch-tee-768.avif",
-        "size": 19339
+        "size": 20618
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/merch-tee-480.webp",
-        "size": 9838
+        "size": 10256
       },
       {
         "w": 768,
         "url": "/img/merch-tee-768.webp",
-        "size": 19410
+        "size": 20454
       }
     ],
     "fallback": "/img/merch-tee-768.jpg"
@@ -218,24 +218,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-01-480.avif",
-        "size": 5252
+        "size": 15773
       },
       {
         "w": 768,
         "url": "/img/release-01-768.avif",
-        "size": 11293
+        "size": 30903
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-01-480.webp",
-        "size": 4786
+        "size": 23774
       },
       {
         "w": 768,
         "url": "/img/release-01-768.webp",
-        "size": 9664
+        "size": 47108
       }
     ],
     "fallback": "/img/release-01-768.jpg"
@@ -249,24 +249,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-02-480.avif",
-        "size": 1682
+        "size": 10323
       },
       {
         "w": 768,
         "url": "/img/release-02-768.avif",
-        "size": 2745
+        "size": 19678
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-02-480.webp",
-        "size": 1800
+        "size": 12516
       },
       {
         "w": 768,
         "url": "/img/release-02-768.webp",
-        "size": 3340
+        "size": 24368
       }
     ],
     "fallback": "/img/release-02-768.jpg"
@@ -280,24 +280,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-03-480.avif",
-        "size": 4564
+        "size": 5392
       },
       {
         "w": 768,
         "url": "/img/release-03-768.avif",
-        "size": 8725
+        "size": 10420
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-03-480.webp",
-        "size": 5588
+        "size": 6748
       },
       {
         "w": 768,
         "url": "/img/release-03-768.webp",
-        "size": 11010
+        "size": 13350
       }
     ],
     "fallback": "/img/release-03-768.jpg"
@@ -311,24 +311,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-04-480.avif",
-        "size": 9595
+        "size": 16667
       },
       {
         "w": 768,
         "url": "/img/release-04-768.avif",
-        "size": 17242
+        "size": 34990
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-04-480.webp",
-        "size": 12762
+        "size": 26406
       },
       {
         "w": 768,
         "url": "/img/release-04-768.webp",
-        "size": 23324
+        "size": 57244
       }
     ],
     "fallback": "/img/release-04-768.jpg"
@@ -342,24 +342,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-05-480.avif",
-        "size": 3004
+        "size": 5663
       },
       {
         "w": 768,
         "url": "/img/release-05-768.avif",
-        "size": 4608
+        "size": 9975
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-05-480.webp",
-        "size": 3190
+        "size": 7496
       },
       {
         "w": 768,
         "url": "/img/release-05-768.webp",
-        "size": 5504
+        "size": 13064
       }
     ],
     "fallback": "/img/release-05-768.jpg"
@@ -373,24 +373,24 @@ export const images = {
       {
         "w": 480,
         "url": "/img/release-06-480.avif",
-        "size": 6975
+        "size": 17810
       },
       {
         "w": 768,
         "url": "/img/release-06-768.avif",
-        "size": 11527
+        "size": 35267
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/release-06-480.webp",
-        "size": 8930
+        "size": 27682
       },
       {
         "w": 768,
         "url": "/img/release-06-768.webp",
-        "size": 15000
+        "size": 50828
       }
     ],
     "fallback": "/img/release-06-768.jpg"
@@ -455,34 +455,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/room-b-480.avif",
-        "size": 13246
+        "size": 14998
       },
       {
         "w": 768,
         "url": "/img/room-b-768.avif",
-        "size": 29028
+        "size": 33331
       },
       {
         "w": 1024,
         "url": "/img/room-b-1024.avif",
-        "size": 60218
+        "size": 68404
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/room-b-480.webp",
-        "size": 18754
+        "size": 21902
       },
       {
         "w": 768,
         "url": "/img/room-b-768.webp",
-        "size": 42872
+        "size": 50052
       },
       {
         "w": 1024,
         "url": "/img/room-b-1024.webp",
-        "size": 80182
+        "size": 88110
       }
     ],
     "fallback": "/img/room-b-1024.jpg"
@@ -496,34 +496,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/room-booth-480.avif",
-        "size": 3798
+        "size": 4655
       },
       {
         "w": 768,
         "url": "/img/room-booth-768.avif",
-        "size": 7310
+        "size": 8944
       },
       {
         "w": 1024,
         "url": "/img/room-booth-1024.avif",
-        "size": 12224
+        "size": 14917
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/room-booth-480.webp",
-        "size": 4940
+        "size": 6190
       },
       {
         "w": 768,
         "url": "/img/room-booth-768.webp",
-        "size": 10158
+        "size": 12388
       },
       {
         "w": 1024,
         "url": "/img/room-booth-1024.webp",
-        "size": 17510
+        "size": 20774
       }
     ],
     "fallback": "/img/room-booth-1024.jpg"
@@ -537,34 +537,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/room-lockout-480.avif",
-        "size": 10306
+        "size": 11567
       },
       {
         "w": 768,
         "url": "/img/room-lockout-768.avif",
-        "size": 21705
+        "size": 23999
       },
       {
         "w": 1024,
         "url": "/img/room-lockout-1024.avif",
-        "size": 39789
+        "size": 44282
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/room-lockout-480.webp",
-        "size": 14578
+        "size": 16548
       },
       {
         "w": 768,
         "url": "/img/room-lockout-768.webp",
-        "size": 32620
+        "size": 36492
       },
       {
         "w": 1024,
         "url": "/img/room-lockout-1024.webp",
-        "size": 56230
+        "size": 62292
       }
     ],
     "fallback": "/img/room-lockout-1024.jpg"
@@ -578,44 +578,44 @@ export const images = {
       {
         "w": 480,
         "url": "/img/split-corridor-480.avif",
-        "size": 4628
+        "size": 5104
       },
       {
         "w": 768,
         "url": "/img/split-corridor-768.avif",
-        "size": 10471
+        "size": 11397
       },
       {
         "w": 1024,
         "url": "/img/split-corridor-1024.avif",
-        "size": 17738
+        "size": 19199
       },
       {
         "w": 1440,
         "url": "/img/split-corridor-1440.avif",
-        "size": 35428
+        "size": 37873
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/split-corridor-480.webp",
-        "size": 6116
+        "size": 6932
       },
       {
         "w": 768,
         "url": "/img/split-corridor-768.webp",
-        "size": 14148
+        "size": 15598
       },
       {
         "w": 1024,
         "url": "/img/split-corridor-1024.webp",
-        "size": 24350
+        "size": 26954
       },
       {
         "w": 1440,
         "url": "/img/split-corridor-1440.webp",
-        "size": 44192
+        "size": 48098
       }
     ],
     "fallback": "/img/split-corridor-1024.jpg"
@@ -629,34 +629,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/wall-01-480.avif",
-        "size": 9699
+        "size": 10719
       },
       {
         "w": 768,
         "url": "/img/wall-01-768.avif",
-        "size": 16952
+        "size": 18958
       },
       {
         "w": 1024,
         "url": "/img/wall-01-1024.avif",
-        "size": 25523
+        "size": 28692
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/wall-01-480.webp",
-        "size": 14414
+        "size": 15988
       },
       {
         "w": 768,
         "url": "/img/wall-01-768.webp",
-        "size": 26254
+        "size": 29426
       },
       {
         "w": 1024,
         "url": "/img/wall-01-1024.webp",
-        "size": 38172
+        "size": 43156
       }
     ],
     "fallback": "/img/wall-01-1024.jpg"
@@ -670,34 +670,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/wall-02-480.avif",
-        "size": 10516
+        "size": 11593
       },
       {
         "w": 768,
         "url": "/img/wall-02-768.avif",
-        "size": 19809
+        "size": 21846
       },
       {
         "w": 1024,
         "url": "/img/wall-02-1024.avif",
-        "size": 32534
+        "size": 36039
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/wall-02-480.webp",
-        "size": 14664
+        "size": 16304
       },
       {
         "w": 768,
         "url": "/img/wall-02-768.webp",
-        "size": 27716
+        "size": 30660
       },
       {
         "w": 1024,
         "url": "/img/wall-02-1024.webp",
-        "size": 43166
+        "size": 47868
       }
     ],
     "fallback": "/img/wall-02-1024.jpg"
@@ -711,34 +711,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/wall-03-480.avif",
-        "size": 4230
+        "size": 4721
       },
       {
         "w": 768,
         "url": "/img/wall-03-768.avif",
-        "size": 7306
+        "size": 8234
       },
       {
         "w": 1024,
         "url": "/img/wall-03-1024.avif",
-        "size": 11462
+        "size": 13034
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/wall-03-480.webp",
-        "size": 4730
+        "size": 5316
       },
       {
         "w": 768,
         "url": "/img/wall-03-768.webp",
-        "size": 8932
+        "size": 10258
       },
       {
         "w": 1024,
         "url": "/img/wall-03-1024.webp",
-        "size": 14568
+        "size": 16734
       }
     ],
     "fallback": "/img/wall-03-1024.jpg"
@@ -752,34 +752,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/wall-04-480.avif",
-        "size": 6306
+        "size": 6923
       },
       {
         "w": 768,
         "url": "/img/wall-04-768.avif",
-        "size": 12728
+        "size": 13911
       },
       {
         "w": 1024,
         "url": "/img/wall-04-1024.avif",
-        "size": 19945
+        "size": 21782
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/wall-04-480.webp",
-        "size": 8210
+        "size": 8902
       },
       {
         "w": 768,
         "url": "/img/wall-04-768.webp",
-        "size": 17174
+        "size": 18738
       },
       {
         "w": 1024,
         "url": "/img/wall-04-1024.webp",
-        "size": 26606
+        "size": 29054
       }
     ],
     "fallback": "/img/wall-04-1024.jpg"
@@ -793,34 +793,34 @@ export const images = {
       {
         "w": 480,
         "url": "/img/wall-05-480.avif",
-        "size": 9561
+        "size": 10733
       },
       {
         "w": 768,
         "url": "/img/wall-05-768.avif",
-        "size": 17343
+        "size": 19698
       },
       {
         "w": 1024,
         "url": "/img/wall-05-1024.avif",
-        "size": 28915
+        "size": 33583
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/wall-05-480.webp",
-        "size": 12754
+        "size": 14578
       },
       {
         "w": 768,
         "url": "/img/wall-05-768.webp",
-        "size": 23716
+        "size": 27336
       },
       {
         "w": 1024,
         "url": "/img/wall-05-1024.webp",
-        "size": 37294
+        "size": 43164
       }
     ],
     "fallback": "/img/wall-05-1024.jpg"
