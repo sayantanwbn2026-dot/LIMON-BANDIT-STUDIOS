@@ -20,29 +20,71 @@ import { Cursor } from "@/components/lb/Cursor";
 import { SmoothScroll } from "@/components/lb/SmoothScroll";
 import { SkipLink } from "@/components/lb/SkipLink";
 import { SectionRule } from "@/components/lb/SectionRule";
+import { GridRules } from "@/components/lb/GridRules";
 import { RouteTransition } from "@/components/lb/RouteTransition";
 import { MiniTransport } from "@/components/lb/MiniTransport";
 import { PlayerProvider } from "@/lib/player";
+import { AuthProvider } from "@/lib/auth";
+import { CartProvider } from "@/lib/cart";
+import { WishlistProvider } from "@/lib/wishlist";
+import { AuthModal } from "@/components/shop/AuthModal";
+import { CartDrawer } from "@/components/shop/CartDrawer";
+import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
+import { FlashOffer } from "@/components/shop/FlashOffer";
 
+/**
+ * The 404 and error screens.
+ *
+ * Both were the shadcn defaults — rounded, generic, off-brand — which is the
+ * one thing every other page on this site has been redrawn to avoid. Nothing
+ * fancy is called for here: the shell, the drafting grid, an acid mark, and
+ * two of the same square buttons the rest of the site uses. The house
+ * language, quietly, on the pages a visitor sees when something is wrong.
+ */
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+    <main
+      id="main"
+      className="relative flex min-h-screen w-full items-center overflow-hidden bg-surface-deep"
+    >
+      <GridRules tone="dark" />
+      <div className="shell relative z-[2] max-w-[640px] pt-[calc(var(--nav-h)+56px)]">
+        <span className="mb-8 flex items-center gap-3">
+          <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
+          <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
+            404 / Not Found
+          </span>
+        </span>
+
+        <h1
+          className="font-display text-[64px] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-text md:text-[96px]"
+          data-page-h1
+          tabIndex={-1}
+        >
+          Wrong door.
+        </h1>
+
+        <p className="mt-8 max-w-[46ch] font-ui text-[16px] leading-[1.6] text-mute md:text-[18px]">
+          Nothing lives at this address. It may have been a link that has moved, or a page that
+          never was — either way, the way back is through here.
         </p>
-        <div className="mt-6">
+
+        <div className="mt-12 flex flex-wrap gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
-            Go home
+            Home
+          </Link>
+          <Link
+            to="/shop"
+            className="flex h-[60px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+          >
+            The shop
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -54,33 +96,52 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+    <main
+      id="main"
+      className="relative flex min-h-screen w-full items-center overflow-hidden bg-surface-deep"
+    >
+      <GridRules tone="dark" />
+      <div className="shell relative z-[2] max-w-[640px] pt-[calc(var(--nav-h)+56px)]">
+        <span className="mb-8 flex items-center gap-3">
+          <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
+          <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
+            500 / Room's dark
+          </span>
+        </span>
+
+        <h1
+          className="font-display text-[48px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text md:text-[72px]"
+          data-page-h1
+          tabIndex={-1}
+        >
+          Something tripped.
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+
+        <p className="mt-8 max-w-[46ch] font-ui text-[16px] leading-[1.6] text-mute md:text-[18px]">
+          The page did not load. Refreshing usually clears it — if it keeps happening on the same
+          page, tell us and we will look at what broke.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+
+        <div className="mt-12 flex flex-wrap gap-3">
           <button
+            type="button"
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="flex h-[60px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
-            Go home
+            Home
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -194,20 +255,39 @@ function RootComponent() {
           stand still while the component transitions kept animating. `user`
           reduces transforms and keeps opacity, which is the intent — nothing
           moves, things still appear. */}
+      {/* The shop providers nest inside-out by dependency: the cart and the
+          wishlist both read the session, so Auth wraps them. All three sit
+          above the router for the same reason the audio element does — a
+          basket that emptied itself on navigation would be worse than no
+          basket, and the login popup has to be able to open over any page.
+          The gate's pending action (see lib/auth) only survives navigation
+          because the provider holding it never unmounts. */}
       <MotionConfig reducedMotion="user">
-        <PlayerProvider>
-          <SkipLink />
-          <SmoothScroll />
-          <SectionRule />
-          <Noise />
-          <Cursor />
-          <RouteTransition />
-          <Nav />
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-          <Footer />
-          <MiniTransport />
-        </PlayerProvider>
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <PlayerProvider>
+                <SkipLink />
+                <SmoothScroll />
+                <SectionRule />
+                <Noise />
+                <Cursor />
+                <RouteTransition />
+                <Nav />
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+                <Footer />
+                <MiniTransport />
+
+                {/* Mounted once, opened from anywhere. */}
+                <AuthModal />
+                <CartDrawer />
+                <WishlistDrawer />
+                <FlashOffer />
+              </PlayerProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
       </MotionConfig>
     </QueryClientProvider>
   );

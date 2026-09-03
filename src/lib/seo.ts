@@ -8,6 +8,12 @@ export type PageSeo = {
   path: string;
   ogType?: "website" | "article" | "product";
   image?: string;
+  /**
+   * Keep the page out of search results. For the transactional pages —
+   * checkout, order history — which are per-person, useless to a stranger,
+   * and would leak a shape of the shop nobody asked to publish.
+   */
+  noindex?: boolean;
 };
 
 /**
@@ -18,13 +24,21 @@ export type PageSeo = {
  * this existed. Canonical and og:url are derived from the path rather than
  * hand-written, so they cannot point at the wrong page.
  */
-export function pageHead({ title, description, path, ogType = "website", image }: PageSeo) {
+export function pageHead({
+  title,
+  description,
+  path,
+  ogType = "website",
+  image,
+  noindex,
+}: PageSeo) {
   const url = new URL(path, site.url).href;
   const img = image ?? site.ogImage;
   return {
     meta: [
       { title },
       { name: "description", content: description },
+      ...(noindex ? [{ name: "robots", content: "noindex, nofollow" }] : []),
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: ogType },
