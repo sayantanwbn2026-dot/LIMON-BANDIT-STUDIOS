@@ -51,17 +51,18 @@
 @font-face {
   font-family: "Sora Fallback";
   src: local("Arial"), local("Helvetica"), local("Liberation Sans");
-  ascent-override: 97%;
-  descent-override: 29%;
-  line-gap-override: 0%;
+  ascent-override: 97.00%;
+  descent-override: 29.00%;
+  line-gap-override: 0.00%;
   size-adjust: 115.72%;
 }
 
 @font-face {
   font-family: "Switzer Fallback";
   src: local("Arial"), local("Helvetica"), local("Liberation Sans");
-  ascent-override: 98%;
-  descent-override: 25%;
-  line-gap-override: 9%;
+  ascent-override: 98.00%;
+  descent-override: 25.00%;
+  line-gap-override: 9.00%;
   size-adjust: 101.05%;
 }
+

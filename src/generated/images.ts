@@ -139,41 +139,41 @@ export const images = {
   },
   "limon-mascot": {
     "width": 1024,
-    "height": 1280,
-    "aspect": 0.8,
+    "height": 1169,
+    "aspect": 0.876,
     "alpha": true,
     "avif": [
       {
         "w": 480,
         "url": "/img/limon-mascot-480.avif",
-        "size": 23925
+        "size": 26688
       },
       {
         "w": 768,
         "url": "/img/limon-mascot-768.avif",
-        "size": 45302
+        "size": 50732
       },
       {
         "w": 1024,
         "url": "/img/limon-mascot-1024.avif",
-        "size": 56525
+        "size": 74191
       }
     ],
     "webp": [
       {
         "w": 480,
         "url": "/img/limon-mascot-480.webp",
-        "size": 38740
+        "size": 78700
       },
       {
         "w": 768,
         "url": "/img/limon-mascot-768.webp",
-        "size": 76388
+        "size": 173852
       },
       {
         "w": 1024,
         "url": "/img/limon-mascot-1024.webp",
-        "size": 107494
+        "size": 254918
       }
     ],
     "fallback": "/img/limon-mascot-1024.webp"

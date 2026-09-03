@@ -127,11 +127,11 @@ export function Hero() {
         { y: 16, opacity: 0, duration: 0.6, ease: "expo.out", immediateRender: false },
         0.95,
       );
-      tl.from(
-        "[data-hero-micro]",
-        { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false },
-        1.2,
-      );
+      /* The [data-hero-micro] tween that used to sit here is gone with the
+       * elements it drove — the scroll cue and the clock/coordinates line
+       * were removed from the bottom rule. GSAP does not fail on a selector
+       * that matches nothing, it warns, so this survived as console noise on
+       * every load of the landing page rather than as a broken animation. */
 
       /* Atmosphere, not action — the one thing that moves at rest.
        * Lives on a child of the element the scene scales. */
@@ -181,11 +181,7 @@ export function Hero() {
       tl.to(medallionRef.current, { scale: 1, duration: 0.2, ease: "power2.in" }, 2.2);
 
       /* ---- phase 3 — the poster concedes (2.2 → 3.2) ---- */
-      tl.to(
-        "[data-hero-station], [data-hero-micro]",
-        { y: -24, opacity: 0, duration: 0.7, stagger: 0.08 },
-        2.2,
-      );
+      tl.to("[data-hero-station]", { y: -24, opacity: 0, duration: 0.7, stagger: 0.08 }, 2.2);
       tl.to(wordWrapRef.current, { opacity: 0.12, y: "6vh", duration: 1.0 }, 2.2);
       /* he leaves without growing — the exit is blur and fade only */
       tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.8 }, 2.8);
@@ -433,11 +429,19 @@ export function Hero() {
        * He is the poster on a phone, not a prop in it — 52svh, roughly
        * double what he was, which puts his head just over the top of the
        * wordmark exactly as it reads on desktop. Anchored in svh rather
-       * than px so the composition holds from a 667pt SE to a 932pt Max. */}
+       * than px so the composition holds from a 667pt SE to a 932pt Max.
+       *
+       * The box is bounded on BOTH axes and the artwork is object-contain
+       * inside it. Height alone used to drive the size, with `max-w-none`
+       * explicitly removing any cap — fine for the 4:5 portrait that was
+       * here, and an overflow the moment the art changes shape: a square
+       * mascot at 52svh is 439px wide on a 390px screen. Bounding the width
+       * too means any replacement letterboxes inside the frame instead of
+       * pushing the page sideways. */}
       <div
         ref={limonWrapRef}
         data-limon
-        className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] lg:h-[62vh] 2xl:h-[68vh]"
+        className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] w-[92vw] max-w-[560px] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] md:w-[54vw] lg:h-[62vh] lg:w-[48vw] lg:max-w-[720px] 2xl:h-[68vh]"
       >
         {/* scene layer — the tilt pivots on his stance, not his centre */}
         <div ref={limonRef} className="h-full w-full" style={{ transformOrigin: "50% 85%" }}>
@@ -451,7 +455,7 @@ export function Hero() {
             alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
             sizes="(max-width: 767px) 90vw, (max-width: 1023px) 360px, 660px"
             priority
-            className="block h-full w-auto max-w-none object-contain"
+            className="block h-full w-full object-contain"
             style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
           />
         </div>
