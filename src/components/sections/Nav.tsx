@@ -6,6 +6,7 @@ import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { useNavPole } from "@/lib/nav-pole";
 import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import { Picture } from "@/components/lb/Picture";
+import { ShopBar } from "@/components/shop/ShopBar";
 
 /** Home lives on the logotype, so the menu carries the remaining six. */
 const menuLinks = navItems.slice(1);
@@ -113,15 +114,21 @@ export function Nav() {
             <Logotype />
           </Link>
 
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
+          {/* Four controls now, not two — the shop added a cart and an
+              account button. Five 48px squares plus the logotype overflow a
+              360pt phone (measured: the burger left the screen at 320), so
+              below `sm` the controls drop to 44px and the theme toggle moves
+              into the menu, where it is one tap away and nothing is lost. */}
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            <ThemeToggle className="hidden sm:flex" />
+            <ShopBar />
             <button
               ref={triggerRef}
               type="button"
               onClick={() => setOpen(true)}
               aria-expanded={open}
               aria-label="Open menu"
-              className="flex h-12 w-12 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type"
+              className="flex h-11 w-11 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type sm:h-12 sm:w-12"
             >
               <span className="block h-[2px] w-[20px] bg-text" />
               <span className="block h-[2px] w-[14px] bg-text" />
@@ -148,17 +155,22 @@ export function Nav() {
         <div className="flex h-[100svh] flex-col">
           <div className="lb-menu-header shell flex shrink-0 items-center justify-between">
             <Logotype />
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                triggerRef.current?.focus();
-              }}
-              aria-label="Close menu"
-              className="t-label border border-line px-4 py-3 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
-            >
-              Close
-            </button>
+            <div className="flex items-center gap-2">
+              {/* The bar's toggle is hidden below `sm` to make room for the
+                  cart and account controls, so it lives here on phones. */}
+              <ThemeToggle className="sm:hidden" />
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  triggerRef.current?.focus();
+                }}
+                aria-label="Close menu"
+                className="t-label border border-line px-4 py-3 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+              >
+                Close
+              </button>
+            </div>
           </div>
 
           <nav aria-label="Site" className="shell flex min-h-0 flex-1 flex-col">

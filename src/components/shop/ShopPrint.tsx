@@ -74,7 +74,7 @@ export function ShopPrint() {
          * single long word cannot wrap, so between 768 and 1023 "Kolkata"
          * ran 66px past its own cell into the neighbour — invisible to a
          * viewport-overflow check, because nothing escapes the page. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3">
+        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {RUN.map((s, i) => (
             <div
               key={s.k}

@@ -33,7 +33,8 @@ export function ShopOrder() {
           </div>
           <div className="flex items-end md:col-span-1">
             <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              One form for every order. We confirm stock by hand before taking any money.
+              Add it to your cart and check out. You pay on delivery, and we confirm stock by hand
+              before anything is dispatched.
             </p>
           </div>
         </div>
@@ -61,11 +62,11 @@ export function ShopOrder() {
 
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <a
-                href="/contact?intent=order"
+                href="#catalogue"
                 className="group flex h-[60px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  Place an order
+                  Back to the catalogue
                 </span>
                 <ArrowRight
                   size={16}
