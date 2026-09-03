@@ -61,7 +61,7 @@ export function CrewHiring() {
 
         {/* lg, not md — see ShopPrint: the 44px value cannot wrap and the
          * three-column cell is too narrow for it below 1024. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3">
+        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {TERMS.map((s, i) => (
             <div
               key={s.k}

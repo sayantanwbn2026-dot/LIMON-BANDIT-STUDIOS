@@ -1,16 +1,22 @@
-import { useId, useState } from "react";
-import { ArrowRight, Minus, Plus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
+import { Accordion } from "@/components/lb/Accordion";
 import { faq } from "@/data/faq";
 import { Picture } from "@/components/lb/Picture";
 
+/**
+ * The landing-page FAQ.
+ *
+ * This used to carry its own inline accordion — the same one already
+ * extracted into `@/components/lb/Accordion` and used by /rooms and /label —
+ * which meant a fix to one had to be remembered in the other. It now uses
+ * the shared component, on the alt pole because this section is one of the
+ * two dark chapters in light mode.
+ */
 export function Faq() {
-  const [open, setOpen] = useState(0);
-  const uid = useId();
-
-  /* 160px top: this is where the page changes chapter, dark to light. */
   return (
+    /* 160px top: this is where the page changes chapter, dark to light. */
     <Section tone="light" className="pt-[160px] pb-[120px]">
       <div className="section-head">
         <div className="md:col-span-1">
@@ -46,55 +52,7 @@ export function Faq() {
           />
 
           <div className="mt-12">
-            {faq.map((item, i) => {
-              const isOpen = open === i;
-              return (
-                <div key={item.question} className="border-t border-alt-line">
-                  <h3>
-                    <button
-                      type="button"
-                      id={`${uid}-t-${i}`}
-                      aria-expanded={isOpen}
-                      aria-controls={`${uid}-p-${i}`}
-                      onClick={() => setOpen(isOpen ? -1 : i)}
-                      className="flex w-full items-center gap-6 py-8 text-left"
-                    >
-                      <span className="tnum font-ui text-[13px] text-alt-mute">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="flex-1 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
-                        {item.question}
-                      </span>
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center text-alt-text">
-                        {isOpen ? <Minus size={20} /> : <Plus size={20} />}
-                      </span>
-                    </button>
-                  </h3>
-                  <div
-                    id={`${uid}-p-${i}`}
-                    role="region"
-                    aria-labelledby={`${uid}-t-${i}`}
-                    className="grid"
-                    style={{
-                      gridTemplateRows: isOpen ? "1fr" : "0fr",
-                      transition: "grid-template-rows 0.45s var(--ease-in-out-quart)",
-                    }}
-                  >
-                    <div className="overflow-hidden">
-                      <p
-                        className="max-w-[60ch] pb-8 pl-[48px] font-ui text-[16px] leading-[1.5] text-alt-mute"
-                        style={{
-                          opacity: isOpen ? 1 : 0,
-                          transition: "opacity 0.35s ease 0.08s",
-                        }}
-                      >
-                        {item.answer}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <Accordion items={faq} pole="alt" />
           </div>
         </div>
       </div>

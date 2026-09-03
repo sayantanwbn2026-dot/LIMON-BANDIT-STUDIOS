@@ -51,7 +51,7 @@ export function JournalTopics() {
           </div>
         </div>
 
-        <dl className="mt-16 grid grid-cols-1 border-t border-alt-line sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-16 grid grid-cols-1 border-t border-alt-line sm:grid-cols-2 lg:grid-cols-4 lg:border-b">
           {BEATS.map((b, i) => (
             <div
               key={b.category}

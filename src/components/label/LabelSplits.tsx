@@ -52,8 +52,16 @@ export function LabelSplits() {
 
         {/* lg, not md: at 768 the 44px value "Monthly" ran 39px past its own
          * cell into the neighbouring column. Same pattern and same fix as
-         * ShopPrint and CrewHiring. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3">
+         * ShopPrint and CrewHiring.
+         *
+         * `lg:border-b` closes the box. The cells drop their own bottom rule
+         * at lg to avoid doubling it, which left the two `lg:border-l`
+         * dividers running down into open space and stopping in mid-air —
+         * the drafting grid reads as a ruled box, and a rule that ends
+         * without meeting another looks like a rendering fault rather than a
+         * decision. Same omission was in ShopPrint, CrewHiring,
+         * JournalTopics and Bento. */}
+        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {SPLITS.map((s, i) => (
             <div
               key={s.k}

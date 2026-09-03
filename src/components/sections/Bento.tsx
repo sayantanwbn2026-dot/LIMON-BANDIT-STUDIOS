@@ -54,7 +54,7 @@ export function Bento() {
         </div>
       </div>
 
-      <div className="mt-20 grid grid-cols-1 border-t border-line lg:grid-cols-12">
+      <div className="mt-20 grid grid-cols-1 border-t border-line lg:grid-cols-12 lg:border-b">
         {/* the sound */}
         <RiseIn className="border-b border-line py-12 lg:col-span-6 lg:border-b-0 lg:pr-12">
           <span className="t-label text-mute">The sound</span>
