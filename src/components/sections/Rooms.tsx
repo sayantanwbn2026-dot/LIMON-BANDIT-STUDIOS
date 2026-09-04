@@ -3,10 +3,11 @@ import { Section } from "@/components/lb/Section";
 import { Eyebrow } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { rooms } from "@/data/rooms";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { useRooms } from "@/cms/hooks";
 
 export function Rooms() {
+  const rooms = useRooms();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -63,7 +64,7 @@ export function Rooms() {
             <div className="sticky top-[14vh]">
               <div className="relative border border-line" style={{ aspectRatio: "4 / 5" }}>
                 {rooms.map((r, i) => (
-                  <Picture
+                  <CmsImage
                     key={r.id}
                     data-room-img={i}
                     src={r.image}
@@ -116,7 +117,7 @@ export function Rooms() {
                   </span>
                 </div>
 
-                <Picture
+                <CmsImage
                   src={r.image}
                   sizes="(max-width: 1023px) 100vw, 45vw"
                   alt={`${r.name} — ${r.kind} at Limon Bandit`}

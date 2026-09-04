@@ -17,9 +17,18 @@ import { Route as LabelRouteImport } from './routes/label'
 import { Route as CrewRouteImport } from './routes/crew'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
+import { Route as AdminShopRouteImport } from './routes/admin.shop'
+import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminGlobalRouteImport } from './routes/admin.global'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminPagePageRouteImport } from './routes/admin.page.$page'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -61,6 +70,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -71,14 +85,55 @@ const JournalIndexRoute = JournalIndexRouteImport.update({
   path: '/journal/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const JournalSlugRoute = JournalSlugRouteImport.update({
   id: '/journal/$slug',
   path: '/journal/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminShopRoute = AdminShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOwnershipRoute = AdminOwnershipRouteImport.update({
+  id: '/ownership',
+  path: '/ownership',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGlobalRoute = AdminGlobalRouteImport.update({
+  id: '/global',
+  path: '/global',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPagePageRoute = AdminPagePageRouteImport.update({
+  id: '/page/$page',
+  path: '/page/$page',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
@@ -87,8 +142,16 @@ export interface FileRoutesByFullPath {
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/global': typeof AdminGlobalRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/shop': typeof AdminShopRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
+  '/admin/page/$page': typeof AdminPagePageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,12 +163,21 @@ export interface FileRoutesByTo {
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/global': typeof AdminGlobalRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/shop': typeof AdminShopRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/journal': typeof JournalIndexRoute
+  '/admin/page/$page': typeof AdminPagePageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
@@ -114,13 +186,22 @@ export interface FileRoutesById {
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/global': typeof AdminGlobalRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/shop': typeof AdminShopRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
+  '/admin/page/$page': typeof AdminPagePageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/checkout'
     | '/contact'
     | '/crew'
@@ -129,8 +210,16 @@ export interface FileRouteTypes {
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
+    | '/admin/analytics'
+    | '/admin/global'
+    | '/admin/login'
+    | '/admin/media'
+    | '/admin/ownership'
+    | '/admin/shop'
     | '/journal/$slug'
+    | '/admin/'
     | '/journal/'
+    | '/admin/page/$page'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,11 +231,20 @@ export interface FileRouteTypes {
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
+    | '/admin/analytics'
+    | '/admin/global'
+    | '/admin/login'
+    | '/admin/media'
+    | '/admin/ownership'
+    | '/admin/shop'
     | '/journal/$slug'
+    | '/admin'
     | '/journal'
+    | '/admin/page/$page'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/checkout'
     | '/contact'
     | '/crew'
@@ -155,12 +253,21 @@ export interface FileRouteTypes {
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
+    | '/admin/analytics'
+    | '/admin/global'
+    | '/admin/login'
+    | '/admin/media'
+    | '/admin/ownership'
+    | '/admin/shop'
     | '/journal/$slug'
+    | '/admin/'
     | '/journal/'
+    | '/admin/page/$page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   CrewRoute: typeof CrewRoute
@@ -231,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -245,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/journal/$slug': {
       id: '/journal/$slug'
       path: '/journal/$slug'
@@ -252,11 +373,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/shop': {
+      id: '/admin/shop'
+      path: '/shop'
+      fullPath: '/admin/shop'
+      preLoaderRoute: typeof AdminShopRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ownership': {
+      id: '/admin/ownership'
+      path: '/ownership'
+      fullPath: '/admin/ownership'
+      preLoaderRoute: typeof AdminOwnershipRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/global': {
+      id: '/admin/global'
+      path: '/global'
+      fullPath: '/admin/global'
+      preLoaderRoute: typeof AdminGlobalRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/page/$page': {
+      id: '/admin/page/$page'
+      path: '/page/$page'
+      fullPath: '/admin/page/$page'
+      preLoaderRoute: typeof AdminPagePageRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminGlobalRoute: typeof AdminGlobalRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminOwnershipRoute: typeof AdminOwnershipRoute
+  AdminShopRoute: typeof AdminShopRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminPagePageRoute: typeof AdminPagePageRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminGlobalRoute: AdminGlobalRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminOwnershipRoute: AdminOwnershipRoute,
+  AdminShopRoute: AdminShopRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminPagePageRoute: AdminPagePageRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   CrewRoute: CrewRoute,

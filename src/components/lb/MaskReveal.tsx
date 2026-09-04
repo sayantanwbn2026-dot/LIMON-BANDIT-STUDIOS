@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { Picture } from "./Picture";
+import { CmsImage } from "./CmsImage";
 import type { ImageKey } from "@/generated/images";
 
 /**
@@ -17,7 +17,8 @@ export function MaskReveal({
   sizes = "(max-width: 767px) 50vw, 25vw",
   priority = false,
 }: {
-  src: ImageKey;
+  /** manifest key or CMS-uploaded URL */
+  src: ImageKey | string;
   alt: string;
   className?: string;
   imgClassName?: string;
@@ -49,7 +50,7 @@ export function MaskReveal({
 
   return (
     <div ref={wrap} className={`overflow-hidden ${className ?? ""}`} style={style}>
-      <Picture
+      <CmsImage
         src={src}
         alt={alt}
         sizes={sizes}

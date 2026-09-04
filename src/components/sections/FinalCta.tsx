@@ -3,11 +3,12 @@ import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
 import { LiveLog } from "@/components/lb/LiveLog";
-import { ctaChecklist } from "@/data/tickers";
-import { site } from "@/data/site";
+import { useSite, useTickers } from "@/cms/hooks";
 import { Picture } from "@/components/lb/Picture";
 
 export function FinalCta() {
+  const { ctaChecklist } = useTickers();
+  const site = useSite();
   return (
     <section className="relative w-full overflow-hidden bg-surface-deep">
       <Picture

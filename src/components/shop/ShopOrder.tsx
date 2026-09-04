@@ -2,8 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { faqByTopic } from "@/data/faq";
-import { site } from "@/data/site";
+import { useFaqByTopic, useSite } from "@/cms/hooks";
 
 const SHIPPING = [
   { k: "Kolkata", v: "Free", d: "Collect from the building, or we drop it if we are passing." },
@@ -16,6 +15,8 @@ const SHIPPING = [
 ];
 
 export function ShopOrder() {
+  const faqItems = useFaqByTopic("shop");
+  const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[120px]">
       <GridRules tone="dark" />
@@ -85,7 +86,7 @@ export function ShopOrder() {
           <div>
             <h3 className="t-label text-mute">Before you order</h3>
             <div className="mt-6">
-              <Accordion items={faqByTopic("shop")} />
+              <Accordion items={faqItems} />
             </div>
           </div>
         </div>

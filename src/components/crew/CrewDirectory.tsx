@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { crew, disciplines, type Discipline } from "@/data/crew";
+import { disciplines, type Discipline } from "@/data/crew";
+import { useCrew } from "@/cms/hooks";
 
 /**
  * The directory.
@@ -22,6 +23,7 @@ const statusTint: Record<string, string> = {
 type Filter = Discipline | "All";
 
 export function CrewDirectory() {
+  const crew = useCrew();
   const [filter, setFilter] = useState<Filter>("All");
   const filters: Filter[] = ["All", ...disciplines];
   const shown = filter === "All" ? crew : crew.filter((c) => c.discipline === filter);

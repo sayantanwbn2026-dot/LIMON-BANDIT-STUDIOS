@@ -4,10 +4,11 @@ import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { drops } from "@/data/drops";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { useDrops } from "@/cms/hooks";
 
 export function DropRail() {
+  const drops = useDrops();
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
@@ -115,7 +116,7 @@ export function DropRail() {
                 className="group w-[280px] shrink-0 snap-start border border-line bg-surface md:w-[340px]"
               >
                 <div className="relative overflow-hidden" style={{ aspectRatio: "1 / 1" }}>
-                  <Picture
+                  <CmsImage
                     src={d.image}
                     sizes="(max-width: 767px) 280px, 340px"
                     alt={`${d.title} by ${d.artist} — cover art`}

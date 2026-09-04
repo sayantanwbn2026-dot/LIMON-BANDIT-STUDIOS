@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Section, Eyebrow } from "@/components/lb/Section";
-import { metrics } from "@/data/metrics";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { useMetrics } from "@/cms/hooks";
 
 /**
  * The numbers, as a meter bridge.
@@ -31,6 +31,7 @@ import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 const clipAt = (f: number) => `inset(0 ${(1 - f) * 100}% 0 0)`;
 
 export function Numbers() {
+  const metrics = useMetrics();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

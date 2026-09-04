@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
-import { rates } from "@/data/rates";
+import { useRates } from "@/cms/hooks";
 
 type Mode = "hourly" | "package";
 
@@ -20,6 +20,7 @@ type Mode = "hourly" | "package";
  * now marked by its price being in acid — one signal, not four.
  */
 export function Rates() {
+  const rates = useRates();
   const [mode, setMode] = useState<Mode>("hourly");
 
   return (

@@ -2,8 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
-import { testimonials } from "@/data/testimonials";
-import { testimonialTicker } from "@/data/tickers";
+import { useTestimonials, useTickers } from "@/cms/hooks";
 
 /**
  * The roster talks — set the way the hero is set.
@@ -25,6 +24,8 @@ import { testimonialTicker } from "@/data/tickers";
 const RULE = "rgba(0,0,0,0.22)";
 
 export function Testimonials() {
+  const { testimonialTicker } = useTickers();
+  const testimonials = useTestimonials();
   return (
     <section className="relative w-full bg-acid pt-[160px]">
       <GridRules tone="acid" />

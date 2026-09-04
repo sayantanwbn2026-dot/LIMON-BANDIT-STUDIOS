@@ -1,10 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
-import { posts } from "@/data/journal";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { usePosts } from "@/cms/hooks";
 
 export function Journal() {
+  const posts = usePosts();
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
     <Section tone="light" className="border-t border-alt-line pt-[120px] pb-[160px]">
@@ -38,7 +39,7 @@ export function Journal() {
         {posts.map((p, i) => (
           <RiseIn key={p.title} delay={i * 0.08}>
             <a href="/journal" className="group block">
-              <Picture
+              <CmsImage
                 src={p.image}
                 sizes="(max-width: 767px) 100vw, 30vw"
                 alt={p.alt}

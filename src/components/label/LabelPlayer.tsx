@@ -1,16 +1,17 @@
 import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { Waveform } from "@/components/lb/Waveform";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { clock, usePlayer } from "@/lib/player";
-import { tracks } from "@/data/tracks";
+import { useTracks } from "@/cms/hooks";
 
 /**
  * The player. Not a decoration — it decodes the actual audio to draw its
  * waveform, and it keeps playing when you leave this page.
  */
 export function LabelPlayer() {
+  const tracks = useTracks();
   const { track, playing, time, duration, failed, play, toggle, seek, step, next, prev } =
     usePlayer();
 
@@ -58,7 +59,7 @@ export function LabelPlayer() {
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">The roster, playing</h2>
 
         <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-16">
-          <Picture
+          <CmsImage
             src={shown.cover}
             alt={`Cover art for ${shown.title} by ${shown.artist}`}
             sizes="(max-width: 1023px) 100vw, 280px"

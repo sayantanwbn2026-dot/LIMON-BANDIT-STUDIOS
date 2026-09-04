@@ -1,6 +1,6 @@
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { posts } from "@/data/journal";
+import { usePosts } from "@/cms/hooks";
 
 /**
  * The beats, still inverted. Counts come from the entries themselves so the
@@ -26,6 +26,7 @@ const BEATS: { category: string; blurb: string }[] = [
 ];
 
 export function JournalTopics() {
+  const posts = usePosts();
   const countFor = (c: string) =>
     String(posts.filter((p) => p.category === c).length).padStart(2, "0");
 

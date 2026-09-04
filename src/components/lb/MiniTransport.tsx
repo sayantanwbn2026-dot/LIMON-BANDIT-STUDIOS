@@ -1,5 +1,5 @@
 import { Pause, Play, SkipForward, X } from "lucide-react";
-import { Picture } from "./Picture";
+import { CmsImage } from "./CmsImage";
 import { clock, usePlayer } from "@/lib/player";
 
 /**
@@ -30,7 +30,7 @@ export function MiniTransport() {
       </div>
 
       <div className="shell flex h-[64px] items-center gap-4">
-        <Picture
+        <CmsImage
           src={track.cover}
           alt=""
           sizes="36px"

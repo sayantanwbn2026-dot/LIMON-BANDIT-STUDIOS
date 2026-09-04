@@ -2,11 +2,14 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { GridRules } from "@/components/lb/GridRules";
 import { Logotype } from "./Nav";
-import { navItems, site } from "@/data/site";
-import { releases } from "@/data/releases";
+import { useNavItems, useReleases, useSite, useSocialLink } from "@/cms/hooks";
 import { Picture } from "@/components/lb/Picture";
 
 export function Footer() {
+  const releases = useReleases();
+  const site = useSite();
+  const navItems = useNavItems();
+  const instagram = useSocialLink("Instagram");
   return (
     <footer className="relative w-full overflow-hidden border-t border-line bg-surface-deep">
       <GridRules tone="dark" />
@@ -74,7 +77,7 @@ export function Footer() {
               </div>
               <div>{site.phone}</div>
               <div>{site.email}</div>
-              <div>{site.instagram}</div>
+              {instagram ? <div>{instagram.handle || instagram.platform}</div> : null}
             </div>
           </div>
         </div>

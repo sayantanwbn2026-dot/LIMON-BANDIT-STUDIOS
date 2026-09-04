@@ -2,8 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { faqByTopic } from "@/data/faq";
-import { site } from "@/data/site";
+import { useFaqByTopic, useSite } from "@/cms/hooks";
 
 const STEPS = [
   { k: "01", t: "Send the dates", d: "What you are recording and roughly how long you need." },
@@ -17,6 +16,8 @@ const STEPS = [
  * page has already decided they want a room.
  */
 export function RoomsBooking() {
+  const faqItems = useFaqByTopic("booking");
+  const site = useSite();
   return (
     <section className="relative w-full bg-surface py-[120px]">
       <GridRules tone="dark" />
@@ -90,7 +91,7 @@ export function RoomsBooking() {
           <div>
             <h3 className="t-label text-mute">Before you book</h3>
             <div className="mt-6">
-              <Accordion items={faqByTopic("booking")} />
+              <Accordion items={faqItems} />
             </div>
           </div>
         </div>

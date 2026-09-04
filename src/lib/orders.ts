@@ -108,6 +108,30 @@ function readableIssue(error: z.ZodError): string {
   return "That order could not be read. Refresh the page and try once more.";
 }
 
+/**
+ * Look a discount code up in the CMS-managed list.
+ *
+ * Mirrors `findOffer` in data/offers.ts — case-insensitive, and an expiry in
+ * the past is not a code. Kept separate rather than made generic because the
+ * stored rows are untyped JSON and every field has to be checked before it is
+ * trusted; a blank `expires` is "no expiry", not "expired in 1970".
+ */
+function findLiveOffer(
+  offers: { code: string; percent: number; expires?: string | null }[],
+  code: string | null,
+): { code: string; percent: number } | null {
+  if (!code) return null;
+  const wanted = code.trim().toLowerCase();
+  const found = offers.find((o) => typeof o.code === "string" && o.code.toLowerCase() === wanted);
+  if (!found) return null;
+  if (typeof found.percent !== "number" || found.percent <= 0) return null;
+  if (found.expires && String(found.expires).trim()) {
+    const when = new Date(String(found.expires));
+    if (!Number.isNaN(when.getTime()) && when < new Date(new Date().toDateString())) return null;
+  }
+  return { code: found.code, percent: Math.min(100, found.percent) };
+}
+
 export const submitOrder = createServerFn({ method: "POST" })
   .validator((d: unknown) => {
     const parsed = orderSchema.safeParse(d);
@@ -136,9 +160,44 @@ export const submitOrder = createServerFn({ method: "POST" })
     }
     const user = auth.user;
 
+    /* The catalogue the server prices against.
+     *
+     * This must be the CMS document, not the compiled `src/data/shop.ts`.
+     * The moment an editor changes a price in the admin, the two disagree —
+     * and since this function's whole job is to be the authority on what an
+     * order costs, pricing from the stale copy would quietly charge the old
+     * amount for everything the editor had just repriced. `cms_documents` is
+     * world-readable, so the buyer's own client can fetch it.
+     *
+     * The committed data stays as the fallback for exactly the case the rest
+     * of the CMS falls back for: an unseeded or unreachable database should
+     * degrade to the shipped catalogue rather than refuse every order. */
+    const { data: catalogue } = await asUser
+      .from("cms_documents")
+      .select("data")
+      .eq("key", "commerce.products")
+      .maybeSingle();
+
+    const liveProducts =
+      Array.isArray(catalogue?.data) && catalogue.data.length > 0
+        ? (catalogue.data as typeof products)
+        : products;
+
+    const { data: offerDoc } = await asUser
+      .from("cms_documents")
+      .select("data")
+      .eq("key", "commerce.offers")
+      .maybeSingle();
+
+    const { data: shipDoc } = await asUser
+      .from("cms_documents")
+      .select("data")
+      .eq("key", "commerce.shipping")
+      .maybeSingle();
+
     // ---- price it here, from the catalogue, ignoring whatever the client thinks ----
     const items = data.lines.map((line) => {
-      const product = products.find((p) => p.id === line.productId);
+      const product = liveProducts.find((p) => p.id === line.productId);
       if (!product) throw new Error(`That item is no longer in the shop (${line.productId}).`);
       if (product.stock <= 0) throw new Error(`${product.title} is sold out.`);
 
@@ -166,9 +225,24 @@ export const submitOrder = createServerFn({ method: "POST" })
 
     const subtotal = items.reduce((n, i) => n + i.line_inr, 0);
     const allDigital = items.every((i) => i.digital);
-    const shipping = shippingFor(allDigital, data.shipRegion);
 
-    const offer = findOffer(data.discountCode);
+    /* Shipping and discounts come from the CMS too, for the same reason the
+     * prices do — an editor who raises the India rate expects the next order
+     * to be charged the new one. */
+    const ship = shipDoc?.data as { kolkata?: number; india?: number } | undefined;
+    const shipping = allDigital
+      ? 0
+      : typeof ship?.[data.shipRegion] === "number"
+        ? Math.max(0, ship[data.shipRegion] as number)
+        : shippingFor(allDigital, data.shipRegion);
+
+    const liveOffers = Array.isArray(offerDoc?.data)
+      ? (offerDoc.data as { code: string; percent: number; expires?: string | null }[])
+      : null;
+
+    const offer = liveOffers
+      ? findLiveOffer(liveOffers, data.discountCode)
+      : findOffer(data.discountCode);
     const discount = offer ? discountOf(subtotal, offer.percent) : 0;
     const total = Math.max(0, subtotal - discount) + shipping;
 

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
-import { rooms, type Room } from "@/data/rooms";
+import { type Room } from "@/data/rooms";
+import { useRooms, type RoomDoc } from "@/cms/hooks";
+import { rooms as roomGeometry } from "@/data/rooms";
 
 /**
  * The plan of the building, drawn rather than photographed.
@@ -18,6 +20,10 @@ import { rooms, type Room } from "@/data/rooms";
  * control is the list beneath it, which is also what mobile gets.
  */
 function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number) => void }) {
+  /* Geometry only. `plan` is a rectangle in an SVG of the building — a
+   * drawing, not a fact about the room — so it is not editable content and
+   * is read from code rather than the CMS. */
+  const rooms = roomGeometry;
   const lockoutActive = rooms[active]?.plan === null;
 
   return (
@@ -116,7 +122,9 @@ function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number)
 }
 
 /** One room, at length. Alternating shape so no two read the same. */
-function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
+type ChapterRoom = RoomDoc & Pick<Room, "crops">;
+
+function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean }) {
   return (
     <article
       id={`room-${r.id}`}
@@ -134,7 +142,7 @@ function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
       </div>
 
       <div className={`mt-10 flex flex-col gap-10 ${reverse ? "lg:flex-col-reverse" : ""}`}>
-        <Picture
+        <CmsImage
           src={r.image}
           alt={`${r.name} — ${r.kind} at Limon Bandit`}
           sizes="(max-width: 1023px) 100vw, 60vw"
@@ -166,7 +174,7 @@ function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
       {/* three detail crops */}
       <div className="mt-10 grid grid-cols-3 gap-4">
         {r.crops.map((c, i) => (
-          <Picture
+          <CmsImage
             key={`${c}-${i}`}
             src={c}
             alt=""
@@ -207,6 +215,7 @@ function RoomChapter({ room: r, reverse }: { room: Room; reverse: boolean }) {
  * scroll past it, and lights whichever room you are reading.
  */
 export function RoomsFloor() {
+  const rooms = useRooms();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -263,7 +272,17 @@ export function RoomsFloor() {
 
           <div ref={root}>
             {rooms.map((r, i) => (
-              <RoomChapter key={r.id} room={r} reverse={i % 2 === 1} />
+              <RoomChapter
+                key={r.id}
+                /* Editable words and photo from the CMS; the detail crops are
+                   part of the layout and stay in code. Matched on id so
+                   reordering rooms in the admin cannot mismatch them. */
+                room={{
+                  ...r,
+                  crops: roomGeometry.find((g) => g.id === r.id)?.crops ?? [],
+                }}
+                reverse={i % 2 === 1}
+              />
             ))}
           </div>
         </div>

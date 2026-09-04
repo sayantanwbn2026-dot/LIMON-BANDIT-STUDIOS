@@ -2,7 +2,7 @@ import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
 import { chapter } from "@/data/routes";
-import { rooms } from "@/data/rooms";
+import { useRooms } from "@/cms/hooks";
 
 /**
  * ROOMS — the ledger, under the house lockup.
@@ -15,6 +15,7 @@ import { rooms } from "@/data/rooms";
  * column of prices reads as a column. Photography is downstream.
  */
 export function RoomsHero() {
+  const rooms = useRooms();
   const c = chapter("rooms");
 
   return (

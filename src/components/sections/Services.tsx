@@ -4,9 +4,9 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
-import { Picture } from "@/components/lb/Picture";
-import { services } from "@/data/services";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
+import { useServices } from "@/cms/hooks";
 
 /**
  * What we run — the four operations, as a projection room.
@@ -35,6 +35,7 @@ import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
  * only to report which step we are on.
  */
 export function Services() {
+  const services = useServices();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -190,7 +191,7 @@ export function Services() {
                     className="absolute inset-0 transition-opacity duration-[700ms]"
                     style={{ opacity: i === active ? 1 : 0 }}
                   >
-                    <Picture
+                    <CmsImage
                       src={s.image}
                       alt=""
                       sizes="58vw"
@@ -283,7 +284,7 @@ export function Services() {
             >
               {/* the frame */}
               <div className="relative overflow-hidden">
-                <Picture
+                <CmsImage
                   src={s.image}
                   alt={s.alt}
                   sizes="100vw"

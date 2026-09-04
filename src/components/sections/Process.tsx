@@ -1,9 +1,10 @@
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { PushIn, WordReveal } from "@/components/lb/Reveal";
-import { processSteps } from "@/data/process";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { useProcess } from "@/cms/hooks";
 
 export function Process() {
+  const processSteps = useProcess();
   return (
     /* bg-surface: --mute at 16px measures 4.39:1 on --surface-deep in light
      * mode, just under AA. Same one-step-lighter fix as Rates. The token
@@ -30,7 +31,7 @@ export function Process() {
               </h3>
               <p className="font-ui text-[16px] leading-[1.5] text-mute">{s.description}</p>
               <div className="flex md:justify-end">
-                <Picture
+                <CmsImage
                   src={s.thumb}
                   sizes="120px"
                   alt={s.alt}

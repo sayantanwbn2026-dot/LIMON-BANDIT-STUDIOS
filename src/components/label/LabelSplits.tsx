@@ -2,31 +2,16 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { faqByTopic } from "@/data/faq";
-
-const SPLITS = [
-  {
-    k: "Artist keeps",
-    v: "70%",
-    d: "Of net receipts, on everything — streaming, sync, physical, merch tied to the record.",
-  },
-  {
-    k: "Label takes",
-    v: "30%",
-    d: "Against recording, mastering, artwork, distribution and press. No recoupable extras.",
-  },
-  {
-    k: "Paid",
-    v: "Monthly",
-    d: "Statements on the 5th, payment the same week. Masters revert after five years.",
-  },
-];
+import { useFaqByTopic, useSplits } from "@/cms/hooks";
 
 /**
  * The deal, in three columns and no marketing language. If a split is worth
  * signing it survives being stated plainly.
  */
 export function LabelSplits() {
+  const SPLITS = useSplits();
+  const faqItems = useFaqByTopic("label");
+
   return (
     <section className="relative w-full bg-surface py-[120px]">
       <GridRules tone="dark" />
@@ -108,7 +93,7 @@ export function LabelSplits() {
           <div>
             <h3 className="t-label text-mute">Before you send</h3>
             <div className="mt-6">
-              <Accordion items={faqByTopic("label")} />
+              <Accordion items={faqItems} />
             </div>
           </div>
         </div>

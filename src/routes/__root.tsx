@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -31,6 +32,8 @@ import { AuthModal } from "@/components/shop/AuthModal";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
 import { FlashOffer } from "@/components/shop/FlashOffer";
+import { ContentProvider } from "@/cms/content";
+import { Analytics } from "@/components/lb/Analytics";
 
 /**
  * The 404 and error screens.
@@ -239,8 +242,40 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * The public site's chrome.
+ *
+ * Split out so `/admin` can skip all of it. Everything in here is hostile to
+ * an editing surface — a custom cursor, hijacked scrolling, a route-change
+ * curtain, a fixed nav over the top of the working area — and the admin
+ * needs a plain document that stays where it was put.
+ */
+function SiteChrome() {
+  return (
+    <>
+      <SkipLink />
+      <SmoothScroll />
+      <SectionRule />
+      <Noise />
+      <Cursor />
+      <RouteTransition />
+      <Nav />
+      <Outlet />
+      <Footer />
+      <MiniTransport />
+
+      {/* Mounted once, opened from anywhere. */}
+      <AuthModal />
+      <CartDrawer />
+      <WishlistDrawer />
+      <FlashOffer />
+    </>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const admin = useRouterState({ select: (s) => s.location.pathname.startsWith("/admin") });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -264,29 +299,17 @@ function RootComponent() {
           because the provider holding it never unmounts. */}
       <MotionConfig reducedMotion="user">
         <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <PlayerProvider>
-                <SkipLink />
-                <SmoothScroll />
-                <SectionRule />
-                <Noise />
-                <Cursor />
-                <RouteTransition />
-                <Nav />
-                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-                <Outlet />
-                <Footer />
-                <MiniTransport />
-
-                {/* Mounted once, opened from anywhere. */}
-                <AuthModal />
-                <CartDrawer />
-                <WishlistDrawer />
-                <FlashOffer />
-              </PlayerProvider>
-            </WishlistProvider>
-          </CartProvider>
+          <ContentProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <PlayerProvider>
+                  <Analytics />
+                  {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                  {admin ? <Outlet /> : <SiteChrome />}
+                </PlayerProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </ContentProvider>
         </AuthProvider>
       </MotionConfig>
     </QueryClientProvider>

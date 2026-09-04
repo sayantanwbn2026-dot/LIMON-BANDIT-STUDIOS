@@ -2,8 +2,8 @@ import { ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { Picture } from "@/components/lb/Picture";
-import { posts } from "@/data/journal";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { usePosts } from "@/cms/hooks";
 
 /**
  * The index, still on the alt pole.
@@ -17,6 +17,7 @@ import { posts } from "@/data/journal";
  * four-entry journal actually warrants.
  */
 export function JournalIndex() {
+  const posts = usePosts();
   const [lead, ...rest] = posts;
 
   return (
@@ -46,7 +47,7 @@ export function JournalIndex() {
             params={{ slug: lead.slug }}
             className="block overflow-hidden border border-alt-line"
           >
-            <Picture
+            <CmsImage
               src={lead.image}
               alt={lead.alt}
               sizes="(max-width: 1023px) 100vw, 50vw"
@@ -104,7 +105,7 @@ export function JournalIndex() {
                 </span>
 
                 <span className="hidden md:col-span-2 md:block">
-                  <Picture
+                  <CmsImage
                     src={p.image}
                     alt=""
                     sizes="140px"

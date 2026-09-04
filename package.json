@@ -14,7 +14,8 @@
     "predev": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing && node scripts/audio.mjs --if-missing",
     "prebuild": "node scripts/images.mjs && node scripts/fonts.mjs --if-missing && node scripts/audio.mjs --if-missing",
     "fonts": "node scripts/fonts.mjs",
-    "audio": "node scripts/audio.mjs"
+    "audio": "node scripts/audio.mjs",
+    "cms:seed": "node scripts/cms-seed.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.4",

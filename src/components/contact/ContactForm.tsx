@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { site } from "@/data/site";
+import { useSite } from "@/cms/hooks";
 import {
   INTENTS,
   DEFAULT_INTENT,
@@ -31,6 +31,7 @@ type Errors = Partial<Record<"name" | "email" | "message", string>>;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ContactForm() {
+  const site = useSite();
   const [intent, setIntent] = useState<IntentId>(DEFAULT_INTENT);
   const [subject, setSubject] = useState<Subject | undefined>();
   const [name, setName] = useState("");

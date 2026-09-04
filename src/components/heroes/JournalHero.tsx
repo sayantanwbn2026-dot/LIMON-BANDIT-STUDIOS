@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { chapter } from "@/data/routes";
-import { posts } from "@/data/journal";
+import { usePosts } from "@/cms/hooks";
 
 /**
  * JOURNAL — the masthead.
@@ -15,6 +15,7 @@ import { posts } from "@/data/journal";
  * the title wide, then a standfirst with a drop cap.
  */
 export function JournalHero() {
+  const posts = usePosts();
   const c = chapter("journal");
   const issue = String(posts.length).padStart(2, "0");
 

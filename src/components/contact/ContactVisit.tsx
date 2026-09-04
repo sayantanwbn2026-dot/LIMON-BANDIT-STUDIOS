@@ -2,8 +2,7 @@ import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { faqByTopic } from "@/data/faq";
-import { site } from "@/data/site";
+import { useFaqByTopic, useSite } from "@/cms/hooks";
 
 /**
  * Finding the building, and when it is awake. The hours are the argument —
@@ -23,6 +22,8 @@ const GETTING_THERE = [
 ];
 
 export function ContactVisit() {
+  const faqItems = useFaqByTopic("booking");
+  const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[120px]">
       <GridRules tone="dark" />
@@ -96,7 +97,7 @@ export function ContactVisit() {
           <div>
             <h3 className="t-label text-mute">Asked most</h3>
             <div className="mt-6">
-              <Accordion items={faqByTopic("booking")} />
+              <Accordion items={faqItems} />
             </div>
           </div>
         </div>

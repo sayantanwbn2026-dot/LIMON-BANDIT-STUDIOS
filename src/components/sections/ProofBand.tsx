@@ -1,12 +1,13 @@
 import { Ticker, TickerItem } from "@/components/lb/Ticker";
 import { GridRules } from "@/components/lb/GridRules";
-import { partners, proofTicker } from "@/data/tickers";
 import { Star } from "lucide-react";
 import { Picture } from "@/components/lb/Picture";
+import { useTickers } from "@/cms/hooks";
 
 const avatars = ["release-01", "release-02", "release-03", "release-06"] as const;
 
 export function ProofBand() {
+  const { partners, proofTicker } = useTickers();
   return (
     <section className="relative w-full bg-surface-deep" aria-label="Studio facts and partners">
       <GridRules tone="dark" />

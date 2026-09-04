@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
-import { releases } from "@/data/releases";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
+import { useReleases } from "@/cms/hooks";
 
 export function Roster() {
+  const releases = useReleases();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export function Roster() {
             data-cursor="play"
             className={`group relative block overflow-hidden border border-line ${r.span} ${r.height}`}
           >
-            <Picture
+            <CmsImage
               src={r.cover}
               sizes="(max-width: 767px) 100vw, 33vw"
               alt={r.alt}

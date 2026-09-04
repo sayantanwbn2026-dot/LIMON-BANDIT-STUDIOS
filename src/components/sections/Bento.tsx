@@ -1,10 +1,10 @@
 import { ArrowRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal, RiseIn } from "@/components/lb/Reveal";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { Waveform } from "@/components/lb/Waveform";
 import { usePlayer } from "@/lib/player";
-import { tracks } from "@/data/tracks";
+import { useTracks } from "@/cms/hooks";
 
 /**
  * What's inside — the artefacts, not another list of the four operations.
@@ -22,6 +22,7 @@ import { tracks } from "@/data/tracks";
  * Rooms ledger and the Crew directory are already built.
  */
 export function Bento() {
+  const tracks = useTracks();
   const { track, playing, time, duration, play, toggle, seek } = usePlayer();
   const shown = track ?? tracks[0];
   const isLive = track?.id === shown.id;
@@ -60,7 +61,7 @@ export function Bento() {
           <span className="t-label text-mute">The sound</span>
 
           <div className="mt-8 flex items-center gap-5">
-            <Picture
+            <CmsImage
               src={shown.cover}
               sizes="72px"
               alt=""
@@ -104,7 +105,7 @@ export function Bento() {
           className="border-b border-line py-12 lg:col-span-3 lg:border-b-0 lg:border-l lg:px-10"
         >
           <span className="t-label text-mute">The drop</span>
-          <Picture
+          <CmsImage
             src="merch-tee"
             sizes="(max-width: 1023px) 100vw, 24vw"
             alt="The house tee hanging against a concrete wall"
@@ -126,7 +127,7 @@ export function Bento() {
         {/* the room */}
         <RiseIn delay={0.16} className="py-12 lg:col-span-3 lg:border-l lg:border-line lg:pl-10">
           <span className="t-label text-mute">The room</span>
-          <Picture
+          <CmsImage
             src="room-a"
             sizes="(max-width: 1023px) 100vw, 24vw"
             alt="Room A set up for a live session"

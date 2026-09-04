@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Ticker } from "@/components/lb/Ticker";
 import { GridRules } from "@/components/lb/GridRules";
-import { metaChips } from "@/data/tickers";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { useTickers } from "@/cms/hooks";
 
 export function IdentityMarquee() {
+  const { metaChips } = useTickers();
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {

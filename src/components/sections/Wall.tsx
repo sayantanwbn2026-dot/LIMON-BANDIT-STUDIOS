@@ -1,9 +1,10 @@
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { MaskReveal } from "@/components/lb/MaskReveal";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { wall } from "@/data/wall";
+import { useWall } from "@/cms/hooks";
 
 export function Wall() {
+  const wall = useWall();
   return (
     <Section id="wall" tone="dark" surface="bg-surface" index="15" name="The Wall">
       <div className="py-[120px] md:py-[160px]">

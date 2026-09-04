@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { navItems, site } from "@/data/site";
+import { useNavItems, useSite, useSocialLink } from "@/cms/hooks";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { useNavPole } from "@/lib/nav-pole";
 import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import { Picture } from "@/components/lb/Picture";
 import { ShopBar } from "@/components/shop/ShopBar";
-
-/** Home lives on the logotype, so the menu carries the remaining six. */
-const menuLinks = navItems.slice(1);
 
 export function Logotype({ size = 18 }: { size?: number }) {
   return (
@@ -31,6 +28,10 @@ export function Logotype({ size = 18 }: { size?: number }) {
  * read as one control cluster.
  */
 export function Nav() {
+  const site = useSite();
+  const instagram = useSocialLink("Instagram");
+  /* Home lives on the logotype, so the menu carries the rest. */
+  const menuLinks = useNavItems().slice(1);
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -207,7 +208,7 @@ export function Nav() {
               </div>
               <div className="t-label space-y-1 text-mute">
                 <div>{site.phone}</div>
-                <div>{site.instagram}</div>
+                {instagram ? <div>{instagram.handle || instagram.platform}</div> : null}
               </div>
             </div>
 
@@ -215,8 +216,12 @@ export function Nav() {
               <span className="truncate">{site.address.join(", ")}</span>
               <span aria-hidden="true">·</span>
               <span className="shrink-0">{site.phone}</span>
-              <span aria-hidden="true">·</span>
-              <span className="shrink-0">{site.instagram}</span>
+              {instagram ? (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span className="shrink-0">{instagram.handle || instagram.platform}</span>
+                </>
+              ) : null}
             </div>
 
             <Picture

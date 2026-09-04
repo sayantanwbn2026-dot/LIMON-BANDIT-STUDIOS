@@ -4,8 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { MaskReveal } from "@/components/lb/MaskReveal";
-import { doors } from "@/data/doors";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { useDoors } from "@/cms/hooks";
 /* The three door plates are CSS background slices of one photograph, so this
  * one needs a plain URL rather than a <picture>. Points at the generated
  * AVIF — same pipeline, just consumed as a background. */
@@ -16,6 +16,7 @@ const CORRIDOR = "/img/split-corridor-1440.avif";
  * into the house's three offers. Scrubbed, reversible, GSAP-native.
  */
 export function ThreeWaysIn() {
+  const doors = useDoors();
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

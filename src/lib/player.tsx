@@ -8,7 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { tracks, type Track } from "@/data/tracks";
+import { type Track } from "@/data/tracks";
+import { useTracks } from "@/cms/hooks";
 
 type PlayerState = {
   track: Track | null;
@@ -38,6 +39,7 @@ const Ctx = createContext<PlayerState | null>(null);
  * Never autoplays — playback only ever starts from a user gesture.
  */
 export function PlayerProvider({ children }: { children: ReactNode }) {
+  const tracks = useTracks();
   const ref = useRef<HTMLAudioElement | null>(null);
   const [track, setTrack] = useState<Track | null>(null);
   const [playing, setPlaying] = useState(false);

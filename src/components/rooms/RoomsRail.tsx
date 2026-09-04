@@ -1,14 +1,14 @@
 import { Check } from "lucide-react";
 import { Eyebrow } from "@/components/lb/Section";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
-import { rooms } from "@/data/rooms";
+import { useRooms, type RoomDoc } from "@/cms/hooks";
 
 const ROWS = [
-  { label: "Rate", get: (r: (typeof rooms)[number]) => r.rate, numeric: true },
-  { label: "Capacity", get: (r: (typeof rooms)[number]) => r.capacity, numeric: true },
-  { label: "Engineer", get: (r: (typeof rooms)[number]) => (r.engineer ? "Included" : "—") },
-  { label: "Gear", get: (r: (typeof rooms)[number]) => r.specs[1].v },
-  { label: "Best for", get: (r: (typeof rooms)[number]) => r.bestFor },
+  { label: "Rate", get: (r: RoomDoc) => r.rate, numeric: true },
+  { label: "Capacity", get: (r: RoomDoc) => r.capacity, numeric: true },
+  { label: "Engineer", get: (r: RoomDoc) => (r.engineer ? "Included" : "—") },
+  { label: "Gear", get: (r: RoomDoc) => r.specs[1].v },
+  { label: "Best for", get: (r: RoomDoc) => r.bestFor },
 ] as const;
 
 /**
@@ -20,6 +20,7 @@ const ROWS = [
  * pushing the page sideways.
  */
 export function RoomsRail() {
+  const rooms = useRooms();
   return (
     <section className="relative w-full bg-surface py-[120px]">
       <GridRules tone="dark" />

@@ -2,8 +2,8 @@ import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Accordion } from "@/components/lb/Accordion";
-import { faq } from "@/data/faq";
 import { Picture } from "@/components/lb/Picture";
+import { useFaq } from "@/cms/hooks";
 
 /**
  * The landing-page FAQ.
@@ -15,6 +15,7 @@ import { Picture } from "@/components/lb/Picture";
  * two dark chapters in light mode.
  */
 export function Faq() {
+  const faq = useFaq();
   return (
     /* 160px top: this is where the page changes chapter, dark to light. */
     <Section tone="light" className="pt-[160px] pb-[120px]">

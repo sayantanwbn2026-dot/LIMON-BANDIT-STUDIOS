@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { faqByTopic } from "@/data/faq";
+import { useFaqByTopic } from "@/cms/hooks";
 
 const STEPS = [
   { k: "01", t: "Say what it is", d: "The project, the date, and the budget you actually have." },
@@ -37,6 +37,7 @@ const TERMS = [
 ];
 
 export function CrewHiring() {
+  const faqItems = useFaqByTopic("crew");
   return (
     <section className="relative w-full bg-surface py-[120px]">
       <GridRules tone="dark" />
@@ -127,7 +128,7 @@ export function CrewHiring() {
           <div>
             <h3 className="t-label text-mute">Before you hire</h3>
             <div className="mt-6">
-              <Accordion items={faqByTopic("crew")} />
+              <Accordion items={faqItems} />
             </div>
           </div>
         </div>

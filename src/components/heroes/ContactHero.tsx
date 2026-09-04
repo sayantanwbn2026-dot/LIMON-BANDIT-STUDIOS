@@ -4,7 +4,7 @@ import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
 import { LocalTime } from "@/components/lb/LocalTime";
 import { chapter } from "@/data/routes";
-import { site } from "@/data/site";
+import { useSite, useSocialLink } from "@/cms/hooks";
 
 /**
  * CONTACT — the dispatch slip, under the house lockup.
@@ -16,6 +16,8 @@ import { site } from "@/data/site";
  * is a working link where a link makes sense.
  */
 export function ContactHero() {
+  const site = useSite();
+  const instagram = useSocialLink("Instagram");
   const c = chapter("contact");
 
   return (
@@ -80,14 +82,16 @@ export function ContactHero() {
                   {site.email}
                 </a>
               </SlipRow>
-              <SlipRow label="Instagram">
-                <a
-                  href={`https://instagram.com/${site.instagram.replace("@", "")}`}
-                  className="tap transition-colors duration-300 hover:text-acid-type"
-                >
-                  {site.instagram}
-                </a>
-              </SlipRow>
+              {instagram ? (
+                <SlipRow label="Instagram">
+                  <a
+                    href={instagram.url}
+                    className="tap transition-colors duration-300 hover:text-acid-type"
+                  >
+                    {instagram.handle || instagram.platform}
+                  </a>
+                </SlipRow>
+              ) : null}
             </dl>
           </address>
 

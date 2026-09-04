@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { releases } from "@/data/releases";
 import { trackForArtist } from "@/data/tracks";
 import { usePlayer } from "@/lib/player";
+import { useReleases } from "@/cms/hooks";
 
 /**
  * The roster as a drafting index rather than a wall of covers. Hovering or
@@ -14,6 +14,7 @@ import { usePlayer } from "@/lib/player";
  * because a second pattern for the same job would be noise.
  */
 export function LabelRoster() {
+  const releases = useReleases();
   const [hover, setHover] = useState(0);
   const { play, track, playing } = usePlayer();
   const shown = releases[hover];
@@ -90,7 +91,7 @@ export function LabelRoster() {
           {/* the pinned plate */}
           <div className="hidden lg:block">
             <div className="sticky top-[14vh]">
-              <Picture
+              <CmsImage
                 src={shown.cover}
                 alt={shown.alt}
                 sizes="360px"
