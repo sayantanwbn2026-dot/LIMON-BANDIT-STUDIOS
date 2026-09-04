@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Heart, Check, Plus } from "lucide-react";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
-import type { Product } from "@/data/shop";
+import type { ProductDoc as Product } from "@/cms/hooks";
 
 /**
  * One product.
@@ -81,7 +81,7 @@ export function ProductCard({
             className="block w-full overflow-hidden"
             style={{ aspectRatio: "4 / 5" }}
           >
-            <Picture
+            <CmsImage
               src={product.image}
               sizes="(max-width: 639px) 50vw, (max-width: 1023px) 50vw, 33vw"
               alt={`${product.title} — ${product.by}`}

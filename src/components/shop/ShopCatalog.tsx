@@ -6,14 +6,12 @@ import { ProductSheet } from "./ProductSheet";
 import {
   categories,
   categoryById,
-  products,
-  selectProducts,
   SORTS,
   DEFAULT_CATEGORY,
   DEFAULT_SORT,
-  type Product,
   type SortId,
 } from "@/data/shop";
+import { useProducts, type ProductDoc as Product } from "@/cms/hooks";
 
 /**
  * The catalogue.
@@ -41,13 +39,25 @@ export function ShopCatalog() {
   const [sheetFor, setSheetFor] = useState<Product | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const shown = useMemo(() => selectProducts(category, sort), [category, sort]);
+  /* The catalogue itself is CMS content — prices, stock and which products
+   * exist are all editable. The category definitions are not: each one owns a
+   * predicate over a product's shape, which is code, not copy. So the list
+   * comes from the CMS and the filtering from data/shop.ts. */
+  const products = useProducts();
+
+  const shown = useMemo(() => {
+    const cat = categoryById(category);
+    const list = products.filter((p) => cat.match(p as never));
+    if (sort === "price-desc") return [...list].sort((a, b) => b.price - a.price);
+    if (sort === "price-asc") return [...list].sort((a, b) => a.price - b.price);
+    return list;
+  }, [products, category, sort]);
 
   const counts = useMemo(() => {
     const map = new Map<string, number>();
-    for (const c of categories) map.set(c.id, products.filter(c.match).length);
+    for (const c of categories) map.set(c.id, products.filter((p) => c.match(p as never)).length);
     return map;
-  }, []);
+  }, [products]);
 
   const active = categoryById(category);
 

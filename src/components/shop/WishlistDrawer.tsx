@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { useWishlist } from "@/lib/wishlist";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
-import { productById } from "@/data/shop";
+import { useProducts } from "@/cms/hooks";
 import { inr } from "@/lib/money";
 
 /**
@@ -20,9 +20,10 @@ export function WishlistDrawer() {
   const wishlist = useWishlist();
   const cart = useCart();
   const { requireAuth } = useAuth();
+  const catalogue = useProducts();
 
   const items = Array.from(wishlist.ids)
-    .map((id) => productById(id))
+    .map((id) => catalogue.find((p) => p.id === id))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   return (
@@ -60,7 +61,7 @@ export function WishlistDrawer() {
             return (
               <li key={p.id} className="flex gap-4 border-b border-line py-5">
                 <div className="h-[84px] w-[84px] shrink-0 overflow-hidden bg-surface-raised">
-                  <Picture
+                  <CmsImage
                     src={p.image}
                     sizes="84px"
                     alt=""

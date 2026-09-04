@@ -4,7 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { getSupabase } from "@/lib/supabase";
@@ -397,7 +397,7 @@ export function CheckoutForm() {
                     className="flex gap-4 border-b border-line py-4"
                   >
                     <div className="h-[56px] w-[56px] shrink-0 overflow-hidden bg-surface-raised">
-                      <Picture
+                      <CmsImage
                         src={l.product.image}
                         sizes="56px"
                         alt=""

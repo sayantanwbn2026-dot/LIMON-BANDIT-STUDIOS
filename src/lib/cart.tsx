@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { productById, shippingFor, type Product } from "@/data/shop";
+import { useProducts, useShipping, type ProductDoc as Product } from "@/cms/hooks";
 import { discountOf } from "./money";
 import { useAuth } from "./auth";
 
@@ -98,6 +98,11 @@ function writeJson(key: string, value: unknown) {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  /* Prices, stock and shipping all come from the CMS so the basket agrees
+   * with what the admin says — and, more importantly, with what the server
+   * will charge when the order is placed. */
+  const catalogue = useProducts();
+  const shippingRates = useShipping();
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
   const [region, setRegionState] = useState<Region>("india");
@@ -173,10 +178,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const resolved = useMemo<ResolvedLine[]>(
     () =>
       lines.map((l) => {
-        const product = productById(l.productId) ?? null;
+        const product = catalogue.find((p) => p.id === l.productId) ?? null;
         return { ...l, product, lineTotal: product ? product.price * l.qty : 0 };
       }),
-    [lines],
+    [lines, catalogue],
   );
 
   const subtotal = useMemo(() => resolved.reduce((n, l) => n + l.lineTotal, 0), [resolved]);
@@ -189,10 +194,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [resolved],
   );
 
-  const shipping = useMemo(
-    () => (resolved.length === 0 ? 0 : shippingFor(allDigital, region)),
-    [resolved.length, allDigital, region],
-  );
+  const shipping = useMemo(() => {
+    if (resolved.length === 0 || allDigital) return 0;
+    const rate = shippingRates?.[region];
+    return typeof rate === "number" ? Math.max(0, rate) : 0;
+  }, [resolved.length, allDigital, region, shippingRates]);
 
   const discount = useMemo(
     () => (offer ? discountOf(subtotal, offer.percent) : 0),

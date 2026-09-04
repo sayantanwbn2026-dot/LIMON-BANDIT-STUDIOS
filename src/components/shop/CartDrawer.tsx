@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { useCart } from "@/lib/cart";
 import { inr } from "@/lib/money";
 
@@ -78,7 +78,7 @@ export function CartDrawer() {
               return (
                 <li key={key} className="flex gap-4 border-b border-line py-5">
                   <div className="h-[84px] w-[84px] shrink-0 overflow-hidden bg-surface-raised">
-                    <Picture
+                    <CmsImage
                       src={p.image}
                       sizes="84px"
                       alt=""

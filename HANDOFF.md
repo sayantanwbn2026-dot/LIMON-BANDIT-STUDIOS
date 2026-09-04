@@ -104,6 +104,41 @@ Two things still need a person:
 2. Leaked-password protection is off (Supabase default). Dashboard →
    Authentication → Password settings.
 
+## The CMS
+
+`/admin` edits every piece of content on the site. Password-protected at
+`/admin/login`, Supabase-backed. **Read [`scripts/CMS-GUIDE.md`](scripts/CMS-GUIDE.md)**
+before touching it — it covers both the editor's side and the developer's.
+
+- **One JSONB document per key**, described by a TypeScript schema in
+  `src/cms/collections.ts`. The admin renders its forms from that schema, so
+  adding an editable field is one line there — no migration, no form
+  component, no query. Twenty-odd sections stay identical instead of drifting
+  into twenty hand-built forms.
+- **`src/cms/seeds.ts` is the floor, not a loading state.** It is the
+  committed content in CMS shape, used both as the seed and as the fallback
+  every `useDoc` returns when a row is missing or the database is
+  unreachable. With an empty database the site renders exactly as it did
+  before the CMS existed. Keep it in step when you add a collection.
+- **Images can be a manifest key or a URL.** `<CmsImage>` handles both:
+  untouched sections keep `<Picture>` and its build-time AVIF/WebP variants,
+  replaced ones become a single uploaded file. Every image field declares the
+  resolution it wants and warns — without blocking — when what was supplied
+  does not match.
+- **`submitOrder` prices from the CMS**, not `src/data/shop.ts`. The moment
+  an editor changes a price the two would disagree, and that function is the
+  authority on what an order costs. Shipping and discount codes too.
+- **The route guard is not the security boundary.** RLS is. `cms_documents`,
+  `cms_media` and `admins` refuse writes unless `is_admin()` is true for the
+  caller's JWT — verified: a signed-in shopper changed 0 rows on content, 0
+  on prices, could not grant themselves access, and could read neither the
+  admin list, the traffic log nor the audit trail.
+- **Analytics are first-party** — a per-tab id in `sessionStorage`, no cookie,
+  no third party. `/admin` is excluded so staff do not inflate the figures.
+
+The one admin seeded is `sayantanmukherjee2505@gmail.com` (owner). That grants
+permission to an address; the account still has to be registered on the site.
+
 ## Architecture you need to know before editing
 
 - **Two token poles, not two themes.** A section declares which pole it sits

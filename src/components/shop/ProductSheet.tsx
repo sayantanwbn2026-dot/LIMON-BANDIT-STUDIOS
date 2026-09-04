@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Check, Heart, Minus, Plus } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
-import type { Product } from "@/data/shop";
+import type { ProductDoc as Product } from "@/cms/hooks";
 
 /**
  * One product, in full.
@@ -105,7 +105,7 @@ export function ProductSheet({
     >
       <div className="flex gap-4">
         <div className="w-[112px] shrink-0 overflow-hidden bg-surface-raised sm:w-[150px]">
-          <Picture
+          <CmsImage
             src={product.image}
             sizes="(max-width: 639px) 112px, 150px"
             alt={`${product.title} — ${product.by}`}
