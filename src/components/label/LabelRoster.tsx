@@ -20,7 +20,7 @@ export function LabelRoster() {
   const shown = releases[hover];
 
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -30,7 +30,7 @@ export function LabelRoster() {
         </Eyebrow>
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">The roster</h2>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_360px] lg:gap-12">
           <ol className="border-t border-line">
             {releases.map((r, i) => {
               const t = trackForArtist(r.artist);
@@ -47,7 +47,7 @@ export function LabelRoster() {
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text md:text-[26px]">
+                      <span className="block truncate font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text md:text-[24px]">
                         {r.artist}
                       </span>
                       <span className="mt-1 block truncate font-ui text-[13px] text-mute">

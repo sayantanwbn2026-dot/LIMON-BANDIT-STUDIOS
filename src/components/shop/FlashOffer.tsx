@@ -123,7 +123,7 @@ export function FlashOffer() {
       {code ? (
         <div>
           <div className="flex items-center justify-between gap-4 border border-line bg-surface-raised px-6 py-5">
-            <span className="tnum font-display text-[26px] font-extrabold uppercase tracking-[0.06em] text-acid-type">
+            <span className="tnum font-display text-[24px] font-extrabold uppercase tracking-[0.06em] text-acid-type">
               {code}
             </span>
             <button

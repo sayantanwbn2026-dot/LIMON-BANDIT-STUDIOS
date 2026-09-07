@@ -39,14 +39,14 @@ export function CrewHero() {
         <p className="t-lead text-text">{c.standfirst}</p>
       </div>
 
-      <RiseIn delay={0.1} className="mt-16 border-t border-line">
+      <RiseIn delay={0.1} className="mt-12 border-t border-line">
         <ul>
           {roles.map((r) => (
             <li
               key={r.role}
               className="group flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-line py-6"
             >
-              <span className="font-display text-[26px] font-extrabold uppercase leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[36px]">
+              <span className="font-display text-[24px] font-extrabold uppercase leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[34px]">
                 {r.role}
               </span>
               <span className="t-label text-mute">{r.note}</span>

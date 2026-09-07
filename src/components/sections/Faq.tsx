@@ -18,7 +18,7 @@ export function Faq() {
   const faq = useFaq();
   return (
     /* 160px top: this is where the page changes chapter, dark to light. */
-    <Section tone="light" className="pt-[160px] pb-[120px]">
+    <Section tone="light" className="pt-[120px] pb-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">

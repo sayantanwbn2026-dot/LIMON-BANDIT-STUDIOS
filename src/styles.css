@@ -538,12 +538,31 @@
   }
 }
 
-/* ---------------- type ---------------- */
+/* ---------------- type ----------------
+ *
+ * THE SCALE. Display sizes are 20 / 24 / 28 / 34 / 42 / 52 / 68, plus the
+ * four fluid utilities below. Body and UI type is 10 / 11 / 12 / 13 / 14 /
+ * 15 / 16 / 18. Nothing else.
+ *
+ * That list is the whole point. The site had drifted to twenty-eight
+ * distinct font sizes — 13 next to 14 next to 15, 34 next to 36 next to 38 —
+ * which is not a scale, it is a puddle. Sizes a pixel apart are invisible as
+ * hierarchy but very visible as sloppiness: every heading reads as roughly
+ * the same rank, so the page flattens into a wall and nothing leads the eye.
+ *
+ * The top end also came down. t-h2 rendered at 52px against a 78px hero —
+ * two ranks three pixels apart, doing the work of one — and the decorative
+ * wordmark at 187px pushed real content below the fold on a laptop. Big type
+ * is only loud when something quieter is next to it.
+ *
+ * If you need a size that is not on this list, the answer is almost always
+ * one of these with different weight, colour or tracking.
+ * ------------------------------------------------------------------ */
 
 @utility t-hero {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(48px, 5.4vw, 78px);
+  font-size: clamp(40px, 4.4vw, 62px);
   letter-spacing: -0.035em;
   line-height: 0.92;
   text-transform: uppercase;
@@ -551,14 +570,14 @@
 
 @media (max-width: 767px) {
   .t-hero {
-    font-size: clamp(34px, 10vw, 46px);
+    font-size: clamp(32px, 8.6vw, 42px);
   }
 }
 
 @utility t-h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(38px, 3.6vw, 56px);
+  font-size: clamp(28px, 2.7vw, 42px);
   letter-spacing: -0.03em;
   line-height: 0.96;
   text-transform: uppercase;
@@ -567,7 +586,7 @@
 @utility t-h3 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   letter-spacing: -0.02em;
   line-height: 1.1;
   text-transform: uppercase;
@@ -576,7 +595,7 @@
 @utility t-giant {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(90px, 13vw, 210px);
+  font-size: clamp(64px, 8.5vw, 132px);
   letter-spacing: -0.05em;
   line-height: 0.8;
   text-transform: uppercase;
@@ -600,8 +619,8 @@
 
 @utility t-lead {
   font-family: var(--font-ui);
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: 17px;
+  line-height: 1.55;
 }
 
 @utility tnum {
@@ -937,9 +956,12 @@
  *
  * Three causes, all of them desktop values reaching a phone:
  *
- *   1. t-h2 is clamp(38px, 3.6vw, 56px). At 390px wide the middle term is
- *      14px, so it pins to the 38px FLOOR — a size chosen for a 1440px
- *      measure, set on a 326px one.
+ *   1. t-h2 pins to its clamp FLOOR on a phone — the vw term is ~10px at
+ *      390px wide, so the floor is the only value that ever applies there.
+ *      It was 38px, a size chosen for a 1440px measure, set on a 326px one.
+ *      The floor is 28px now (see the type scale note by t-h2); the
+ *      override below still lifts it to 30 so a stacked header has one
+ *      clearly loudest line.
  *   2. The copy carries hard line breaks written for that wide measure.
  *      On a phone they stack on top of the natural wrapping, so a heading
  *      broken into three lines arrives as seven.

@@ -21,7 +21,7 @@ export function JournalIndex() {
   const [lead, ...rest] = posts;
 
   return (
-    <section className="relative w-full bg-alt-surface pb-[120px] pt-[96px]">
+    <section className="relative w-full bg-alt-surface pb-[96px] pt-[96px]">
       <GridRules tone="light" />
       <BoundaryRule tone="light" className="top-0" />
 
@@ -41,7 +41,7 @@ export function JournalIndex() {
         </div>
 
         {/* lead story */}
-        <article className="group mt-16 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+        <article className="group mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12">
           <Link
             to="/journal/$slug"
             params={{ slug: lead.slug }}
@@ -66,7 +66,7 @@ export function JournalIndex() {
               <span className="t-label tnum text-alt-mute">{lead.readTime}</span>
             </div>
 
-            <h3 className="mt-6 max-w-[18ch] font-display text-[32px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-alt-text md:text-[44px]">
+            <h3 className="mt-6 max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-alt-text md:text-[42px]">
               {lead.title}
             </h3>
 
@@ -82,7 +82,7 @@ export function JournalIndex() {
         </article>
 
         {/* the rest, as an index */}
-        <ul className="mt-16 border-t border-alt-line">
+        <ul className="mt-12 border-t border-alt-line">
           {rest.map((p, i) => (
             <li key={p.title}>
               <Link

@@ -18,7 +18,7 @@ export function ShopOrder() {
   const faqItems = useFaqByTopic("shop");
   const site = useSite();
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -40,7 +40,7 @@ export function ShopOrder() {
           </div>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <dl className="border-t border-line">
               {SHIPPING.map((s) => (
@@ -64,7 +64,7 @@ export function ShopOrder() {
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <a
                 href="#catalogue"
-                className="group flex h-[60px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+                className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                   Back to the catalogue

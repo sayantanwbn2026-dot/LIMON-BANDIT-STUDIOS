@@ -132,7 +132,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={() => onOpen(product)}
-            className="text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[19px] sm:leading-[1.05] sm:tracking-[-0.02em]"
+            className="text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.05] sm:tracking-[-0.02em]"
           >
             {product.title}
           </button>

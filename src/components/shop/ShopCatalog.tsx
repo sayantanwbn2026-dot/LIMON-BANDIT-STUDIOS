@@ -67,7 +67,7 @@ export function ShopCatalog() {
   };
 
   return (
-    <section id="catalogue" className="relative w-full bg-surface-deep py-20 lg:py-[120px]">
+    <section id="catalogue" className="relative w-full bg-surface-deep py-20 lg:py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -87,7 +87,7 @@ export function ShopCatalog() {
         </div>
 
         {/* ---- filters ---- */}
-        <div className="mt-10 border-y border-line py-4 lg:mt-16 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:py-6">
+        <div className="mt-10 border-y border-line py-4 lg:mt-12 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:py-6">
           <nav aria-label="Product categories" className="relative min-w-0">
             {/* The strip bleeds through the shell's gutter on a phone so the
                 last chip runs to the screen edge — a chip that stops short

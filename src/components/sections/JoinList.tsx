@@ -79,7 +79,7 @@ export function JoinList() {
     <Section id="list" tone="dark" surface="bg-surface-deep" index="18" name="Join The List">
       {/* slim band */}
       <div className="py-[80px] md:py-[96px]">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <Eyebrow tone="dark" surface="bg-surface-deep">
               One mail a month
@@ -130,7 +130,7 @@ export function JoinList() {
                     aria-describedby={reason ? "join-email-msg" : undefined}
                     placeholder="you@somewhere.in"
                     disabled={busy}
-                    className="h-[64px] w-full bg-transparent font-display text-[22px] font-bold uppercase tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] disabled:opacity-60 md:text-[28px]"
+                    className="h-[56px] w-full bg-transparent font-display text-[20px] font-bold uppercase tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] disabled:opacity-60 md:text-[28px]"
                   />
                   <button
                     type="submit"

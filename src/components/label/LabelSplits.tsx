@@ -13,7 +13,7 @@ export function LabelSplits() {
   const faqItems = useFaqByTopic("label");
 
   return (
-    <section className="relative w-full bg-surface py-[120px]">
+    <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -46,7 +46,7 @@ export function LabelSplits() {
          * without meeting another looks like a rendering fault rather than a
          * decision. Same omission was in ShopPrint, CrewHiring,
          * JournalTopics and Bento. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
+        <dl className="mt-12 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {SPLITS.map((s, i) => (
             <div
               key={s.k}
@@ -56,7 +56,7 @@ export function LabelSplits() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[44px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -67,7 +67,7 @@ export function LabelSplits() {
           ))}
         </dl>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <h3 className="font-display text-[24px] font-bold uppercase tracking-[-0.02em] text-text">
               Send two tracks
@@ -78,7 +78,7 @@ export function LabelSplits() {
             </p>
             <a
               href="/contact?intent=demo"
-              className="group mt-8 flex h-[60px] w-fit items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+              className="group mt-8 flex h-[56px] w-fit items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                 Submit a demo

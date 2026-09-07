@@ -27,7 +27,7 @@ export function LabelHero() {
         srText={c.heading}
       />
 
-      <div className="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
+      <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
         <div>
           <p className="t-lead max-w-[44ch] text-mute">{c.standfirst}</p>
 

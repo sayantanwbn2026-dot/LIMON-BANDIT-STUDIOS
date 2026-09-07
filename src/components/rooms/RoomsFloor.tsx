@@ -135,7 +135,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
         <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
           {r.index}
         </span>
-        <h3 className="font-display text-[32px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[44px]">
+        <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[42px]">
           {r.name}
         </h3>
         <span className="t-label ml-auto text-mute">{r.kind}</span>
@@ -195,7 +195,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
         </div>
         <a
           href={`/contact?intent=booking&room=${r.id}`}
-          className="group flex h-[60px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+          className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
         >
           <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
             Book {r.name}
@@ -253,7 +253,7 @@ export function RoomsFloor() {
   };
 
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -263,7 +263,7 @@ export function RoomsFloor() {
         </Eyebrow>
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">Room by room</h2>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[300px_1fr] lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[300px_1fr] lg:gap-12">
           <div>
             <div className="lg:sticky lg:top-[14vh]">
               <FloorPlan active={active} onSelect={go} />

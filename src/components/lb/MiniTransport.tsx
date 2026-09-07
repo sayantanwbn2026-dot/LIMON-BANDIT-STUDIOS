@@ -29,7 +29,7 @@ export function MiniTransport() {
         />
       </div>
 
-      <div className="shell flex h-[64px] items-center gap-4">
+      <div className="shell flex h-[56px] items-center gap-4">
         <CmsImage
           src={track.cover}
           alt=""

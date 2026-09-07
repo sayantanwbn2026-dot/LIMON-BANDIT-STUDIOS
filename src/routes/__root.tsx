@@ -60,7 +60,7 @@ function NotFoundComponent() {
         </span>
 
         <h1
-          className="font-display text-[64px] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-text md:text-[96px]"
+          className="font-display text-[52px] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-text md:text-[68px]"
           data-page-h1
           tabIndex={-1}
         >
@@ -75,13 +75,13 @@ function NotFoundComponent() {
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
             to="/"
-            className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Home
           </Link>
           <Link
             to="/shop"
-            className="flex h-[60px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
             The shop
           </Link>
@@ -113,7 +113,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </span>
 
         <h1
-          className="font-display text-[48px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text md:text-[72px]"
+          className="font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text md:text-[52px]"
           data-page-h1
           tabIndex={-1}
         >
@@ -132,13 +132,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Try again
           </button>
           <a
             href="/"
-            className="flex h-[60px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
             Home
           </a>

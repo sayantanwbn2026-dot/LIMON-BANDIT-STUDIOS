@@ -61,7 +61,7 @@ export function CtaButton({
    * from the left instead of crossfading the whole panel. The colour flip on
    * the label and icon is handled by the utility, so the group-hover text
    * variants inside `inner` are belt-and-braces rather than load-bearing. */
-  const cls = `group fill-acid flex h-[60px] items-center justify-between border border-line bg-surface-raised transition-colors duration-300 ${rollCss} ${className ?? ""}`;
+  const cls = `group fill-acid flex h-[56px] items-center justify-between border border-line bg-surface-raised transition-colors duration-300 ${rollCss} ${className ?? ""}`;
 
   return (
     <Magnetic className="inline-block">

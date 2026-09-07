@@ -188,7 +188,7 @@ export function RoomFilm() {
             {/* Controls only. An autoplaying film has to be stoppable, so
              * these stay — icon buttons with labels for assistive tech, no
              * visible type on the picture. */}
-            <div className="absolute inset-x-0 bottom-0 flex justify-end p-6 md:p-10">
+            <div className="absolute inset-x-0 bottom-0 flex justify-end p-6 md:p-8">
               <div className="flex shrink-0 items-center gap-3">
                 <button
                   type="button"

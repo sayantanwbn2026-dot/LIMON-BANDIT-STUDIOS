@@ -29,7 +29,7 @@ export function Bento() {
   const progress = isLive && duration > 0 ? time / duration : 0;
 
   return (
-    <Section surface="bg-surface" className="py-[120px]">
+    <Section surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>What&apos;s inside</Eyebrow>
@@ -55,7 +55,7 @@ export function Bento() {
         </div>
       </div>
 
-      <div className="mt-20 grid grid-cols-1 border-t border-line lg:grid-cols-12 lg:border-b">
+      <div className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-12 lg:border-b">
         {/* the sound */}
         <RiseIn className="border-b border-line py-12 lg:col-span-6 lg:border-b-0 lg:pr-12">
           <span className="t-label text-mute">The sound</span>
@@ -149,7 +149,7 @@ export function Bento() {
 
       {/* the roster, stated rather than illustrated */}
       <RiseIn className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-6 border-t border-line pt-12">
-        <p className="max-w-[18ch] font-display text-[30px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[40px]">
+        <p className="max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[34px]">
           Forty artists on the roster
         </p>
         <a

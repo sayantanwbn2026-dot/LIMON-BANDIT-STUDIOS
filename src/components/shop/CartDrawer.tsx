@@ -183,7 +183,7 @@ export function CartDrawer() {
           <Link
             to="/checkout"
             onClick={() => cart.setOpen(false)}
-            className="mt-8 flex h-[60px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="mt-8 flex h-[56px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Checkout
           </Link>

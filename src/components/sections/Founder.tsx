@@ -60,7 +60,7 @@ export function Founder() {
   }, []);
 
   return (
-    <Section tone="dark" className="py-[120px]">
+    <Section tone="dark" className="py-[96px]">
       <h2 className="sr-only">Who&apos;s behind it</h2>
 
       <div ref={ref} className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-x-10">
@@ -103,7 +103,7 @@ export function Founder() {
            * a time — it is someone talking, not a paragraph. */}
           <WordReveal
             as="blockquote"
-            className="mt-7 font-display text-[27px] font-extrabold uppercase leading-[1.06] tracking-[-0.03em] text-text md:text-[40px]"
+            className="mt-7 font-display text-[27px] font-extrabold uppercase leading-[1.06] tracking-[-0.03em] text-text md:text-[34px]"
             text={
               "I started Limon Bandit because the good rooms in this city were always booked by people who weren't making anything."
             }
@@ -125,7 +125,7 @@ export function Founder() {
           {/* the sign-off */}
           <div className="mt-9 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-6">
             <div>
-              <div className="font-display text-[17px] font-extrabold uppercase tracking-[-0.02em] text-text">
+              <div className="font-display text-[16px] font-extrabold uppercase tracking-[-0.02em] text-text">
                 Arko Dasgupta
               </div>
               <div className="mt-1 t-label text-mute">Founder &amp; head engineer</div>

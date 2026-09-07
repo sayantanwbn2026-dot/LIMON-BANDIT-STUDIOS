@@ -29,7 +29,7 @@ export function CrewDirectory() {
   const shown = filter === "All" ? crew : crew.filter((c) => c.discipline === filter);
 
   return (
-    <section id="directory" className="relative w-full bg-surface-deep py-[120px]">
+    <section id="directory" className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -82,7 +82,7 @@ export function CrewDirectory() {
             <li key={m.id} className="border-b border-line">
               <article className="group grid grid-cols-1 gap-x-6 gap-y-4 py-8 md:grid-cols-12 md:items-baseline">
                 <div className="md:col-span-4">
-                  <h3 className="font-display text-[22px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
+                  <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
                     {m.name}
                   </h3>
                   <p className="t-label mt-2 text-acid-type">{m.discipline}</p>

@@ -40,7 +40,7 @@ export function Roster() {
   }, []);
 
   return (
-    <Section tone="dark" className="py-[120px]">
+    <Section tone="dark" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>The roster</Eyebrow>
@@ -62,7 +62,7 @@ export function Roster() {
         </div>
       </div>
 
-      <div ref={ref} className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div ref={ref} className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {releases.map((r) => (
           <a
             key={r.title}

@@ -28,7 +28,7 @@ export function Rates() {
      * cards put the qualifier and note straight onto the section ground, and
      * --mute at 14px measures 4.4:1 on --surface-deep in light mode — just
      * under AA. --surface is one step lighter and clears it. */
-    <Section tone="dark" surface="bg-surface" className="py-[120px]">
+    <Section tone="dark" surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>Rates</Eyebrow>
@@ -77,7 +77,7 @@ export function Rates() {
         <span className="t-label text-mute">Packages save twenty percent</span>
       </div>
 
-      <ul className="mt-16 border-t border-line">
+      <ul className="mt-12 border-t border-line">
         {rates.map((r, i) => {
           const price = mode === "hourly" ? r.hourly : r.packagePrice;
           return (
@@ -86,7 +86,7 @@ export function Rates() {
                 <article className="grid grid-cols-1 gap-x-10 gap-y-8 py-12 lg:grid-cols-12">
                   {/* the plan */}
                   <div className="lg:col-span-3">
-                    <h3 className="font-display text-[26px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[32px]">
+                    <h3 className="font-display text-[24px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[28px]">
                       {r.plan}
                     </h3>
                     <p className="mt-3 max-w-[30ch] font-ui text-[14px] leading-[1.5] text-mute">
@@ -126,7 +126,7 @@ export function Rates() {
                   {/* the number */}
                   <div className="lg:col-span-4 lg:text-right">
                     <span
-                      className={`tnum block font-display text-[38px] font-extrabold tracking-[-0.04em] md:text-[46px] ${
+                      className={`tnum block font-display text-[34px] font-extrabold tracking-[-0.04em] md:text-[42px] ${
                         r.featured ? "text-acid-type" : "text-text"
                       }`}
                     >

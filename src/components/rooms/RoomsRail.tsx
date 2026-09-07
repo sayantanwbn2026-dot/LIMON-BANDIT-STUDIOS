@@ -22,7 +22,7 @@ const ROWS = [
 export function RoomsRail() {
   const rooms = useRooms();
   return (
-    <section className="relative w-full bg-surface py-[120px]">
+    <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -33,7 +33,7 @@ export function RoomsRail() {
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">What each room costs and holds</h2>
 
         {/* desktop: one table, compared across */}
-        <div className="mt-16 hidden overflow-x-auto md:block">
+        <div className="mt-12 hidden overflow-x-auto md:block">
           <table className="w-full min-w-[720px] border-collapse text-left">
             <caption className="sr-only">
               The four rooms compared by rate, capacity, engineer, gear and best use
@@ -49,7 +49,7 @@ export function RoomsRail() {
                       <span className="tnum block font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                         {r.index}
                       </span>
-                      <span className="mt-2 block font-display text-[22px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text transition-transform duration-300 group-hover:translate-x-1">
+                      <span className="mt-2 block font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text transition-transform duration-300 group-hover:translate-x-1">
                         {r.name}
                       </span>
                       <span className="t-label mt-2 block font-normal text-mute">{r.kind}</span>

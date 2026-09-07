@@ -139,7 +139,7 @@ export function DropRail() {
                   </span>
                 </div>
                 <div className="border-t border-line p-5">
-                  <h3 className="font-display text-[22px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text">
+                  <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text">
                     {d.title}
                   </h3>
                   <p className="mt-2 font-ui text-[13px] text-mute">{d.artist}</p>

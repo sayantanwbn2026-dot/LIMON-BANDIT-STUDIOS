@@ -156,7 +156,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-surface-deep p-5">
       <p className="t-label text-mute">{label}</p>
-      <p className="tnum mt-3 font-display text-[26px] font-extrabold tracking-[-0.02em] text-text">
+      <p className="tnum mt-3 font-display text-[24px] font-extrabold tracking-[-0.02em] text-text">
         {value}
       </p>
     </div>

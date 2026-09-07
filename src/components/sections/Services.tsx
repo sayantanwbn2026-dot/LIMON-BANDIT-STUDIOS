@@ -74,7 +74,7 @@ export function Services() {
   }, []);
 
   return (
-    <Section surface="bg-surface" className="pt-[120px]">
+    <Section surface="bg-surface" className="pt-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <Eyebrow>What we run</Eyebrow>
@@ -100,7 +100,7 @@ export function Services() {
        * nothing is missed by scrolling at a normal pace. */}
       <div
         ref={root}
-        className="relative mt-20 hidden lg:block"
+        className="relative mt-16 hidden lg:block"
         style={{ height: `${services.length * 70 + 50}vh` }}
       >
         <div className="sticky top-0 flex h-[100svh] items-center pt-[var(--nav-h)]">
@@ -127,7 +127,7 @@ export function Services() {
                         /* The active row steps forward rather than lighting
                          * up: colour alone at this size reads as a hover
                          * state, and this is a position in a sequence. */
-                        className="font-display text-[34px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] transition-all duration-500 group-focus-visible:underline xl:text-[44px]"
+                        className="font-display text-[34px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] transition-all duration-500 group-focus-visible:underline xl:text-[42px]"
                         style={{
                           color: on ? "var(--text)" : "var(--mute)",
                           transform: on ? "translateX(14px)" : "translateX(0)",
@@ -233,7 +233,7 @@ export function Services() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -22 }}
                     transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
-                    className="pointer-events-none absolute bottom-5 left-6 block font-display text-[64px] font-extrabold uppercase leading-none tracking-[-0.04em] text-text xl:text-[88px]"
+                    className="pointer-events-none absolute bottom-5 left-6 block font-display text-[52px] font-extrabold uppercase leading-none tracking-[-0.04em] text-text xl:text-[68px]"
                   >
                     {services[active].word}
                   </motion.span>
@@ -275,7 +275,7 @@ export function Services() {
        * The 16:9 crop is doing work too: at 4:5 the image was tall enough
        * to be the whole card and the copy had nowhere to live except on top
        * of it. Letterboxed, the picture is a window in a document. */}
-      <ul className="mt-14 flex flex-col gap-5 pb-[120px] lg:hidden">
+      <ul className="mt-14 flex flex-col gap-5 pb-[96px] lg:hidden">
         {services.map((s) => (
           <li key={s.index}>
             <Link
@@ -319,7 +319,7 @@ export function Services() {
               {/* the document */}
               <div className="p-6">
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-display text-[26px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
+                  <h3 className="font-display text-[24px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
                     {s.title}
                   </h3>
                   <ArrowUpRight size={16} className="shrink-0 text-acid-type" />

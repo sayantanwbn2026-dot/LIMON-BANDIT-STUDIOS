@@ -121,7 +121,7 @@ export function ProductSheet({
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
             <span
-              className={`tnum font-display text-[26px] font-extrabold tracking-[-0.02em] ${
+              className={`tnum font-display text-[24px] font-extrabold tracking-[-0.02em] ${
                 gone ? "text-mute line-through" : "text-text"
               }`}
             >

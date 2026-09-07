@@ -192,7 +192,7 @@ export function CheckoutForm() {
         <button
           type="button"
           onClick={() => openAuth("Sign in to check out. Your cart is waiting.")}
-          className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+          className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
           Sign in
         </button>
@@ -205,7 +205,7 @@ export function CheckoutForm() {
       <Stub title="Your cart is empty" body="Nothing to check out. The shop is through here.">
         <Link
           to="/shop"
-          className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+          className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
           Go to the shop
         </Link>
@@ -214,7 +214,7 @@ export function CheckoutForm() {
   }
 
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -237,7 +237,7 @@ export function CheckoutForm() {
           </div>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_380px] lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_380px] lg:gap-12">
           <form onSubmit={onSubmit} noValidate>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <Field
@@ -470,7 +470,7 @@ export function CheckoutForm() {
                 <dt className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text">
                   To pay on delivery
                 </dt>
-                <dd className="tnum font-display text-[22px] font-extrabold tracking-[-0.02em] text-text">
+                <dd className="tnum font-display text-[20px] font-extrabold tracking-[-0.02em] text-text">
                   {inr(cart.total)}
                 </dd>
               </div>
@@ -505,7 +505,7 @@ function Stub({
   children: React.ReactNode;
 }) {
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
       <div className="shell relative z-[2] max-w-[560px]">
@@ -526,7 +526,7 @@ function Stub({
  */
 function Confirmation({ order }: { order: PlacedOrder }) {
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -561,13 +561,13 @@ function Confirmation({ order }: { order: PlacedOrder }) {
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
             to="/orders"
-            className="flex h-[60px] items-center gap-3 bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center gap-3 bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Your orders <ArrowRight size={16} />
           </Link>
           <Link
             to="/shop"
-            className="flex h-[60px] items-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
             Back to the shop
           </Link>

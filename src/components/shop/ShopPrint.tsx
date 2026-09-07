@@ -48,7 +48,7 @@ const STAGES = [
 
 export function ShopPrint() {
   return (
-    <section className="relative w-full bg-surface py-[120px]">
+    <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -74,7 +74,7 @@ export function ShopPrint() {
          * single long word cannot wrap, so between 768 and 1023 "Kolkata"
          * ran 66px past its own cell into the neighbour — invisible to a
          * viewport-overflow check, because nothing escapes the page. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
+        <dl className="mt-12 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {RUN.map((s, i) => (
             <div
               key={s.k}
@@ -84,7 +84,7 @@ export function ShopPrint() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[44px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -95,7 +95,7 @@ export function ShopPrint() {
           ))}
         </dl>
 
-        <ol className="mt-16 grid grid-cols-1 border-t border-line md:grid-cols-2">
+        <ol className="mt-12 grid grid-cols-1 border-t border-line md:grid-cols-2">
           {STAGES.map((s, i) => (
             <li
               key={s.k}

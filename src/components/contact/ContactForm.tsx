@@ -102,7 +102,7 @@ export function ContactForm() {
   const err = (k: keyof Errors) => (touched[k] ? errors[k] : undefined);
 
   return (
-    <section id="form" className="relative w-full bg-surface py-[120px]">
+    <section id="form" className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -124,7 +124,7 @@ export function ContactForm() {
           </div>
         </div>
 
-        <form ref={formRef} onSubmit={onSubmit} noValidate className="mt-16 max-w-[760px]">
+        <form ref={formRef} onSubmit={onSubmit} noValidate className="mt-12 max-w-[760px]">
           {/* What you clicked to get here, said back to you. Without this the
            * form silently discarded the choice and the only clue that it had
            * registered anything was which chip happened to be lit. Dismissable,
@@ -145,7 +145,7 @@ export function ContactForm() {
               >
                 <div className="mb-12 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-y border-line py-5">
                   <span className="t-label shrink-0 text-mute">{subject.kind}</span>
-                  <span className="font-display text-[19px] font-bold uppercase tracking-[-0.02em] text-text">
+                  <span className="font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
                     {subject.title}
                   </span>
                   {subject.detail ? (
@@ -243,7 +243,7 @@ export function ContactForm() {
           <div className="mt-12 flex flex-wrap items-center gap-6">
             <button
               type="submit"
-              className="group flex h-[60px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+              className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                 Send it

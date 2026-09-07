@@ -25,7 +25,7 @@ export const Route = createFileRoute("/checkout")({
 function Checkout() {
   return (
     <main id="main" className="relative w-full bg-surface-deep">
-      <header className="shell relative z-[2] pb-10 pt-[160px]">
+      <header className="shell relative z-[2] pb-10 pt-[120px]">
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>

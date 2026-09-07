@@ -29,7 +29,7 @@ export function ContactHero() {
         srText={c.heading}
       />
 
-      <div className="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-20">
+      <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-20">
         <div>
           <p className="t-lead max-w-[44ch] text-mute">{c.standfirst}</p>
 

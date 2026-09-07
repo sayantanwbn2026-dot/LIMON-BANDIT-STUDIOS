@@ -57,7 +57,7 @@ function Orders() {
 
   return (
     <main id="main" className="relative w-full bg-surface-deep">
-      <header className="shell relative z-[2] pb-10 pt-[160px]">
+      <header className="shell relative z-[2] pb-10 pt-[120px]">
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
@@ -78,7 +78,7 @@ function Orders() {
         </h1>
       </header>
 
-      <section className="relative w-full bg-surface-deep pb-[120px] pt-10">
+      <section className="relative w-full bg-surface-deep pb-[96px] pt-10">
         <GridRules tone="dark" />
         <BoundaryRule tone="dark" className="top-0" />
 
@@ -90,7 +90,7 @@ function Orders() {
                 <button
                   type="button"
                   onClick={() => openAuth("Sign in to see your orders.")}
-                  className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+                  className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
                   Sign in
                 </button>
@@ -104,7 +104,7 @@ function Orders() {
               cta={
                 <Link
                   to="/shop"
-                  className="flex h-[60px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+                  className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
                   Go to the shop
                 </Link>

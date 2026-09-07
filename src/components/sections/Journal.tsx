@@ -8,7 +8,7 @@ export function Journal() {
   const posts = usePosts();
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
-    <Section tone="light" className="border-t border-alt-line pt-[120px] pb-[160px]">
+    <Section tone="light" className="border-t border-alt-line pt-[96px] pb-[120px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ export function Journal() {
         </div>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {posts.map((p, i) => (
           <RiseIn key={p.title} delay={i * 0.08}>
             <a href="/journal" className="group block">

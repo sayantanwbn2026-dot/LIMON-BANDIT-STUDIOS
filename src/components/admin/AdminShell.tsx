@@ -169,7 +169,7 @@ export function AdminHeading({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
       <div className="min-w-0">
-        <h1 className="font-display text-[30px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text lg:text-[38px]">
+        <h1 className="font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text lg:text-[34px]">
           {title}
         </h1>
         {standfirst ? (

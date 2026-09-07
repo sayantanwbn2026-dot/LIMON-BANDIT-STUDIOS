@@ -25,7 +25,7 @@ export function ContactVisit() {
   const faqItems = useFaqByTopic("booking");
   const site = useSite();
   return (
-    <section className="relative w-full bg-surface-deep py-[120px]">
+    <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -46,7 +46,7 @@ export function ContactVisit() {
           </div>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-12">
           {/* hours */}
           <div>
             <h3 className="t-label text-mute">Hours</h3>

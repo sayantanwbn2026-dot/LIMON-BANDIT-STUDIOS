@@ -47,7 +47,7 @@ export function Rooms() {
 
   return (
     <Section id="rooms" tone="dark" surface="bg-surface" index="06" name="The Rooms">
-      <div ref={root} className="py-[120px] md:py-[160px]">
+      <div ref={root} className="py-[96px] md:py-[120px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark" surface="bg-surface">
@@ -58,7 +58,7 @@ export function Rooms() {
           <GhostLink label="See availability" to="/rooms" className="text-mute" />
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           {/* sticky visual */}
           <div className="hidden lg:block">
             <div className="sticky top-[14vh]">
@@ -109,7 +109,7 @@ export function Rooms() {
                   <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
                     {r.index}
                   </span>
-                  <h3 className="font-display text-[32px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[40px]">
+                  <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[34px]">
                     {r.name}
                   </h3>
                   <span className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute">

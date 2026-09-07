@@ -62,7 +62,7 @@ export function Field({
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
           placeholder={placeholder}
-          className="h-[52px] w-full bg-transparent font-ui text-[16px] text-text outline-none placeholder:text-[color:var(--placeholder)]"
+          className="h-12 w-full bg-transparent font-ui text-[16px] text-text outline-none placeholder:text-[color:var(--placeholder)]"
         />
       </div>
       {hint && !error ? (

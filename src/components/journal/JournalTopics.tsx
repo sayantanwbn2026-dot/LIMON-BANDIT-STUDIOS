@@ -31,7 +31,7 @@ export function JournalTopics() {
     String(posts.filter((p) => p.category === c).length).padStart(2, "0");
 
   return (
-    <section className="relative w-full bg-alt-surface-deep py-[120px]">
+    <section className="relative w-full bg-alt-surface-deep py-[96px]">
       <GridRules tone="light" />
       <BoundaryRule tone="light" className="top-0" />
 
@@ -52,7 +52,7 @@ export function JournalTopics() {
           </div>
         </div>
 
-        <dl className="mt-16 grid grid-cols-1 border-t border-alt-line sm:grid-cols-2 lg:grid-cols-4 lg:border-b">
+        <dl className="mt-12 grid grid-cols-1 border-t border-alt-line sm:grid-cols-2 lg:grid-cols-4 lg:border-b">
           {BEATS.map((b, i) => (
             <div
               key={b.category}

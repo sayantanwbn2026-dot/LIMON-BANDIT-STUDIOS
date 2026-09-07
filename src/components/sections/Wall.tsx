@@ -7,7 +7,7 @@ export function Wall() {
   const wall = useWall();
   return (
     <Section id="wall" tone="dark" surface="bg-surface" index="15" name="The Wall">
-      <div className="py-[120px] md:py-[160px]">
+      <div className="py-[96px] md:py-[120px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark" surface="bg-surface">

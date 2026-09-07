@@ -59,7 +59,7 @@ function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
 
       {/* 160px top: the band follows the fixed navbar, which is a chapter
           change in its own right. */}
-      <div className="shell relative z-[2] pb-[120px] pt-[160px]">
+      <div className="shell relative z-[2] pb-[96px] pt-[120px]">
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
@@ -139,7 +139,7 @@ function ChapterPanel({
           {c.index}
         </span>
         <span
-          className={`font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text transition-transform duration-300 md:text-[36px] ${
+          className={`font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text transition-transform duration-300 md:text-[34px] ${
             isNext ? "group-hover:-translate-x-2" : "group-hover:translate-x-2"
           }`}
         >

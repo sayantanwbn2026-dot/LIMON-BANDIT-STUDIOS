@@ -27,7 +27,7 @@ export function FinalCta() {
       />
       <GridRules tone="dark" />
 
-      <div className="shell relative z-[2] py-[160px]">
+      <div className="shell relative z-[2] py-[120px]">
         <div className="max-w-[760px]">
           <div className="flex items-center gap-4">
             <span className="flex gap-1" aria-hidden="true">
@@ -93,7 +93,7 @@ export function FinalCta() {
         </div>
       </div>
 
-      <div className="relative z-[2] flex h-[52px] items-center border-y border-line">
+      <div className="relative z-[2] flex h-12 items-center border-y border-line">
         <Ticker duration={40}>
           {ctaChecklist.map((c) => (
             <span key={c} className="flex shrink-0 items-center gap-6 pr-6">

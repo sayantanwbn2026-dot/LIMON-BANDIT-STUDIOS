@@ -94,7 +94,7 @@ function AdminLogin() {
           <span className="t-label text-mute">Content management</span>
         </span>
 
-        <h1 className="mt-6 font-display text-[38px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
+        <h1 className="mt-6 font-display text-[34px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
           Sign in
         </h1>
 

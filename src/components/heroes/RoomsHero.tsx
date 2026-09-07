@@ -27,7 +27,7 @@ export function RoomsHero() {
         srText={c.heading}
       />
 
-      <div className="mt-14 grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-0">
+      <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
         <div className="lg:pr-16">
           <p className="t-lead max-w-[46ch] text-mute">{c.standfirst}</p>
         </div>
@@ -53,7 +53,7 @@ export function RoomsHero() {
                   {r.index}
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-display text-[17px] font-bold uppercase leading-none tracking-[-0.02em] text-text">
+                  <span className="block font-display text-[16px] font-bold uppercase leading-none tracking-[-0.02em] text-text">
                     {r.name}
                   </span>
                   <span className="t-label mt-2 block text-mute">{r.capacity}</span>

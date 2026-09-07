@@ -39,7 +39,7 @@ const TERMS = [
 export function CrewHiring() {
   const faqItems = useFaqByTopic("crew");
   return (
-    <section className="relative w-full bg-surface py-[120px]">
+    <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -62,7 +62,7 @@ export function CrewHiring() {
 
         {/* lg, not md — see ShopPrint: the 44px value cannot wrap and the
          * three-column cell is too narrow for it below 1024. */}
-        <dl className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
+        <dl className="mt-12 grid grid-cols-1 border-t border-line lg:grid-cols-3 lg:border-b">
           {TERMS.map((s, i) => (
             <div
               key={s.k}
@@ -72,7 +72,7 @@ export function CrewHiring() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[44px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -83,7 +83,7 @@ export function CrewHiring() {
           ))}
         </dl>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <ol className="border-t border-line">
               {STEPS.map((s) => (
@@ -106,7 +106,7 @@ export function CrewHiring() {
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <a
                 href="/contact?intent=crew"
-                className="group flex h-[60px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+                className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                   Hire the crew

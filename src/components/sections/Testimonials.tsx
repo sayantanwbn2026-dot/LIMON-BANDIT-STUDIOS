@@ -27,10 +27,10 @@ export function Testimonials() {
   const { testimonialTicker } = useTickers();
   const testimonials = useTestimonials();
   return (
-    <section className="relative w-full bg-acid pt-[160px]">
+    <section className="relative w-full bg-acid pt-[120px]">
       <GridRules tone="acid" />
 
-      <div className="shell relative z-[2] pb-[160px]">
+      <div className="shell relative z-[2] pb-[120px]">
         <div className="section-head">
           <div className="md:col-span-1">
             <div className="flex items-center gap-3">
@@ -55,13 +55,13 @@ export function Testimonials() {
           </div>
         </div>
 
-        <ul className="mt-20" style={{ borderTop: `1px solid ${RULE}` }}>
+        <ul className="mt-16" style={{ borderTop: `1px solid ${RULE}` }}>
           {testimonials.map((t, i) => (
             <li key={t.name} style={{ borderBottom: `1px solid ${RULE}` }}>
               <RiseIn delay={i * 0.05}>
                 <article className="grid grid-cols-1 gap-x-10 gap-y-6 py-12 lg:grid-cols-12 lg:items-baseline">
                   <blockquote className="lg:col-span-8">
-                    <p className="max-w-[26ch] font-display text-[26px] font-extrabold uppercase leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
+                    <p className="max-w-[26ch] font-display text-[24px] font-extrabold uppercase leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
                       {t.quote}
                     </p>
                   </blockquote>
@@ -76,7 +76,7 @@ export function Testimonials() {
                   </div>
 
                   <div className="lg:col-span-2 lg:text-right">
-                    <span className="tnum block font-display text-[22px] font-extrabold tracking-[-0.03em] text-accent-text">
+                    <span className="tnum block font-display text-[20px] font-extrabold tracking-[-0.03em] text-accent-text">
                       {t.resultValue}
                     </span>
                     <span className="t-label mt-1 block text-accent-text">
@@ -90,7 +90,7 @@ export function Testimonials() {
         </ul>
       </div>
 
-      <div className="relative z-[2] flex h-[52px] items-center bg-surface-deep">
+      <div className="relative z-[2] flex h-12 items-center bg-surface-deep">
         <Ticker duration={38} reverse>
           {testimonialTicker.map((t) => (
             <span key={t} className="flex shrink-0 items-center gap-6 pr-6">

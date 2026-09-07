@@ -48,7 +48,7 @@ export function LabelPlayer() {
   };
 
   return (
-    <section className="relative w-full bg-surface py-[120px]">
+    <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -58,7 +58,7 @@ export function LabelPlayer() {
         </Eyebrow>
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">The roster, playing</h2>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-12">
           <CmsImage
             src={shown.cover}
             alt={`Cover art for ${shown.title} by ${shown.artist}`}
@@ -75,7 +75,7 @@ export function LabelPlayer() {
           >
             <div>
               <span className="t-label text-mute">{shown.genre}</span>
-              <h3 className="mt-3 font-display text-[32px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text md:text-[44px]">
+              <h3 className="mt-3 font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text md:text-[42px]">
                 {shown.title}
               </h3>
               <p className="mt-2 font-ui text-[15px] text-mute">
@@ -142,7 +142,7 @@ export function LabelPlayer() {
         </div>
 
         {/* the rest of the previewable roster */}
-        <ul className="mt-16 border-t border-line">
+        <ul className="mt-12 border-t border-line">
           {tracks.map((t, i) => {
             const on = track?.id === t.id;
             return (

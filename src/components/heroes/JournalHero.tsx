@@ -32,7 +32,7 @@ export function JournalHero() {
       tone="light"
       surface="bg-alt-surface"
       className="mt-[var(--nav-h)]"
-      bodyClassName="pb-[120px] pt-[72px]"
+      bodyClassName="pb-[96px] pt-[72px]"
     >
       {/* running head */}
       <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4 border-b border-alt-line pb-4">

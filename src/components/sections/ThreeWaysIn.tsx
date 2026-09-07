@@ -130,7 +130,7 @@ export function ThreeWaysIn() {
 
   return (
     <Section id="doors" tone="dark" surface="bg-surface-deep" index="05" name="Three Ways In">
-      <div className="pt-[120px]">
+      <div className="pt-[96px]">
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow surface="bg-surface-deep">Three ways in</Eyebrow>
@@ -147,7 +147,7 @@ export function ThreeWaysIn() {
        * fractions of the scroll range, so a shorter container plays the
        * same scene at a pace that reads as choreography rather than as the
        * page refusing to move. */}
-      <div ref={root} className="relative mt-16 lg:h-[200vh]">
+      <div ref={root} className="relative mt-12 lg:h-[200vh]">
         <div
           data-stage
           /* pt reserves the fixed navbar: the stage is pinned to the top of
@@ -204,7 +204,7 @@ export function ThreeWaysIn() {
 
                     {/* back — the offer card */}
                     <article
-                      className="lb-back group relative flex min-h-[320px] w-full flex-col p-10 transition-transform duration-[350ms] lg:absolute lg:inset-0 lg:min-h-0"
+                      className="lb-back group relative flex min-h-[320px] w-full flex-col p-8 transition-transform duration-[350ms] lg:absolute lg:inset-0 lg:min-h-0"
                       style={{
                         background: d.surface,
                         color: d.text,

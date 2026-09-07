@@ -83,7 +83,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="relative z-[2] mt-20 flex items-end justify-between">
+      <div className="relative z-[2] mt-16 flex items-end justify-between">
         <span
           aria-hidden="true"
           className="block w-full select-none whitespace-nowrap px-[var(--page-margin)] font-display font-extrabold uppercase leading-[0.8] tracking-[-0.05em]"

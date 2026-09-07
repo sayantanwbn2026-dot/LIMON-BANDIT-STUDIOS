@@ -21,13 +21,13 @@ export function ProofBand() {
           </Ticker>
         </div>
         {/* A fixed height around wrapping content is a collision waiting for
-         * a narrow screen. Both rows below used to be h-[64px] / h-[88px]
+         * a narrow screen. Both rows below used to be h-[56px] / h-[88px]
          * with flex-wrap: on a 390px phone the partner row needed 168px and
          * got 88, so three of the five partners were clipped out of the
          * section entirely and "Trusted by 100+ artists" printed on top of
          * "Radio Misfit". The heights are now the desktop case only, and
          * the phone gets padding and whatever height the content asks for. */}
-        <div className="shell flex flex-col items-center justify-center gap-4 border-b border-line py-6 sm:h-[64px] sm:flex-row sm:gap-5 sm:py-0">
+        <div className="shell flex flex-col items-center justify-center gap-4 border-b border-line py-6 sm:h-[56px] sm:flex-row sm:gap-5 sm:py-0">
           <div className="flex items-center gap-4">
             <div className="flex">
               {avatars.map((a, i) => (
