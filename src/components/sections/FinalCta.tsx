@@ -3,12 +3,13 @@ import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
 import { LiveLog } from "@/components/lb/LiveLog";
-import { useSite, useTickers } from "@/cms/hooks";
+import { useSection, useSite, useTickers } from "@/cms/hooks";
 import { Picture } from "@/components/lb/Picture";
 
 export function FinalCta() {
   const { ctaChecklist } = useTickers();
   const site = useSite();
+  const copy = useSection("home", "finalcta");
   return (
     <section className="relative w-full overflow-hidden bg-surface-deep">
       <Picture
@@ -38,12 +39,9 @@ export function FinalCta() {
             <span className="t-eyebrow text-mute">{site.rating}</span>
           </div>
 
-          <WordReveal as="h2" className="t-hero mt-8 text-text" text={"The room's already warm."} />
+          <WordReveal as="h2" className="t-hero mt-8 text-text" text={copy.heading} />
 
-          <p className="t-lead mt-8 max-w-[520px] text-mute">
-            Bring the songs. We&apos;ll handle the room, the master, the print run, and the people
-            who shoot the video.
-          </p>
+          <p className="t-lead mt-8 max-w-[520px] text-mute">{copy.standfirst}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <div className="flex">

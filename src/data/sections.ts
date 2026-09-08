@@ -85,6 +85,13 @@ export const homeSections: SectionCopy[] = [
   },
   { id: "journal", eyebrow: "Journal", heading: "Notes from the room.", standfirst: "" },
   {
+    id: "finalcta",
+    eyebrow: "",
+    heading: "The room's already warm.",
+    standfirst:
+      "Bring the songs. We'll handle the room, the master, the print run, and the people who shoot the video.",
+  },
+  {
     id: "join",
     eyebrow: "One mail a month",
     heading: "Join the list",
