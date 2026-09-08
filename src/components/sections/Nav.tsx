@@ -10,14 +10,13 @@ import { ShopBar } from "@/components/shop/ShopBar";
 
 export function Logotype({ size = 18 }: { size?: number }) {
   return (
-    <span className="flex items-end gap-2">
+    <span className="flex items-end">
       <span
         className="font-display font-extrabold uppercase leading-none tracking-[-0.04em]"
         style={{ fontSize: size }}
       >
         Limon Bandit
       </span>
-      <span className="neon mb-[1px] h-[10px] w-[10px] shrink-0 bg-acid" />
     </span>
   );
 }
