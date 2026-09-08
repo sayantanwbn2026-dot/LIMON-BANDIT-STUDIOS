@@ -177,7 +177,32 @@ export function Modal({
               </button>
             </header>
 
+            {/* data-lenis-prevent is load-bearing, not a nicety.
+             *
+             * Opening a modal calls lockScroll(), which calls lenis.stop().
+             * A stopped Lenis does not merely decline to scroll the page —
+             * its virtual-scroll handler runs `if (this.isStopped) {
+             * event.preventDefault() }` on every wheel and touchmove it
+             * sees, anywhere in the document, including ones that started
+             * inside this container. So the body below had the right CSS to
+             * scroll and was never allowed to.
+             *
+             * On a desktop that was survivable, because the scrollbar is
+             * still draggable. On a phone there is no scrollbar to drag, so
+             * the sign-up form simply ended at whatever the fold cut off and
+             * the Create account button could not be reached at all.
+             *
+             * Lenis checks for this attribute on the composed path and bails
+             * out BEFORE the isStopped branch, which hands the element back
+             * to native scrolling. It belongs on the scrolling body rather
+             * than the panel: a drag on the header should still be swallowed,
+             * or it would scroll the page behind the dialog.
+             *
+             * overscroll-contain stops that native scroll from chaining to
+             * the page once it reaches either end.
+             */}
             <div
+              data-lenis-prevent
               className={`min-h-0 flex-1 overflow-y-auto overscroll-contain ${
                 sheet ? "p-5 sm:p-8" : "p-6 sm:p-8"
               }`}
