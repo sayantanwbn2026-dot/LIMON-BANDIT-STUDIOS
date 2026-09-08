@@ -365,7 +365,7 @@ export function Hero() {
                 >
                   <span
                     data-measure-side="left"
-                    className="block h-[8px] w-[8px] shrink-0 bg-acid"
+                    className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
                   />
                   <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
                     {"LIMON".split("").map((c, i) => (
@@ -376,7 +376,7 @@ export function Hero() {
                   </span>
                   <span
                     data-measure-side="right"
-                    className="block h-[8px] w-[8px] shrink-0 bg-acid"
+                    className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
                   />
                 </span>
                 <span className="sr-only">Limon Bandit</span>

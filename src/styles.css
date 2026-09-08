@@ -17,23 +17,59 @@
  * Components must never branch on the theme — only on their pole.
  * ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------
+ * THE TONAL LADDER — why these values and not darker ones.
+ *
+ * The surfaces used to be #050505 / #070707 / #0f0f0f: gaps of two and
+ * eight sRGB values. Measured against the ground they came out at 1.01:1
+ * and 1.06:1 — which is to say the three "different" surfaces were one
+ * flat black, and the section-to-section rhythm the whole layout is built
+ * on only ever rendered on the two bone chapters.
+ *
+ * The rules were worse. A drafting grid of hairlines is this site's entire
+ * signature, and `--line` sat at 1.22:1 on the ground — present in the DOM,
+ * invisible on a screen. What a visitor actually saw was a black page with
+ * some text and some photographs on it, which is exactly as dull as it
+ * sounds.
+ *
+ * So the ladder is opened up. Still near-black, still austere — the steps
+ * are 5 → 16 → 26 → 46 → 69, which reads as separate planes on an ordinary
+ * laptop at ordinary brightness without ever becoming grey. Contrast ratio
+ * is a poor guide this near black (the +0.05 flare term swamps it), so
+ * these are spaced by sRGB value and then checked for text legibility:
+ * body holds 17.3:1 and mute 8.4:1 on the lightest of them, both well
+ * clear of AA.
+ * ------------------------------------------------------------------ */
 :root,
 [data-theme="dark"] {
   --surface-deep: #050505;
-  --surface: #070707;
-  --surface-raised: #0f0f0f;
-  --line: #1e1e1e;
-  --line-strong: #2a2a2a;
+  --surface: #101010;
+  --surface-raised: #1a1a1a;
+  --line: #2e2e2e;
+  --line-strong: #454545;
   --text: #f4f4f0;
-  --mute: #9c9c9c;
+  /* MUTE CARRIES HALF THE PAGE. Measured on the home page: 51% of all
+     rendered text is --mute and another 15% is --alt-mute, against 19%
+     at full --text strength. That is the whole reason the site read as
+     washed out — mute is not just labels here, it is the body copy of
+     every section, so the page's *default* voice was a grey.
+     #9C9C9C measured 6.93:1 on --surface, which passes AA and still
+     looks tired. #B4B4B0 measures 9.15:1 and keeps a 1.89x step down
+     from --text (17.26:1) — a hierarchy you can still see, in a colour
+     that reads as quiet white rather than grey. */
+  --mute: #b4b4b0;
 
   /* the opposite pole */
   --alt-surface: #f1f1ef;
-  --alt-surface-deep: #ededea;
-  --alt-line: #dbdbd7;
-  --alt-line-strong: #c6c6c1;
+  --alt-surface-deep: #e7e7e3;
+  --alt-line: #cfcfc9;
+  --alt-line-strong: #b3b3ad;
   --alt-text: #080808;
-  --alt-mute: #6b6b68;
+  /* Same move, mirrored: #6B6B68 was 4.73:1 on bone — barely over AA and
+     a full 3.74x below its text, far weaker than the dark pole's mute is
+     below its own. #545450 is 6.73:1 at a 2.63x step, which brings the
+     two poles into something like agreement. */
+  --alt-mute: #545450;
 
   /* accent is theme-independent */
   --accent: #e9ff00;
@@ -52,7 +88,10 @@
   --neon-cool: #00e5ff; /* the cool half of an RGB split */
   --neon-warm: #ff0059; /* the warm half */
   --neon-glow: rgba(233, 255, 0, 0.42); /* acid, blurred — halo on live marks */
-  --scanline: rgba(233, 255, 0, 0.028); /* CRT line, barely there */
+  /* Was 0.028 — "barely there" turned out to mean "not there", and the
+     scanline is the one thing giving a very dark page any surface at all.
+     Still under 5%: texture you notice only if you look for it. */
+  --scanline: rgba(233, 255, 0, 0.045);
   --scanline-size: 3px;
 
   /* Acid as SURFACE is always #E9FF00. Acid as TYPE or fine stroke must
@@ -67,31 +106,33 @@
   --accent-type: #e9ff00;
   --alt-accent-type: #5f6b00;
 
-  --grid-rule: rgba(255, 255, 255, 0.12);
-  --alt-grid-rule: rgba(0, 0, 0, 0.12);
+  --grid-rule: rgba(255, 255, 255, 0.2);
+  --alt-grid-rule: rgba(0, 0, 0, 0.18);
 }
 
 [data-theme="light"] {
-  --surface-deep: #ededea;
+  /* Same widening, mirrored. The bone pole had a four-value gap between
+     its ground and its surface, so it flattened for the same reason. */
+  --surface-deep: #e7e7e3;
   --surface: #f1f1ef;
-  --surface-raised: #f7f7f4;
-  --line: #dbdbd7;
-  --line-strong: #c6c6c1;
+  --surface-raised: #fbfbf9;
+  --line: #cfcfc9;
+  --line-strong: #b3b3ad;
   --text: #080808;
-  --mute: #6b6b68;
+  --mute: #545450;
 
-  --alt-surface: #070707;
+  --alt-surface: #101010;
   --alt-surface-deep: #050505;
-  --alt-line: #1e1e1e;
-  --alt-line-strong: #2a2a2a;
+  --alt-line: #2e2e2e;
+  --alt-line-strong: #454545;
   --alt-text: #f4f4f0;
-  --alt-mute: #9c9c9c;
+  --alt-mute: #b4b4b0;
 
   --accent-type: #5f6b00;
   --alt-accent-type: #e9ff00;
 
-  --grid-rule: rgba(0, 0, 0, 0.12);
-  --alt-grid-rule: rgba(255, 255, 255, 0.12);
+  --grid-rule: rgba(0, 0, 0, 0.18);
+  --alt-grid-rule: rgba(255, 255, 255, 0.2);
 }
 
 :root {

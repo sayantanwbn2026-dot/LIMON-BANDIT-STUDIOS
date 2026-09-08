@@ -17,7 +17,7 @@ export function Logotype({ size = 18 }: { size?: number }) {
       >
         Limon Bandit
       </span>
-      <span className="mb-[1px] h-[10px] w-[10px] shrink-0 bg-acid" />
+      <span className="neon mb-[1px] h-[10px] w-[10px] shrink-0 bg-acid" />
     </span>
   );
 }
