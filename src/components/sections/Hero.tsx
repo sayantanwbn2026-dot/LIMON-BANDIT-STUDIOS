@@ -293,6 +293,155 @@ export function Hero() {
     return () => el.removeEventListener("pointermove", onMove);
   }, []);
 
+  /* ---- microinteractions: the room answers the pointer ----
+   *
+   * Three, all of them the studio saying something back rather than
+   * decoration for its own sake:
+   *
+   *   the tape head — the pointer is a playhead crossing the wordmark.
+   *     Letters lift as it passes, with a falloff either side, and each
+   *     one ticks a chromatic split as the head crosses onto it. That
+   *     split is the site's existing `.glitch`, which is drawn with
+   *     drop-shadow precisely because these letters are painted with
+   *     background-clip: text and have no glyph for a duplicate to sit
+   *     behind.
+   *
+   *   the input meters — the two acid ticks that end the LIMON measure
+   *     are already the only meter-shaped things on the screen, so they
+   *     read pointer speed as level and fall back when you stop.
+   *
+   *   the medallion — the acid pool behind Limon warms as you approach
+   *     him, which is the closest thing a still poster has to stepping
+   *     into the light.
+   *
+   * **Property discipline.** The scrubbed scene owns `x` on the letter
+   * boxes, `x` and `opacity` on the measure ticks, and `scale` on the
+   * medallion; the parallax owns `x`/`y` on the two outer wrappers.
+   * Nothing here writes any of those. The letters get `y` (composed with
+   * the scene's `x` as separate transform components), the ticks get
+   * `scaleY`, and the medallion gets a custom property its gradient
+   * reads — which is why the warmth is a var and not an opacity.
+   *
+   * Pointer-fine only. On a touchscreen there is no hover and no track
+   * to follow, so these would fire once on tap and read as a fault.
+   * `size` is a dependency because the letter geometry is cached, and
+   * the fitting routine changes it on every resize.
+   */
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const gsap = ensureGsap();
+    if (!gsap || prefersReducedMotion()) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const boxes = gsap.utils.toArray<HTMLElement>("[data-hero-letter-box]", el);
+    const ticks = gsap.utils.toArray<HTMLElement>("[data-hero-meter]", el);
+    const medallion = medallionRef.current;
+    if (!boxes.length) return;
+
+    const lift = boxes.map((b) => gsap.quickTo(b, "y", { duration: 0.5, ease: "power3.out" }));
+    const meter = ticks.map((t) =>
+      gsap.quickTo(t, "scaleY", { duration: 0.35, ease: "power2.out" }),
+    );
+    const warm = medallion
+      ? gsap.quickTo(medallion, "--lb-warm", { duration: 0.7, ease: "power2.out" })
+      : null;
+
+    /* Letter centres are cached rather than measured per move: six
+     * getBoundingClientRect calls inside a pointermove that also writes
+     * transforms is a read-after-write on every frame. They only move
+     * when the wordmark is refitted, and during the scene — by which
+     * point the wordmark is at 12% opacity and nobody can see the
+     * half-letter of drift. */
+    let centres: number[] = [];
+    let halves: number[] = [];
+    const measure = () => {
+      centres = boxes.map((b) => {
+        const r = b.getBoundingClientRect();
+        return r.left + r.width / 2;
+      });
+      halves = boxes.map((b) => Math.max(1, b.getBoundingClientRect().width / 2));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+
+    /* The split is one-shot CSS, so it has to be cleared before it can
+     * fire again; animationend is the honest signal and costs no reflow,
+     * where toggling the attribute around a forced layout read would. */
+    const clear = (e: AnimationEvent) => {
+      (e.currentTarget as HTMLElement).removeAttribute("data-on");
+    };
+    boxes.forEach((b) => b.addEventListener("animationend", clear));
+
+    let head = -1;
+    let lastX = 0;
+    let lastT = 0;
+
+    const onMove = (e: PointerEvent) => {
+      /* --- the tape head --- */
+      let nearest = 0;
+      let best = Infinity;
+      for (let i = 0; i < centres.length; i++) {
+        const d = Math.abs(e.clientX - centres[i]);
+        if (d < best) {
+          best = d;
+          nearest = i;
+        }
+        /* quadratic falloff over ~1.6 letter widths, so the lift is a
+         * wave under the head rather than one letter popping */
+        const f = Math.max(0, 1 - Math.pow(d / (halves[i] * 3.2), 2));
+        lift[i](-9 * f);
+      }
+
+      if (nearest !== head) {
+        head = nearest;
+        const box = boxes[nearest];
+        if (!box.hasAttribute("data-on")) box.setAttribute("data-on", "");
+      }
+
+      /* --- the input meters --- */
+      const now = e.timeStamp;
+      const dt = Math.max(1, now - lastT);
+      const speed = Math.abs(e.clientX - lastX) / dt;
+      lastX = e.clientX;
+      lastT = now;
+      /* 2.2 px/ms is a brisk sweep; past that the meter just pins */
+      const level = 1 + Math.min(speed / 2.2, 1) * 1.4;
+      meter.forEach((m) => m(level));
+
+      /* --- the medallion warms with proximity to Limon --- */
+      if (warm && limonWrapRef.current) {
+        const r = limonWrapRef.current.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / (r.width || 1);
+        const dy = (e.clientY - (r.top + r.height / 2)) / (r.height || 1);
+        const near = Math.max(0, 1 - Math.min(1, Math.hypot(dx, dy)));
+        warm(0.06 + near * 0.1);
+      }
+    };
+
+    const onLeave = () => {
+      lift.forEach((f) => f(0));
+      meter.forEach((m) => m(1));
+      warm?.(0.06);
+      head = -1;
+    };
+
+    el.addEventListener("pointermove", onMove, { passive: true });
+    el.addEventListener("pointerleave", onLeave);
+
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("resize", measure);
+      boxes.forEach((b) => {
+        b.removeEventListener("animationend", clear);
+        b.removeAttribute("data-on");
+      });
+      gsap.set(boxes, { y: 0 });
+      gsap.set(ticks, { scaleY: 1 });
+    };
+  }, [size]);
+
   return (
     <section
       ref={root}
@@ -339,7 +488,9 @@ export function Hero() {
         className="pointer-events-none absolute left-1/2 top-[52%] z-[4] h-[320px] w-[320px]"
         style={{
           transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(233,255,0,0.06), transparent 70%)",
+          ["--lb-warm" as string]: 0.06,
+          background:
+            "radial-gradient(circle, rgba(233,255,0,var(--lb-warm,0.06)), transparent 70%)",
         }}
       />
 
@@ -365,7 +516,8 @@ export function Hero() {
                 >
                   <span
                     data-measure-side="left"
-                    className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
+                    data-hero-meter
+                    className="neon block h-[8px] w-[8px] shrink-0 origin-center bg-acid"
                   />
                   <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
                     {"LIMON".split("").map((c, i) => (
@@ -376,7 +528,8 @@ export function Hero() {
                   </span>
                   <span
                     data-measure-side="right"
-                    className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
+                    data-hero-meter
+                    className="neon block h-[8px] w-[8px] shrink-0 origin-center bg-acid"
                   />
                 </span>
                 <span className="sr-only">Limon Bandit</span>
@@ -401,7 +554,7 @@ export function Hero() {
                       <span
                         key={i}
                         data-hero-letter-box
-                        className="inline-block overflow-hidden align-bottom"
+                        className="glitch inline-block overflow-hidden align-bottom"
                         style={{ lineHeight: 0.82 }}
                       >
                         <span
