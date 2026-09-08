@@ -3,6 +3,8 @@ import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { useFaqByTopic, useSection, useShipping, useSite } from "@/cms/hooks";
+import { getLenis } from "@/lib/smooth";
+import { prefersReducedMotion } from "@/lib/motion";
 import { SHIPPING_SEED } from "@/cms/seeds";
 
 export function ShopOrder() {
@@ -58,8 +60,21 @@ export function ShopOrder() {
             </dl>
 
             <div className="mt-10 flex flex-wrap items-center gap-6">
+              {/* The href stays, so this is still a real link — middle-click,
+               * open-in-new-tab and a no-JS load all keep working, and the
+               * handler only takes over when it can do better. Without it
+               * the browser jumps the page instantly, which on a site that
+               * smooth-scrolls everything else reads as a glitch rather
+               * than as navigation. Same shape as RoomsFloor's room picker. */}
               <a
                 href="#catalogue"
+                onClick={(e) => {
+                  const target = document.getElementById("catalogue");
+                  const lenis = getLenis();
+                  if (!target || !lenis || prefersReducedMotion()) return;
+                  e.preventDefault();
+                  lenis.scrollTo(target, { offset: -80 });
+                }}
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
