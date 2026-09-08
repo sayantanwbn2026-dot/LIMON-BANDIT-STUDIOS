@@ -311,6 +311,36 @@
     --grid-gutter: 12px;
   }
 
+  /* ---------------- the grid rules, on a phone ----------------
+   * The drafting grid drops from five rules to three below md, and the
+   * survivors are the two shell edges and one straight down the middle.
+   * On desktop that centre rule falls in a gutter between columns; at
+   * 375px there are no columns for it to fall between, so it runs through
+   * the body copy instead — measured at 375px, eleven separate runs of
+   * text have a rule crossing them.
+   *
+   * That is fine for a hairline you have to look for and bad for one you
+   * cannot help reading, so the phone gets a much quieter grid: 0.07
+   * against the 0.20 the desktop keeps. The rules are drawn as a 4-on
+   * 6-off dash, so the effective weight is lower again — present as
+   * texture, gone as soon as you are reading a sentence.
+   *
+   * Both poles are restated because the two tokens swap between the theme
+   * blocks; overriding only `--grid-rule` here would paint white rules on
+   * the bone chapters and lose them entirely. These sit after both theme
+   * blocks at equal specificity, so source order carries them.
+   * ------------------------------------------------------------ */
+  :root,
+  [data-theme="dark"] {
+    --grid-rule: rgba(255, 255, 255, 0.07);
+    --alt-grid-rule: rgba(0, 0, 0, 0.07);
+  }
+
+  [data-theme="light"] {
+    --grid-rule: rgba(0, 0, 0, 0.07);
+    --alt-grid-rule: rgba(255, 255, 255, 0.07);
+  }
+
   /* ---------------- mobile vertical rhythm ----------------
    * The section scale is tuned for a 900px-tall desktop viewport. On a
    * 844px phone, py-[120px] spends 240px — 28% of the screen — on empty
