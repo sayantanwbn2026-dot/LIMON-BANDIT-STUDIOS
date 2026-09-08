@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
-import { useRates } from "@/cms/hooks";
+import { useRates, useSection } from "@/cms/hooks";
 
 type Mode = "hourly" | "package";
 
@@ -20,6 +20,7 @@ type Mode = "hourly" | "package";
  * now marked by its price being in acid — one signal, not four.
  */
 export function Rates() {
+  const copy = useSection("home", "rates");
   const rates = useRates();
   const [mode, setMode] = useState<Mode>("hourly");
 
@@ -31,14 +32,10 @@ export function Rates() {
     <Section tone="dark" surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>Rates</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-2">
-          <WordReveal
-            as="h2"
-            className="t-h2 text-text"
-            text={"Simple rates,\nno surprise invoices."}
-          />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
           <p className="font-ui text-[16px] leading-[1.5] text-mute">

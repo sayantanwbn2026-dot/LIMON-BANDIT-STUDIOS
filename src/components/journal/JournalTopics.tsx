@@ -1,6 +1,6 @@
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useBeats, usePosts } from "@/cms/hooks";
+import { useBeats, usePosts, useSection } from "@/cms/hooks";
 
 /**
  * The beats, still inverted. Counts come from the entries themselves so the
@@ -9,6 +9,7 @@ import { useBeats, usePosts } from "@/cms/hooks";
 export function JournalTopics() {
   const posts = usePosts();
   const BEATS = useBeats();
+  const copy = useSection("journal", "topics");
   const countFor = (c: string) =>
     String(posts.filter((p) => p.category === c).length).padStart(2, "0");
 
@@ -21,16 +22,14 @@ export function JournalTopics() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="light" surface="bg-alt-surface-deep">
-              The beats
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-alt-text">Four things we keep returning to</h2>
+            <h2 className="t-h2 text-alt-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-alt-mute">
-              No opinion pieces and no industry commentary. Only things we did here.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-alt-mute">{copy.standfirst}</p>
           </div>
         </div>
 

@@ -1,12 +1,13 @@
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useShopRun, useShopStages } from "@/cms/hooks";
+import { useSection, useShopRun, useShopStages } from "@/cms/hooks";
 
 /**
  * Why the runs are small, in the same three-column form the Label uses to
  * state its split. The argument is the economics, so the numbers carry it.
  */
 export function ShopPrint() {
+  const copy = useSection("shop", "print");
   const RUN = useShopRun();
   const STAGES = useShopStages();
   return (
@@ -18,17 +19,14 @@ export function ShopPrint() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface">
-              The run
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Small, local, and finished</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              Everything here is made in a quantity we can carry. That is a constraint, not a
-              marketing position.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

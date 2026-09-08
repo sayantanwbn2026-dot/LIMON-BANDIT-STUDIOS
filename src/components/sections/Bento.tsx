@@ -4,7 +4,7 @@ import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { Waveform } from "@/components/lb/Waveform";
 import { usePlayer } from "@/lib/player";
-import { useTracks } from "@/cms/hooks";
+import { useSection, useTracks } from "@/cms/hooks";
 
 /**
  * What's inside — the artefacts, not another list of the four operations.
@@ -22,6 +22,7 @@ import { useTracks } from "@/cms/hooks";
  * Rooms ledger and the Crew directory are already built.
  */
 export function Bento() {
+  const copy = useSection("home", "bento");
   const tracks = useTracks();
   const { track, playing, time, duration, play, toggle, seek } = usePlayer();
   const shown = track ?? tracks[0];
@@ -32,14 +33,10 @@ export function Bento() {
     <Section surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>What&apos;s inside</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-2">
-          <WordReveal
-            as="h2"
-            className="t-h2 text-text"
-            text={"A label, a shop,\nand a crew —\non one site."}
-          />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
           <a

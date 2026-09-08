@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
-import { useTestimonials, useTickers } from "@/cms/hooks";
+import { useSection, useTestimonials, useTickers } from "@/cms/hooks";
 
 /**
  * The roster talks — set the way the hero is set.
@@ -24,6 +24,7 @@ import { useTestimonials, useTickers } from "@/cms/hooks";
 const RULE = "rgba(0,0,0,0.22)";
 
 export function Testimonials() {
+  const copy = useSection("home", "testimonials");
   const { testimonialTicker } = useTickers();
   const testimonials = useTestimonials();
   return (
@@ -35,11 +36,11 @@ export function Testimonials() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-3">
               <span className="h-[10px] w-[10px] bg-accent-text" />
-              <span className="t-eyebrow text-accent-text">What they say</span>
+              <span className="t-eyebrow text-accent-text">{copy.eyebrow}</span>
             </div>
           </div>
           <div className="md:col-span-2">
-            <WordReveal as="h2" className="t-h2 text-accent-text" text={"The roster talks."} />
+            <WordReveal as="h2" className="t-h2 text-accent-text" text={copy.heading} />
           </div>
           <div className="flex items-end md:col-span-1">
             <a

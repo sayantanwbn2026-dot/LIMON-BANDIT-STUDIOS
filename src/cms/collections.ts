@@ -1,4 +1,4 @@
-import { type Collection, text, area, num, image, choice, strings } from "./schema";
+import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
 
 /**
  * Everything on this site that a person is allowed to change.
@@ -463,6 +463,91 @@ const splits: Collection = {
 };
 
 /* ------------------------------------------------------------------ *
+ * Section copy — the words above every section
+ *
+ * The eyebrow, the heading and the line under it were literals in the
+ * JSX of twenty-odd components. That made the single thing a client most
+ * reliably wants to change — "can we reword that heading" — the one
+ * thing the CMS could not do.
+ *
+ * The shape is identical on all seven pages, so it is built once here.
+ * `id` is what the component looks itself up by and must not be edited;
+ * the row editor shows it read-only-ish with that said plainly, and a
+ * deleted row falls back to the committed copy rather than rendering an
+ * empty heading (see useSection).
+ *
+ * The headings carry real line breaks. Several are set with WordReveal,
+ * which splits on newline, and the layouts around them are measured in
+ * `ch` — so the help text says where the break lands rather than leaving
+ * an editor to discover it by breaking the page.
+ * ------------------------------------------------------------------ */
+
+const sectionsFor = (page: PageKey, title: string, description: string): Collection => ({
+  key: `page.${page}.sections`,
+  title,
+  description,
+  group: "page",
+  page,
+  shape: "list",
+  titleField: "heading",
+  itemNoun: "section",
+  fields: [
+    text("id", "Section id", {
+      required: true,
+      mono: true,
+      help: "Do not change — the page matches its sections on this.",
+    }),
+    text("eyebrow", "Eyebrow", { max: 40, help: "The small label above the heading." }),
+    area("heading", "Heading", {
+      rows: 2,
+      max: 90,
+      help: "Press Enter to force a line break. These are set to a measure — keep them short.",
+    }),
+    area("standfirst", "Standfirst", {
+      rows: 3,
+      max: 220,
+      help: "The supporting line beside or under the heading. Leave empty if the section has none.",
+    }),
+  ],
+});
+
+const homeSections = sectionsFor(
+  "home",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the home page.",
+);
+const roomsSections = sectionsFor(
+  "rooms",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Rooms page.",
+);
+const labelSections = sectionsFor(
+  "label",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Label page.",
+);
+const shopSections = sectionsFor(
+  "shop",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Shop page.",
+);
+const crewSections = sectionsFor(
+  "crew",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Crew page.",
+);
+const journalSections = sectionsFor(
+  "journal",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Journal page.",
+);
+const contactSections = sectionsFor(
+  "contact",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the Contact page.",
+);
+
+/* ------------------------------------------------------------------ *
  * Copy that used to be locked inside a component
  *
  * Eight blocks of editorial copy — the booking steps, the hiring terms,
@@ -835,6 +920,7 @@ export const collections: Collection[] = [
   tickers,
   faq,
   // home
+  homeSections,
   services,
   doors,
   metrics,
@@ -842,25 +928,31 @@ export const collections: Collection[] = [
   testimonials,
   processSteps,
   // rooms
+  roomsSections,
   rooms,
   rates,
   roomsSteps,
   // label
+  labelSections,
   releases,
   tracks,
   splits,
   // shop
+  shopSections,
   drops,
   shopRun,
   shopStages,
   // crew
+  crewSections,
   crew,
   crewTerms,
   crewSteps,
   // journal
+  journalSections,
   posts,
   journalBeats,
   // contact
+  contactSections,
   contact,
   contactHours,
   contactTravel,

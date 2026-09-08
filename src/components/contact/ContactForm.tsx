@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { useSite } from "@/cms/hooks";
+import { useSection, useSite } from "@/cms/hooks";
 import {
   INTENTS,
   DEFAULT_INTENT,
@@ -31,6 +31,7 @@ type Errors = Partial<Record<"name" | "email" | "message", string>>;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ContactForm() {
+  const copy = useSection("contact", "form");
   const site = useSite();
   const [intent, setIntent] = useState<IntentId>(DEFAULT_INTENT);
   const [subject, setSubject] = useState<Subject | undefined>();
@@ -110,17 +111,14 @@ export function ContactForm() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface">
-              The form
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Tell us what you need</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              One form for every reason. It opens your mail client addressed to us — there is no
-              server in between.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

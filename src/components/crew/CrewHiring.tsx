@@ -2,12 +2,13 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useCrewSteps, useCrewTerms, useFaqByTopic } from "@/cms/hooks";
+import { useCrewSteps, useCrewTerms, useFaqByTopic, useSection } from "@/cms/hooks";
 
 export function CrewHiring() {
   const faqItems = useFaqByTopic("crew");
   const STEPS = useCrewSteps();
   const TERMS = useCrewTerms();
+  const copy = useSection("crew", "hiring");
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
@@ -17,16 +18,14 @@ export function CrewHiring() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface">
-              Hiring
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">We introduce, then step out</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              A marketplace that takes a cut ends up working for itself. This one does not take one.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

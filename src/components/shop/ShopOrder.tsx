@@ -2,11 +2,12 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useShipping, useSite } from "@/cms/hooks";
+import { useFaqByTopic, useSection, useShipping, useSite } from "@/cms/hooks";
 import { SHIPPING_SEED } from "@/cms/seeds";
 
 export function ShopOrder() {
   const faqItems = useFaqByTopic("shop");
+  const copy = useSection("shop", "order");
   /* These three rows were a duplicate hardcoded copy of commerce.shipping's
    * `notes`, which meant an editor could change the shipping table in the
    * CMS — the one checkout actually charges from — and this section would
@@ -24,17 +25,14 @@ export function ShopOrder() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              Ordering
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">How it gets to you</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              Add it to your cart and check out. You pay on delivery, and we confirm stock by hand
-              before anything is dispatched.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

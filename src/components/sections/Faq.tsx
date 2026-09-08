@@ -3,7 +3,7 @@ import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Accordion } from "@/components/lb/Accordion";
 import { Picture } from "@/components/lb/Picture";
-import { useFaq } from "@/cms/hooks";
+import { useFaq, useSection } from "@/cms/hooks";
 
 /**
  * The landing-page FAQ.
@@ -15,6 +15,7 @@ import { useFaq } from "@/cms/hooks";
  * two dark chapters in light mode.
  */
 export function Faq() {
+  const copy = useSection("home", "faq");
   const faq = useFaq();
   return (
     /* 160px top: this is where the page changes chapter, dark to light. */
@@ -23,7 +24,7 @@ export function Faq() {
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
             <span className="h-[10px] w-[10px] bg-alt-acid-type" />
-            <span className="t-eyebrow text-alt-text">Questions</span>
+            <span className="t-eyebrow text-alt-text">{copy.eyebrow}</span>
           </div>
 
           <div className="mt-10 border border-alt-line p-8">
@@ -46,11 +47,7 @@ export function Faq() {
         </div>
 
         <div className="md:col-span-3">
-          <WordReveal
-            as="h2"
-            className="t-h2 text-alt-text"
-            text={"The things people ask\nbefore they book."}
-          />
+          <WordReveal as="h2" className="t-h2 text-alt-text" text={copy.heading} />
 
           <div className="mt-12">
             <Accordion items={faq} pole="alt" />

@@ -2,9 +2,10 @@ import { ArrowRight } from "lucide-react";
 import { Section } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { usePosts } from "@/cms/hooks";
+import { usePosts, useSection } from "@/cms/hooks";
 
 export function Journal() {
+  const copy = useSection("home", "journal");
   const posts = usePosts();
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
@@ -13,11 +14,11 @@ export function Journal() {
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
             <span className="h-[10px] w-[10px] bg-alt-acid-type" />
-            <span className="t-eyebrow text-alt-text">Journal</span>
+            <span className="t-eyebrow text-alt-text">{copy.eyebrow}</span>
           </div>
         </div>
         <div className="md:col-span-2">
-          <WordReveal as="h2" className="t-h2 text-alt-text" text={"Notes from the room."} />
+          <WordReveal as="h2" className="t-h2 text-alt-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
           <a

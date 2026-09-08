@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { Eyebrow } from "@/components/lb/Section";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
-import { useRooms, type RoomDoc } from "@/cms/hooks";
+import { useRooms, useSection, type RoomDoc } from "@/cms/hooks";
 
 const ROWS = [
   { label: "Rate", get: (r: RoomDoc) => r.rate, numeric: true },
@@ -21,6 +21,7 @@ const ROWS = [
  */
 export function RoomsRail() {
   const rooms = useRooms();
+  const copy = useSection("rooms", "rail");
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
@@ -28,9 +29,9 @@ export function RoomsRail() {
 
       <div className="shell relative z-[2]">
         <Eyebrow tone="dark" surface="bg-surface">
-          Pick by the numbers
+          {copy.eyebrow}
         </Eyebrow>
-        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">What each room costs and holds</h2>
+        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
         {/* desktop: one table, compared across */}
         <div className="mt-12 hidden overflow-x-auto md:block">

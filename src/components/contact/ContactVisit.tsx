@@ -2,7 +2,7 @@ import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { useFaqByTopic, useHours, useSite, useTravel } from "@/cms/hooks";
+import { useFaqByTopic, useHours, useSection, useSite, useTravel } from "@/cms/hooks";
 
 /**
  * Finding the building, and when it is awake. The hours are the argument —
@@ -12,6 +12,7 @@ export function ContactVisit() {
   const faqItems = useFaqByTopic("booking");
   const HOURS = useHours();
   const GETTING_THERE = useTravel();
+  const copy = useSection("contact", "visit");
   const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[96px]">
@@ -22,16 +23,14 @@ export function ContactVisit() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              The building
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Come and look at it</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              You are welcome to see a room before you book one. Message first so someone is in.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

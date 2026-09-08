@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { disciplines, type Discipline } from "@/data/crew";
-import { useCrew } from "@/cms/hooks";
+import { useCrew, useSection } from "@/cms/hooks";
 
 /**
  * The directory.
@@ -23,6 +23,7 @@ const statusTint: Record<string, string> = {
 type Filter = Discipline | "All";
 
 export function CrewDirectory() {
+  const copy = useSection("crew", "directory");
   const crew = useCrew();
   const [filter, setFilter] = useState<Filter>("All");
   const filters: Filter[] = ["All", ...disciplines];
@@ -37,16 +38,14 @@ export function CrewDirectory() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              The list
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Who you can hire</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              Rates are theirs, not ours. The house takes nothing from a crew booking.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

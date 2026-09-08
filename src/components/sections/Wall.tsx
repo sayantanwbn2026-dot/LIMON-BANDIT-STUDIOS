@@ -1,9 +1,10 @@
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { MaskReveal } from "@/components/lb/MaskReveal";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { useWall } from "@/cms/hooks";
+import { useSection, useWall } from "@/cms/hooks";
 
 export function Wall() {
+  const copy = useSection("home", "wall");
   const wall = useWall();
   return (
     <Section id="wall" tone="dark" surface="bg-surface" index="15" name="The Wall">
@@ -11,9 +12,9 @@ export function Wall() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark" surface="bg-surface">
-              Unedited house archive
+              {copy.eyebrow}
             </Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[16ch] text-text">The wall</h2>
+            <h2 className="t-h2 mt-6 max-w-[16ch] text-text">{copy.heading}</h2>
           </div>
           <LocalTime className="text-mute" />
         </div>

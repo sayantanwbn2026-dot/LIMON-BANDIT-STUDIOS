@@ -4,13 +4,14 @@ import { Waveform } from "@/components/lb/Waveform";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { clock, usePlayer } from "@/lib/player";
-import { useTracks } from "@/cms/hooks";
+import { useSection, useTracks } from "@/cms/hooks";
 
 /**
  * The player. Not a decoration — it decodes the actual audio to draw its
  * waveform, and it keeps playing when you leave this page.
  */
 export function LabelPlayer() {
+  const copy = useSection("label", "player");
   const tracks = useTracks();
   const { track, playing, time, duration, failed, play, toggle, seek, step, next, prev } =
     usePlayer();
@@ -54,9 +55,9 @@ export function LabelPlayer() {
 
       <div className="shell relative z-[2]">
         <Eyebrow tone="dark" surface="bg-surface">
-          Hear it
+          {copy.eyebrow}
         </Eyebrow>
-        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">The roster, playing</h2>
+        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-12">
           <CmsImage

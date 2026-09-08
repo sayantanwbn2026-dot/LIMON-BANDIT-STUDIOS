@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { getSupabase } from "@/lib/supabase";
+import { useSection } from "@/cms/hooks";
 
 /**
  * The home page mailing list band.
@@ -21,6 +22,7 @@ import { getSupabase } from "@/lib/supabase";
  * split is a `where source = 'flash'` filter, not a data migration.
  */
 export function JoinList() {
+  const copy = useSection("home", "join");
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "done" | "bad">("idle");
   const [reason, setReason] = useState<string | null>(null);
@@ -82,12 +84,11 @@ export function JoinList() {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              One mail a month
+              {copy.eyebrow}
             </Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[14ch] text-text">Join the list</h2>
+            <h2 className="t-h2 mt-6 max-w-[14ch] text-text">{copy.heading}</h2>
             <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">
-              Drop dates, open studio nights, merch runs before they go public. No forwarding, no
-              selling, one unsubscribe link that actually works.
+              {copy.standfirst}
             </p>
           </div>
 

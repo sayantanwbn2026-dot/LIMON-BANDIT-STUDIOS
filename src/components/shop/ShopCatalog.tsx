@@ -11,7 +11,7 @@ import {
   DEFAULT_SORT,
   type SortId,
 } from "@/data/shop";
-import { useProducts, type ProductDoc as Product } from "@/cms/hooks";
+import { useProducts, useSection, type ProductDoc as Product } from "@/cms/hooks";
 
 /**
  * The catalogue.
@@ -34,6 +34,7 @@ import { useProducts, type ProductDoc as Product } from "@/cms/hooks";
  * for it deserves to see that it exists and is empty today.
  */
 export function ShopCatalog() {
+  const copy = useSection("shop", "catalogue");
   const [category, setCategory] = useState<string>(DEFAULT_CATEGORY);
   const [sort, setSort] = useState<SortId>(DEFAULT_SORT);
   const [sheetFor, setSheetFor] = useState<Product | null>(null);
@@ -75,11 +76,11 @@ export function ShopCatalog() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              In the shop
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Everything currently for sale</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
             <p className="font-ui text-[16px] leading-[1.5] text-mute">{active.note}</p>

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { useMetrics } from "@/cms/hooks";
+import { useMetrics, useSection } from "@/cms/hooks";
 
 /**
  * The numbers, as a meter bridge.
@@ -31,6 +31,7 @@ import { useMetrics } from "@/cms/hooks";
 const clipAt = (f: number) => `inset(0 ${(1 - f) * 100}% 0 0)`;
 
 export function Numbers() {
+  const copy = useSection("home", "numbers");
   const metrics = useMetrics();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -87,10 +88,10 @@ export function Numbers() {
     <Section surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>The numbers</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-3">
-          <h2 className="t-h2 text-text">Five years, counted</h2>
+          <h2 className="t-h2 text-text">{copy.heading}</h2>
         </div>
       </div>
 

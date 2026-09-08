@@ -5,7 +5,7 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { MaskReveal } from "@/components/lb/MaskReveal";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { useDoors } from "@/cms/hooks";
+import { useDoors, useSection } from "@/cms/hooks";
 /* The three door plates are CSS background slices of one photograph, so this
  * one needs a plain URL rather than a <picture>. Points at the generated
  * AVIF — same pipeline, just consumed as a background. */
@@ -16,6 +16,7 @@ const CORRIDOR = "/img/split-corridor-1440.avif";
  * into the house's three offers. Scrubbed, reversible, GSAP-native.
  */
 export function ThreeWaysIn() {
+  const copy = useSection("home", "doors");
   const doors = useDoors();
   const root = useRef<HTMLDivElement>(null);
 
@@ -133,10 +134,10 @@ export function ThreeWaysIn() {
       <div className="pt-[96px]">
         <div className="section-head">
           <div className="md:col-span-1">
-            <Eyebrow surface="bg-surface-deep">Three ways in</Eyebrow>
+            <Eyebrow surface="bg-surface-deep">{copy.eyebrow}</Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <WordReveal as="h2" className="t-h2 text-text" text={"Pick your door."} />
+            <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
           </div>
         </div>
       </div>

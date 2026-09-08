@@ -2,13 +2,14 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useSplits } from "@/cms/hooks";
+import { useFaqByTopic, useSection, useSplits } from "@/cms/hooks";
 
 /**
  * The deal, in three columns and no marketing language. If a split is worth
  * signing it survives being stated plainly.
  */
 export function LabelSplits() {
+  const copy = useSection("label", "splits");
   const SPLITS = useSplits();
   const faqItems = useFaqByTopic("label");
 
@@ -21,17 +22,14 @@ export function LabelSplits() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface">
-              The deal
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Seventy thirty, stated plainly</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              One page, no schedule of exceptions. If you want a lawyer to read it, it is short
-              enough that they will not charge you much.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

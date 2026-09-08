@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { usePosts } from "@/cms/hooks";
+import { usePosts, useSection } from "@/cms/hooks";
 
 /**
  * The index, still on the alt pole.
@@ -17,6 +17,7 @@ import { usePosts } from "@/cms/hooks";
  * four-entry journal actually warrants.
  */
 export function JournalIndex() {
+  const copy = useSection("journal", "index");
   const posts = usePosts();
   const [lead, ...rest] = posts;
 
@@ -28,15 +29,13 @@ export function JournalIndex() {
       <div className="shell relative z-[2]">
         <div className="section-head">
           <div className="md:col-span-1">
-            <Eyebrow tone="light">Latest</Eyebrow>
+            <Eyebrow tone="light">{copy.eyebrow}</Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-alt-text">What we have been writing</h2>
+            <h2 className="t-h2 text-alt-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-alt-mute">
-              Four entries. We write when something is worth writing down, not to a schedule.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-alt-mute">{copy.standfirst}</p>
           </div>
         </div>
 

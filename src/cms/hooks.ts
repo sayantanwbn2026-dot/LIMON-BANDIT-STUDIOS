@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useDoc, useList } from "./content";
+import { seeds } from "./seeds";
+import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
 
 /**
@@ -96,6 +98,41 @@ export type TickerDoc = {
 };
 
 export const useTickers = () => useDoc<TickerDoc>("global.tickers");
+
+/* ---------------- section copy ---------------- */
+
+/**
+ * The eyebrow / heading / standfirst above a section.
+ *
+ * These were literals in the JSX of twenty-odd components, which meant the
+ * one thing a client most reliably wants to reword — the words at the top
+ * of a section — was the one thing the CMS could not touch.
+ */
+export type SectionCopy = { id: string; eyebrow: string; heading: string; standfirst: string };
+
+const NO_COPY: SectionCopy = { id: "", eyebrow: "", heading: "", standfirst: "" };
+
+/**
+ * One section's copy, by page and id.
+ *
+ * Falls back **per row**, not per document. `useList` already returns the
+ * whole seed array when the stored document is missing or malformed, but
+ * that does not cover the likelier accident: an editor deleting one row out
+ * of a list that is otherwise fine. Looking the id up in the seed as well
+ * means a deleted row reverts to committed copy instead of rendering a
+ * section with no heading on it.
+ */
+export function useSection(page: PageKey, id: string): SectionCopy {
+  const rows = useList<SectionCopy>(`page.${page}.sections`);
+  return useMemo(() => {
+    const stored = rows.find((r) => r?.id === id);
+    if (stored) return stored;
+    const seeded = (seeds[`page.${page}.sections`] as SectionCopy[] | undefined)?.find(
+      (r) => r?.id === id,
+    );
+    return seeded ?? NO_COPY;
+  }, [rows, page, id]);
+}
 
 export type FaqItem = { question: string; answer: string; topic: string };
 export const useFaq = () => useList<FaqItem>("global.faq");

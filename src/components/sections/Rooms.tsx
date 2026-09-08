@@ -4,9 +4,10 @@ import { Eyebrow } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useRooms } from "@/cms/hooks";
+import { useRooms, useSection } from "@/cms/hooks";
 
 export function Rooms() {
+  const copy = useSection("home", "rooms");
   const rooms = useRooms();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -51,9 +52,9 @@ export function Rooms() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <Eyebrow tone="dark" surface="bg-surface">
-              Four rooms, one building
+              {copy.eyebrow}
             </Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[16ch] text-text">The rooms, room by room</h2>
+            <h2 className="t-h2 mt-6 max-w-[16ch] text-text">{copy.heading}</h2>
           </div>
           <GhostLink label="See availability" to="/rooms" className="text-mute" />
         </div>

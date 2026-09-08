@@ -5,9 +5,10 @@ import { MarginNotes } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useDrops } from "@/cms/hooks";
+import { useDrops, useSection } from "@/cms/hooks";
 
 export function DropRail() {
+  const copy = useSection("home", "drops");
   const drops = useDrops();
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -94,8 +95,8 @@ export function DropRail() {
       <div className="relative z-[2] flex min-h-screen flex-col justify-center py-[96px]">
         <div className="shell flex flex-wrap items-end justify-between gap-6">
           <div>
-            <Eyebrow tone="dark">Label output</Eyebrow>
-            <h2 className="t-h2 mt-6 max-w-[18ch] text-text">Everything the house has pressed</h2>
+            <Eyebrow tone="dark">{copy.eyebrow}</Eyebrow>
+            <h2 className="t-h2 mt-6 max-w-[18ch] text-text">{copy.heading}</h2>
           </div>
           <GhostLink label="Full catalogue" to="/label" className="text-mute" />
         </div>

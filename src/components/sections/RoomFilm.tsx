@@ -4,6 +4,7 @@ import { GridRules } from "@/components/lb/GridRules";
 import { MarginNotes, Eyebrow } from "@/components/lb/Section";
 import { images } from "@/generated/images";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
+import { useSection } from "@/cms/hooks";
 
 /**
  * A night in Room A — the film, opening to full screen as you scroll.
@@ -45,6 +46,7 @@ const CLOSED = "inset(21% 19% 21% 19%)";
 const OPEN = "inset(0% 0% 0% 0%)";
 
 export function RoomFilm() {
+  const copy = useSection("home", "film");
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -140,15 +142,13 @@ export function RoomFilm() {
       <div className="shell relative z-[2] pb-14 pt-[96px]">
         <div className="section-head">
           <div className="md:col-span-1">
-            <Eyebrow surface="bg-surface-deep">The film</Eyebrow>
+            <Eyebrow surface="bg-surface-deep">{copy.eyebrow}</Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">A night in Room&nbsp;A</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[15px] leading-[1.5] text-mute">
-              Two minutes, no commentary. Shot on a Tuesday, nobody rehearsing for the camera.
-            </p>
+            <p className="font-ui text-[15px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
       </div>

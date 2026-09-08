@@ -1,9 +1,10 @@
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { PushIn, WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useProcess } from "@/cms/hooks";
+import { useProcess, useSection } from "@/cms/hooks";
 
 export function Process() {
+  const copy = useSection("home", "process");
   const processSteps = useProcess();
   return (
     /* bg-surface: --mute at 16px measures 4.39:1 on --surface-deep in light
@@ -12,10 +13,10 @@ export function Process() {
     <Section tone="dark" surface="bg-surface" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>How it runs</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-3">
-          <WordReveal as="h2" className="t-h2 text-text" text={"Four steps, start to drop."} />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
       </div>
 

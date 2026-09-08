@@ -6,7 +6,7 @@ import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
 import { type Room } from "@/data/rooms";
-import { useRooms, type RoomDoc } from "@/cms/hooks";
+import { useRooms, useSection, type RoomDoc } from "@/cms/hooks";
 import { rooms as roomGeometry } from "@/data/rooms";
 
 /**
@@ -216,6 +216,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
  */
 export function RoomsFloor() {
   const rooms = useRooms();
+  const copy = useSection("rooms", "floor");
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -259,9 +260,9 @@ export function RoomsFloor() {
 
       <div className="shell relative z-[2]">
         <Eyebrow tone="dark" surface="bg-surface-deep">
-          The floor
+          {copy.eyebrow}
         </Eyebrow>
-        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">Room by room</h2>
+        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[300px_1fr] lg:gap-12">
           <div>

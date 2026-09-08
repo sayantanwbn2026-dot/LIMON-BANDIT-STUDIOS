@@ -18,6 +18,15 @@ import { drops } from "@/data/drops";
 import { products } from "@/data/shop";
 import { offers } from "@/data/offers";
 import { INTENTS } from "@/lib/enquiry";
+import {
+  homeSections,
+  roomsSections,
+  labelSections,
+  shopSections,
+  crewSections,
+  journalSections,
+  contactSections,
+} from "@/data/sections";
 
 /**
  * The committed content, in CMS shape.
@@ -252,6 +261,7 @@ export const seeds: Record<string, unknown> = {
   "global.faq": faq.map((f) => ({ question: f.question, answer: f.answer, topic: f.topic })),
 
   // ---- home ----
+  "page.home.sections": homeSections,
   "page.home.services": services.map((s) => ({
     index: s.index,
     title: s.title,
@@ -288,6 +298,7 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- rooms ----
+  "page.rooms.sections": roomsSections,
   "page.rooms.steps": ROOMS_STEPS_SEED,
   "page.rooms.rooms": rooms.map((r) => ({
     id: r.id,
@@ -313,11 +324,13 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- label ----
+  "page.label.sections": labelSections,
   "page.label.releases": releases.map((r) => ({ ...r })),
   "page.label.tracks": tracks.map((t) => ({ ...t })),
   "page.label.splits": SPLITS_SEED,
 
   // ---- shop / commerce ----
+  "page.shop.sections": shopSections,
   "page.shop.drops": drops.map((d) => ({ ...d })),
   "page.shop.run": SHOP_RUN_SEED,
   "page.shop.stages": SHOP_STAGES_SEED,
@@ -346,6 +359,7 @@ export const seeds: Record<string, unknown> = {
   "commerce.shipping": SHIPPING_SEED,
 
   // ---- crew ----
+  "page.crew.sections": crewSections,
   "page.crew.steps": CREW_STEPS_SEED,
   "page.crew.terms": CREW_TERMS_SEED,
   "page.crew.crew": crew.map((c) => ({
@@ -359,6 +373,7 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- journal ----
+  "page.journal.sections": journalSections,
   "page.journal.beats": JOURNAL_BEATS_SEED,
   "page.journal.posts": posts.map((p) => ({
     slug: p.slug,
@@ -373,6 +388,7 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- contact ----
+  "page.contact.sections": contactSections,
   "page.contact.form": INTENTS.map((i) => ({ id: i.id, label: i.label })),
   "page.contact.hours": CONTACT_HOURS_SEED,
   "page.contact.travel": CONTACT_TRAVEL_SEED,

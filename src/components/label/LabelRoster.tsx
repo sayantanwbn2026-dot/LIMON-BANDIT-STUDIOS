@@ -5,7 +5,7 @@ import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { trackForArtist } from "@/data/tracks";
 import { usePlayer } from "@/lib/player";
-import { useReleases } from "@/cms/hooks";
+import { useReleases, useSection } from "@/cms/hooks";
 
 /**
  * The roster as a drafting index rather than a wall of covers. Hovering or
@@ -14,6 +14,7 @@ import { useReleases } from "@/cms/hooks";
  * because a second pattern for the same job would be noise.
  */
 export function LabelRoster() {
+  const copy = useSection("label", "roster");
   const releases = useReleases();
   const [hover, setHover] = useState(0);
   const { play, track, playing } = usePlayer();
@@ -26,9 +27,9 @@ export function LabelRoster() {
 
       <div className="shell relative z-[2]">
         <Eyebrow tone="dark" surface="bg-surface-deep">
-          Who we put out
+          {copy.eyebrow}
         </Eyebrow>
-        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">The roster</h2>
+        <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_360px] lg:gap-12">
           <ol className="border-t border-line">

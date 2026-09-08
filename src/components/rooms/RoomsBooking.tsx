@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useRoomSteps, useSite } from "@/cms/hooks";
+import { useFaqByTopic, useRoomSteps, useSection, useSite } from "@/cms/hooks";
 
 /**
  * How a booking actually happens, and the three questions people ask before
@@ -12,6 +12,7 @@ import { useFaqByTopic, useRoomSteps, useSite } from "@/cms/hooks";
 export function RoomsBooking() {
   const faqItems = useFaqByTopic("booking");
   const STEPS = useRoomSteps();
+  const copy = useSection("rooms", "booking");
   const site = useSite();
   return (
     <section className="relative w-full bg-surface py-[96px]">
@@ -22,16 +23,14 @@ export function RoomsBooking() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface">
-              Booking
+              {copy.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Hold a room</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              No deposit to hold. No card on file. A person reads every message.
-            </p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 

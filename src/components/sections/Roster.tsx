@@ -4,9 +4,10 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useReleases } from "@/cms/hooks";
+import { useReleases, useSection } from "@/cms/hooks";
 
 export function Roster() {
+  const copy = useSection("home", "roster");
   const releases = useReleases();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,10 +44,10 @@ export function Roster() {
     <Section tone="dark" className="py-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>The roster</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-2">
-          <WordReveal as="h2" className="t-h2 text-text" text={"Real rooms.\nReal records."} />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
           <a

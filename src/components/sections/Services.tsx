@@ -6,7 +6,7 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import { useServices } from "@/cms/hooks";
+import { useSection, useServices } from "@/cms/hooks";
 
 /**
  * What we run — the four operations, as a projection room.
@@ -35,6 +35,7 @@ import { useServices } from "@/cms/hooks";
  * only to report which step we are on.
  */
 export function Services() {
+  const copy = useSection("home", "services");
   const services = useServices();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -77,19 +78,13 @@ export function Services() {
     <Section surface="bg-surface" className="pt-[96px]">
       <div className="section-head">
         <div className="md:col-span-1">
-          <Eyebrow>What we run</Eyebrow>
+          <Eyebrow>{copy.eyebrow}</Eyebrow>
         </div>
         <div className="md:col-span-2">
-          <WordReveal
-            as="h2"
-            className="t-h2 text-text"
-            text={"Turning a room, a roster,\nand a print run\ninto one house"}
-          />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
-          <p className="font-ui text-[16px] leading-[1.5] text-mute">
-            Four operations, one building. Each one exists because the last one needed it.
-          </p>
+          <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
         </div>
       </div>
 
