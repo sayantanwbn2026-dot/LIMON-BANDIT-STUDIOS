@@ -2,20 +2,18 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useSite } from "@/cms/hooks";
-
-const SHIPPING = [
-  { k: "Kolkata", v: "Free", d: "Collect from the building, or we drop it if we are passing." },
-  { k: "India", v: "₹120", d: "Tracked, three to six days. One flat rate whatever the order." },
-  {
-    k: "Outside India",
-    v: "By ask",
-    d: "Message us first. Vinyl abroad usually costs more than the record.",
-  },
-];
+import { useFaqByTopic, useShipping, useSite } from "@/cms/hooks";
+import { SHIPPING_SEED } from "@/cms/seeds";
 
 export function ShopOrder() {
   const faqItems = useFaqByTopic("shop");
+  /* These three rows were a duplicate hardcoded copy of commerce.shipping's
+   * `notes`, which meant an editor could change the shipping table in the
+   * CMS — the one checkout actually charges from — and this section would
+   * go on quoting the old rates. Same document now, so the promise on this
+   * page and the arithmetic at checkout cannot drift apart. */
+  const shipping = useShipping();
+  const SHIPPING = shipping?.notes?.length ? shipping.notes : SHIPPING_SEED.notes;
   const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[96px]">

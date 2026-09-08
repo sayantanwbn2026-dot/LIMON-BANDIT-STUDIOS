@@ -4,10 +4,11 @@ import { RoomsRail } from "@/components/rooms/RoomsRail";
 import { RoomsFloor } from "@/components/rooms/RoomsFloor";
 import { RoomsBooking } from "@/components/rooms/RoomsBooking";
 import { RoomsHero } from "@/components/heroes/RoomsHero";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/rooms")({
-  head: () => chapterHead("rooms"),
+  loader: () => chapterSeo("rooms"),
+  head: ({ loaderData }) => chapterHeadFrom("rooms", loaderData),
   component: Rooms,
 });
 

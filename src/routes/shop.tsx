@@ -4,10 +4,11 @@ import { ShopHero } from "@/components/heroes/ShopHero";
 import { ShopCatalog } from "@/components/shop/ShopCatalog";
 import { ShopPrint } from "@/components/shop/ShopPrint";
 import { ShopOrder } from "@/components/shop/ShopOrder";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/shop")({
-  head: () => chapterHead("shop"),
+  loader: () => chapterSeo("shop"),
+  head: ({ loaderData }) => chapterHeadFrom("shop", loaderData),
   component: Shop,
 });
 

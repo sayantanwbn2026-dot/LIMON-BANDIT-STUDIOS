@@ -2,13 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useSite } from "@/cms/hooks";
-
-const STEPS = [
-  { k: "01", t: "Send the dates", d: "What you are recording and roughly how long you need." },
-  { k: "02", t: "We confirm", d: "Usually within a few hours, and we hold the slot for 48 hours." },
-  { k: "03", t: "You play", d: "Engineer is already in the room. Masters go home with you." },
-];
+import { useFaqByTopic, useRoomSteps, useSite } from "@/cms/hooks";
 
 /**
  * How a booking actually happens, and the three questions people ask before
@@ -17,6 +11,7 @@ const STEPS = [
  */
 export function RoomsBooking() {
   const faqItems = useFaqByTopic("booking");
+  const STEPS = useRoomSteps();
   const site = useSite();
   return (
     <section className="relative w-full bg-surface py-[96px]">

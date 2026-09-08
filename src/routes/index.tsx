@@ -21,10 +21,11 @@ import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => chapterHead("home"),
+  loader: () => chapterSeo("home"),
+  head: ({ loaderData }) => chapterHeadFrom("home", loaderData),
   component: Index,
 });
 

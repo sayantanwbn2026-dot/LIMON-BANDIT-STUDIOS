@@ -3,7 +3,7 @@ import { PageShell } from "@/components/lb/PageShell";
 import { JournalHero } from "@/components/heroes/JournalHero";
 import { JournalIndex } from "@/components/journal/JournalIndex";
 import { JournalTopics } from "@/components/journal/JournalTopics";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 /* `journal.index.tsx`, not `journal.tsx`. With a sibling `journal.$slug`,
  * a bare `journal.tsx` becomes the LAYOUT for /journal/* — it rendered this
@@ -11,7 +11,8 @@ import { chapterHead } from "@/lib/seo";
  * no <Outlet/> here to put it in. As an index route the two are siblings and
  * each owns its own URL. */
 export const Route = createFileRoute("/journal/")({
-  head: () => chapterHead("journal"),
+  loader: () => chapterSeo("journal"),
+  head: ({ loaderData }) => chapterHeadFrom("journal", loaderData),
   component: Journal,
 });
 

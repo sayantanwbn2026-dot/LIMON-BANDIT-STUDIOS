@@ -3,10 +3,11 @@ import { PageShell } from "@/components/lb/PageShell";
 import { CrewHero } from "@/components/heroes/CrewHero";
 import { CrewDirectory } from "@/components/crew/CrewDirectory";
 import { CrewHiring } from "@/components/crew/CrewHiring";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/crew")({
-  head: () => chapterHead("crew"),
+  loader: () => chapterSeo("crew"),
+  head: ({ loaderData }) => chapterHeadFrom("crew", loaderData),
   component: Crew,
 });
 

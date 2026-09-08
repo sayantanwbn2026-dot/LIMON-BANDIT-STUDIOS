@@ -3,10 +3,11 @@ import { PageShell } from "@/components/lb/PageShell";
 import { ContactHero } from "@/components/heroes/ContactHero";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactVisit } from "@/components/contact/ContactVisit";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => chapterHead("contact"),
+  loader: () => chapterSeo("contact"),
+  head: ({ loaderData }) => chapterHeadFrom("contact", loaderData),
   component: Contact,
 });
 

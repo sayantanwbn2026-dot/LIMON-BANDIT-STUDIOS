@@ -1,52 +1,14 @@
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
+import { useShopRun, useShopStages } from "@/cms/hooks";
 
 /**
  * Why the runs are small, in the same three-column form the Label uses to
  * state its split. The argument is the economics, so the numbers carry it.
  */
-const RUN = [
-  {
-    k: "Run size",
-    v: "150",
-    d: "Priced to break even at the number printed. Nothing is made on the assumption it sells out.",
-  },
-  {
-    k: "Printed",
-    v: "Kolkata",
-    d: "Cut, screened and cured within a few streets of the building. We collect it ourselves.",
-  },
-  {
-    k: "Restocks",
-    v: "None",
-    d: "A sold-out size stays sold out. The money goes into the next record instead of more stock.",
-  },
-];
-
-const STAGES = [
-  {
-    k: "01",
-    t: "Artwork locks",
-    d: "One colour, one screen. The sleeve artist sets the separation.",
-  },
-  {
-    k: "02",
-    t: "Screen and cure",
-    d: "Pulled by hand in batches of twenty-five, cured the same day.",
-  },
-  {
-    k: "03",
-    t: "Counted in",
-    d: "Numbered as they come off, so the run size on the page is the real one.",
-  },
-  {
-    k: "04",
-    t: "Sold direct",
-    d: "No wholesale, no marketplace. It ships from the room it was made in.",
-  },
-];
-
 export function ShopPrint() {
+  const RUN = useShopRun();
+  const STAGES = useShopStages();
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />

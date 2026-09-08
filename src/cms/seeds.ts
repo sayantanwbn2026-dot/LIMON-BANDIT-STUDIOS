@@ -75,6 +75,128 @@ export const SOCIAL_SEED = [
   { platform: "Instagram", handle: site.instagram, url: "https://instagram.com/limonbandit" },
 ];
 
+/* ------------------------------------------------------------------ *
+ * Copy that used to live in a component
+ *
+ * Each of these was a module-level `const` inside the section that
+ * rendered it — real editorial copy (opening hours, the hiring terms, the
+ * print-run argument) that an editor had no way to reach. Same treatment
+ * as SPLITS_SEED above: lifted here, registered as a collection, read
+ * through a hook. The wording is unchanged, so the site renders exactly
+ * as it did.
+ * ------------------------------------------------------------------ */
+
+export const ROOMS_STEPS_SEED = [
+  { k: "01", t: "Send the dates", d: "What you are recording and roughly how long you need." },
+  { k: "02", t: "We confirm", d: "Usually within a few hours, and we hold the slot for 48 hours." },
+  { k: "03", t: "You play", d: "Engineer is already in the room. Masters go home with you." },
+];
+
+export const CREW_STEPS_SEED = [
+  { k: "01", t: "Say what it is", d: "The project, the date, and the budget you actually have." },
+  {
+    k: "02",
+    t: "We introduce",
+    d: "Usually two names, so you are choosing rather than accepting.",
+  },
+  {
+    k: "03",
+    t: "You deal direct",
+    d: "Contract and payment are between you and them. We step out.",
+  },
+];
+
+export const CREW_TERMS_SEED = [
+  {
+    k: "House cut",
+    v: "0%",
+    d: "We do not take a commission. The list exists so the roster keeps working.",
+  },
+  {
+    k: "Vetting",
+    v: "One job",
+    d: "Everyone here has finished a project through this building and would be booked again.",
+  },
+  {
+    k: "Turnaround",
+    v: "48 hrs",
+    d: "That is how long it takes us to come back with names and their availability.",
+  },
+];
+
+export const JOURNAL_BEATS_SEED = [
+  {
+    category: "Gear",
+    blurb: "What is actually on the desk, why it is there, and what we stopped using.",
+  },
+  {
+    category: "Label",
+    blurb: "Splits, statements, and the arithmetic behind releasing a record ourselves.",
+  },
+  {
+    category: "City",
+    blurb: "Recording in Kolkata — the noise floor, the power cuts, the 3am rates.",
+  },
+  {
+    category: "Merch",
+    blurb: "Print runs, screens, and why a hundred and fifty is the honest number.",
+  },
+];
+
+export const SHOP_RUN_SEED = [
+  {
+    k: "Run size",
+    v: "150",
+    d: "Priced to break even at the number printed. Nothing is made on the assumption it sells out.",
+  },
+  {
+    k: "Printed",
+    v: "Kolkata",
+    d: "Cut, screened and cured within a few streets of the building. We collect it ourselves.",
+  },
+  {
+    k: "Restocks",
+    v: "None",
+    d: "A sold-out size stays sold out. The money goes into the next record instead of more stock.",
+  },
+];
+
+export const SHOP_STAGES_SEED = [
+  {
+    k: "01",
+    t: "Artwork locks",
+    d: "One colour, one screen. The sleeve artist sets the separation.",
+  },
+  {
+    k: "02",
+    t: "Screen and cure",
+    d: "Pulled by hand in batches of twenty-five, cured the same day.",
+  },
+  {
+    k: "03",
+    t: "Counted in",
+    d: "Numbered as they come off, so the run size on the page is the real one.",
+  },
+  {
+    k: "04",
+    t: "Sold direct",
+    d: "No wholesale, no marketplace. It ships from the room it was made in.",
+  },
+];
+
+export const CONTACT_HOURS_SEED = [
+  { k: "Mon — Thu", v: "10:00 — 22:00" },
+  { k: "Fri — Sat", v: "10:00 — 06:00" },
+  { k: "Sunday", v: "By arrangement" },
+  { k: "Lockout", v: "22:00 — 06:00, any night" },
+];
+
+export const CONTACT_TRAVEL_SEED = [
+  { k: "Metro", d: "Shyambazar, eight minutes on foot down Sisir Bhaduri Sarani." },
+  { k: "Tram", d: "Route 5 stops at Hatibagan crossing, two minutes away." },
+  { k: "Parking", d: "One car in the lane behind. Tell us and we will keep it clear." },
+];
+
 /**
  * Journal bodies are typed blocks in the source and a flat list of
  * `{type, text}` rows in the CMS, because a non-technical editor should not
@@ -166,6 +288,7 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- rooms ----
+  "page.rooms.steps": ROOMS_STEPS_SEED,
   "page.rooms.rooms": rooms.map((r) => ({
     id: r.id,
     index: r.index,
@@ -196,6 +319,8 @@ export const seeds: Record<string, unknown> = {
 
   // ---- shop / commerce ----
   "page.shop.drops": drops.map((d) => ({ ...d })),
+  "page.shop.run": SHOP_RUN_SEED,
+  "page.shop.stages": SHOP_STAGES_SEED,
   "commerce.products": products.map((p) => ({
     id: p.id,
     index: p.index,
@@ -221,6 +346,8 @@ export const seeds: Record<string, unknown> = {
   "commerce.shipping": SHIPPING_SEED,
 
   // ---- crew ----
+  "page.crew.steps": CREW_STEPS_SEED,
+  "page.crew.terms": CREW_TERMS_SEED,
   "page.crew.crew": crew.map((c) => ({
     id: c.id,
     name: c.name,
@@ -232,6 +359,7 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- journal ----
+  "page.journal.beats": JOURNAL_BEATS_SEED,
   "page.journal.posts": posts.map((p) => ({
     slug: p.slug,
     category: p.category,
@@ -246,4 +374,6 @@ export const seeds: Record<string, unknown> = {
 
   // ---- contact ----
   "page.contact.form": INTENTS.map((i) => ({ id: i.id, label: i.label })),
+  "page.contact.hours": CONTACT_HOURS_SEED,
+  "page.contact.travel": CONTACT_TRAVEL_SEED,
 };

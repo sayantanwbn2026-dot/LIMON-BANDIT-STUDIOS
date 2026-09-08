@@ -182,6 +182,18 @@ export type RoomDoc = {
 };
 export const useRooms = () => useList<RoomDoc>("page.rooms.rooms");
 
+/**
+ * A numbered step — booking a room, hiring the crew, printing a run.
+ * Three sections use the same shape, so they share the type rather than
+ * declaring three identical ones.
+ */
+export type StepDoc = { k: string; t: string; d: string };
+
+/** Label / big value / explanation. The splits block's shape, reused. */
+export type TermDoc = { k: string; v: string; d: string };
+
+export const useRoomSteps = () => useList<StepDoc>("page.rooms.steps");
+
 export type RateDoc = {
   plan: string;
   hourly: { price: string; unit: string };
@@ -219,7 +231,7 @@ export type TrackDoc = {
 };
 export const useTracks = () => useList<TrackDoc>("page.label.tracks");
 
-export type SplitDoc = { k: string; v: string; d: string };
+export type SplitDoc = TermDoc;
 export const useSplits = () => useList<SplitDoc>("page.label.splits");
 
 /* ---------------- shop ---------------- */
@@ -237,6 +249,9 @@ export type DropDoc = {
   run: string;
 };
 export const useDrops = () => useList<DropDoc>("page.shop.drops");
+
+export const useShopRun = () => useList<TermDoc>("page.shop.run");
+export const useShopStages = () => useList<StepDoc>("page.shop.stages");
 
 export type ProductDoc = {
   id: string;
@@ -279,6 +294,9 @@ export type CrewDoc = {
 };
 export const useCrew = () => useList<CrewDoc>("page.crew.crew");
 
+export const useCrewSteps = () => useList<StepDoc>("page.crew.steps");
+export const useCrewTerms = () => useList<TermDoc>("page.crew.terms");
+
 /* ---------------- journal ---------------- */
 
 export type BodyBlock = { kind: string; text: string; who?: string };
@@ -300,7 +318,16 @@ export function usePost(slug: string): PostDoc | undefined {
   return useMemo(() => posts.find((p) => p.slug === slug), [posts, slug]);
 }
 
+export type BeatDoc = { category: string; blurb: string };
+export const useBeats = () => useList<BeatDoc>("page.journal.beats");
+
 /* ---------------- contact ---------------- */
 
 export type IntentDoc = { id: string; label: string };
 export const useIntents = () => useList<IntentDoc>("page.contact.form");
+
+export type HoursDoc = { k: string; v: string };
+export const useHours = () => useList<HoursDoc>("page.contact.hours");
+
+export type TravelDoc = { k: string; d: string };
+export const useTravel = () => useList<TravelDoc>("page.contact.travel");

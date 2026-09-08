@@ -463,6 +463,146 @@ const splits: Collection = {
 };
 
 /* ------------------------------------------------------------------ *
+ * Copy that used to be locked inside a component
+ *
+ * Eight blocks of editorial copy — the booking steps, the hiring terms,
+ * the journal beats, the print-run argument, the opening hours, the
+ * directions — were module-level consts in the sections that rendered
+ * them. They read as chrome but they are the argument each of those
+ * pages makes, and an editor could not touch a word of any of it.
+ * ------------------------------------------------------------------ */
+
+const roomsSteps: Collection = {
+  key: "page.rooms.steps",
+  title: "How booking works",
+  description: "The three numbered steps in the Booking block on the Rooms page.",
+  group: "page",
+  page: "rooms",
+  shape: "list",
+  titleField: "t",
+  itemNoun: "step",
+  fields: [
+    text("k", "Number", { required: true, help: 'Two digits, e.g. "01".' }),
+    text("t", "Title", { required: true }),
+    area("d", "Description", { rows: 2 }),
+  ],
+};
+
+const crewSteps: Collection = {
+  key: "page.crew.steps",
+  title: "How hiring works",
+  description: "The three numbered steps in the Hiring block on the Crew page.",
+  group: "page",
+  page: "crew",
+  shape: "list",
+  titleField: "t",
+  itemNoun: "step",
+  fields: [
+    text("k", "Number", { required: true, help: 'Two digits, e.g. "01".' }),
+    text("t", "Title", { required: true }),
+    area("d", "Description", { rows: 2 }),
+  ],
+};
+
+const crewTerms: Collection = {
+  key: "page.crew.terms",
+  title: "Hiring terms",
+  description: "House cut, vetting and turnaround — the three-up block on the Crew page.",
+  group: "page",
+  page: "crew",
+  shape: "list",
+  titleField: "k",
+  itemNoun: "term",
+  fields: [
+    text("k", "Label", { required: true, help: 'e.g. "House cut".' }),
+    text("v", "Value", { required: true, help: 'The big number, e.g. "0%".' }),
+    area("d", "Description", { rows: 3 }),
+  ],
+};
+
+const journalBeats: Collection = {
+  key: "page.journal.beats",
+  title: "The beats",
+  description:
+    "The subjects the journal covers. The count beside each one is worked out from the entries themselves, so it cannot claim a column you have not written.",
+  group: "page",
+  page: "journal",
+  shape: "list",
+  titleField: "category",
+  itemNoun: "beat",
+  fields: [
+    text("category", "Category", {
+      required: true,
+      help: "Must match the category on the entries exactly, or the count reads zero.",
+    }),
+    area("blurb", "Blurb", { rows: 2 }),
+  ],
+};
+
+const shopRun: Collection = {
+  key: "page.shop.run",
+  title: "The run",
+  description: "Run size, where it is printed, and the restock policy — the three-up on the Shop.",
+  group: "page",
+  page: "shop",
+  shape: "list",
+  titleField: "k",
+  itemNoun: "fact",
+  fields: [
+    text("k", "Label", { required: true, help: 'e.g. "Run size".' }),
+    text("v", "Value", { required: true, help: 'The big number, e.g. "150".' }),
+    area("d", "Description", { rows: 3 }),
+  ],
+};
+
+const shopStages: Collection = {
+  key: "page.shop.stages",
+  title: "How it gets made",
+  description: "The numbered print stages under The run on the Shop page.",
+  group: "page",
+  page: "shop",
+  shape: "list",
+  titleField: "t",
+  itemNoun: "stage",
+  fields: [
+    text("k", "Number", { required: true, help: 'Two digits, e.g. "01".' }),
+    text("t", "Title", { required: true }),
+    area("d", "Description", { rows: 2 }),
+  ],
+};
+
+const contactHours: Collection = {
+  key: "page.contact.hours",
+  title: "Opening hours",
+  description:
+    "When the building is awake. Free text on both sides, so you can write 'By arrangement' where a time would be wrong.",
+  group: "page",
+  page: "contact",
+  shape: "list",
+  titleField: "k",
+  itemNoun: "row",
+  fields: [
+    text("k", "Days", { required: true, help: 'e.g. "Mon — Thu".' }),
+    text("v", "Hours", { required: true, help: 'e.g. "10:00 — 22:00".' }),
+  ],
+};
+
+const contactTravel: Collection = {
+  key: "page.contact.travel",
+  title: "Getting there",
+  description: "Metro, tram and parking directions on the Contact page.",
+  group: "page",
+  page: "contact",
+  shape: "list",
+  titleField: "k",
+  itemNoun: "route",
+  fields: [
+    text("k", "Mode", { required: true, help: 'e.g. "Metro".' }),
+    area("d", "Directions", { rows: 2 }),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
  * SHOP
  * ------------------------------------------------------------------ */
 
@@ -704,18 +844,26 @@ export const collections: Collection[] = [
   // rooms
   rooms,
   rates,
+  roomsSteps,
   // label
   releases,
   tracks,
   splits,
   // shop
   drops,
+  shopRun,
+  shopStages,
   // crew
   crew,
+  crewTerms,
+  crewSteps,
   // journal
   posts,
+  journalBeats,
   // contact
   contact,
+  contactHours,
+  contactTravel,
   // commerce
   products,
   offers,

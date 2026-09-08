@@ -4,10 +4,11 @@ import { LabelPlayer } from "@/components/label/LabelPlayer";
 import { LabelRoster } from "@/components/label/LabelRoster";
 import { LabelSplits } from "@/components/label/LabelSplits";
 import { LabelHero } from "@/components/heroes/LabelHero";
-import { chapterHead } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
 
 export const Route = createFileRoute("/label")({
-  head: () => chapterHead("label"),
+  loader: () => chapterSeo("label"),
+  head: ({ loaderData }) => chapterHeadFrom("label", loaderData),
   component: Label,
 });
 

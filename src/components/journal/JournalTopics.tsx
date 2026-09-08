@@ -1,32 +1,14 @@
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { usePosts } from "@/cms/hooks";
+import { useBeats, usePosts } from "@/cms/hooks";
 
 /**
  * The beats, still inverted. Counts come from the entries themselves so the
  * page cannot claim a column it has not written.
  */
-const BEATS: { category: string; blurb: string }[] = [
-  {
-    category: "Gear",
-    blurb: "What is actually on the desk, why it is there, and what we stopped using.",
-  },
-  {
-    category: "Label",
-    blurb: "Splits, statements, and the arithmetic behind releasing a record ourselves.",
-  },
-  {
-    category: "City",
-    blurb: "Recording in Kolkata — the noise floor, the power cuts, the 3am rates.",
-  },
-  {
-    category: "Merch",
-    blurb: "Print runs, screens, and why a hundred and fifty is the honest number.",
-  },
-];
-
 export function JournalTopics() {
   const posts = usePosts();
+  const BEATS = useBeats();
   const countFor = (c: string) =>
     String(posts.filter((p) => p.category === c).length).padStart(2, "0");
 

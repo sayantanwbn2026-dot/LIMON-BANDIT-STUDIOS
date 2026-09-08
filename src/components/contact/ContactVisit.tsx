@@ -2,27 +2,16 @@ import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { useFaqByTopic, useSite } from "@/cms/hooks";
+import { useFaqByTopic, useHours, useSite, useTravel } from "@/cms/hooks";
 
 /**
  * Finding the building, and when it is awake. The hours are the argument —
  * a room that closes at ten is a different product to one that does not.
  */
-const HOURS = [
-  { k: "Mon — Thu", v: "10:00 — 22:00" },
-  { k: "Fri — Sat", v: "10:00 — 06:00" },
-  { k: "Sunday", v: "By arrangement" },
-  { k: "Lockout", v: "22:00 — 06:00, any night" },
-];
-
-const GETTING_THERE = [
-  { k: "Metro", d: "Shyambazar, eight minutes on foot down Sisir Bhaduri Sarani." },
-  { k: "Tram", d: "Route 5 stops at Hatibagan crossing, two minutes away." },
-  { k: "Parking", d: "One car in the lane behind. Tell us and we will keep it clear." },
-];
-
 export function ContactVisit() {
   const faqItems = useFaqByTopic("booking");
+  const HOURS = useHours();
+  const GETTING_THERE = useTravel();
   const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[96px]">

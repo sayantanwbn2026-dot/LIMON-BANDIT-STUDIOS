@@ -2,42 +2,12 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic } from "@/cms/hooks";
-
-const STEPS = [
-  { k: "01", t: "Say what it is", d: "The project, the date, and the budget you actually have." },
-  {
-    k: "02",
-    t: "We introduce",
-    d: "Usually two names, so you are choosing rather than accepting.",
-  },
-  {
-    k: "03",
-    t: "You deal direct",
-    d: "Contract and payment are between you and them. We step out.",
-  },
-];
-
-const TERMS = [
-  {
-    k: "House cut",
-    v: "0%",
-    d: "We do not take a commission. The list exists so the roster keeps working.",
-  },
-  {
-    k: "Vetting",
-    v: "One job",
-    d: "Everyone here has finished a project through this building and would be booked again.",
-  },
-  {
-    k: "Turnaround",
-    v: "48 hrs",
-    d: "That is how long it takes us to come back with names and their availability.",
-  },
-];
+import { useCrewSteps, useCrewTerms, useFaqByTopic } from "@/cms/hooks";
 
 export function CrewHiring() {
   const faqItems = useFaqByTopic("crew");
+  const STEPS = useCrewSteps();
+  const TERMS = useCrewTerms();
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
