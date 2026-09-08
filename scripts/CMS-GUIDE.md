@@ -37,6 +37,24 @@ on the list. An owner can add it under **Ownership**.
 If you cannot find something, it is almost always either on the page it
 appears on, or in **Global content** if it appears on all of them.
 
+### Rewording a heading
+
+Every page has a **Section headings** panel. Each row is one block on that
+page, and it holds the three bits of text at the top of it: the small label
+(the "eyebrow"), the heading itself, and the supporting line beside it.
+
+Two things to know before you rewrite one:
+
+- **Leave the Section id alone.** It is how the page finds its own heading.
+  Change the heading, not the id.
+- **Line breaks are deliberate.** Where a heading is split across lines,
+  those breaks were set for the width of the column. Press Enter to make a
+  new one. Keep headings short — the box will stop you at 90 characters,
+  and most of them look right well under that.
+
+If you delete a row by accident, that section goes back to the wording the
+site shipped with rather than losing its heading.
+
 ---
 
 ## Images
@@ -92,6 +110,12 @@ read.
 the database is unreachable, the site falls back to the content it shipped
 with. You will see the old text, not a broken page.
 
+**Search-engine titles are live.** What you write under Global content →
+Page titles & SEO is what Google and WhatsApp actually show. It is read when
+the page is built on the server, so a change can take up to a minute to
+appear — if you have just saved and the old title is still showing, wait and
+reload rather than saving again.
+
 **Every save is recorded** with who made it and what it replaced, under
 Ownership → Change history.
 
@@ -115,6 +139,13 @@ num("price", "Price", { prefix: "₹", min: 0 });
 
 Then add a matching entry to `src/cms/seeds.ts` so the site has a fallback and
 the admin opens with real content in it.
+
+Those two files have to agree, and neither a typecheck nor a test will tell
+you when they do not, because both are keyed by string. So `collections.ts`
+checks it on import in development and logs the offending key: a collection
+with no seed opens as an empty form (and saving it writes that emptiness over
+a section that was rendering fine), and a seed with no collection is content
+the site reads and nobody can edit. Watch the console after adding either.
 
 ### Adding a whole section
 

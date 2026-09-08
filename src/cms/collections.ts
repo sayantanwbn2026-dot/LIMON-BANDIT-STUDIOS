@@ -1,4 +1,5 @@
 import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
+import { seeds } from "./seeds";
 
 /**
  * Everything on this site that a person is allowed to change.
@@ -972,3 +973,38 @@ export const globalCollections = collections.filter((c) => c.group === "global")
 export const commerceCollections = collections.filter((c) => c.group === "commerce");
 export const pageCollections = (page: string) =>
   collections.filter((c) => c.group === "page" && c.page === page);
+
+/* ------------------------------------------------------------------ *
+ * The invariant this file and seeds.ts have to keep between them
+ *
+ * Every collection needs a seed and every seed needs a collection, and
+ * the two failures are quiet in opposite directions:
+ *
+ *   - a collection with no seed opens as an empty form, and an editor
+ *     who saves it writes emptiness over a section that was rendering
+ *     fine from committed copy;
+ *   - a seed with no collection is content the site reads and the admin
+ *     cannot reach, which is the exact bug this whole pass was fixing.
+ *
+ * Neither shows up in a typecheck, because both files are keyed by
+ * string. Checking it by hand works right up until the day nobody does,
+ * so it runs on import in development and says which key is wrong.
+ * Development only — it must never cost a production page anything, and
+ * by then the answer is already in the repository.
+ * ------------------------------------------------------------------ */
+if (import.meta.env.DEV) {
+  const missingSeed = collections.filter((c) => seeds[c.key] === undefined).map((c) => c.key);
+  const orphanSeed = Object.keys(seeds).filter((k) => !byKey.has(k));
+  if (missingSeed.length) {
+    console.error(
+      "cms: these collections have no seed in seeds.ts — they will open as empty forms:",
+      missingSeed,
+    );
+  }
+  if (orphanSeed.length) {
+    console.error(
+      "cms: these seeds have no collection in collections.ts — the site reads them and the admin cannot edit them:",
+      orphanSeed,
+    );
+  }
+}
