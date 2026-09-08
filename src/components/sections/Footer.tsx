@@ -89,7 +89,8 @@ export function Footer() {
           className="block w-full select-none whitespace-nowrap px-[var(--page-margin)] font-display font-extrabold uppercase leading-[0.8] tracking-[-0.05em]"
           style={{
             fontSize: "clamp(90px, 15vw, 260px)",
-            color: "var(--emboss)",
+            /* --emboss-deep, not --emboss: this sits on --surface-deep. */
+            color: "var(--emboss-deep)",
             marginBottom: "-0.18em",
           }}
         >

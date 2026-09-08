@@ -38,11 +38,59 @@
   /* 6 — monochrome photography */
   --img-brightness: 1;
 
-  /* 7 — giant embossed wordmark (marquee + footer) */
-  --emboss: #111111;
+  /* 7 — giant embossed wordmark (marquee + footer)
+   *
+   * THIS VALUE IS A RELATIONSHIP, NOT A COLOUR. It has to sit a little
+   * above --surface: far enough to read as a form, nowhere near far
+   * enough to read as type. If --surface moves, re-measure it.
+   *
+   * It was #111111, picked when --surface was #070707 — ten sRGB values
+   * above the ground, 1.07:1. Opening the tonal ladder moved the ground
+   * to #101010 and the gap collapsed to a single value, 1.008:1: the
+   * giant wordmark went from ghosted to genuinely absent. Nothing
+   * errored. A fixed colour simply stopped having the relationship it
+   * was chosen for, and nothing in the build could notice.
+   *
+   * #202020 on #101010 measures 1.17:1, and the bone value below
+   * measures 1.16:1 on #F1F1EF, so the two poles match. The footer sits
+   * on --surface-deep rather than --surface and so reads a little
+   * stronger at 1.25:1 — which suits it, being the last thing on the
+   * page.
+   *
+   * Deriving this with color-mix was tried and reverted. It resolved
+   * correctly in the browser, but the minifier insists on emitting its
+   * own no-color-mix fallback, picks `var(--text)` — the first colour
+   * in the mix, at full strength — and discards any literal fallback
+   * written beside it. Browsers taking that path would paint this
+   * wordmark in near-white. A measured literal beats automation whose
+   * failure mode is the loudest thing on the page. */
+  --emboss: #202020;
 
-  /* 8 — form placeholder (AA against the surface it sits on) */
-  --placeholder: #787878;
+  /* 7b — the same emboss where it lands on --surface-deep (the footer).
+   *
+   * One token could not serve both grounds, because the deeper surface
+   * pulls the two poles in opposite directions: against near-black it
+   * RAISES contrast (#202020 reads 1.25:1 on #050505), and against bone
+   * it LOWERS it (#E1E1DF reads 1.06:1 on #E7E7E3 — as good as gone,
+   * which is exactly the fault this whole change set out to fix, hiding
+   * in the pole nobody screenshotted).
+   *
+   * Dark keeps #202020: 1.25:1 is a touch stronger than the marquee's
+   * 1.17:1 and suits the last thing on the page. The bone value below
+   * is pulled down to match at 1.15:1. */
+  --emboss-deep: #202020;
+
+  /* 8 — form placeholder (AA against the surface it sits on)
+   *
+   * #787878 cleared 4.56:1 when the ground was #070707. Opening the
+   * tonal ladder moved that ground to #101010 and the same colour fell
+   * to 4.31:1 — under AA, quietly, while the comment above it went on
+   * claiming otherwise. #7E7E7E measures 4.69:1 on #101010.
+   *
+   * Measured per pole, because the two are not symmetric in luminance:
+   * a single derivation that clears AA on near-black lands at 3.44:1 on
+   * bone. The light value is unchanged and measures 4.73:1 on #F1F1EF. */
+  --placeholder: #7e7e7e;
 
   /* caption scrim over photography — follows the primary pole so the
    * primary-pole type sitting on it stays legible */
@@ -79,8 +127,13 @@
   /* 6 — lift greyscale so photography doesn't sit heavier than bone */
   --img-brightness: 1.04;
 
-  /* 7 — embossed into bone instead of into ink */
-  --emboss: #e4e4e0;
+  /* 7 — embossed into bone instead of into ink. 1.16:1 on #F1F1EF,
+   *     matching the dark pole's 1.17:1. Same warning applies: this is
+   *     a relationship to --surface, so re-measure it if that moves. */
+  --emboss: #e1e1df;
+
+  /* 7b — 1.15:1 on #E7E7E3, matching the dark pole's footer. */
+  --emboss-deep: #d8d8d5;
 
   /* 8 */
   --placeholder: #6b6b68;
