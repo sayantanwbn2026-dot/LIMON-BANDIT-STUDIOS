@@ -538,6 +538,20 @@
   animation: lb-rgb-split 560ms steps(3, end) 1;
 }
 
+/* The confirmation banner rising in after an auth email. Kept next to
+ * the other one-shot keyframes rather than inline, so reduced-motion is
+ * handled the same way everything else on this site handles it. */
+@keyframes lb-landing-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes lb-rgb-split {
   0% {
     filter: none;

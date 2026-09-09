@@ -45,6 +45,8 @@ type AuthState = {
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<AuthResult>;
+  updatePassword: (password: string) => Promise<AuthResult>;
+  resendConfirmation: (email: string) => Promise<AuthResult>;
 
   /** run `action` if signed in, otherwise open the gate and run it after */
   requireAuth: (reason: string, action: () => void) => void;
@@ -55,7 +57,7 @@ type AuthState = {
   setMode: (m: AuthMode) => void;
 };
 
-export type AuthMode = "signin" | "signup" | "reset";
+export type AuthMode = "signin" | "signup" | "reset" | "update";
 
 export type SignUpInput = {
   email: string;
@@ -64,12 +66,62 @@ export type SignUpInput = {
   phone?: string;
 };
 
-export type AuthResult = { ok: true; needsConfirmation?: boolean } | { ok: false; message: string };
+export type AuthResult =
+  | { ok: true; needsConfirmation?: boolean }
+  /* `unconfirmed` lets the caller offer a way out of the one failure
+   * that a visitor can recover from without help. */
+  | { ok: false; message: string; unconfirmed?: boolean };
 
 const Ctx = createContext<AuthState | null>(null);
 
 const NOT_CONFIGURED =
   "Accounts are not connected yet. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to .env and restart the dev server.";
+
+/**
+ * Supabase's auth errors, said in a way a customer can act on.
+ *
+ * These strings were going straight to the screen. "Invalid login
+ * credentials" is a database's way of speaking, and "Email not confirmed"
+ * tells someone what is wrong without telling them what to do about it —
+ * which matters here more than on most sites, because this project still
+ * has email confirmation switched on, so *every* new member hits that
+ * state at least once.
+ *
+ * Anything unrecognised falls through unchanged. A raw message is worse
+ * than a written one and much better than a confident wrong guess.
+ */
+export function readableAuthError(message: string): string {
+  const m = message.toLowerCase();
+
+  if (m.includes("invalid login credentials")) {
+    return "That email and password do not match an account. Check both — or reset your password below.";
+  }
+  if (m.includes("email not confirmed") || m.includes("not confirmed")) {
+    return "This account is not confirmed yet. Open the link we emailed you — check spam — or send it again below.";
+  }
+  if (m.includes("already registered") || m.includes("already been registered")) {
+    return "There is already an account on that email. Sign in instead, or reset the password.";
+  }
+  if (m.includes("password should be at least") || m.includes("password is too short")) {
+    return "That password is too short. Use at least 8 characters.";
+  }
+  /* Supabase words its own throttle as "For security purposes, you can
+   * only request this after N seconds", which reads like a refusal
+   * rather than a wait. */
+  if (m.includes("for security purposes") || m.includes("rate limit") || m.includes("too many")) {
+    return "Too many attempts just now. Wait a minute and try again.";
+  }
+  if (m.includes("failed to fetch") || m.includes("networkerror") || m.includes("network")) {
+    return "Could not reach the server. Check your connection and try again.";
+  }
+  if (m.includes("invalid email") || (m.includes("email") && m.includes("invalid"))) {
+    return "That email address does not look right.";
+  }
+  if (m.includes("same password")) {
+    return "That is already your password. Pick a different one.";
+  }
+  return message;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -81,6 +133,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /* The action that was blocked. Held in a ref so the sign-in re-render does
    * not drop it, and cleared before it runs so it can never fire twice. */
   const pending = useRef<(() => void) | null>(null);
+  /* Mirrors `mode` for the release effect, which has to read it
+   * without taking a dependency on it. */
+  const modeRef = useRef<AuthMode>("signin");
+  modeRef.current = mode;
 
   useEffect(() => {
     let alive = true;
@@ -102,10 +158,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(data.session);
       setLoading(false);
 
-      const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+      const { data: sub } = supabase.auth.onAuthStateChange((event, next) => {
         if (!alive) return;
         setSession(next);
         setLoading(false);
+        /* Arriving from a "reset your password" email. Supabase has
+         * already exchanged the token and signed them in by this point,
+         * so without opening this the visitor lands on the homepage,
+         * mysteriously logged in, with the old password still in force
+         * and nothing on screen about it. */
+        if (event === "PASSWORD_RECOVERY") {
+          pending.current = null;
+          setReason("Choose a new password.");
+          setMode("update");
+          setOpen(true);
+        }
       });
       unsubscribe = () => sub.subscription.unsubscribe();
     })();
@@ -119,15 +186,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = session?.user ?? null;
 
   /* When a session appears, close the popup and release whatever the visitor
-   * was trying to do when we interrupted them. */
+   * was trying to do when we interrupted them.
+   *
+   * Keyed on the user's id, NOT the user object. Supabase hands back a
+   * fresh object on every token refresh and on every return to the tab,
+   * and this effect closes the popup — so on the object it would slam
+   * the "choose a new password" prompt shut roughly an hour into a
+   * session, or the moment someone switched tabs to go and read the
+   * email we just told them to open. The id only changes when the
+   * person does.
+   *
+   * `mode` is read but deliberately not a dependency: the recovery
+   * prompt is opened by the auth listener at the same moment the
+   * session lands, and re-running this on a mode change would race it. */
+  const uid = user?.id ?? null;
   useEffect(() => {
-    if (!user) return;
+    if (!uid) return;
+    if (modeRef.current === "update") return;
     setOpen(false);
     setReason(null);
     const run = pending.current;
     pending.current = null;
     if (run) run();
-  }, [user]);
+  }, [uid]);
 
   const signUp = useCallback(async (input: SignUpInput): Promise<AuthResult> => {
     const supabase = await getSupabase();
@@ -138,15 +219,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password: input.password,
       options: {
         data: { full_name: input.fullName.trim(), phone: input.phone?.trim() ?? "" },
-        emailRedirectTo: `${window.location.origin}/shop`,
+        /* Home, not /shop. Confirming your email is the end of signing
+         * up, not the start of shopping — landing someone in the middle
+         * of a product grid gives them no idea whether it worked or
+         * where they are. The homepage opens on the hero, which is the
+         * one screen on this site that says what the place is. */
+        emailRedirectTo: `${window.location.origin}/?confirmed=1`,
       },
     });
-    if (error) return { ok: false, message: error.message };
+    if (error) return { ok: false, message: readableAuthError(error.message) };
 
-    /* With "Confirm email" on (the Supabase default) signUp returns a user
-     * but no session — they cannot shop until they click the link. Say so,
-     * rather than leaving them staring at a popup that did nothing. */
+    /* An email that already has an account does NOT come back as an
+     * error. Supabase deliberately returns a normal-looking user with an
+     * empty `identities` array, so that a stranger cannot use the signup
+     * form to discover who is registered. Left unhandled, that reads to
+     * the actual owner of the address as "Account made — check your
+     * inbox", and then no email ever arrives. Same obfuscation, honest
+     * wording: it is safe to say this to someone who typed the address. */
+    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      return {
+        ok: false,
+        message:
+          "There is already an account on that email. Sign in instead, or reset the password.",
+      };
+    }
+
+    /* With "Confirm email" on (still the case on this project) signUp
+     * returns a user but no session — they cannot shop until they click
+     * the link. Say so, rather than leaving them staring at a popup that
+     * did nothing. */
     if (!data.session) return { ok: true, needsConfirmation: true };
+    return { ok: true };
+  }, []);
+
+  /**
+   * Send the confirmation email again.
+   *
+   * The single most common way to get stuck on this site: sign up, miss
+   * the email, come back, try to sign in, and be told the account is not
+   * confirmed with no way to do anything about it. Without this the only
+   * escape is signing up again, which now correctly refuses because the
+   * account already exists — a closed loop.
+   */
+  const resendConfirmation = useCallback(async (email: string): Promise<AuthResult> => {
+    const supabase = await getSupabase();
+    if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/?confirmed=1` },
+    });
+    if (error) return { ok: false, message: readableAuthError(error.message) };
     return { ok: true };
   }, []);
 
@@ -158,7 +281,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: email.trim(),
       password,
     });
-    if (error) return { ok: false, message: error.message };
+    if (error) {
+      return {
+        ok: false,
+        message: readableAuthError(error.message),
+        /* Lets the popup offer "send it again" instead of leaving the
+         * one recoverable failure looking like a dead end. */
+        unconfirmed: /not confirmed/i.test(error.message),
+      };
+    }
     return { ok: true };
   }, []);
 
@@ -172,10 +303,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = await getSupabase();
     if (!supabase) return { ok: false, message: NOT_CONFIGURED };
 
+    /* Home, and flagged, for the same reason as the confirmation link —
+     * plus one that matters more: the link signs the visitor in and
+     * fires PASSWORD_RECOVERY, and something has to be listening in
+     * order to actually let them set a new password. This used to point
+     * at /shop with nothing listening anywhere, so "reset your password"
+     * delivered a working email whose link changed no password: you
+     * arrived signed in, on a product grid, with the old password still
+     * the only one that worked. */
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/shop`,
+      redirectTo: `${window.location.origin}/?recover=1`,
     });
-    if (error) return { ok: false, message: error.message };
+    if (error) return { ok: false, message: readableAuthError(error.message) };
+    return { ok: true };
+  }, []);
+
+  /** Set a new password. Only reachable while a recovery session is live. */
+  const updatePassword = useCallback(async (password: string): Promise<AuthResult> => {
+    const supabase = await getSupabase();
+    if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) return { ok: false, message: readableAuthError(error.message) };
     return { ok: true };
   }, []);
 
@@ -216,6 +364,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signIn,
       signOut,
       resetPassword,
+      updatePassword,
+      resendConfirmation,
       requireAuth,
       openAuth,
       closeAuth,
@@ -230,6 +380,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signIn,
       signOut,
       resetPassword,
+      updatePassword,
+      resendConfirmation,
       requireAuth,
       openAuth,
       closeAuth,

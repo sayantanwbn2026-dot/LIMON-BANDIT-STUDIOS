@@ -32,6 +32,7 @@ import { AuthModal } from "@/components/shop/AuthModal";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
 import { FlashOffer } from "@/components/shop/FlashOffer";
+import { AuthLanding } from "@/components/shop/AuthLanding";
 import { ContentProvider } from "@/cms/content";
 import { Analytics } from "@/components/lb/Analytics";
 
@@ -266,6 +267,7 @@ function SiteChrome() {
 
       {/* Mounted once, opened from anywhere. */}
       <AuthModal />
+      <AuthLanding />
       <CartDrawer />
       <WishlistDrawer />
       <FlashOffer />

@@ -23,7 +23,17 @@ const MIN_PASSWORD = 8;
 type Errors = Partial<Record<"email" | "password" | "fullName" | "phone", string>>;
 
 export function AuthModal() {
-  const { gate, closeAuth, setMode, signIn, signUp, resetPassword, configured } = useAuth();
+  const {
+    gate,
+    closeAuth,
+    setMode,
+    signIn,
+    signUp,
+    resetPassword,
+    updatePassword,
+    resendConfirmation,
+    configured,
+  } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +42,9 @@ export function AuthModal() {
   const [errors, setErrors] = useState<Errors>({});
   const [notice, setNotice] = useState<{ tone: "bad" | "good"; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  /* Shown only after a sign-in fails specifically because the account
+   * was never confirmed — the one failure a visitor can fix alone. */
+  const [canResend, setCanResend] = useState(false);
 
   const mode = gate.mode;
 
@@ -43,16 +56,22 @@ export function AuthModal() {
     setErrors({});
     setNotice(null);
     setBusy(false);
+    setCanResend(false);
   }, [gate.open]);
 
   useEffect(() => {
     setErrors({});
     setNotice(null);
+    setCanResend(false);
   }, [mode]);
 
   const validate = (): Errors => {
     const e: Errors = {};
-    if (!EMAIL.test(email)) e.email = "That address will not reach you — check it.";
+    /* "update" runs on a recovery session that already knows who the
+     * visitor is, so it asks for a password and nothing else. */
+    if (mode !== "update" && !EMAIL.test(email)) {
+      e.email = "That address will not reach you — check it.";
+    }
     if (mode !== "reset" && password.length < MIN_PASSWORD) {
       e.password = `At least ${MIN_PASSWORD} characters.`;
     }
@@ -87,11 +106,27 @@ export function AuthModal() {
         return;
       }
 
+      if (mode === "update") {
+        const res = await updatePassword(password);
+        if (!res.ok) {
+          setNotice({ tone: "bad", text: res.message });
+          return;
+        }
+        setNotice({ tone: "good", text: "Password changed. You are signed in." });
+        /* Long enough to read the confirmation, short enough not to
+         * feel stuck in a dialog with nothing left to do. */
+        window.setTimeout(closeAuth, 1400);
+        return;
+      }
+
       if (mode === "signin") {
         const res = await signIn(email, password);
         /* On success the provider closes this and releases the pending
          * action, so there is nothing to do here but report a failure. */
-        if (!res.ok) setNotice({ tone: "bad", text: res.message });
+        if (!res.ok) {
+          setNotice({ tone: "bad", text: res.message });
+          setCanResend(Boolean(res.unconfirmed));
+        }
         return;
       }
 
@@ -111,10 +146,26 @@ export function AuthModal() {
     }
   };
 
+  const onResend = async () => {
+    setBusy(true);
+    try {
+      const res = await resendConfirmation(email);
+      setNotice(
+        res.ok
+          ? { tone: "good", text: `Sent again to ${email.trim()}. It can take a minute.` }
+          : { tone: "bad", text: res.message },
+      );
+      if (res.ok) setCanResend(false);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const heading: Record<AuthMode, string> = {
     signin: "Sign in",
     signup: "Become a member",
     reset: "Reset your password",
+    update: "Choose a new password",
   };
 
   const standfirst = gate.reason
@@ -123,7 +174,9 @@ export function AuthModal() {
       ? "Members can cart, wishlist and order. It takes a minute."
       : mode === "reset"
         ? "We will email you a link to set a new one."
-        : "Welcome back.";
+        : mode === "update"
+          ? "Pick something you have not used here before. At least 8 characters."
+          : "Welcome back.";
 
   return (
     <Modal open={gate.open} onClose={closeAuth} title={heading[mode]} standfirst={standfirst}>
@@ -151,29 +204,33 @@ export function AuthModal() {
           />
         ) : null}
 
-        <Field
-          id="auth-email"
-          label="Email"
-          type="email"
-          inputMode="email"
-          value={email}
-          onChange={setEmail}
-          error={errors.email}
-          placeholder="you@somewhere.in"
-          autoComplete="email"
-          required
-        />
+        {mode !== "update" ? (
+          <Field
+            id="auth-email"
+            label="Email"
+            type="email"
+            inputMode="email"
+            value={email}
+            onChange={setEmail}
+            error={errors.email}
+            placeholder="you@somewhere.in"
+            autoComplete="email"
+            required
+          />
+        ) : null}
 
         {mode !== "reset" ? (
           <Field
             id="auth-password"
-            label="Password"
+            label={mode === "update" ? "New password" : "Password"}
             type="password"
             value={password}
             onChange={setPassword}
             error={errors.password}
             placeholder="At least 8 characters"
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
+            autoComplete={
+              mode === "signup" || mode === "update" ? "new-password" : "current-password"
+            }
             required
           />
         ) : null}
@@ -196,31 +253,58 @@ export function AuthModal() {
         {notice ? <FormNotice tone={notice.tone}>{notice.text}</FormNotice> : null}
 
         <SubmitButton
-          label={mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send link"}
-          busyLabel={mode === "signup" ? "Creating…" : "Sending…"}
+          label={
+            mode === "signin"
+              ? "Sign in"
+              : mode === "signup"
+                ? "Create account"
+                : mode === "update"
+                  ? "Save new password"
+                  : "Send link"
+          }
+          busyLabel={mode === "signup" ? "Creating…" : mode === "update" ? "Saving…" : "Sending…"}
           busy={busy}
           disabled={!configured}
         />
       </form>
 
-      <div className="mt-8 space-y-3 border-t border-line pt-6">
-        {mode === "signin" ? (
-          <>
-            <Switch
-              prompt="No account yet?"
-              label="Become a member"
-              onClick={() => setMode("signup")}
-            />
-            <Switch
-              prompt="Forgotten it?"
-              label="Reset your password"
-              onClick={() => setMode("reset")}
-            />
-          </>
-        ) : (
-          <Switch prompt="Already a member?" label="Sign in" onClick={() => setMode("signin")} />
-        )}
-      </div>
+      {/* The escape hatch from the one failure a visitor can fix alone.
+       * Without it, an unconfirmed account is a closed loop: signing in
+       * is refused, and signing up again is refused too because the
+       * account already exists. */}
+      {canResend ? (
+        <div className="mt-6 border-t border-line pt-6">
+          <button
+            type="button"
+            onClick={onResend}
+            disabled={busy}
+            className="t-label text-acid-type underline underline-offset-4 transition-opacity duration-300 hover:opacity-70 disabled:opacity-40"
+          >
+            Send the confirmation email again
+          </button>
+        </div>
+      ) : null}
+
+      {mode === "update" ? null : (
+        <div className="mt-8 space-y-3 border-t border-line pt-6">
+          {mode === "signin" ? (
+            <>
+              <Switch
+                prompt="No account yet?"
+                label="Become a member"
+                onClick={() => setMode("signup")}
+              />
+              <Switch
+                prompt="Forgotten it?"
+                label="Reset your password"
+                onClick={() => setMode("reset")}
+              />
+            </>
+          ) : (
+            <Switch prompt="Already a member?" label="Sign in" onClick={() => setMode("signin")} />
+          )}
+        </div>
+      )}
     </Modal>
   );
 }
