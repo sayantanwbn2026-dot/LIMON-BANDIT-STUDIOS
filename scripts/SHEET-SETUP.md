@@ -5,6 +5,63 @@ a few minutes in a browser.
 
 ---
 
+## 0. The four switches only you can flip
+
+Each of these lives in a dashboard the site cannot reach for you. None needs a
+code change — the site is already built to use them the moment they are on.
+
+### Get told about orders and enquiries — pick ONE, ~1 minute
+
+Orders and contact-form enquiries are always saved to the database. This is
+only about **being told**. Set `SHEETS_WEBHOOK_URL` in `.env` to any one of:
+
+| Option           | Where to get the URL                                                        | You get                             |
+| ---------------- | --------------------------------------------------------------------------- | ----------------------------------- |
+| **Discord**      | Server → Edit channel → Integrations → Webhooks → New Webhook → Copy URL    | a message per order/enquiry         |
+| **Slack**        | api.slack.com/apps → Create app → Incoming Webhooks → Add to channel → Copy | a message per order/enquiry         |
+| **Google Sheet** | the Apps Script in section 2 below (slower to set up)                       | a row per order, a tab of enquiries |
+
+The site works out which it is from the URL. Discord or Slack is the fastest
+way to go live; the sheet is better if logistics already work from one.
+Restart the dev server (or redeploy) after changing `.env`.
+
+`SHEETS_WEBHOOK_SECRET` is only used by the Google Sheet option.
+
+### Turn off email confirmation
+
+Supabase → **Authentication → Sign In / Providers → Email** → switch off
+**Confirm email** → Save.
+
+While it is on, every new member has to find an email before they can shop,
+and signing in first gives "not confirmed". The site now explains that and
+offers to resend — but the smoothest fix is not to ask.
+
+### Add "Continue with Google"
+
+1. Google Cloud Console → **APIs & Services → Credentials → Create
+   credentials → OAuth client ID** → Web application.
+2. Authorised redirect URI:
+   `https://vwuuwommxvqtgzlsndip.supabase.co/auth/v1/callback`
+3. Copy the Client ID and Client secret.
+4. Supabase → **Authentication → Sign In / Providers → Google** → enable,
+   paste both → Save.
+
+The button appears in the sign-in popup **by itself** as soon as the provider
+is on — it reads the setting live, so there is nothing to deploy.
+
+### Allow the redirect URLs
+
+Supabase → **Authentication → URL Configuration**:
+
+- **Site URL**: the live domain, e.g. `https://limonbandit.com`
+- **Redirect URLs**: add `https://limonbandit.com/**` and, for local work,
+  `http://localhost:8081/**`
+
+Without these, confirmation and Google links fall back to the Site URL and
+can land on the wrong page.
+
+---
+
 ## 1. Supabase — accounts, wishlist, orders (done)
 
 Project **limon-bandit-shop**, region `ap-south-1` (Mumbai), free tier.
@@ -12,7 +69,7 @@ Project **limon-bandit-shop**, region `ap-south-1` (Mumbai), free tier.
 - URL: `https://vwuuwommxvqtgzlsndip.supabase.co`
 - Both `VITE_*` values are already in `.env`.
 
-Four tables, RLS on all of them, denying by default:
+Five tables, RLS on all of them, denying by default:
 
 | Table            | Who can do what                                    |
 | ---------------- | -------------------------------------------------- |
@@ -20,23 +77,12 @@ Four tables, RLS on all of them, denying by default:
 | `wishlist_items` | read/insert/delete your own rows only              |
 | `orders`         | insert and read your own; **no update, no delete** |
 | `offer_signups`  | insert only — nobody can read the list back        |
+| `enquiries`      | anyone may submit; only admins can read or triage  |
 
 `orders` has no update policy on purpose: fulfilment state is moved by staff
 through the service role, so a buyer cannot mark their own order paid or
 delivered. `offer_signups` is insert-only so the flash popup cannot be turned
 into an email-harvesting endpoint.
-
-### One switch worth deciding on
-
-Supabase ships with **Confirm email** ON. A new member therefore has to click
-a link before they can sign in, and the popup tells them so. If you would
-rather they shop immediately:
-
-Dashboard → Authentication → Sign In / Providers → Email → turn off
-**Confirm email**.
-
-Leave it on if you would rather not collect unverified addresses. The site
-handles both — nothing in the code needs changing either way.
 
 ### Optional: the service role key
 

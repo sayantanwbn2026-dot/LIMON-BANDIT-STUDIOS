@@ -37,6 +37,21 @@ var HEADERS = [
   'Note',
 ];
 
+/** Contact-form enquiries get their own tab — see doPost. */
+var ENQUIRY_SHEET_NAME = 'Enquiries';
+
+var ENQUIRY_HEADERS = [
+  'Reference',
+  'Received at',
+  'About',
+  'Name',
+  'Phone',
+  'Email',
+  'Message',
+  'Sent from',
+  'Status',
+];
+
 function doPost(e) {
   try {
     if (!e || !e.postData || !e.postData.contents) {
@@ -49,6 +64,29 @@ function doPost(e) {
     // append rows, and logistics pack from these rows.
     if (SHARED_SECRET && body.secret !== SHARED_SECRET) {
       return json({ ok: false, error: 'bad secret' });
+    }
+
+    // Enquiries from the contact form share this URL but must never land in
+    // the Orders tab: logistics pack from that tab top to bottom, and an
+    // enquiry there is a row with no address and a total of zero that
+    // somebody might try to ship. They get a tab of their own.
+    if (body.kind === 'enquiry') {
+      var enq = getTab(ENQUIRY_SHEET_NAME, ENQUIRY_HEADERS);
+      if (body.reference && findRow(enq, body.reference) > 0) {
+        return json({ ok: true, duplicate: true });
+      }
+      enq.appendRow([
+        body.reference || '',
+        body.received_at ? new Date(body.received_at) : new Date(),
+        body.intent || '',
+        body.name || '',
+        body.phone ? "'" + body.phone : '',
+        body.email || '',
+        body.message || '',
+        body.source || '',
+        'new',
+      ]);
+      return json({ ok: true });
     }
 
     var sheet = getSheet();
@@ -94,21 +132,26 @@ function doGet() {
 }
 
 function getSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME);
-
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-  }
-
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(HEADERS);
-    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
-    sheet.setFrozenRows(1);
+  var sheet = getTab(SHEET_NAME, HEADERS);
+  if (sheet.getLastRow() === 1) {
     sheet.setColumnWidth(10, 320); // Items — the widest cell by far
     sheet.setColumnWidth(7, 280); // Address
   }
+  return sheet;
+}
 
+/** A tab by name, created with a bold frozen header row on first use. */
+function getTab(name, headers) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
   return sheet;
 }
 

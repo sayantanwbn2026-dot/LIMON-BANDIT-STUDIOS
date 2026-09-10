@@ -47,6 +47,10 @@ type AuthState = {
   resetPassword: (email: string) => Promise<AuthResult>;
   updatePassword: (password: string) => Promise<AuthResult>;
   resendConfirmation: (email: string) => Promise<AuthResult>;
+  /** Leaves the page for Google and comes back signed in. */
+  signInWithGoogle: () => Promise<AuthResult>;
+  /** true once the Supabase project has the Google provider switched on */
+  googleEnabled: boolean;
 
   /** run `action` if signed in, otherwise open the gate and run it after */
   requireAuth: (reason: string, action: () => void) => void;
@@ -117,6 +121,9 @@ export function readableAuthError(message: string): string {
   if (m.includes("invalid email") || (m.includes("email") && m.includes("invalid"))) {
     return "That email address does not look right.";
   }
+  if (m.includes("provider is not enabled") || m.includes("unsupported provider")) {
+    return "Google sign-in is not switched on yet. Use your email and password for now.";
+  }
   if (m.includes("same password")) {
     return "That is already your password. Pick a different one.";
   }
@@ -129,6 +136,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<GateReason>(null);
   const [mode, setMode] = useState<AuthMode>("signin");
+  const [googleEnabled, setGoogleEnabled] = useState(false);
 
   /* The action that was blocked. Held in a ref so the sign-in re-render does
    * not drop it, and cleared before it runs so it can never fire twice. */
@@ -180,6 +188,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       alive = false;
       unsubscribe?.();
+    };
+  }, []);
+
+  /* Which sign-in methods the project actually has switched on.
+   *
+   * The Google button is shown only when the provider is enabled in
+   * Supabase, read from the public settings endpoint rather than
+   * hardcoded. A button that is always there but errors until someone
+   * configures OAuth is worse than no button: it is the first thing a
+   * new visitor would try. Read this way, it appears by itself the
+   * moment the provider is turned on, with no deploy. */
+  useEffect(() => {
+    const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+    if (!url || !key) return;
+    let alive = true;
+    fetch(`${url.replace(/\/$/, "")}/auth/v1/settings`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: { external?: Record<string, boolean> } | null) => {
+        if (alive) setGoogleEnabled(Boolean(j?.external?.google));
+      })
+      /* Unreachable settings just means no Google button — email and
+       * password still work, which is the right way to degrade. */
+      .catch(() => {});
+    return () => {
+      alive = false;
     };
   }, []);
 
@@ -318,6 +354,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true };
   }, []);
 
+  /**
+   * Sign in with Google.
+   *
+   * A full-page redirect, not a popup: popups are blocked by default on
+   * iOS Safari and inside Instagram's in-app browser, which is exactly
+   * where a music site's visitors arrive from.
+   *
+   * It comes back to the page it left, not the homepage. A shopper who
+   * pressed "Add to cart" and was asked to sign in should land back on
+   * that product; the email-confirmation link goes home because that is
+   * the end of signing up, but this is the middle of doing something.
+   *
+   * The pending action cannot survive the trip — it is a function in
+   * memory and the page is torn down — so the visitor returns signed in
+   * to the right page and presses the button once more. That is one
+   * extra tap, and it is honest; serialising arbitrary actions into
+   * storage to replay them after a redirect is how carts end up with a
+   * phantom item nobody remembers adding.
+   */
+  const signInWithGoogle = useCallback(async (): Promise<AuthResult> => {
+    const supabase = await getSupabase();
+    if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+    const back = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: back,
+        /* Always show the account chooser. Without it, someone signed
+         * into Google with a work account gets silently signed in as
+         * that one, with no chance to pick their personal address. */
+        queryParams: { prompt: "select_account" },
+      },
+    });
+    if (error) return { ok: false, message: readableAuthError(error.message) };
+    return { ok: true };
+  }, []);
+
   /** Set a new password. Only reachable while a recovery session is live. */
   const updatePassword = useCallback(async (password: string): Promise<AuthResult> => {
     const supabase = await getSupabase();
@@ -366,6 +439,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       resetPassword,
       updatePassword,
       resendConfirmation,
+      signInWithGoogle,
+      googleEnabled,
       requireAuth,
       openAuth,
       closeAuth,
@@ -382,6 +457,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       resetPassword,
       updatePassword,
       resendConfirmation,
+      signInWithGoogle,
+      googleEnabled,
       requireAuth,
       openAuth,
       closeAuth,

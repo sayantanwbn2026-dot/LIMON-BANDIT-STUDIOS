@@ -188,7 +188,7 @@ export const contactSections: SectionCopy[] = [
     eyebrow: "The form",
     heading: "Tell us what you need",
     standfirst:
-      "One form for every reason. It opens your mail client addressed to us — there is no server in between.",
+      "One form for every reason. It comes straight to us, and a person answers it — usually the same day.",
   },
   {
     id: "visit",

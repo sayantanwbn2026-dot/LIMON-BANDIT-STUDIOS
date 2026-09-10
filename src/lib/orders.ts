@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSupabase } from "./supabase";
+import { orderSummary, postNotification } from "./notify";
 
 /**
  * Placing an order.
@@ -361,23 +362,19 @@ async function syncToSheet(args: {
     note: r.note ?? "",
   };
 
-  let ok = false;
-  let detail = "";
-
-  try {
-    const res = await fetch(webhook, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    /* Apps Script 302s to its own script.googleusercontent.com host on
-     * success and fetch follows it, so the status alone is not the signal —
-     * check the body the script actually returned. */
-    detail = (await res.text()).slice(0, 500);
-    ok = res.ok && !detail.toLowerCase().includes('"ok":false');
-  } catch (e) {
-    detail = e instanceof Error ? e.message : String(e);
-  }
+  /* Through the shared notifier, so the same SHEETS_WEBHOOK_URL can be a
+   * Slack or Discord incoming webhook instead of an Apps Script — see
+   * lib/notify. The sheet payload is unchanged; a chat destination gets
+   * the written summary instead. The secret is the notifier's to add, so
+   * it is taken off the payload here rather than sent twice. */
+  const { secret, ...sheetRow } = payload;
+  const res = await postNotification(webhook, {
+    secret,
+    text: orderSummary(r, sheetRow.items as string),
+    payload: sheetRow,
+  });
+  const ok = res.ok;
+  const detail = res.detail;
 
   if (!ok) console.error("sheet sync failed:", detail);
 
