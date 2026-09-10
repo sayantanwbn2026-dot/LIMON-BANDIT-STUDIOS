@@ -94,18 +94,25 @@ export function ScrollDepth({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      data-depth
-      /* overflow-x: clip contains the 1.06 push-through. Without it the
-       * scaled section widens documentElement.scrollWidth by ~29px — the
-       * page-level overflow-x guard hides the scrollbar, but the document is
-       * genuinely wider and every overflow measurement inherits the noise.
-       * `clip` is the one value that pairs with a visible cross axis, so it
-       * contains the paint without creating a scroll container. */
-      style={{ transformOrigin: "50% 50%", overflowX: "clip", overflowY: "visible" }}
-    >
-      {children}
+    /* The clip lives on a parent that never transforms, and the scale on
+     * the child inside it.
+     *
+     * They used to be the same element, with a comment saying the clip
+     * contained the 1.06 push-through. It could not: overflow clips an
+     * element's descendants, never its own transformed box. Measured at
+     * 1440px, six wrappers were 1510px wide in a 1425px viewport and the
+     * document was 42px wider than the screen — hidden by the page-level
+     * overflow guard, but real, and inherited by every width measurement.
+     * One level up, the parent clips the child's transform, which is the
+     * thing the original comment meant.
+     *
+     * `clip` rather than `hidden` so it creates no scroll container: it is
+     * the one value allowed to pair with a visible cross axis, so the
+     * section still paints freely above and below while it scales. */
+    <div style={{ overflowX: "clip", overflowY: "visible" }}>
+      <div ref={ref} data-depth style={{ transformOrigin: "50% 50%" }}>
+        {children}
+      </div>
     </div>
   );
 }

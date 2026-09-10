@@ -18,7 +18,13 @@ export function Rooms() {
     const gsap = ensureGsap();
     if (!gsap) return;
 
-    const ctx = gsap.context(() => {
+    /* Desktop only: `active` drives the sticky photograph, and that is
+     * lg:block. Below lg the triggers were still being built, and on a
+     * phone — where the list is now a sideways rail, every card at the
+     * same height — they all toggled at once, re-rendering and replaying
+     * a clip animation on an image nobody could see. */
+    const mm = gsap.matchMedia(el);
+    mm.add("(min-width: 1024px)", () => {
       const items = el.querySelectorAll<HTMLElement>("[data-room-item]");
       items.forEach((item, i) => {
         import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
@@ -30,8 +36,8 @@ export function Rooms() {
           });
         });
       });
-    }, el);
-    return () => ctx.revert();
+    });
+    return () => mm.revert();
   }, []);
 
   useEffect(() => {
@@ -98,13 +104,15 @@ export function Rooms() {
             </div>
           </div>
 
-          {/* list */}
-          <div>
+          {/* list — a swipe rail on phones (see .rail-mobile). Four rooms of
+           * image, blurb and spec sheet stacked to 2,906px, the tallest
+           * section left on the page, and the full detail lives on /rooms. */}
+          <div className="rail-mobile">
             {rooms.map((r, i) => (
               <article
                 key={r.id}
                 data-room-item
-                className="border-t border-line py-10 first:border-t-0 first:pt-0"
+                className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-10 md:first:border-t-0 md:first:pt-0"
               >
                 <div className="flex items-baseline gap-4">
                   <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
@@ -138,7 +146,7 @@ export function Rooms() {
                  * over two — a spec sheet that reads as damaged text. Full
                  * width gives every row its label left, value right, on one
                  * line, which is how the shop and contact rows already set. */}
-                <dl className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
+                <dl className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2">
                   {r.specs.map((s) => (
                     <div key={s.k} className="flex items-baseline gap-2 border-b border-line pb-2">
                       <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">

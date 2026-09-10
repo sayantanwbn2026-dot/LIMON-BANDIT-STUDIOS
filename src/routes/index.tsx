@@ -10,7 +10,6 @@ import { RoomFilm } from "@/components/sections/RoomFilm";
 import { Numbers } from "@/components/sections/Numbers";
 import { Roster } from "@/components/sections/Roster";
 import { DropRail } from "@/components/sections/DropRail";
-import { Bento } from "@/components/sections/Bento";
 import { Wall } from "@/components/sections/Wall";
 import { Rates } from "@/components/sections/Rates";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -76,9 +75,11 @@ function Index() {
 
         <DropRail />
 
-        <ScrollDepth>
-          <Bento />
-        </ScrollDepth>
+        {/* Bento was here: a third pass at "rooms, label, shop, crew", after
+            Services said it as an overview and ThreeWaysIn said it as three
+            calls to action. 2,095px on a phone to repeat the page's own
+            point. The component is kept (nothing else imports it) in case
+            the inline player it carried is wanted back somewhere. */}
         <ScrollDepth>
           <Rates />
         </ScrollDepth>

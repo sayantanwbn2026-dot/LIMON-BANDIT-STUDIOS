@@ -270,7 +270,10 @@ export function Services() {
        * The 16:9 crop is doing work too: at 4:5 the image was tall enough
        * to be the whole card and the copy had nowhere to live except on top
        * of it. Letterboxed, the picture is a window in a document. */}
-      <ul className="mt-14 flex flex-col gap-5 pb-[96px] lg:hidden">
+      {/* A swipe rail below md (see .rail-mobile): four 16:9 cards stacked
+       * were most of this section's 1,838px on a phone. Tablets keep the
+       * stack until the desktop sequence takes over at lg. */}
+      <ul className="rail-mobile mt-14 flex flex-col gap-5 pb-[96px] lg:hidden">
         {services.map((s) => (
           <li key={s.index}>
             <Link

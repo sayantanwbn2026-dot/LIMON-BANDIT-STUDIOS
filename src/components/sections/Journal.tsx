@@ -36,7 +36,8 @@ export function Journal() {
         </div>
       </div>
 
-      <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Swipe rail on phones — four entries stacked were two screens. */}
+      <div className="rail-mobile mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {posts.map((p, i) => (
           <RiseIn key={p.title} delay={i * 0.08}>
             <a href="/journal" className="group block">

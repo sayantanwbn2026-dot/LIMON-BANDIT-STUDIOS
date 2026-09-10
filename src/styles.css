@@ -341,6 +341,59 @@
     --alt-grid-rule: rgba(255, 255, 255, 0.07);
   }
 
+  /* ---------------- swipe rails ----------------
+   * The home page was 32,215px on a 375px phone — 39.7 screens — and most
+   * of that was lists laid out one card per screen: six releases at
+   * 420–560px each, then the rates, the testimonials, the steps, the
+   * journal. On a desktop those are grids of three or four across; on a
+   * phone the same markup became a very long single column.
+   *
+   * `rail-mobile` turns a list into a horizontal swipe on phones only and
+   * leaves the desktop grid exactly as it was. It is a plain unlayered
+   * rule, so it outranks the Tailwind `grid` utilities it replaces here
+   * without !important — the same mechanism the rhythm block below uses.
+   *
+   * It bleeds to the screen edge by exactly the shell's own padding
+   * (page margin + gutter + safe area), so the first card lines up with
+   * the text above it and the last one can scroll fully clear. Cards are
+   * 82% wide by default, which leaves the next one visibly peeking in:
+   * that sliver is the only affordance a phone has that there is more to
+   * the side, and a rail showing one whole card hides its own existence.
+   *
+   * Sections set `--rail-card` and `--rail-h` when a list needs a
+   * different width or a uniform height.
+   * -------------------------------------------------- */
+  .rail-mobile {
+    display: flex;
+    /* Stated, not assumed: a list that was `flex flex-col` for its
+     * vertical layout keeps that direction unless something resets it,
+     * and a rail that stacks downward is just the original list again. */
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    margin-inline: calc(
+      (var(--page-margin) + var(--grid-gutter) + env(safe-area-inset-left, 0px)) * -1
+    );
+    padding-inline: calc(var(--page-margin) + var(--grid-gutter) + env(safe-area-inset-left, 0px));
+    scroll-padding-inline: calc(
+      var(--page-margin) + var(--grid-gutter) + env(safe-area-inset-left, 0px)
+    );
+    scrollbar-width: none;
+  }
+  .rail-mobile::-webkit-scrollbar {
+    display: none;
+  }
+  .rail-mobile > * {
+    flex: 0 0 var(--rail-card, 82%);
+    min-width: 0;
+    scroll-snap-align: start;
+    height: var(--rail-h, auto);
+  }
+
   /* ---------------- mobile vertical rhythm ----------------
    * The section scale is tuned for a 900px-tall desktop viewport. On a
    * 844px phone, py-[120px] spends 240px — 28% of the screen — on empty
@@ -1115,6 +1168,22 @@
   /* the standfirst steps back so the heading is clearly the loud one */
   .section-head p {
     font-size: 15px;
+  }
+
+  /* The footer's two short lists side by side, with the brand block and
+   * the studio details spanning both. One column stacked seven nav links
+   * and six artist names end to end, and the footer came to 1,425px —
+   * nearly two screens of links after the page had already ended. It has
+   * to be written here rather than as `max-md:grid-cols-2`: the rule above
+   * is unlayered, so it beats any Tailwind utility; `.section-head.footer-cols`
+   * is unlayered too and simply more specific. */
+  .section-head.footer-cols {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+  }
+  .section-head.footer-cols > :first-child,
+  .section-head.footer-cols > :last-child {
+    grid-column: 1 / -1;
   }
 }
 

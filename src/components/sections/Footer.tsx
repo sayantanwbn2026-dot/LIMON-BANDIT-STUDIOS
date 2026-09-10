@@ -15,7 +15,8 @@ export function Footer() {
       <GridRules tone="dark" />
 
       <div className="shell relative z-[2] pt-24">
-        <div className="section-head">
+        {/* footer-cols: two columns on a phone, see styles.css */}
+        <div className="section-head footer-cols">
           <div>
             <div className="text-text">
               <Logotype />

@@ -23,7 +23,7 @@ export function Process() {
       <div className="mt-12">
         {processSteps.map((s, i) => (
           <PushIn key={s.index} delay={i * 0.1}>
-            <div className="group grid grid-cols-1 items-center gap-6 border-b border-line py-12 transition-colors duration-300 hover:bg-surface-raised md:grid-cols-4">
+            <div className="group grid grid-cols-1 items-center gap-3 border-b border-line py-8 transition-colors duration-300 hover:bg-surface-raised md:grid-cols-4 md:gap-6 md:py-12">
               <span className="font-display text-[14px] font-bold text-acid-type transition-transform duration-300 group-hover:scale-110">
                 {s.index}
               </span>
@@ -31,7 +31,11 @@ export function Process() {
                 {s.title}
               </h3>
               <p className="font-ui text-[16px] leading-[1.5] text-mute">{s.description}</p>
-              <div className="flex md:justify-end">
+              {/* Desktop only. The thumbnail is invisible until hover, and a
+               * phone never hovers — so below md it was a permanent 120px
+               * blank in every row, about 580px of empty page across the four
+               * steps. A reveal you cannot trigger is not a reveal. */}
+              <div className="hidden md:flex md:justify-end">
                 <CmsImage
                   src={s.thumb}
                   sizes="120px"

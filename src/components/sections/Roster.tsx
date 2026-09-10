@@ -16,7 +16,12 @@ export function Roster() {
     if (!el) return;
     const gsap = ensureGsap();
     if (!gsap || prefersReducedMotion()) return;
-    const ctx = gsap.context(() => {
+    /* Tablet and up only. The scrub lifts each card as it rises up the
+     * screen, which is an effect about a vertical stack — and on a phone
+     * this is a sideways rail, where every card sits at the same height
+     * and would all lift at once, off-rail cards included. */
+    const mm = gsap.matchMedia(el);
+    mm.add("(min-width: 768px)", () => {
       el.querySelectorAll<HTMLElement>("[data-release]").forEach((card, i) => {
         gsap.fromTo(
           card,
@@ -36,8 +41,8 @@ export function Roster() {
           },
         );
       });
-    }, el);
-    return () => ctx.revert();
+    });
+    return () => mm.revert();
   }, []);
 
   return (
@@ -63,7 +68,15 @@ export function Roster() {
         </div>
       </div>
 
-      <div ref={ref} className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {/* A swipe rail on phones (see .rail-mobile): six cards at 420–560px
+       * each stacked to over 3,000px, the tallest section on the page.
+       * One uniform height in the rail, because mixed heights side by side
+       * read as a layout fault rather than a rhythm. */}
+      <div
+        ref={ref}
+        className="rail-mobile mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        style={{ ["--rail-h" as string]: "400px" }}
+      >
         {releases.map((r) => (
           <a
             key={r.title}

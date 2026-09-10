@@ -27,7 +27,12 @@ export function Faq() {
             <span className="t-eyebrow text-alt-text">{copy.eyebrow}</span>
           </div>
 
-          <div className="mt-10 border border-alt-line p-8">
+          {/* Desktop only. In the stacked phone layout this card came
+           * before the heading and every question — offering "still stuck?"
+           * to someone who had not yet read one answer — and spent 120px on
+           * a mascot at 25% opacity. On a phone the same way out is a line
+           * after the questions, below. */}
+          <div className="mt-10 hidden border border-alt-line p-8 md:block">
             <Picture
               src="limon-mascot"
               sizes="120px"
@@ -50,8 +55,18 @@ export function Faq() {
           <WordReveal as="h2" className="t-h2 text-alt-text" text={copy.heading} />
 
           <div className="mt-12">
-            <Accordion items={faq} pole="alt" />
+            {/* Five on a phone, the rest behind "Show all": ten rows at
+             * 110–140px each was most of this section's 1,929px. Every
+             * question also appears on the page its topic belongs to. */}
+            <Accordion items={faq} pole="alt" mobileCap={5} />
           </div>
+
+          <a
+            href="/contact"
+            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden"
+          >
+            Still stuck? Message us <ArrowRight size={14} />
+          </a>
         </div>
       </div>
     </Section>

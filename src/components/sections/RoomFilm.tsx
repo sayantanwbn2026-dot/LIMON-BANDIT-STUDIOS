@@ -156,9 +156,16 @@ export function RoomFilm() {
       <div
         ref={root}
         aria-label="A night in Room A"
-        className="relative w-full"
-        /* Two viewports: one to open in, one to watch through. */
-        style={{ height: "200vh" }}
+        /* Two viewports on a desktop: one to open in, one to watch through.
+         * 1.4 on a phone. At 200vh this was 1,624px of scrolling on a 375px
+         * screen — and with no film in the repository yet, all of it spent
+         * opening a frame onto a still photograph. The opening is kept; it
+         * is the moment. What shrinks is the hold after it, and because the
+         * scrub ends at "50% top" of this container, the open-then-hold
+         * proportion comes along automatically. svh on the phone for the
+         * same reason the hero uses it: vh is the large viewport and would
+         * shift as the URL bar retracts. */
+        className="relative h-[140svh] w-full md:h-[200vh]"
       >
         <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
           <GridRules tone="dark" />

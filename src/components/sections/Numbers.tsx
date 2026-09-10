@@ -95,12 +95,14 @@ export function Numbers() {
         </div>
       </div>
 
-      <div ref={ref} className="mt-14 border-t border-line">
+      {/* Two by two on a phone, a column of rows from md. Four full-width
+       * rows were a screen and a third for four numbers. */}
+      <div ref={ref} className="mt-14 grid grid-cols-2 border-t border-line md:block">
         {metrics.map((m, i) => (
           <div
             key={m.label}
             data-row
-            className="grid grid-cols-1 items-baseline gap-x-10 gap-y-4 border-b border-line py-8 md:grid-cols-12 md:py-9"
+            className="grid grid-cols-1 content-start items-baseline gap-x-10 gap-y-3 border-b border-line py-6 max-md:odd:border-r max-md:odd:pr-4 max-md:even:pl-4 md:grid-cols-12 md:gap-y-4 md:py-9"
           >
             {/* The channel: number, what it measures, and the line about it,
              * kept in one cell. Spanning the sentence across all twelve
@@ -119,7 +121,9 @@ export function Numbers() {
             </div>
 
             {/* the figure */}
-            <div className="flex items-baseline gap-1 md:col-span-3">
+            {/* First on a phone, where the row is a card read number-first;
+             * back in its column from md. */}
+            <div className="order-first flex items-baseline gap-1 md:order-none md:col-span-3">
               <span
                 data-count={m.value}
                 data-decimals={m.decimals}

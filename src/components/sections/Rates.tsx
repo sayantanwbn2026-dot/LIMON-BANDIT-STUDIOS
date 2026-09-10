@@ -74,13 +74,15 @@ export function Rates() {
         <span className="t-label text-mute">Packages save twenty percent</span>
       </div>
 
-      <ul className="mt-12 border-t border-line">
+      {/* Swipe rail of boxed plans on a phone (see .rail-mobile); ruled rows
+       * from md up. Three full-width plans were two and a half screens. */}
+      <ul className="rail-mobile mt-12 md:border-t md:border-line">
         {rates.map((r, i) => {
           const price = mode === "hourly" ? r.hourly : r.packagePrice;
           return (
-            <li key={r.plan} className="border-b border-line">
+            <li key={r.plan} className="border border-line p-6 md:border-x-0 md:border-t-0 md:p-0">
               <RiseIn delay={i * 0.06}>
-                <article className="grid grid-cols-1 gap-x-10 gap-y-8 py-12 lg:grid-cols-12">
+                <article className="grid grid-cols-1 gap-x-10 gap-y-8 md:py-12 lg:grid-cols-12">
                   {/* the plan */}
                   <div className="lg:col-span-3">
                     <h3 className="font-display text-[24px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[28px]">

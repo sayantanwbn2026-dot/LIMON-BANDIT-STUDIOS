@@ -17,7 +17,7 @@ import { ensureGsap, ScrollTrigger } from "@/lib/motion";
  * WHY NOT IntersectionObserver
  * It was the obvious choice and it does not work here. Eight of the eleven
  * headers sit inside a `[data-depth]` wrapper, and ScrollDepth sets
- * `overflow-x: clip` on it; IO computes intersection against the clip-rect
+ * `overflow-x: clip` on the element around it; IO computes intersection against the clip-rect
  * chain, so a clipped ancestor makes the child read as never intersecting.
  * Measured: only two of eleven ever fired. ScrollTrigger measures against
  * the document and is what every other reveal on this site already uses

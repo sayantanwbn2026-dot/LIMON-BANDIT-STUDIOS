@@ -12,9 +12,10 @@ import { useSection, useTestimonials, useTickers } from "@/cms/hooks";
  * nested result grid. Eight pieces of chrome around one sentence.
  *
  * Now the sentence is the section. One ruled column, the quote at display
- * scale, attribution and result on a single meta line beneath it. Nothing is
- * boxed; the hairline does the separating, exactly as it does on the Rooms
- * ledger and the Crew directory.
+ * scale, attribution and result on a single meta line beneath it. On a
+ * desktop nothing is boxed; the hairline does the separating, exactly as it
+ * does on the Rooms ledger and the Crew directory. On a phone each quote is
+ * a boxed card in a swipe rail, because a rail needs edges to swipe between.
  *
  * ON THE ACID SURFACE, NOTHING IS DIMMED
  * There is no muted token for the acid pole, and dropping --accent-text to
@@ -56,11 +57,22 @@ export function Testimonials() {
           </div>
         </div>
 
-        <ul className="mt-16" style={{ borderTop: `1px solid ${RULE}` }}>
+        {/* Rows ruled top and bottom on a desktop; on a phone, a swipe rail
+         * of boxed cards (see .rail-mobile) — five full-width quotes were
+         * two and a half screens. The borders moved from inline style to
+         * classes because a phone card needs all four sides and a desktop
+         * row only one, and an inline border cannot change at a breakpoint. */}
+        <ul
+          className="rail-mobile mt-16 md:border-t md:border-[color:var(--rule)]"
+          style={{ ["--rule" as string]: RULE }}
+        >
           {testimonials.map((t, i) => (
-            <li key={t.name} style={{ borderBottom: `1px solid ${RULE}` }}>
+            <li
+              key={t.name}
+              className="border border-[color:var(--rule)] px-6 md:border-x-0 md:border-t-0 md:px-0"
+            >
               <RiseIn delay={i * 0.05}>
-                <article className="grid grid-cols-1 gap-x-10 gap-y-6 py-12 lg:grid-cols-12 lg:items-baseline">
+                <article className="grid grid-cols-1 gap-x-10 gap-y-6 py-8 md:py-12 lg:grid-cols-12 lg:items-baseline">
                   <blockquote className="lg:col-span-8">
                     <p className="max-w-[26ch] font-display text-[24px] font-extrabold uppercase leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
                       {t.quote}

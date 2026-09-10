@@ -14,13 +14,27 @@ export function Accordion({
   items,
   pole = "primary",
   defaultOpen = 0,
+  mobileCap,
 }: {
   items: AccordionItem[];
   /** which token pole the surrounding section sits on */
   pole?: "primary" | "alt";
   defaultOpen?: number;
+  /**
+   * Show only this many on a phone until "Show all" is pressed.
+   *
+   * Visibility is decided by CSS per breakpoint, not by measuring the
+   * screen in React: the server renders every row, a phone hides the ones
+   * past the cap with `max-md:hidden`, and the button only removes that
+   * class. Branching on window width in render would hand the server and
+   * the client different markup and hydrate a mismatch. Desktop always
+   * shows the lot — it has the room.
+   */
+  mobileCap?: number;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const [showAll, setShowAll] = useState(false);
+  const capping = mobileCap != null && !showAll && items.length > mobileCap;
   const uid = useId();
 
   const line = pole === "alt" ? "border-alt-line" : "border-line";
@@ -31,8 +45,12 @@ export function Accordion({
     <div>
       {items.map((item, i) => {
         const isOpen = open === i;
+        const hiddenOnPhone = capping && i >= (mobileCap ?? 0);
         return (
-          <div key={item.question} className={`border-t ${line}`}>
+          <div
+            key={item.question}
+            className={`border-t ${line} ${hiddenOnPhone ? "max-md:hidden" : ""}`}
+          >
             <h3>
               <button
                 type="button"
@@ -77,6 +95,16 @@ export function Accordion({
           </div>
         );
       })}
+      {capping ? (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className={`flex min-h-11 w-full items-center justify-between border-t ${line} py-5 font-ui text-[12px] font-bold uppercase tracking-[0.14em] ${text} md:hidden`}
+        >
+          <span>Show all {items.length} questions</span>
+          <Plus size={16} aria-hidden="true" />
+        </button>
+      ) : null}
     </div>
   );
 }
