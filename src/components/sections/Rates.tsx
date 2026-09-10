@@ -42,7 +42,7 @@ export function Rates() {
             Need something custom?{" "}
             <a
               href="/contact"
-              className="text-text underline decoration-acid-type underline-offset-4"
+              className="tap text-text underline decoration-acid-type underline-offset-4"
             >
               Let&apos;s talk →
             </a>

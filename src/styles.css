@@ -418,7 +418,22 @@
  * Gated on pointer:coarse so a narrow desktop window never gets invisible
  * overlays that could intercept a neighbouring element's click.
  * -------------------------------------------------- */
-@media (pointer: coarse) and (max-width: 767px) {
+/* ---------------- touch targets ----------------
+ * An invisible 44x44 minimum hit area around small text links, so a
+ * fingertip lands on them without the type having to grow.
+ *
+ * Two corrections to the first version of this. It guaranteed 44px of
+ * HEIGHT but took its width from the link, so a short word stayed short:
+ * "Terms" was a 34px-wide target and "Privacy" 40px, both measured under
+ * a fingertip with elementFromPoint. `max(100%, 44px)` on both axes, centred,
+ * keeps a wide link's full width and lifts a narrow one to the minimum.
+ *
+ * And it was phone-only. It now applies to every coarse pointer, because a
+ * tablet is held and tapped exactly like a phone. Only this invisible
+ * layer moved — the footer's padding rule below stays phone-only, since
+ * adding block padding changes layout and the tablet footer is laid out
+ * differently. */
+@media (pointer: coarse) {
   a:has(> .wipe-underline),
   .tap {
     position: relative;
@@ -427,16 +442,20 @@
   .tap::before {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
     top: 50%;
-    height: 44px;
-    translate: 0 -50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
   }
+}
 
+@media (pointer: coarse) and (max-width: 767px) {
+  /* 12, not 11: the line box is 21px here, so 11 made each row 43px —
+   * one short of the minimum it exists to meet. */
   footer nav ul a {
     display: block;
-    padding-block: 11px;
+    padding-block: 12px;
   }
 }
 

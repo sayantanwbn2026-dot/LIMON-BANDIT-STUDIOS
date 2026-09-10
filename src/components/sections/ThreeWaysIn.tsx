@@ -262,11 +262,18 @@ export function ThreeWaysIn() {
                      * and 2i+1, so the seam falls exactly where the picture
                      * would have been cut anyway.
                      *
-                     * transform only, so the whole thing composites. */}
+                     * transform only, so the whole thing composites.
+                     *
+                     * pointer-events-none is not optional. The leaves sit at
+                     * z-3, above the card, and were catching taps: anyone who
+                     * pressed "Book the room" while the doors were still
+                     * parting hit a photograph instead of the link, and had
+                     * the reveal ever failed to fire the whole card would
+                     * have been untappable. They are pictures of a door. */}
                     <span
                       aria-hidden="true"
                       data-leaf
-                      className="absolute inset-y-0 left-0 z-[3] w-1/2 lg:hidden"
+                      className="pointer-events-none absolute inset-y-0 left-0 z-[3] w-1/2 lg:hidden"
                       style={{
                         backgroundImage: `url(${CORRIDOR})`,
                         backgroundSize: "600% 100%",
@@ -278,7 +285,7 @@ export function ThreeWaysIn() {
                     <span
                       aria-hidden="true"
                       data-leaf
-                      className="absolute inset-y-0 right-0 z-[3] w-1/2 lg:hidden"
+                      className="pointer-events-none absolute inset-y-0 right-0 z-[3] w-1/2 lg:hidden"
                       style={{
                         backgroundImage: `url(${CORRIDOR})`,
                         backgroundSize: "600% 100%",

@@ -66,7 +66,7 @@ export function ShopBar() {
               aria-expanded={menu}
               aria-haspopup="menu"
               aria-label={`Account menu for ${displayName(user)}`}
-              className="flex h-11 items-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type sm:h-12 sm:px-3"
+              className="flex h-11 min-w-11 items-center justify-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type sm:h-12 sm:px-3"
             >
               <span className="flex h-[18px] w-[18px] items-center justify-center bg-acid font-ui text-[10px] font-bold uppercase leading-none text-accent-text">
                 {displayName(user).charAt(0)}
@@ -129,7 +129,7 @@ export function ShopBar() {
              * text is hidden, and a bare user icon with no accessible name
              * reads as an unlabeled button to a screen reader. */
             aria-label="Sign in"
-            className="flex h-11 items-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50 sm:h-12 sm:px-3"
+            className="flex h-11 min-w-11 items-center justify-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50 sm:h-12 sm:px-3"
           >
             <User size={16} aria-hidden="true" />
             <span className="hidden font-ui text-[11px] font-bold uppercase tracking-[0.12em] sm:inline">

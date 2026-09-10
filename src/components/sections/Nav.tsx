@@ -166,7 +166,7 @@ export function Nav() {
                   triggerRef.current?.focus();
                 }}
                 aria-label="Close menu"
-                className="t-label border border-line px-4 py-3 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+                className="t-label flex min-h-11 items-center border border-line px-4 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
               >
                 Close
               </button>
