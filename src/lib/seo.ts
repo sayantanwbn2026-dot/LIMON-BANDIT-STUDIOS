@@ -21,14 +21,23 @@ export type PageSeo = {
 /* The brand document as the editor last saved it, synchronously: `head`
  * cannot await, but every route's loader has already awaited `liveDocs()`
  * by the time its head runs (the root loader does it for all of them). */
+const LEGACY_OG_IMAGE =
+  "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png";
+
 type SiteDoc = { name?: string; url?: string; ogImage?: string };
 function liveSite() {
   const doc = docFrom<SiteDoc>(lastDocs(), "global.site");
   const url = doc.url?.trim();
+  const og = doc.ogImage?.trim();
   return {
     name: doc.name?.trim() || site.name,
     url: url && /^https?:\/\//.test(url) ? url : site.url,
-    ogImage: doc.ogImage?.trim() || site.ogImage,
+    /* The old seed value was a Lovable preview screenshot on a third-party
+     * bucket, and the stored document still carries it because it was seeded
+     * before the site had its own share image. That exact URL is treated as
+     * "never chosen" so the committed image is used; anything an editor
+     * actually picks still wins. */
+    ogImage: og && og !== LEGACY_OG_IMAGE ? og : site.ogImage,
   };
 }
 

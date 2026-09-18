@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
@@ -40,6 +40,14 @@ export function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  /* Anti-spam (see lib/enquiries): when the form was drawn, and a honeypot
+   * field that only a bot fills. Set in an effect so the server render and
+   * hydration agree. */
+  const startedAt = useRef<number | undefined>(undefined);
+  const [website, setWebsite] = useState("");
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState(false);
@@ -125,6 +133,8 @@ export function ContactForm() {
            * difference between triage and guesswork. */
           message: subject ? `${subject.title}\n\n${message}` : message,
           sourcePath: window.location.pathname + window.location.search,
+          website,
+          startedAt: startedAt.current,
         },
       });
       if (res.ok) {
@@ -199,6 +209,22 @@ export function ContactForm() {
           </div>
         ) : (
           <form ref={formRef} onSubmit={onSubmit} noValidate className="mt-12 max-w-[760px]">
+            {/* Honeypot. Off-screen rather than display:none (some bots skip
+             * hidden fields), out of the tab order, and hidden from assistive
+             * tech so nobody is asked to fill it in. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+              <label>
+                Website
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </label>
+            </div>
             {/* What you clicked to get here, said back to you. Without this the
              * form silently discarded the choice and the only clue that it had
              * registered anything was which chip happened to be lit. Dismissable,
@@ -207,37 +233,39 @@ export function ContactForm() {
             {/* AnimatePresence so "Clear" collapses the strip instead of
              * blinking it out of existence — the height animates too, so the
              * form below rises into the space rather than snapping up. */}
-            <AnimatePresence initial={false}>
-              {subject ? (
-                <motion.div
-                  key="subject"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="mb-12 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-y border-line py-5">
-                    <span className="t-label shrink-0 text-mute">{subject.kind}</span>
-                    <span className="font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
-                      {subject.title}
-                    </span>
-                    {subject.detail ? (
-                      <span className="tnum font-ui text-[14px] text-acid-type">
-                        {subject.detail}
+            <MotionConfig reducedMotion="user">
+              <AnimatePresence initial={false}>
+                {subject ? (
+                  <motion.div
+                    key="subject"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mb-12 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-y border-line py-5">
+                      <span className="t-label shrink-0 text-mute">{subject.kind}</span>
+                      <span className="font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
+                        {subject.title}
                       </span>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => setSubject(undefined)}
-                      className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute transition-colors duration-300 hover:text-text"
-                    >
-                      <span className="wipe-underline">Clear</span>
-                    </button>
-                  </div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+                      {subject.detail ? (
+                        <span className="tnum font-ui text-[14px] text-acid-type">
+                          {subject.detail}
+                        </span>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => setSubject(undefined)}
+                        className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute transition-colors duration-300 hover:text-text"
+                      >
+                        <span className="wipe-underline">Clear</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </MotionConfig>
 
             <fieldset>
               <legend className="t-label text-mute">What is it about</legend>

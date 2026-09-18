@@ -140,8 +140,14 @@ export const submitOrder = createServerFn({ method: "POST" })
     throw new Error(readableIssue(parsed.error));
   })
   .handler(async ({ data }) => {
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishable = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    /* The public URL and key are compiled into the build (import.meta.env), so
+     * a host that only exposes secrets at runtime — Cloudflare Workers, where
+     * this deploys — still has them. process.env wins when it is set. */
+    const url =
+      process.env.VITE_SUPABASE_URL || (import.meta.env.VITE_SUPABASE_URL as string | undefined);
+    const publishable =
+      process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+      (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined);
     if (!url || !publishable) {
       throw new Error("The shop is not connected to Supabase yet.");
     }
@@ -383,7 +389,8 @@ async function syncToSheet(args: {
    * needs the service role. Without it the order is still correct, it just
    * carries no sync record. */
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const url = process.env.VITE_SUPABASE_URL;
+  const url =
+    process.env.VITE_SUPABASE_URL || (import.meta.env.VITE_SUPABASE_URL as string | undefined);
   if (serviceKey && url) {
     try {
       const { createClient } = await import("@supabase/supabase-js");

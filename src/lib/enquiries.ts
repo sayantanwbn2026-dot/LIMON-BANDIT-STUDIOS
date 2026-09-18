@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestIP } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { enquirySummary, postNotification } from "./notify";
 
@@ -35,7 +36,32 @@ const Input = z.object({
   phone: z.string().trim().max(40).optional().default(""),
   message: z.string().trim().min(10, "A sentence or two, so we know what you need.").max(4000),
   sourcePath: z.string().max(200).optional().default(""),
+  /* Anti-spam. `website` is a honeypot: a visually hidden field no person
+   * fills in and most form bots do. `startedAt` is when the form was drawn,
+   * from the browser's clock — a bot posts in milliseconds, a person takes
+   * seconds. Both are optional so an old tab still submits. */
+  website: z.string().max(500).optional().default(""),
+  startedAt: z.number().optional(),
 });
+
+/* Per-connection ceiling: 5 messages per 10 minutes. In memory, so it
+ * resets when a server instance recycles and is not shared across
+ * instances — a floor against a script hammering one endpoint, not a
+ * guarantee. The honeypot and the timing check catch the common case. */
+const WINDOW_MS = 10 * 60_000;
+const MAX_PER_WINDOW = 5;
+const recent = new Map<string, number[]>();
+
+function overLimit(key: string): boolean {
+  const now = Date.now();
+  const hits = (recent.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
+  hits.push(now);
+  recent.set(key, hits);
+  if (recent.size > 5000) {
+    for (const [k, v] of recent) if (v.every((t) => now - t >= WINDOW_MS)) recent.delete(k);
+  }
+  return hits.length > MAX_PER_WINDOW;
+}
 
 export type EnquiryInput = z.infer<typeof Input>;
 export type EnquiryResult =
@@ -65,14 +91,42 @@ function readableIssue(e: unknown): string {
 export const submitEnquiry = createServerFn({ method: "POST" })
   .validator((raw: unknown) => Input.parse(raw))
   .handler(async ({ data }): Promise<EnquiryResult> => {
+    /* Bots get a normal-looking success and nothing is stored or sent, so
+     * there is no signal to tune against. A person never trips these: the
+     * field is invisible and out of the tab order, and two and a half
+     * seconds is less than it takes to type a name. */
+    const tooFast = typeof data.startedAt === "number" && Date.now() - data.startedAt < 2500;
+    if (data.website.trim() || tooFast) {
+      return { ok: true, reference: makeReference(), notified: false };
+    }
+
+    let ip = "unknown";
+    try {
+      ip = getRequestIP({ xForwardedFor: true }) ?? "unknown";
+    } catch {
+      /* no request context (tests) — fall through with one shared bucket */
+    }
+    if (overLimit(ip)) {
+      return {
+        ok: false,
+        message: "That is a lot of messages in a few minutes — try again shortly, or email us.",
+      };
+    }
+
     /* A client built here, not `getSupabase()`. That helper deliberately
      * returns null on the server — it builds an auth client that reaches
      * for localStorage — so using it made every enquiry fail with "not
      * connected" in production while working fine in any test that ran
      * in a browser. Same construction orders.ts uses, with no session and
      * the publishable key: this runs as a stranger, under RLS. */
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishable = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    /* The public URL and key are compiled into the build (import.meta.env), so
+     * a host that only exposes secrets at runtime — Cloudflare Workers, where
+     * this deploys — still has them. process.env wins when it is set. */
+    const url =
+      process.env.VITE_SUPABASE_URL || (import.meta.env.VITE_SUPABASE_URL as string | undefined);
+    const publishable =
+      process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+      (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined);
     if (!url || !publishable) {
       return {
         ok: false,

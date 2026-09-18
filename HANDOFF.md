@@ -3,6 +3,29 @@
 Read this first, then `AUDIT.md` (design constitution) and `PERF.md`
 (measured performance). `PASS-5.md` and `PASS-6.md` are the outstanding briefs.
 
+## Deploying
+
+The build targets **Cloudflare Workers** (`cloudflare-module`, via the Lovable
+preset). Verified before launch on 2026-09-19 against a production build:
+every route 200 (unknown slugs 404), security headers on every response,
+first-load JS 165 KB gz (budget 180), no secrets in the client bundle or git
+history, anonymous database access refused for every private table.
+
+Set these in the host's environment / secrets — they are **not** in the repo:
+
+| Variable                        | Needed for                              | Notes                                        |
+| ------------------------------- | --------------------------------------- | -------------------------------------------- |
+| `VITE_SUPABASE_URL`             | everything                              | also compiled into the build; public         |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | everything                              | also compiled into the build; public         |
+| `SHEETS_WEBHOOK_URL`            | order + enquiry notifications           | Slack, Discord or Apps Script URL            |
+| `SHEETS_WEBHOOK_SECRET`         | the Apps Script option only             |                                              |
+| `SUPABASE_SERVICE_ROLE_KEY`     | stamping "notified" on enquiries/orders | optional; **never** give it a `VITE_` prefix |
+
+Then, once: run `supabase/migrations/20260918_admin_inbox.sql` in the Supabase
+SQL editor, set Brand & contact → _Live website address_ to the real domain
+(canonical links, sitemap and share cards are built from it), and add that
+domain to Supabase → Authentication → URL configuration.
+
 ## Where things are
 
 - **Repo:** `G:\Active Projects\limonbanditstudios-main\limonbanditstudios-main`

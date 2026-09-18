@@ -1,5 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 
@@ -46,6 +45,29 @@ export function Modal({
   labelledBy?: string;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+
+  /* Enter and exit with CSS transitions rather than Framer Motion.
+   *
+   * This component is mounted on every page (login, cart, wishlist, flash
+   * offer all live in __root), so its animation library was in the
+   * first-paint bundle of every visit — for a fade and a slide. Now:
+   * `rendered` keeps the dialog in the DOM through its exit, and `shown`
+   * flips a frame after mount so the entry has a starting state to move
+   * from. Global reduced-motion CSS shortens these transitions to nothing,
+   * the same way it does for everything else on the site. */
+  const [rendered, setRendered] = useState(open);
+  const [shown, setShown] = useState(false);
+  if (open && !rendered) setRendered(true);
+
+  useEffect(() => {
+    if (open) {
+      const raf = requestAnimationFrame(() => requestAnimationFrame(() => setShown(true)));
+      return () => cancelAnimationFrame(raf);
+    }
+    setShown(false);
+    const t = window.setTimeout(() => setRendered(false), EXIT_MS);
+    return () => window.clearTimeout(t);
+  }, [open]);
   const returnTo = useRef<HTMLElement | null>(null);
   const autoId = useId();
   const titleId = labelledBy ?? `modal-title-${autoId}`;
@@ -101,21 +123,15 @@ export function Modal({
   const drawer = variant === "drawer";
   const sheet = variant === "sheet";
 
-  /* A sheet rises; a centred dialog fades up a little. Both are y-only, so
-   * the two share one transition and reduced-motion still gets the fade. */
-  const motionProps = drawer
-    ? { initial: { x: "100%" }, animate: { x: 0 }, exit: { x: "100%" } }
-    : sheet
-      ? {
-          initial: { opacity: 0, y: 48 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: 48 },
-        }
-      : {
-          initial: { opacity: 0, y: 16 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: 16 },
-        };
+  /* A drawer slides in from the right; a sheet rises; a centred dialog
+   * fades up a little. `transform`, not `translate`: the centring classes
+   * use Tailwind's `translate` property, and the two compose. */
+  const hidden = drawer ? "translateX(100%)" : sheet ? "translateY(48px)" : "translateY(16px)";
+  const panelStyle: CSSProperties = {
+    transform: shown ? "none" : hidden,
+    opacity: drawer || shown ? 1 : 0,
+    transition: `transform ${EXIT_MS}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${EXIT_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  };
 
   const panelClass = drawer
     ? "absolute inset-y-0 right-0 flex w-full max-w-[440px] flex-col border-l border-line bg-surface-deep"
@@ -126,28 +142,30 @@ export function Modal({
       : "absolute left-1/2 top-1/2 flex max-h-[92svh] w-[calc(100%-32px)] max-w-[520px] -translate-x-1/2 -translate-y-1/2 flex-col border border-line bg-surface-deep";
 
   return (
-    <AnimatePresence>
-      {open ? (
-        <div className="fixed inset-0 z-[9997]" role="presentation">
-          <motion.button
+    <>
+      {rendered ? (
+        <div
+          className="fixed inset-0 z-[9997]"
+          role="presentation"
+          /* While closing, the dialog is still on screen but must not catch
+           * a click meant for the page underneath. */
+          style={{ pointerEvents: open ? undefined : "none" }}
+        >
+          <button
             type="button"
             aria-label="Close"
             tabIndex={-1}
             onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.28 }}
+            style={{ opacity: shown ? 1 : 0, transition: "opacity 280ms ease" }}
             className="absolute inset-0 h-full w-full cursor-default bg-black/70 backdrop-blur-[2px]"
           />
 
-          <motion.div
+          <div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            {...motionProps}
-            transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            style={panelStyle}
             className={panelClass}
           >
             <header
@@ -209,9 +227,12 @@ export function Modal({
             >
               {children}
             </div>
-          </motion.div>
+          </div>
         </div>
       ) : null}
-    </AnimatePresence>
+    </>
   );
 }
+
+/** Enter/exit duration, ms — the panel's transition and the unmount delay. */
+const EXIT_MS = 420;

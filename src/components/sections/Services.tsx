@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
@@ -153,26 +153,28 @@ export function Services() {
                * `mode="wait"` so the two never overlap in a min-height box
                * that would otherwise jump between copy of different lengths. */}
               <div className="mt-10 min-h-[132px]">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={services[active].index}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <p className="max-w-[46ch] font-ui text-[16px] leading-[1.55] text-mute">
-                      {services[active].description}
-                    </p>
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {services[active].tags.map((t) => (
-                        <span key={t} className="t-label border border-line px-3 py-2 text-mute">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
+                <MotionConfig reducedMotion="user">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div
+                      key={services[active].index}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <p className="max-w-[46ch] font-ui text-[16px] leading-[1.55] text-mute">
+                        {services[active].description}
+                      </p>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {services[active].tags.map((t) => (
+                          <span key={t} className="t-label border border-line px-3 py-2 text-mute">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </MotionConfig>
               </div>
             </ol>
 
@@ -220,19 +222,21 @@ export function Services() {
                 {/* The verb changes with the frame, so it should arrive with
                  * it rather than cutting. Clipped by the frame's own
                  * overflow-hidden, so it rises in from under the edge. */}
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={services[active].word}
-                    aria-hidden="true"
-                    initial={{ opacity: 0, y: 34 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -22 }}
-                    transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
-                    className="pointer-events-none absolute bottom-5 left-6 block font-display text-[52px] font-extrabold uppercase leading-none tracking-[-0.04em] text-text xl:text-[68px]"
-                  >
-                    {services[active].word}
-                  </motion.span>
-                </AnimatePresence>
+                <MotionConfig reducedMotion="user">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={services[active].word}
+                      aria-hidden="true"
+                      initial={{ opacity: 0, y: 34 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -22 }}
+                      transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+                      className="pointer-events-none absolute bottom-5 left-6 block font-display text-[52px] font-extrabold uppercase leading-none tracking-[-0.04em] text-text xl:text-[68px]"
+                    >
+                      {services[active].word}
+                    </motion.span>
+                  </AnimatePresence>
+                </MotionConfig>
 
                 <span
                   aria-hidden="true"

@@ -9,7 +9,6 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { MotionConfig } from "motion/react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -182,16 +181,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:description",
         content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
       },
-      {
-        property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1cedbea-3211-4616-a001-76f4d66bb912/id-preview-7ec2de84--81d10571-0622-4cc6-87cb-939b87a35638.lovable.app-1785234511091.png",
-      },
     ],
     links: [
       /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two
@@ -297,6 +286,10 @@ function RootComponent() {
           down and rebuilt between routes. */}
       {/* The audio element lives here, above the router, so playing a track
           on /label and then navigating does not stop the music. */}
+      {/* (MotionConfig used to wrap everything here. It is now local to the two
+          components that still animate with Framer Motion — Services and
+          ContactForm — so the library is no longer in every page's first
+          bundle. The note below describes why it is set to "user".) */}
       {/* Framer Motion honours prefers-reduced-motion from here, matching what
           every GSAP effect on the site already checks via prefersReducedMotion().
           Without this the two systems disagree: the scroll choreography would
@@ -310,7 +303,7 @@ function RootComponent() {
           basket, and the login popup has to be able to open over any page.
           The gate's pending action (see lib/auth) only survives navigation
           because the provider holding it never unmounts. */}
-      <MotionConfig reducedMotion="user">
+      <>
         <AuthProvider>
           <ContentProvider initial={cms}>
             <CartProvider>
@@ -324,7 +317,7 @@ function RootComponent() {
             </CartProvider>
           </ContentProvider>
         </AuthProvider>
-      </MotionConfig>
+      </>
     </QueryClientProvider>
   );
 }
