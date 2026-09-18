@@ -51,8 +51,23 @@ export function Nav() {
     return () => ctx.revert();
   }, []);
 
+  /* The bar steps aside while you read downward and returns the moment you
+   * scroll up — which is the moment you are looking for it. Never while it
+   * holds focus (a keyboard user tabbing through it must not watch it leave)
+   * and never in the first screen, where it is part of the hero's frame.
+   * An 8px dead band stops a trackpad's jitter from flickering it. */
+  const [tucked, setTucked] = useState(false);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 600);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 600);
+      const dy = y - last;
+      if (Math.abs(dy) < 8) return;
+      const focusInside = navRef.current?.contains(document.activeElement) ?? false;
+      setTucked(dy > 0 && y > window.innerHeight * 0.9 && !focusInside);
+      last = y;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -101,12 +116,19 @@ export function Nav() {
     <>
       <header
         ref={navRef}
+        onFocus={() => setTucked(false)}
         className="fixed inset-x-0 top-0 z-[9990] h-[var(--nav-h)]"
         style={{
           backgroundColor: solid ? "var(--nav-solid)" : "transparent",
           borderBottom: solid ? "1px solid var(--line)" : "1px solid transparent",
-          backdropFilter: solid ? "blur(6px)" : "none",
-          transition: "background-color 0.4s var(--ease-out-expo), border-color 0.4s linear",
+          backdropFilter: solid ? "blur(14px) saturate(1.2)" : "none",
+          /* Inline, not from a stylesheet rule: GSAP's intro
+           * tween writes `translate: none` inline on this element (it clears
+           * the individual transform properties it does not own), and an
+           * inline value beats any stylesheet. */
+          translate: tucked && !open ? "0 -100%" : "0 0",
+          transition:
+            "translate 0.6s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo), border-color 0.4s linear",
         }}
       >
         <div className="shell flex h-full items-center justify-between">
@@ -128,11 +150,14 @@ export function Nav() {
               onClick={() => setOpen(true)}
               aria-expanded={open}
               aria-label="Open menu"
-              className="flex h-11 w-11 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type sm:h-12 sm:w-12"
+              className="group flex h-11 w-11 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type sm:h-12 sm:w-12"
             >
-              <span className="block h-[2px] w-[20px] bg-text" />
-              <span className="block h-[2px] w-[14px] bg-text" />
-              <span className="block h-[2px] w-[20px] bg-text" />
+              {/* On hover the short middle bar reaches full width and the
+               * outer two draw in to meet it — the icon evening itself out
+               * under the pointer, a small "yes, this opens". */}
+              <span className="block h-[2px] w-[20px] bg-text transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-[14px]" />
+              <span className="block h-[2px] w-[14px] bg-text transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-[20px]" />
+              <span className="block h-[2px] w-[20px] bg-text transition-[width] duration-500 ease-[var(--ease-out-expo)] group-hover:w-[14px]" />
             </button>
           </div>
         </div>
@@ -188,7 +213,7 @@ export function Nav() {
                     "opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo)",
                 }}
               >
-                <span className="lb-menu-link font-display font-extrabold uppercase tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
+                <span className="lb-menu-link font-display font-bold tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
                   {item.label}
                 </span>
                 <span className="t-label tnum text-acid-type transition-colors duration-300 group-hover:text-text">

@@ -99,14 +99,14 @@ function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number)
               className="group flex w-full items-baseline gap-4 border-b border-line py-4 text-left transition-colors duration-300 hover:bg-surface-raised"
             >
               <span
-                className={`tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] ${
+                className={`tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${
                   i === active ? "text-acid-type" : "text-mute"
                 }`}
               >
                 {r.index}
               </span>
               <span
-                className={`font-ui text-[13px] font-bold uppercase tracking-[0.1em] transition-transform duration-300 group-hover:translate-x-1 ${
+                className={`t-action transition-transform duration-300 group-hover:translate-x-1 ${
                   i === active ? "text-text" : "text-mute"
                 }`}
               >
@@ -132,10 +132,10 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
       className="scroll-mt-[120px] border-t border-line py-[96px] first:border-t-0"
     >
       <div className="flex items-baseline gap-4">
-        <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+        <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
           {r.index}
         </span>
-        <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[42px]">
+        <h3 className="font-display text-[28px] font-bold leading-[1.1] tracking-[-0.02em] text-text md:text-[42px]">
           {r.name}
         </h3>
         <span className="t-label ml-auto text-mute">{r.kind}</span>
@@ -159,7 +159,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
           <dl className="mt-8 grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
             {r.specs.map((s) => (
               <div key={s.k} className="flex items-baseline gap-4 border-b border-line pb-3">
-                <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
+                <dt className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
                   {s.k}
                 </dt>
                 <dd className="tnum ml-auto font-ui text-[13px] font-semibold uppercase tracking-[0.06em] text-text">
@@ -188,7 +188,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
       <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border border-line bg-surface-raised p-8">
         <div>
           <span className="t-label text-mute">From</span>
-          <div className="tnum mt-2 font-display text-[28px] font-extrabold uppercase tracking-[-0.02em] text-acid-type">
+          <div className="tnum mt-2 font-display text-[28px] font-bold tracking-[-0.02em] text-acid-type">
             {r.rate}
           </div>
           <p className="t-label mt-2 text-mute">Engineer included</p>
@@ -197,13 +197,8 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
           href={`/contact?intent=booking&room=${r.id}`}
           className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
         >
-          <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-            Book {r.name}
-          </span>
-          <ArrowRight
-            size={16}
-            className="text-accent-text transition-transform duration-300 group-hover:translate-x-1"
-          />
+          <span className="t-action text-accent-text">Book {r.name}</span>
+          <ArrowRight size={16} className="text-accent-text lb-arrow" />
         </a>
       </div>
     </article>

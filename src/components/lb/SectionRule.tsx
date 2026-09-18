@@ -23,7 +23,7 @@ import { ensureGsap, ScrollTrigger } from "@/lib/motion";
  * the document and is what every other reveal on this site already uses
  * from inside the same wrappers, so it is both correct and consistent.
  *
- * `once` per element, on purpose. A line that redraws every time a header
+ * Draws once per element, on purpose. A line that redraws every time a header
  * scrolls back into view turns a section boundary into a blinking light,
  * and on a thirty-screen page you cross most of these several times.
  */
@@ -45,7 +45,8 @@ export function SectionRule() {
             /* a little before the header reaches the middle of the screen,
              * so the line has finished drawing by the time it is read */
             start: "top 78%",
-            once: true,
+            /* No `once` — see the note in Reveal.tsx. Setting an attribute
+             * that is already set is free, so a live trigger costs nothing. */
             onEnter: () => el.setAttribute("data-in", ""),
           }),
         );

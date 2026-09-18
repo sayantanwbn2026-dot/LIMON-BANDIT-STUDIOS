@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { BoundaryRule, GridRules, type Tone } from "./GridRules";
 import { ensureGsap } from "@/lib/motion";
-import { Decode } from "./Decode";
 
 const bg: Record<Tone, string> = {
   dark: "bg-surface-deep",
@@ -66,8 +65,22 @@ export function Section({
   );
 }
 
-/** Rotated drafting annotations in the outer margins. */
-export function MarginNotes({
+/**
+ * Rotated drafting annotations in the outer margins.
+ *
+ * Retired, not deleted. "SEC.04 / SERVICES" running up the gutter is the
+ * most editorial device on the site — the page captioning its own layout —
+ * and the one that did the least for a visitor. The call sites stay so the
+ * annotations can come back from one place if the direction ever swings
+ * back; `MARGIN_NOTES` is that place.
+ */
+const MARGIN_NOTES = false;
+
+export function MarginNotes(props: { index: string; name: string; tone?: Tone }) {
+  return MARGIN_NOTES ? <MarginNotesDrawn {...props} /> : null;
+}
+
+function MarginNotesDrawn({
   index,
   name,
   tone = "dark",
@@ -80,7 +93,7 @@ export function MarginNotes({
    * have to follow it — primary-pole mute on a bone surface is unreadable. */
   const tint =
     tone === "light" ? "text-alt-mute" : tone === "acid" ? "text-accent-text" : "text-mute";
-  const base = `pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint} xl:block`;
+  const base = `pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${tint} xl:block`;
   const style: React.CSSProperties = {
     writingMode: "vertical-rl",
     transform: "translateY(-50%) rotate(180deg)",
@@ -98,42 +111,34 @@ export function MarginNotes({
   );
 }
 
-/**
- * Eyebrow — riveted into the section's boundary rule via a notch:
- * surface-coloured background, 16px horizontal padding, pulled up half a line.
- */
+/** Eyebrow — the small signpost above a section heading. */
 export function Eyebrow({
   children,
   tone = "dark",
-  notch = true,
-  surface: surfaceOverride,
 }: {
   children: ReactNode;
   tone?: Tone;
   notch?: boolean;
   surface?: string;
 }) {
-  const surface =
-    surfaceOverride ??
-    (tone === "light" ? "bg-alt-surface" : tone === "acid" ? "bg-acid" : "bg-surface");
   /* Type on the opposite pole must follow that pole (it inverts with the
    * theme); type on acid must not (acid is fixed in both themes). */
   const tint =
     tone === "dark" ? "text-mute" : tone === "light" ? "text-alt-text" : "text-accent-text";
   return (
-    <div
-      className={`inline-flex items-center gap-3 ${notch ? `${surface} -ml-4 px-4 -mt-[0.5em]` : ""}`}
-    >
-      {/* The acid mark carries the halo. It is the one element that appears
-       * at the top of every section, so glowing it is what makes the neon
-       * layer feel systematic rather than sprinkled — and it is a 10px
-       * square, so the glow reads without lighting up the page. */}
-      <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
-      {typeof children === "string" ? (
-        <Decode text={children} className={`t-eyebrow ${tint}`} />
-      ) : (
-        <span className={`t-eyebrow ${tint}`}>{children}</span>
-      )}
+    /* The notch — a surface-coloured patch meant to cut the eyebrow into the
+     * section's boundary rule — is no longer painted. The eyebrow sits a
+     * full section-padding below that rule, so the patch never met a line;
+     * on a section whose ground is --surface-deep it showed as a lighter
+     * box behind the label. `notch` and `surface` are still accepted so
+     * no call site has to change. */
+    <div className="inline-flex items-center gap-2.5">
+      {/* A small acid dot, no halo. It was a glowing 10px square with a
+       * scramble-decoded label beside it — a terminal booting up at the top
+       * of every section. The dot keeps the one piece of colour that ties
+       * the headers together; the glow and the glyph noise are gone. */}
+      <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
+      <span className={`t-eyebrow ${tint}`}>{children}</span>
     </div>
   );
 }

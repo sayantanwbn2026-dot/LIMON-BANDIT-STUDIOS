@@ -110,7 +110,7 @@ export function DocEditor({
     <section className="border border-line bg-surface-deep">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line p-6">
         <div className="min-w-0">
-          <h2 className="font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-text">
             {collection.title}
           </h2>
           <p className="mt-2 max-w-[64ch] font-ui text-[13px] leading-[1.5] text-mute">
@@ -124,7 +124,7 @@ export function DocEditor({
             onClick={() => void revert()}
             disabled={busy}
             title="Put this section back to the content the site shipped with"
-            className="flex h-10 items-center gap-2 border border-line px-3 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text disabled:opacity-50"
+            className="flex h-10 items-center gap-2 border border-line px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text disabled:opacity-50"
           >
             <RotateCcw size={13} />
             Reset
@@ -133,7 +133,7 @@ export function DocEditor({
             type="button"
             onClick={() => void save()}
             disabled={busy || !dirty}
-            className="flex h-10 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-mute"
+            className="flex h-10 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-mute"
           >
             <Save size={13} />
             {busy ? "Saving…" : dirty ? "Save" : "Saved"}
@@ -190,7 +190,7 @@ export function DocEditor({
             type="button"
             onClick={() => void save()}
             disabled={busy}
-            className="flex h-10 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
+            className="flex h-10 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
           >
             <Save size={13} />
             {busy ? "Saving…" : "Save"}
@@ -208,7 +208,7 @@ export function ViewLive({ path }: { path: string }) {
       href={path}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center gap-2 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-300 hover:text-acid-type"
+      className="flex items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:text-acid-type"
     >
       View live
       <ExternalLink size={12} />

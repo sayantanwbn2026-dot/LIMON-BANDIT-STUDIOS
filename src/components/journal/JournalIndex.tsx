@@ -65,14 +65,14 @@ export function JournalIndex() {
               <span className="t-label tnum text-alt-mute">{lead.readTime}</span>
             </div>
 
-            <h3 className="mt-6 max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-alt-text md:text-[42px]">
+            <h3 className="mt-6 max-w-[18ch] font-display text-[28px] font-bold leading-[1.08] tracking-[-0.03em] text-alt-text md:text-[42px]">
               {lead.title}
             </h3>
 
             <Link
               to="/journal/$slug"
               params={{ slug: lead.slug }}
-              className="mt-8 inline-flex w-fit items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-text"
+              className="mt-8 inline-flex w-fit items-center gap-2 t-action text-alt-text"
             >
               <span className="wipe-underline">Read the entry</span>
               <ArrowUpRight size={14} className="text-alt-acid-type" />
@@ -98,7 +98,7 @@ export function JournalIndex() {
                 </span>
 
                 <span className="md:col-span-6">
-                  <span className="block max-w-[34ch] font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-alt-text transition-transform duration-300 group-hover:translate-x-2 md:text-[24px]">
+                  <span className="block max-w-[34ch] font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-alt-text transition-transform duration-300 group-hover:translate-x-2 md:text-[24px]">
                     {p.title}
                   </span>
                 </span>

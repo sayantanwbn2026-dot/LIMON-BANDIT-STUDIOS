@@ -21,6 +21,7 @@ import { Cursor } from "@/components/lb/Cursor";
 import { SmoothScroll } from "@/components/lb/SmoothScroll";
 import { SkipLink } from "@/components/lb/SkipLink";
 import { SectionRule } from "@/components/lb/SectionRule";
+import { StageLight } from "@/components/lb/StageLight";
 import { GridRules } from "@/components/lb/GridRules";
 import { RouteTransition } from "@/components/lb/RouteTransition";
 import { MiniTransport } from "@/components/lb/MiniTransport";
@@ -54,14 +55,14 @@ function NotFoundComponent() {
       <GridRules tone="dark" />
       <div className="shell relative z-[2] max-w-[640px] pt-[calc(var(--nav-h)+56px)]">
         <span className="mb-8 flex items-center gap-3">
-          <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
-          <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
+          <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
+          <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
             404 / Not Found
           </span>
         </span>
 
         <h1
-          className="font-display text-[52px] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-text md:text-[68px]"
+          className="font-display text-[52px] font-bold leading-[1.1] tracking-[-0.03em] text-text md:text-[68px]"
           data-page-h1
           tabIndex={-1}
         >
@@ -76,13 +77,13 @@ function NotFoundComponent() {
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
             to="/"
-            className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Home
           </Link>
           <Link
             to="/shop"
-            className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center justify-center border border-line px-8 t-action text-text transition-colors duration-300 hover:border-acid-type"
           >
             The shop
           </Link>
@@ -107,14 +108,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <GridRules tone="dark" />
       <div className="shell relative z-[2] max-w-[640px] pt-[calc(var(--nav-h)+56px)]">
         <span className="mb-8 flex items-center gap-3">
-          <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
-          <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
+          <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
+          <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
             500 / Room's dark
           </span>
         </span>
 
         <h1
-          className="font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text md:text-[52px]"
+          className="font-display text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-text md:text-[52px]"
           data-page-h1
           tabIndex={-1}
         >
@@ -133,13 +134,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Try again
           </button>
           <a
             href="/"
-            className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center justify-center border border-line px-8 t-action text-text transition-colors duration-300 hover:border-acid-type"
           >
             Home
           </a>
@@ -257,6 +258,7 @@ function SiteChrome() {
       <SkipLink />
       <SmoothScroll />
       <SectionRule />
+      <StageLight />
       <Noise />
       <Cursor />
       <RouteTransition />

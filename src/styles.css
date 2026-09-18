@@ -5,7 +5,10 @@
 
 /* ------------------------------------------------------------------
  * LIMON BANDIT — design tokens
- * Editorial-brutalist. Square corners, hairline borders, no shadows.
+ * Square corners, hairline borders, no shadows. Quiet structure, one
+ * accent, and motion that answers the hand (see "the stage light" at the
+ * end of this file). Was "editorial-brutalist"; the bones are the same,
+ * the voice is lower.
  *
  * TWO POLES, NOT TWO THEMES.
  * A section declares which pole it sits on — the primary set
@@ -106,8 +109,10 @@
   --accent-type: #e9ff00;
   --alt-accent-type: #5f6b00;
 
-  --grid-rule: rgba(255, 255, 255, 0.2);
-  --alt-grid-rule: rgba(0, 0, 0, 0.18);
+  /* 0.2 → 0.08. The rules are solid and end-faded now (GridRules.tsx), so
+   * they read at a fraction of the alpha the dashed version needed. */
+  --grid-rule: rgba(255, 255, 255, 0.08);
+  --alt-grid-rule: rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] {
@@ -131,8 +136,8 @@
   --accent-type: #5f6b00;
   --alt-accent-type: #e9ff00;
 
-  --grid-rule: rgba(0, 0, 0, 0.18);
-  --alt-grid-rule: rgba(255, 255, 255, 0.2);
+  --grid-rule: rgba(0, 0, 0, 0.08);
+  --alt-grid-rule: rgba(255, 255, 255, 0.08);
 }
 
 :root {
@@ -261,7 +266,9 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    text-transform: uppercase;
+    /* Sentence case by default. Capitals are kept for the two places that
+     * are marks rather than sentences — the hero and the giant wordmark —
+     * and they opt in through t-hero / t-giant. See the note by t-h2. */
     /* Tailwind's preflight makes headings inherit weight, which would land
      * them on 400 — a Sora weight the site otherwise never uses and would
      * have to ship purely for these. 700 is the ladder's heading weight. */
@@ -332,13 +339,13 @@
    * ------------------------------------------------------------ */
   :root,
   [data-theme="dark"] {
-    --grid-rule: rgba(255, 255, 255, 0.07);
-    --alt-grid-rule: rgba(0, 0, 0, 0.07);
+    --grid-rule: rgba(255, 255, 255, 0.05);
+    --alt-grid-rule: rgba(0, 0, 0, 0.05);
   }
 
   [data-theme="light"] {
-    --grid-rule: rgba(0, 0, 0, 0.07);
-    --alt-grid-rule: rgba(255, 255, 255, 0.07);
+    --grid-rule: rgba(0, 0, 0, 0.05);
+    --alt-grid-rule: rgba(255, 255, 255, 0.05);
   }
 
   /* ---------------- swipe rails ----------------
@@ -606,8 +613,11 @@
  * Runs only while [data-on] is set, so a section fires it on reveal and
  * then leaves it alone rather than glitching forever in the corner of
  * someone's eye. */
+/* Retired with the scanlines: an RGB split on the wordmark is a glitch-art
+ * gesture, and it fired on the one piece of type that most needs to look
+ * composed. The keyframes stay below in case a later pass wants them. */
 .glitch[data-on] {
-  animation: lb-rgb-split 560ms steps(3, end) 1;
+  animation: none;
 }
 
 /* The confirmation banner rising in after an auth email. Kept next to
@@ -731,22 +741,32 @@
   }
 }
 
+/* SENTENCE CASE BELOW THE HERO.
+ *
+ * Every heading on the site used to be set in capitals at 0.96 leading,
+ * which is the voice of a broadsheet: each section shouted its name at the
+ * same pitch, and a page of shouting reads as editorial rather than as
+ * composed. The copy was always written in sentence case — the capitals
+ * were a CSS transform — so this is a change of voice, not of content.
+ *
+ * Mixed case needs more room than capitals (descenders, ascenders), so the
+ * leading opens to 1.04 and the tracking tightens to keep Sora's wide
+ * lowercase from drifting apart at display size. */
 @utility t-h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(28px, 2.7vw, 42px);
-  letter-spacing: -0.03em;
-  line-height: 0.96;
-  text-transform: uppercase;
+  font-size: clamp(30px, 2.9vw, 46px);
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  text-wrap: balance;
 }
 
 @utility t-h3 {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 @utility t-giant {
@@ -758,20 +778,35 @@
   text-transform: uppercase;
 }
 
+/* Small capitals stay for eyebrows and data labels — they are signage, and
+ * signage is where capitals belong — but quieter: 600 rather than 700, and
+ * tracking brought in from 0.14em, which at 12px spaced the letters so far
+ * apart they read as individual marks rather than as a word. */
 @utility t-eyebrow {
   font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 @utility t-label {
   font-family: var(--font-ui);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* The house action label. Buttons were 13px bold capitals at 0.14em — a
+ * poster voice on a control. Sentence case at 14/600 reads as an invitation
+ * rather than a command, and matches how every other product people use
+ * labels its buttons. */
+@utility t-action {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.005em;
 }
 
 @utility t-lead {
@@ -1156,7 +1191,7 @@
 
   .section-head .t-h2 {
     font-size: 30px;
-    line-height: 1.02;
+    line-height: 1.08;
   }
 
   /* Hard breaks written for a wide measure run together here; the words
@@ -1324,5 +1359,162 @@
     transform: rotateY(180deg);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+}
+
+/* ================= the stage light =================
+ * The site's one signature interaction. A soft acid light follows the
+ * pointer across anything framed — a card, a button, a field — lighting the
+ * frame's edge nearest the hand and washing a little colour into the panel
+ * under it. It is how a desk lamp falls on a console: the object answers
+ * where you are, not merely whether you are on it.
+ *
+ * One delegated listener (StageLight.tsx) writes --mx / --my onto whatever
+ * framed element is under the pointer. Everything else is this CSS.
+ *
+ * Which elements are "framed" is decided by structure, not by hand: any
+ * link or button that draws its own border, plus anything marked
+ * `.lb-lit`. That covers ~60 call sites without touching them, and a new
+ * bordered card picks the light up for free.
+ *
+ * ::after, because ::before is spoken for — `fill-acid` sweeps with it and
+ * the touch hit-area uses it. The pseudo sits on `inset: 0`, over the
+ * element's own border, so an `overflow: hidden` card does not clip it.
+ *
+ * On a touch screen there is no hover, so the light blooms from the point
+ * of the tap while the finger is down (:active) — the same object
+ * acknowledging the same hand.
+ * ================================================== */
+:where(a, button)[class~="border"]:not([class~="absolute"]):not([class~="fixed"]):not(
+    [class~="sticky"]
+  ),
+.lb-lit:not([class~="absolute"]):not([class~="fixed"]) {
+  position: relative;
+}
+
+:where(a, button)[class~="border"]::after,
+.lb-lit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid var(--lit-edge, var(--accent-type));
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    var(--lit-wash, rgba(233, 255, 0, 0.07)),
+    transparent 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  :where(a, button)[class~="border"]:hover::after,
+  .lb-lit:hover::after {
+    opacity: 1;
+  }
+}
+:where(a, button)[class~="border"]:active::after,
+.lb-lit:active::after,
+:where(a, button)[class~="border"]:focus-visible::after {
+  opacity: 1;
+  transition-duration: 0.12s;
+}
+
+/* On an acid panel the light would be acid on acid. Ink instead. */
+.bg-acid :where(a, button)[class~="border"],
+.bg-acid .lb-lit {
+  --lit-edge: var(--accent-text);
+  --lit-wash: rgba(0, 0, 0, 0.06);
+}
+
+/* ---------------- press ----------------
+ * Every pointer, not only touch. A mouse click used to land with no
+ * physical answer at all; now a framed control gives by 2% and springs
+ * back. `scale` the property, for the same reason as the touch block above:
+ * it composes with transforms GSAP writes. */
+@media (pointer: fine) {
+  :where(a, button)[class~="border"]:active,
+  .lb-lit:active {
+    scale: 0.985;
+    transition: scale 0.12s ease-out;
+  }
+}
+
+/* ---------------- the arrow loop ----------------
+ * An arrow on a call to action used to nudge 4px right on hover and stop,
+ * pointing at nothing. Now it leaves through the right edge and comes back
+ * in from the left — one full pass, the way a carriage returns — so the
+ * hover reads as "go", and the arrow is back where it started for the next
+ * look. Clipped by `.lb-arrow-clip`, which the arrow's wrapper carries. */
+.lb-arrow-clip {
+  display: inline-flex;
+  overflow: hidden;
+}
+@keyframes lb-arrow-loop {
+  0% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(140%);
+    opacity: 0;
+  }
+  46% {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@media (hover: hover) {
+  .group:hover .lb-arrow,
+  .group:focus-visible .lb-arrow {
+    animation: lb-arrow-loop 0.6s var(--ease-out-expo);
+  }
+}
+
+/* ---------------- the field line ----------------
+ * A form field's underline draws itself across from the left when the field
+ * takes focus, instead of changing colour in place. The static rule stays
+ * as the resting line; this is a second line laid over it. */
+.lb-field-line {
+  position: relative;
+}
+.lb-field-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--accent-type);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.lb-field-line:focus-within::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .lb-arrow {
+    animation: none;
+  }
+  :where(a, button)[class~="border"]:active,
+  .lb-lit:active {
+    scale: 1;
   }
 }

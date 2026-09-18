@@ -33,7 +33,7 @@ export function Wall() {
                 style={{ aspectRatio: shot.span ? "16 / 10" : "4 / 5" }}
                 imgClassName="h-full w-full object-cover transition-all duration-[700ms] group-hover:scale-[1.04]"
               />
-              <figcaption className="pointer-events-none absolute bottom-0 left-0 bg-surface-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.14em] text-mute opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <figcaption className="pointer-events-none absolute bottom-0 left-0 bg-surface-deep px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {shot.caption}
               </figcaption>
               <span

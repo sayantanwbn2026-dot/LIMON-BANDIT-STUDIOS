@@ -64,7 +64,7 @@ export function Accordion({
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
-                  className={`flex-1 font-display text-[18px] font-bold uppercase tracking-[-0.02em] ${text}`}
+                  className={`flex-1 font-display text-[18px] font-bold tracking-[-0.02em] ${text}`}
                 >
                   {item.question}
                 </span>
@@ -99,7 +99,7 @@ export function Accordion({
         <button
           type="button"
           onClick={() => setShowAll(true)}
-          className={`flex min-h-11 w-full items-center justify-between border-t ${line} py-5 font-ui text-[12px] font-bold uppercase tracking-[0.14em] ${text} md:hidden`}
+          className={`flex min-h-11 w-full items-center justify-between border-t ${line} py-5 t-action ${text} md:hidden`}
         >
           <span>Show all {items.length} questions</span>
           <Plus size={16} aria-hidden="true" />

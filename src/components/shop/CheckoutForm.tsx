@@ -192,7 +192,7 @@ export function CheckoutForm() {
         <button
           type="button"
           onClick={() => openAuth("Sign in to check out. Your cart is waiting.")}
-          className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+          className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
           Sign in
         </button>
@@ -205,7 +205,7 @@ export function CheckoutForm() {
       <Stub title="Your cart is empty" body="Nothing to check out. The shop is through here.">
         <Link
           to="/shop"
-          className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+          className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
           Go to the shop
         </Link>
@@ -349,11 +349,11 @@ export function CheckoutForm() {
             <div className="mt-8">
               <label
                 htmlFor="co-note"
-                className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
+                className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
               >
                 Anything we should know
               </label>
-              <div className="mt-3 border-b border-line transition-colors duration-300 focus-within:border-acid-type">
+              <div className="mt-3 border-b border-line lb-field-line transition-colors duration-300 focus-within:border-line-strong">
                 <textarea
                   id="co-note"
                   rows={3}
@@ -426,7 +426,7 @@ export function CheckoutForm() {
             <div className="mt-6">
               <label
                 htmlFor="co-code"
-                className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
+                className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
               >
                 Discount code
               </label>
@@ -441,7 +441,7 @@ export function CheckoutForm() {
                 <button
                   type="button"
                   onClick={applyCode}
-                  className="shrink-0 border border-line px-4 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+                  className="shrink-0 border border-line px-4 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
                 >
                   Apply
                 </button>
@@ -467,7 +467,7 @@ export function CheckoutForm() {
                 v={digital ? "None" : cart.shipping === 0 ? "Free" : inr(cart.shipping)}
               />
               <div className="mt-4 flex items-baseline justify-between border-t border-line pt-4">
-                <dt className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text">
+                <dt className="font-display text-[15px] font-bold tracking-[-0.01em] text-text">
                   To pay on delivery
                 </dt>
                 <dd className="tnum font-display text-[20px] font-extrabold tracking-[-0.02em] text-text">
@@ -561,13 +561,13 @@ function Confirmation({ order }: { order: PlacedOrder }) {
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
             to="/orders"
-            className="flex h-[56px] items-center gap-3 bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-[56px] items-center gap-3 bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Your orders <ArrowRight size={16} />
           </Link>
           <Link
             to="/shop"
-            className="flex h-[56px] items-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-[56px] items-center border border-line px-8 t-action text-text transition-colors duration-300 hover:border-acid-type"
           >
             Back to the shop
           </Link>

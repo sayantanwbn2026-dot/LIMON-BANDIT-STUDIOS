@@ -41,7 +41,7 @@ export function CartDrawer() {
           <Link
             to="/shop"
             onClick={() => cart.setOpen(false)}
-            className="mt-8 flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="mt-8 flex h-[56px] items-center justify-center border border-line t-action text-text transition-colors duration-300 hover:border-acid-type"
           >
             Go to the shop
           </Link>
@@ -88,7 +88,7 @@ export function CartDrawer() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-display text-[15px] font-bold uppercase leading-[1.1] tracking-[-0.01em] text-text">
+                    <h3 className="font-display text-[15px] font-bold leading-[1.1] tracking-[-0.01em] text-text">
                       {p.title}
                     </h3>
                     <p className="mt-1 font-ui text-[12px] text-mute">
@@ -171,7 +171,7 @@ export function CartDrawer() {
               }
             />
             <div className="mt-4 flex items-baseline justify-between border-t border-line pt-4">
-              <dt className="font-display text-[16px] font-extrabold uppercase tracking-[-0.01em] text-text">
+              <dt className="font-display text-[16px] font-bold tracking-[-0.01em] text-text">
                 Total
               </dt>
               <dd className="tnum font-display text-[24px] font-extrabold tracking-[-0.02em] text-text">
@@ -183,7 +183,7 @@ export function CartDrawer() {
           <Link
             to="/checkout"
             onClick={() => cart.setOpen(false)}
-            className="mt-8 flex h-[56px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="mt-8 flex h-[56px] items-center justify-center bg-acid t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Checkout
           </Link>
@@ -241,7 +241,7 @@ function RegionChip({
         on ? "bg-acid text-accent-text" : "border border-line text-mute hover:border-acid-type"
       }`}
     >
-      <span className="block font-ui text-[11px] font-bold uppercase tracking-[0.12em]">
+      <span className="block font-ui text-[11px] font-semibold uppercase tracking-[0.08em]">
         {label}
       </span>
       <span className="tnum mt-1 block font-ui text-[12px]">{note}</span>

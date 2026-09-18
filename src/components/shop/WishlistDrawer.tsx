@@ -47,7 +47,7 @@ export function WishlistDrawer() {
           <Link
             to="/shop"
             onClick={() => wishlist.setOpen(false)}
-            className="mt-8 flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className="mt-8 flex h-[56px] items-center justify-center border border-line t-action text-text transition-colors duration-300 hover:border-acid-type"
           >
             Go to the shop
           </Link>
@@ -74,7 +74,7 @@ export function WishlistDrawer() {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-display text-[15px] font-bold uppercase leading-[1.1] tracking-[-0.01em] text-text">
+                  <h3 className="font-display text-[15px] font-bold leading-[1.1] tracking-[-0.01em] text-text">
                     {p.title}
                   </h3>
                   <p className="mt-1 font-ui text-[12px] text-mute">{p.by}</p>

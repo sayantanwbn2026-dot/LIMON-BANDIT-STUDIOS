@@ -39,7 +39,7 @@ export function LabelHero() {
             ].map((s) => (
               <div key={s.k}>
                 <dt className="t-label text-mute">{s.k}</dt>
-                <dd className="mt-2 font-display text-[15px] font-bold uppercase tracking-[-0.01em] text-text">
+                <dd className="mt-2 font-display text-[15px] font-bold tracking-[-0.01em] text-text">
                   {s.v}
                 </dd>
               </div>

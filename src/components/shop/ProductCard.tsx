@@ -93,7 +93,7 @@ export function ProductCard({
             />
           </button>
 
-          <span className="tnum pointer-events-none absolute left-0 top-0 bg-surface-deep px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-acid-type">
+          <span className="tnum pointer-events-none absolute left-0 top-0 bg-surface-deep px-2 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
             {product.index}
           </span>
 
@@ -118,11 +118,11 @@ export function ProductCard({
           </button>
 
           {gone ? (
-            <span className="pointer-events-none absolute bottom-0 right-0 bg-surface-deep px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
+            <span className="pointer-events-none absolute bottom-0 right-0 bg-surface-deep px-2 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
               Sold out
             </span>
           ) : low ? (
-            <span className="tnum pointer-events-none absolute bottom-0 right-0 bg-acid px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-accent-text">
+            <span className="tnum pointer-events-none absolute bottom-0 right-0 bg-acid px-2 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text">
               {product.stock} left
             </span>
           ) : null}
@@ -132,7 +132,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={() => onOpen(product)}
-            className="text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.05] sm:tracking-[-0.02em]"
+            className="text-left font-display text-[14px] font-bold leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.1] sm:tracking-[-0.02em]"
           >
             {product.title}
           </button>
@@ -156,7 +156,7 @@ export function ProductCard({
                     type="button"
                     onClick={() => setSize(s)}
                     aria-pressed={size === s}
-                    className={`min-w-[42px] px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-[0.1em] transition-colors duration-300 ${
+                    className={`min-w-[42px] px-3 py-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-300 ${
                       size === s
                         ? "bg-acid text-accent-text"
                         : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -209,7 +209,7 @@ export function ProductCard({
                     ? `Choose a size for ${product.title}`
                     : `Add ${product.title} to cart`
                 }
-                className="flex h-11 shrink-0 items-center justify-center gap-2 bg-acid px-0 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim sm:px-5"
+                className="flex h-11 shrink-0 items-center justify-center gap-2 bg-acid px-0 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim sm:px-5"
                 style={{ minWidth: 44 }}
               >
                 {added ? <Check size={15} /> : <Plus size={15} className="sm:hidden" />}

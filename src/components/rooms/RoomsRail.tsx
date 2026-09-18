@@ -47,10 +47,10 @@ export function RoomsRail() {
                 {rooms.map((r) => (
                   <th key={r.id} scope="col" className="py-6 pr-6 align-bottom">
                     <a href={`#room-${r.id}`} className="group block">
-                      <span className="tnum block font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+                      <span className="tnum block font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
                         {r.index}
                       </span>
-                      <span className="mt-2 block font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text transition-transform duration-300 group-hover:translate-x-1">
+                      <span className="mt-2 block font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-text transition-transform duration-300 group-hover:translate-x-1">
                         {r.name}
                       </span>
                       <span className="t-label mt-2 block font-normal text-mute">{r.kind}</span>
@@ -97,17 +97,17 @@ export function RoomsRail() {
           {rooms.map((r) => (
             <li key={r.id} className="border-t border-line py-8">
               <a href={`#room-${r.id}`} className="block">
-                <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+                <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
                   {r.index}
                 </span>
-                <h3 className="mt-2 font-display text-[24px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
+                <h3 className="mt-2 font-display text-[24px] font-bold leading-[1.1] tracking-[-0.02em] text-text">
                   {r.name}
                 </h3>
                 <p className="t-label mt-1 text-mute">{r.kind}</p>
                 <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3">
                   {ROWS.map((row) => (
                     <div key={row.label} className="border-b border-line pb-2">
-                      <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
+                      <dt className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
                         {row.label}
                       </dt>
                       <dd

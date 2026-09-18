@@ -41,13 +41,13 @@ export function Field({
     <div>
       <label
         htmlFor={id}
-        className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
+        className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
       >
         {label}
         {required ? <span className="ml-1 text-acid-type">*</span> : null}
       </label>
       <div
-        className={`mt-3 border-b transition-colors duration-300 focus-within:border-acid-type ${
+        className={`mt-3 border-b lb-field-line transition-colors duration-300 focus-within:border-line-strong ${
           error ? "border-acid-type" : "border-line"
         }`}
       >
@@ -123,7 +123,7 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={busy || disabled}
-      className={`flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:opacity-50 ${
+      className={`flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:opacity-50 ${
         full ? "w-full" : ""
       }`}
     >

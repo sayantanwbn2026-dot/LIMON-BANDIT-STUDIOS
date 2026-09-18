@@ -126,11 +126,11 @@ export function DropRail() {
                       filter: "brightness(var(--img-brightness)) contrast(1.03) saturate(1.06)",
                     }}
                   />
-                  <span className="absolute left-0 top-0 bg-surface-deep px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] tnum text-acid-type">
+                  <span className="absolute left-0 top-0 bg-surface-deep px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] tnum text-acid-type">
                     {d.index}
                   </span>
                   <span
-                    className={`absolute bottom-0 right-0 px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] ${
+                    className={`absolute bottom-0 right-0 px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${
                       d.status === "Out now"
                         ? "bg-acid text-accent-text"
                         : "bg-surface-deep text-mute"
@@ -140,15 +140,15 @@ export function DropRail() {
                   </span>
                 </div>
                 <div className="border-t border-line p-5">
-                  <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text">
+                  <h3 className="font-display text-[20px] font-bold leading-[1.08] tracking-[-0.02em] text-text">
                     {d.title}
                   </h3>
                   <p className="mt-2 font-ui text-[13px] text-mute">{d.artist}</p>
                   <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
-                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] text-mute">
+                    <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
                       {d.format}
                     </span>
-                    <span className="font-ui text-[10px] font-bold uppercase tracking-[0.14em] tnum text-mute">
+                    <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] tnum text-mute">
                       {d.date}
                     </span>
                   </div>
@@ -159,7 +159,7 @@ export function DropRail() {
         </div>
 
         <div className="shell mt-12 flex items-center gap-5">
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
+          <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
             Drag / Scroll
           </span>
           <span className="relative h-px flex-1 bg-line">
@@ -169,7 +169,7 @@ export function DropRail() {
               style={{ transform: "scaleX(0)" }}
             />
           </span>
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] tnum text-mute">
+          <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] tnum text-mute">
             {String(drops.length).padStart(2, "0")} releases
           </span>
         </div>

@@ -157,7 +157,7 @@ export function ProductSheet({
                 type="button"
                 onClick={() => setSize(s)}
                 aria-pressed={size === s}
-                className={`h-12 min-w-[52px] px-3 font-ui text-[12px] font-bold uppercase tracking-[0.1em] transition-colors duration-300 ${
+                className={`h-12 min-w-[52px] px-3 t-action transition-colors duration-300 ${
                   size === s
                     ? "bg-acid text-accent-text"
                     : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -222,7 +222,7 @@ export function ProductSheet({
         </button>
 
         {gone ? (
-          <span className="flex h-[56px] flex-1 items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
+          <span className="flex h-[56px] flex-1 items-center justify-center border border-line t-action text-mute">
             Sold out
           </span>
         ) : (
@@ -230,7 +230,7 @@ export function ProductSheet({
             type="button"
             onClick={add}
             disabled={needsSize && !size}
-            className="flex h-[56px] flex-1 items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-mute"
+            className="flex h-[56px] flex-1 items-center justify-center gap-2 bg-acid t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-mute"
           >
             {added ? <Check size={15} /> : null}
             {added ? "Added" : needsSize && !size ? "Pick a size" : "Add to cart"}

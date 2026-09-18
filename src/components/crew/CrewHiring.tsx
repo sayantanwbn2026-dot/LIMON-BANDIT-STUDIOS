@@ -41,7 +41,7 @@ export function CrewHiring() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -57,11 +57,11 @@ export function CrewHiring() {
             <ol className="border-t border-line">
               {STEPS.map((s) => (
                 <li key={s.k} className="flex gap-6 border-b border-line py-8">
-                  <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+                  <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
                     {s.k}
                   </span>
                   <span>
-                    <span className="block font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
+                    <span className="block font-display text-[18px] font-bold tracking-[-0.02em] text-text">
                       {s.t}
                     </span>
                     <span className="mt-2 block max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -77,13 +77,8 @@ export function CrewHiring() {
                 href="/contact?intent=crew"
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
-                <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  Hire the crew
-                </span>
-                <ArrowRight
-                  size={16}
-                  className="text-accent-text transition-transform duration-300 group-hover:translate-x-1"
-                />
+                <span className="t-action text-accent-text">Hire the crew</span>
+                <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </a>
               <a
                 href="/contact?intent=join-crew"

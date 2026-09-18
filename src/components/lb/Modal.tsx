@@ -158,7 +158,7 @@ export function Modal({
               <div className="min-w-0">
                 <h2
                   id={titleId}
-                  className="font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text"
+                  className="font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-text"
                 >
                   {title}
                 </h2>

@@ -59,11 +59,8 @@ export function Roster() {
             href="/label"
             className="group flex items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
-            <span className="t-eyebrow text-text">Hear the label</span>
-            <ArrowRight
-              size={15}
-              className="text-acid-type transition-transform duration-300 group-hover:translate-x-1"
-            />
+            <span className="t-action text-text">Hear the label</span>
+            <ArrowRight size={15} className="text-acid-type lb-arrow" />
           </a>
         </div>
       </div>
@@ -104,7 +101,7 @@ export function Roster() {
                 {r.genre} · {r.runtime} · {r.year}
               </div>
               <div className="mt-3 flex items-center justify-between gap-4">
-                <span className="font-display text-[18px] font-bold uppercase leading-none tracking-[-0.02em] text-text">
+                <span className="font-display text-[18px] font-bold leading-none tracking-[-0.02em] text-text">
                   {r.artist}
                 </span>
                 <ArrowUpRight size={18} className="shrink-0 text-acid-type" />

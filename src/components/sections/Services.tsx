@@ -122,7 +122,7 @@ export function Services() {
                         /* The active row steps forward rather than lighting
                          * up: colour alone at this size reads as a hover
                          * state, and this is a position in a sequence. */
-                        className="font-display text-[34px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] transition-all duration-500 group-focus-visible:underline xl:text-[42px]"
+                        className="font-display text-[34px] font-bold leading-[1.08] tracking-[-0.03em] transition-all duration-500 group-focus-visible:underline xl:text-[42px]"
                         style={{
                           color: on ? "var(--text)" : "var(--mute)",
                           transform: on ? "translateX(14px)" : "translateX(0)",
@@ -317,7 +317,7 @@ export function Services() {
               {/* the document */}
               <div className="p-6">
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-display text-[24px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
+                  <h3 className="font-display text-[24px] font-bold leading-[1.08] tracking-[-0.03em] text-text">
                     {s.title}
                   </h3>
                   <ArrowUpRight size={16} className="shrink-0 text-acid-type" />

@@ -95,7 +95,7 @@ export function JoinList() {
           <div className="flex flex-col justify-end">
             {done ? (
               <div className="border border-acid-type bg-surface-raised p-8">
-                <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+                <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
                   On the list
                 </span>
                 <p className="mt-3 font-ui text-[15px] text-text">
@@ -106,13 +106,13 @@ export function JoinList() {
               <form onSubmit={onSubmit} noValidate>
                 <label
                   htmlFor="join-email"
-                  className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
+                  className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
                 >
                   Email address
                 </label>
                 <div
                   ref={fieldRef}
-                  className={`group mt-3 flex items-center border-b transition-colors duration-300 focus-within:border-acid-type ${
+                  className={`group mt-3 flex items-center border-b lb-field-line transition-colors duration-300 focus-within:border-line-strong ${
                     state === "bad" ? "border-acid-type" : "border-line"
                   }`}
                 >
@@ -131,7 +131,7 @@ export function JoinList() {
                     aria-describedby={reason ? "join-email-msg" : undefined}
                     placeholder="you@somewhere.in"
                     disabled={busy}
-                    className="h-[56px] w-full bg-transparent font-display text-[20px] font-bold uppercase tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] disabled:opacity-60 md:text-[28px]"
+                    className="h-[56px] w-full bg-transparent font-display text-[20px] font-bold tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] disabled:opacity-60 md:text-[28px]"
                   />
                   <button
                     type="submit"

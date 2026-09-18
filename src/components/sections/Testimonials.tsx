@@ -36,7 +36,7 @@ export function Testimonials() {
         <div className="section-head">
           <div className="md:col-span-1">
             <div className="flex items-center gap-3">
-              <span className="h-[10px] w-[10px] bg-accent-text" />
+              <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-accent-text" />
               <span className="t-eyebrow text-accent-text">{copy.eyebrow}</span>
             </div>
           </div>
@@ -46,13 +46,10 @@ export function Testimonials() {
           <div className="flex items-end md:col-span-1">
             <a
               href="/label"
-              className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text"
+              className="group inline-flex items-center gap-2 t-action text-accent-text"
             >
               <span className="wipe-underline">See the roster</span>
-              <ArrowRight
-                size={14}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <ArrowRight size={14} className="lb-arrow" />
             </a>
           </div>
         </div>
@@ -74,7 +71,7 @@ export function Testimonials() {
               <RiseIn delay={i * 0.05}>
                 <article className="grid grid-cols-1 gap-x-10 gap-y-6 py-8 md:py-12 lg:grid-cols-12 lg:items-baseline">
                   <blockquote className="lg:col-span-8">
-                    <p className="max-w-[26ch] font-display text-[24px] font-extrabold uppercase leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
+                    <p className="max-w-[26ch] font-display text-[24px] font-bold leading-[1.08] tracking-[-0.03em] text-accent-text md:text-[34px]">
                       {t.quote}
                     </p>
                   </blockquote>

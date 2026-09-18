@@ -104,7 +104,7 @@ export function ShopCatalog() {
                       onClick={() => setCategory(c.id)}
                       aria-pressed={on}
                       disabled={n === 0}
-                      className={`flex h-10 items-baseline gap-1.5 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:gap-2 lg:py-2 lg:tracking-[0.14em] ${
+                      className={`flex h-10 items-center gap-1.5 px-3 font-ui text-[13px] font-semibold tracking-[-0.005em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:gap-2 lg:py-2 ${
                         on
                           ? "bg-acid text-accent-text"
                           : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -128,7 +128,7 @@ export function ShopCatalog() {
           <div className="mt-3 flex shrink-0 items-center justify-between gap-3 lg:mt-0 lg:justify-end">
             <label
               htmlFor="shop-sort"
-              className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
+              className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
             >
               Sort
             </label>

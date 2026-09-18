@@ -2,7 +2,12 @@ const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 /**
- * The screen: film grain, then a CRT ruling over it.
+ * The screen: film grain.
+ *
+ * The CRT ruling that used to sit under it is gone — scanlines are the
+ * cyberpunk layer's texture, and at a glance they read as a cheap monitor
+ * rather than as a surface. Grain alone gives the dark planes the tooth
+ * they need. The notes below describe the two-layer arrangement it had.
  *
  * Opacity and blend mode live in CSS so they can follow the theme.
  *
@@ -16,7 +21,6 @@ const NOISE =
 export function Noise() {
   return (
     <>
-      <div aria-hidden="true" className="lb-scanlines pointer-events-none fixed inset-0 z-[9997]" />
       <div
         aria-hidden="true"
         className="lb-noise pointer-events-none fixed inset-0 z-[9998]"

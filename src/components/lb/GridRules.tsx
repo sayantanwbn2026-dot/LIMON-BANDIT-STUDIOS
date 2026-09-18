@@ -5,7 +5,7 @@ export type Tone = "dark" | "light" | "acid";
 export const ruleColor: Record<Tone, string> = {
   dark: "var(--grid-rule)",
   light: "var(--alt-grid-rule)",
-  acid: "rgba(0,0,0,0.16)",
+  acid: "rgba(0,0,0,0.08)",
 };
 
 export const solidRuleColor: Record<Tone, string> = {
@@ -21,8 +21,16 @@ const crosshairColor: Record<Tone, string> = {
 };
 
 /**
- * The visible four-column dashed grid — the drafting layer's vertical members.
+ * The column rules — the drafting layer's vertical members.
+ *
+ * Solid now, not dashed, and faded out at both ends. A 4-on-6-off dash is a
+ * draughtsman's construction line: it says "this page is a working
+ * drawing", which is the editorial voice this pass steps away from. A
+ * continuous hairline that dissolves into the section edges keeps the grid
+ * as quiet structure — you sense the columns, you do not read them.
  */
+const FADE = "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)";
+
 export function GridRules({ tone = "dark" }: { tone?: Tone }) {
   const color = ruleColor[tone];
 
@@ -41,7 +49,9 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
               }
               style={{
                 left: `${left}%`,
-                backgroundImage: `repeating-linear-gradient(to bottom, ${color} 0 4px, transparent 4px 10px)`,
+                background: color,
+                maskImage: FADE,
+                WebkitMaskImage: FADE,
               }}
             />
           ))}
@@ -51,7 +61,15 @@ export function GridRules({ tone = "dark" }: { tone?: Tone }) {
   );
 }
 
-/** A single drafting crosshair: two crossing 9px strokes. */
+/**
+ * A single drafting crosshair: two crossing 9px strokes.
+ *
+ * Hidden. Crosshairs at every column intersection were registration marks —
+ * print furniture — and they are the loudest piece of the "working drawing"
+ * look. Kept in the DOM, with `hidden`, because the hero timeline targets
+ * their tick layer by selector; removing them would leave it tweening
+ * nothing and warning about it.
+ */
 export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; active?: boolean }) {
   const c = active ? "var(--accent)" : crosshairColor[tone];
   /* Strokes inherit `currentColor` so the whole crosshair can be ticked by
@@ -62,7 +80,7 @@ export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; acti
     <span
       data-crosshair
       aria-hidden="true"
-      className="pointer-events-none absolute block h-[9px] w-[9px]"
+      className="pointer-events-none absolute hidden h-[9px] w-[9px]"
       style={{
         color: c,
         transform: "translate(-4.5px, -4.5px)",

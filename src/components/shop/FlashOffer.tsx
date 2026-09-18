@@ -129,7 +129,7 @@ export function FlashOffer() {
             <button
               type="button"
               onClick={copy}
-              className="flex items-center gap-2 border border-line px-4 py-2 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+              className="flex items-center gap-2 border border-line px-4 py-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
             >
               {copied ? <Check size={13} /> : <Copy size={13} />}
               {copied ? "Copied" : "Copy"}
@@ -144,7 +144,7 @@ export function FlashOffer() {
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="mt-8 flex h-[56px] w-full items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="mt-8 flex h-[56px] w-full items-center justify-center bg-acid t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             Back to the shop
           </button>

@@ -40,7 +40,7 @@ export function MaskReveal({
       gsap.set(img, { scale: 1.12 });
       const tl = gsap.timeline({
         delay,
-        scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
       });
       tl.to(el, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power4.inOut" }, 0);
       tl.to(img, { scale: 1, duration: 0.9, ease: "power4.inOut" }, 0);

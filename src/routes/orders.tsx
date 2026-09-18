@@ -59,7 +59,7 @@ function Orders() {
     <main id="main" className="relative w-full bg-surface-deep">
       <header className="shell relative z-[2] pb-10 pt-[120px]">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
+          <ol className="flex flex-wrap items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
                 LMN&middot;BNDT
@@ -90,7 +90,7 @@ function Orders() {
                 <button
                   type="button"
                   onClick={() => openAuth("Sign in to see your orders.")}
-                  className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+                  className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
                   Sign in
                 </button>
@@ -104,7 +104,7 @@ function Orders() {
               cta={
                 <Link
                   to="/shop"
-                  className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+                  className="flex h-[56px] items-center justify-center bg-acid px-8 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
                   Go to the shop
                 </Link>
@@ -143,7 +143,7 @@ function Orders() {
                     </p>
 
                     <div className="mt-5 flex flex-wrap items-center gap-3">
-                      <span className="bg-surface-raised px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-acid-type">
+                      <span className="bg-surface-raised px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
                         {String(o.status)}
                       </span>
                       <span className="t-label text-mute">

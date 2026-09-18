@@ -51,7 +51,23 @@ export function Rates() {
       </div>
 
       <div className="mt-12 flex flex-wrap items-center gap-6">
-        <div role="radiogroup" aria-label="Rate type" className="flex border border-line">
+        {/* A sliding thumb rather than two cells swapping colour: the acid
+         * block travels to the option you picked, so the switch shows where
+         * the choice went, not only that it changed. Two equal cells, so the
+         * thumb is half the track and moves by exactly its own width. */}
+        <div
+          role="radiogroup"
+          aria-label="Rate type"
+          className="relative grid grid-cols-2 border border-line p-1"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute inset-y-1 left-1 w-[calc(50%-4px)] bg-acid"
+            style={{
+              transform: mode === "package" ? "translateX(100%)" : "translateX(0)",
+              transition: "transform 0.55s var(--ease-out-expo)",
+            }}
+          />
           {(["hourly", "package"] as Mode[]).map((m) => (
             <button
               key={m}
@@ -59,13 +75,8 @@ export function Rates() {
               role="radio"
               aria-checked={mode === m}
               onClick={() => setMode(m)}
-              className="t-eyebrow px-8 py-4"
-              style={{
-                backgroundColor: mode === m ? "var(--accent)" : "transparent",
-                color: mode === m ? "var(--accent-text)" : "var(--mute)",
-                transition:
-                  "background-color 0.35s var(--ease-in-out-quart), color 0.35s var(--ease-in-out-quart)",
-              }}
+              className="t-action relative z-[1] px-7 py-3 transition-colors duration-300"
+              style={{ color: mode === m ? "var(--accent-text)" : "var(--mute)" }}
             >
               {m === "hourly" ? "Hourly" : "Package"}
             </button>
@@ -85,7 +96,7 @@ export function Rates() {
                 <article className="grid grid-cols-1 gap-x-10 gap-y-8 md:py-12 lg:grid-cols-12">
                   {/* the plan */}
                   <div className="lg:col-span-3">
-                    <h3 className="font-display text-[24px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[28px]">
+                    <h3 className="font-display text-[24px] font-bold leading-[1.1] tracking-[-0.03em] text-text md:text-[28px]">
                       {r.plan}
                     </h3>
                     <p className="mt-3 max-w-[30ch] font-ui text-[14px] leading-[1.5] text-mute">
@@ -135,7 +146,7 @@ export function Rates() {
 
                     <a
                       href="/contact?intent=booking"
-                      className="group mt-6 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
+                      className="group mt-6 inline-flex items-center gap-2 t-action text-text"
                     >
                       <span className="wipe-underline">Book {r.plan}</span>
                       <ArrowUpRight size={14} className="text-acid-type" />

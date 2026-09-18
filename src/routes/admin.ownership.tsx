@@ -91,7 +91,7 @@ function Ownership() {
 
       <section className="border border-line bg-surface-deep">
         <header className="border-b border-line p-6">
-          <h2 className="font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[18px] font-bold tracking-[-0.02em] text-text">
             People with access
           </h2>
           <p className="mt-2 max-w-[64ch] font-ui text-[13px] leading-[1.5] text-mute">
@@ -119,7 +119,7 @@ function Ownership() {
                   {a.label ? <p className="t-label text-mute">{a.label}</p> : null}
                 </div>
                 <span
-                  className={`ml-auto px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.14em] ${
+                  className={`ml-auto px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${
                     a.role === "owner" ? "bg-acid text-accent-text" : "bg-surface-raised text-mute"
                   }`}
                 >
@@ -170,7 +170,7 @@ function Ownership() {
                 type="button"
                 onClick={() => void onAdd()}
                 disabled={busy}
-                className="flex h-11 items-center justify-center gap-2 bg-acid px-5 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
+                className="flex h-11 items-center justify-center gap-2 bg-acid px-5 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
               >
                 <Plus size={14} />
                 Add
@@ -196,7 +196,7 @@ function Ownership() {
       </section>
 
       <section className="mt-12">
-        <h2 className="font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+        <h2 className="font-display text-[18px] font-bold tracking-[-0.02em] text-text">
           Change history
         </h2>
         <p className="mt-2 max-w-[64ch] font-ui text-[13px] leading-[1.5] text-mute">
@@ -217,7 +217,7 @@ function Ownership() {
                   <Clock size={13} className="shrink-0 text-mute" />
                   <span className="font-ui text-[13px] font-semibold text-text">{title}</span>
                   <span
-                    className={`px-2 py-0.5 font-ui text-[10px] font-bold uppercase tracking-[0.12em] ${
+                    className={`px-2 py-0.5 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${
                       c.action === "create" ? "text-acid-type" : "text-mute"
                     }`}
                   >

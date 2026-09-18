@@ -5,6 +5,18 @@ import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 /* WordReveal — splits text into words that rise, unblur, and settle.  */
 /* ------------------------------------------------------------------ */
 
+/* WHY NOT `once: true`
+ * A `once` trigger kills itself the moment it finds it is already past its
+ * start — and it can find that in the middle of ScrollTrigger.refresh(),
+ * which is iterating the very trigger list the kill splices. The loop then
+ * reads a slot that no longer exists and throws "Cannot read properties of
+ * undefined (reading 'end')", taking the whole route down to the 500 page.
+ * It needs a page that loads already scrolled down (a reload, a back
+ * button), which is why it came and went.
+ *
+ * `toggleActions: "play none none none"` is the same visual contract —
+ * play on entry, never reverse — and the trigger simply stays alive. */
+
 export function WordReveal({
   text,
   as: Tag = "span",
@@ -37,7 +49,15 @@ export function WordReveal({
         duration: 0.85,
         delay,
         ease: "expo.out",
-        ...(onLoad ? {} : { scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
+        ...(onLoad
+          ? {}
+          : {
+              scrollTrigger: {
+                trigger: el,
+                start: "top 88%",
+                toggleActions: "play none none none",
+              },
+            }),
       });
     }, el);
     return () => ctx.revert();
@@ -99,7 +119,7 @@ export function RiseIn({
           duration: 0.6,
           delay,
           ease: "expo.out",
-          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
         },
       );
     });
@@ -148,7 +168,7 @@ export function PushIn({
           duration: 0.75,
           delay,
           ease: "expo.out",
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" },
         },
       );
     });

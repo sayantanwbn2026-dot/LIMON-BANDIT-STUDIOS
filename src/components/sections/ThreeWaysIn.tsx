@@ -43,7 +43,11 @@ export function ThreeWaysIn() {
           if (leaves.length !== 2) return;
 
           const tl = gsap.timeline({
-            scrollTrigger: { trigger: panel, start: "top 72%", once: true },
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 72%",
+              toggleActions: "play none none none",
+            },
           });
           /* 101%, not 100 — a hairline of the leaf stays visible at exactly
            * 100% on fractional-DPR screens. */
@@ -221,7 +225,7 @@ export function ThreeWaysIn() {
                       </span>
                       <h3
                         data-back-item
-                        className="mt-6 font-display font-bold uppercase tracking-[-0.02em]"
+                        className="mt-6 font-display font-bold tracking-[-0.02em]"
                         style={{ fontSize: "clamp(24px, 2vw, 32px)", lineHeight: 1.02 }}
                       >
                         {d.title}
@@ -240,7 +244,7 @@ export function ThreeWaysIn() {
                       >
                         <Link
                           to={d.to}
-                          className="group/cta mt-6 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em]"
+                          className="group/cta mt-6 inline-flex items-center gap-2 t-action"
                           style={{ color: d.text }}
                         >
                           <span className="wipe-underline">{d.cta}</span>

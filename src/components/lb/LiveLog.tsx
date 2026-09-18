@@ -43,10 +43,10 @@ export function LiveLog() {
     >
       <div className="flex items-center gap-2">
         <span className="h-[7px] w-[7px] bg-acid pulse-dot" />
-        <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-text">
+        <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text">
           House log
         </span>
-        <span className="ml-auto font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
+        <span className="ml-auto font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
           Live
         </span>
       </div>
@@ -56,9 +56,7 @@ export function LiveLog() {
             <Icon size={12} className="text-accent-text" />
           </span>
           <span className="min-w-0">
-            <span className="block truncate font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text">
-              {title}
-            </span>
+            <span className="block truncate t-action text-text">{title}</span>
             <span className="block truncate font-ui text-[11px] text-mute">{sub}</span>
           </span>
         </div>

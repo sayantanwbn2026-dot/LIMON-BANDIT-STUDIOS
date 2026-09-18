@@ -23,7 +23,7 @@ export function Faq() {
       <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
-            <span className="h-[10px] w-[10px] bg-alt-acid-type" />
+            <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-alt-acid-type" />
             <span className="t-eyebrow text-alt-text">{copy.eyebrow}</span>
           </div>
 
@@ -39,12 +39,12 @@ export function Faq() {
               alt=""
               className="h-[120px] w-auto opacity-25"
             />
-            <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
+            <div className="mt-6 font-display text-[18px] font-bold tracking-[-0.02em] text-alt-text">
               Still stuck?
             </div>
             <a
               href="/contact"
-              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface"
+              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text t-action text-alt-surface"
             >
               Message us <ArrowRight size={14} />
             </a>
@@ -63,7 +63,7 @@ export function Faq() {
 
           <a
             href="/contact"
-            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden"
+            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text t-action text-alt-surface md:hidden"
           >
             Still stuck? Message us <ArrowRight size={14} />
           </a>

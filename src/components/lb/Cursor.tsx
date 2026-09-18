@@ -26,7 +26,7 @@ export function Cursor() {
       target.x = e.clientX;
       target.y = e.clientY;
       const dot = dotRef.current;
-      if (dot) dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0)`;
+      if (dot) dot.style.transform = `translate3d(${e.clientX - 3}px, ${e.clientY - 3}px, 0)`;
       if (reduced && ringRef.current) {
         ringRef.current.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0) scale(${grown ? 1.9 : 1})`;
       }
@@ -60,7 +60,7 @@ export function Cursor() {
       if (!t || !t.closest) return;
       const play = t.closest<HTMLElement>('[data-cursor="play"]');
       const grow = t.closest<HTMLElement>('a, button, [data-cursor="grow"]');
-      setLabel(play ? "PLAY" : null);
+      setLabel(play ? "Play" : null);
       setGrown(Boolean(play || grow));
     };
 
@@ -80,19 +80,19 @@ export function Cursor() {
     <div aria-hidden="true">
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-[10px] w-[10px] bg-acid will-change-transform"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-[6px] w-[6px] rounded-full bg-acid will-change-transform"
         style={{ transition: "opacity 0.25s var(--ease-out-expo)" }}
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] flex h-[36px] w-[36px] items-center justify-center border will-change-transform"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] flex h-[36px] w-[36px] items-center justify-center rounded-full border will-change-transform"
         style={{
           borderColor: "color-mix(in srgb, var(--text) 35%, transparent)",
           transition: "border-color 0.25s var(--ease-out-expo)",
         }}
       >
         {label ? (
-          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.12em] text-acid-type">
+          <span className="font-ui text-[9px] font-semibold uppercase tracking-[0.08em] text-acid-type">
             {label}
           </span>
         ) : null}

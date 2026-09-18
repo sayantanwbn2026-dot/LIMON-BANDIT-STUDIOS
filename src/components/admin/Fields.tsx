@@ -16,7 +16,7 @@ import { blankRecord, blankValue, rowTitle, type Field } from "@/cms/schema";
  * it against the saved document to know whether anything is dirty.
  */
 
-const labelCls = "font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute";
+const labelCls = "font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute";
 const inputCls =
   "h-11 w-full border-b border-line bg-transparent font-ui text-[14px] text-text outline-none transition-colors duration-300 focus:border-acid-type placeholder:text-[color:var(--placeholder)]";
 
@@ -259,7 +259,7 @@ function StringList({
       <button
         type="button"
         onClick={() => onChange([...value, ""])}
-        className="mt-3 flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type"
+        className="mt-3 flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text transition-colors duration-300 hover:border-acid-type"
       >
         <Plus size={13} />
         Add {field.itemLabel?.toLowerCase() ?? "item"}
@@ -384,7 +384,7 @@ export function ListEditor({
         type="button"
         onClick={add}
         disabled={atMax}
-        className="mt-4 flex h-10 items-center gap-2 border border-line px-4 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-text transition-colors duration-300 hover:border-acid-type disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-4 flex h-10 items-center gap-2 border border-line px-4 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text transition-colors duration-300 hover:border-acid-type disabled:cursor-not-allowed disabled:opacity-40"
       >
         <Plus size={14} />
         Add {field.itemNoun}

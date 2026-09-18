@@ -163,7 +163,7 @@ export function AuthLanding() {
           animation: prefersReducedMotion() ? undefined : "lb-landing-in 0.5s var(--ease-out-expo)",
         }}
       >
-        <span className="neon h-[10px] w-[10px] shrink-0 bg-acid" />
+        <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
         <p className="flex-1 font-ui text-[13px] leading-[1.45] text-text">
           Email confirmed — your account is live. You can cart, wishlist and order now.
         </p>

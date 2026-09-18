@@ -46,7 +46,7 @@ function Dashboard() {
         <Stat label="Wishlist adds" value={String(stats.wishlist)} />
       </div>
 
-      <h2 className="mt-14 font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+      <h2 className="mt-14 font-display text-[18px] font-bold tracking-[-0.02em] text-text">
         Pages
       </h2>
       <ul className="mt-5 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +60,7 @@ function Dashboard() {
                 className="group flex h-full flex-col justify-between gap-6 p-6 transition-colors duration-300 hover:bg-surface-raised"
               >
                 <div>
-                  <span className="font-display text-[20px] font-extrabold uppercase tracking-[-0.02em] text-text">
+                  <span className="font-display text-[20px] font-bold tracking-[-0.02em] text-text">
                     {p.label}
                   </span>
                   <p className="mt-2 font-ui text-[12px] text-mute">
@@ -69,7 +69,7 @@ function Dashboard() {
                       : "Titles & SEO only"}
                   </p>
                 </div>
-                <span className="flex items-center gap-2 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors group-hover:text-acid-type">
+                <span className="flex items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors group-hover:text-acid-type">
                   Edit
                   <ArrowUpRight size={13} />
                 </span>
@@ -79,7 +79,7 @@ function Dashboard() {
         })}
       </ul>
 
-      <h2 className="mt-14 font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+      <h2 className="mt-14 font-display text-[18px] font-bold tracking-[-0.02em] text-text">
         Recent changes
       </h2>
       {changes.length === 0 ? (

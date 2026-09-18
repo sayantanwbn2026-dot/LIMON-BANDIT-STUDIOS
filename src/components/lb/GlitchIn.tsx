@@ -9,7 +9,7 @@ import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
  * JS means the effect still exists with JS disabled — it simply never
  * fires — rather than leaving a half-styled element behind.
  *
- * `once: true` is the whole point. A glitch that re-fires every time a
+ * Firing once is the whole point. A glitch that re-fires every time a
  * heading re-enters the viewport stops reading as a signal and starts
  * reading as a fault, and on a page this long you cross most headings
  * several times.
@@ -41,12 +41,15 @@ export function GlitchIn({
     if (!gsap) return;
 
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let fired = false;
 
     const st = ScrollTrigger.create({
       trigger: el,
       start: "top 85%",
-      once: true,
+      /* A flag rather than `once: true` — see the note in Reveal.tsx. */
       onEnter: () => {
+        if (fired) return;
+        fired = true;
         timer = setTimeout(() => {
           el.setAttribute("data-on", "");
           /* Strip the flag once the keyframes have run so the element is

@@ -26,7 +26,7 @@ export function RollLabel({ label, className }: { label: string; className?: str
 
 const rollCss = "[&:hover_[data-roll]]:-translate-y-1/2";
 
-/** Primary square CTA — magnetic + label roll + arrow nudge. */
+/** Primary square CTA — magnetic + label roll + arrow loop + stage light. */
 export function CtaButton({
   label,
   to,
@@ -46,14 +46,16 @@ export function CtaButton({
     <>
       <span
         data-mag-label
-        className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 group-hover:text-accent-text"
+        className="pl-6 t-action text-text transition-colors duration-300 group-hover:text-accent-text"
       >
         <RollLabel label={label} />
       </span>
-      <ArrowRight
-        size={18}
-        className="mr-6 shrink-0 text-text transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-accent-text"
-      />
+      <span className="lb-arrow-clip mr-6 shrink-0">
+        <ArrowRight
+          size={18}
+          className="lb-arrow text-text transition-colors duration-300 group-hover:text-accent-text"
+        />
+      </span>
     </>
   );
 
@@ -95,13 +97,12 @@ export function GhostLink({
   const inner = (
     <>
       <span className="wipe-underline">{children ?? label}</span>
-      <ArrowUpRight
-        size={14}
-        className="transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
-      />
+      <span className="lb-arrow-clip">
+        <ArrowUpRight size={14} className="lb-arrow" />
+      </span>
     </>
   );
-  const cls = `group inline-flex items-center gap-2 font-ui text-[13px] font-bold uppercase tracking-[0.14em] ${className ?? "text-text"}`;
+  const cls = `group inline-flex items-center gap-2 t-action ${className ?? "text-text"}`;
   return to ? (
     <Link to={to} className={cls}>
       {inner}

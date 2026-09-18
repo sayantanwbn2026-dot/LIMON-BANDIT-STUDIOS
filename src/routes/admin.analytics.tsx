@@ -59,7 +59,7 @@ function Analytics() {
                 type="button"
                 onClick={() => setDays(r)}
                 aria-pressed={days === r}
-                className={`h-9 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.1em] transition-colors duration-300 ${
+                className={`h-9 px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-300 ${
                   days === r
                     ? "bg-acid text-accent-text"
                     : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -81,7 +81,7 @@ function Analytics() {
 
       <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">
         <section>
-          <h2 className="font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[18px] font-bold tracking-[-0.02em] text-text">
             Traffic
           </h2>
           {loading ? (
@@ -109,7 +109,7 @@ function Analytics() {
         </section>
 
         <section>
-          <h2 className="font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+          <h2 className="font-display text-[18px] font-bold tracking-[-0.02em] text-text">
             Top pages
           </h2>
           {top.length === 0 ? (
@@ -130,7 +130,7 @@ function Analytics() {
             </ul>
           )}
 
-          <h2 className="mt-10 font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+          <h2 className="mt-10 font-display text-[18px] font-bold tracking-[-0.02em] text-text">
             Shop
           </h2>
           <dl className="mt-6 border-t border-line">

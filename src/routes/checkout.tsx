@@ -27,7 +27,7 @@ function Checkout() {
     <main id="main" className="relative w-full bg-surface-deep">
       <header className="shell relative z-[2] pb-10 pt-[120px]">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
+          <ol className="flex flex-wrap items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
                 LMN&middot;BNDT
