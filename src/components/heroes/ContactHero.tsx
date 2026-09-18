@@ -3,7 +3,7 @@ import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { chapter } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 import { useSite, useSocialLink } from "@/cms/hooks";
 
 /**
@@ -18,7 +18,7 @@ import { useSite, useSocialLink } from "@/cms/hooks";
 export function ContactHero() {
   const site = useSite();
   const instagram = useSocialLink("Instagram");
-  const c = chapter("contact");
+  const c = useChapter("contact");
 
   return (
     <HeroFrame chapter="contact">

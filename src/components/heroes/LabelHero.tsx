@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { chapter } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 
 /**
  * LABEL — the split, under the house lockup.
@@ -16,7 +16,7 @@ import { chapter } from "@/data/routes";
  * aria-hidden and the accessible reading stays "Seventy-thirty, paid monthly".
  */
 export function LabelHero() {
-  const c = chapter("label");
+  const c = useChapter("label");
 
   return (
     <HeroFrame chapter="label">

@@ -1,8 +1,9 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { chapter } from "@/data/routes";
-import { crewCounts } from "@/data/crew";
+import { useChapter } from "@/cms/hooks";
+import { disciplines, disciplineNote } from "@/data/crew";
+import { useCrew } from "@/cms/hooks";
 
 /**
  * CREW — the call sheet, under the house lockup.
@@ -15,16 +16,18 @@ import { crewCounts } from "@/data/crew";
  * poster above it that deference has somewhere to point, so the standfirst
  * keeps the lead voice and the roles keep theirs.
  */
-/* Counts come from the roster rather than being typed here, so the call
- * sheet can never advertise more crew than the directory below it lists. */
-const roles = crewCounts().map((c) => ({
-  role: c.discipline === "Cover artist" ? "Cover artists" : `${c.discipline}s`,
-  count: c.count,
-  note: c.note,
-}));
-
 export function CrewHero() {
-  const c = chapter("crew");
+  const c = useChapter("crew");
+  /* Counts come from the CMS roster the directory below renders, so the
+   * call sheet can never advertise more — or fewer — crew than it lists.
+   * They used to come from the compiled roster, which an editor never
+   * touches, so adding someone in the admin left the count behind. */
+  const crew = useCrew();
+  const roles = disciplines.map((d) => ({
+    role: d === "Cover artist" ? "Cover artists" : `${d}s`,
+    count: String(crew.filter((m) => m.discipline === d).length).padStart(2, "0"),
+    note: disciplineNote[d],
+  }));
 
   return (
     <HeroFrame chapter="crew">

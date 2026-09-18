@@ -5,6 +5,7 @@ import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
 import { getSupabase } from "@/lib/supabase";
 import { useCart } from "@/lib/cart";
 import { FLASH_OFFER } from "@/data/offers";
+import { useOffers } from "@/cms/hooks";
 
 /**
  * The flash offer.
@@ -29,6 +30,10 @@ const DELAY_MS = 25_000;
 
 export function FlashOffer() {
   const cart = useCart();
+  /* The first offer in the CMS is the one the popup hands out — the same
+   * list checkout and the server validate against, so the code it gives
+   * is always one the order will accept. */
+  const offer = useOffers()[0] ?? FLASH_OFFER;
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string>();
@@ -84,15 +89,15 @@ export function FlashOffer() {
          * code, and the code is the campaign's, not theirs. */
         const { error: dbError } = await supabase
           .from("offer_signups")
-          .insert({ email: email.trim().toLowerCase(), code: FLASH_OFFER.code, source: "flash" });
+          .insert({ email: email.trim().toLowerCase(), code: offer.code, source: "flash" });
 
         if (dbError && dbError.code !== "23505") {
           console.error("offer signup failed", dbError);
         }
       }
 
-      setCode(FLASH_OFFER.code);
-      cart.applyOffer({ code: FLASH_OFFER.code, percent: FLASH_OFFER.percent });
+      setCode(offer.code);
+      cart.applyOffer({ code: offer.code, percent: offer.percent });
     } finally {
       setBusy(false);
     }
@@ -113,7 +118,7 @@ export function FlashOffer() {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
-      title={code ? "Here it is" : FLASH_OFFER.label}
+      title={code ? "Here it is" : offer.label}
       standfirst={
         code
           ? "Already applied to your cart. It will still be there when you check out."
@@ -137,8 +142,8 @@ export function FlashOffer() {
           </div>
 
           <p className="mt-6 font-ui text-[14px] leading-[1.6] text-mute">
-            {FLASH_OFFER.percent}% comes off your subtotal at checkout. Shipping is charged as
-            normal — we do not mark it up, so there is nothing in it to discount.
+            {offer.percent}% comes off your subtotal at checkout. Shipping is charged as normal — we
+            do not mark it up, so there is nothing in it to discount.
           </p>
 
           <button

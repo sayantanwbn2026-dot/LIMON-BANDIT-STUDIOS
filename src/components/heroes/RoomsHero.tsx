@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { chapter } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 import { useRooms } from "@/cms/hooks";
 
 /**
@@ -16,7 +16,7 @@ import { useRooms } from "@/cms/hooks";
  */
 export function RoomsHero() {
   const rooms = useRooms();
-  const c = chapter("rooms");
+  const c = useChapter("rooms");
 
   return (
     <HeroFrame chapter="rooms">

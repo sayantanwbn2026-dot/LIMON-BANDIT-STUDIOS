@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules, type Tone } from "./GridRules";
 import { MarginNotes } from "./Section";
-import { chapter, type ChapterKey } from "@/data/routes";
+import { type ChapterKey } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 
 /**
  * The chrome every page hero shares — drafting grid, margin notes, breadcrumb
@@ -42,7 +43,7 @@ export function HeroFrame({
   bodyClassName?: string;
   children: ReactNode;
 }) {
-  const c = chapter(key);
+  const c = useChapter(key);
   const tint = crumbTint[tone];
 
   return (

@@ -24,15 +24,16 @@ on the list. An owner can add it under **Ownership**.
 
 ## How it is organised
 
-| Section                                                      | What is in it                                                                           |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| **Dashboard**                                                | Orders, revenue, signups, and what was changed recently                                 |
-| **Analytics**                                                | Visits, top pages, traffic over time                                                    |
-| **Pages** → Home, Rooms, Label, Shop, Crew, Journal, Contact | Everything that appears on that page                                                    |
-| **Global content**                                           | Contact details, menu, social links, tickers, FAQ, and every page's search-engine title |
-| **Shop & pricing**                                           | Products, prices, stock, discount codes, delivery costs                                 |
-| **Media**                                                    | Every image uploaded, and links you have added                                          |
-| **Ownership**                                                | Who can edit, and a history of every change                                             |
+| Section                                                      | What is in it                                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| **Dashboard**                                                | What is waiting (orders to ship, enquiries to answer), revenue, and recent changes    |
+| **Inbox** → Orders, Enquiries, Subscribers                   | Work the orders, answer the contact form, export the mailing list                     |
+| **Analytics**                                                | Visits, top pages, traffic over time                                                  |
+| **Pages** → Home, Rooms, Label, Shop, Crew, Journal, Contact | Everything that appears on that page                                                  |
+| **Global content**                                           | Contact details, menu, social links, tickers, FAQ, legal pages, page headings and SEO |
+| **Shop & pricing**                                           | Products, prices, stock, discount codes, delivery costs                               |
+| **Media**                                                    | Every image uploaded, and links you have added                                        |
+| **Ownership**                                                | Who can edit, and a history of every change                                           |
 
 If you cannot find something, it is almost always either on the page it
 appears on, or in **Global content** if it appears on all of them.
@@ -110,11 +111,42 @@ read.
 the database is unreachable, the site falls back to the content it shipped
 with. You will see the old text, not a broken page.
 
-**Search-engine titles are live.** What you write under Global content →
-Page titles & SEO is what Google and WhatsApp actually show. It is read when
-the page is built on the server, so a change can take up to a minute to
-appear — if you have just saved and the old title is still showing, wait and
-reload rather than saving again.
+**Everything is live on the server, not only in the browser.** Pages are
+built with the content as you last saved it, so what Google, WhatsApp link
+previews and a first-time visitor see is your latest text. The server keeps a
+copy for up to 30 seconds — if you have just saved and a fresh tab still shows
+the old text, wait a moment and reload rather than saving again.
+
+**Page headings are under Global content → Page titles & SEO.** Each page's
+H1, the big poster wordmark above it, the line under it, the short name used
+in breadcrumbs and the "next page" doors, and its search-engine title and
+description. Leave "Page id" and "Path" alone.
+
+**Journal entries are pages the moment you save them.** A new entry gets its
+own address (`/journal/<web address>`), appears in the sitemap, and links to
+its neighbours. Deleting one makes its address a proper "not found".
+
+**Legal pages** (Global content → Legal pages) are the terms, privacy policy
+and shipping & returns linked from the footer and from checkout. The text
+that ships is a working draft written from how the site actually behaves —
+have it read by someone qualified, and fill in your registered business name,
+before relying on it. Change the "Last updated" date whenever a policy
+changes.
+
+**The Room A film** (Home → Room A film) takes a link to an MP4. Until one is
+set the section shows the still frame and hides its play controls.
+
+**Discount codes** under Shop & pricing are checked in three places — the
+first-order popup hands out the first code in the list, and checkout and the
+server both accept any code in it that has not expired.
+
+**The Inbox** shows orders, enquiries and mailing-list signups. Move orders
+through received → confirmed → packed → shipped → delivered and mark them
+paid when the cash comes in; mark enquiries replied so nobody answers twice
+(pressing _Reply by email_ does it for you); export subscribers as CSV for
+your newsletter tool and remove anyone who asks. If an inbox is empty when
+you know it should not be, the database has not yet granted admins access —
+run `supabase/migrations/20260918_admin_inbox.sql` once (see below).
 
 **Every save is recorded** with who made it and what it replaced, under
 Ownership → Change history.
@@ -181,6 +213,37 @@ bun run cms:seed you@example.com    # …and make that address an owner
 Needs `SUPABASE_SERVICE_ROLE_KEY` in `.env` — seeding writes to tables only an
 admin may write to, and on a fresh database there is no admin yet. Safe to run
 repeatedly; it upserts content and never demotes an existing admin.
+
+New collections (`global.legal`, `page.home.film`) do not need seeding: a key
+missing from the database renders its seed, and the first save from the admin
+creates the row. Do **not** re-seed a live site just to add them — `cms:seed`
+overwrites every edited document with the repo's version.
+
+### How content reaches the page
+
+`src/cms/live.ts` reads every document over REST (publishable key; the table
+is world-readable, RLS guards writes) with a 30-second cache and a 1.5s
+timeout. The root route's loader calls it, so the server render and the first
+client render both carry the stored content, and `ContentProvider` takes that
+as its initial state. Anything that must be decided on the server — does this
+journal slug or legal page exist, what is the canonical origin, what goes in
+the sitemap — reads `liveDocs()` directly. `head` functions cannot await, so
+`seo.ts` reads `lastDocs()`, which every loader has populated by then.
+
+Chapter copy (H1, poster, standfirst, breadcrumb name) goes through
+`useChapter()` / `useChapterNeighbours()` in `cms/hooks.ts`, which layer the
+`global.pages` row over the compiled `src/data/routes` entry field by field.
+`key` and `to` always come from the compiled table.
+
+### The inbox and its migration
+
+`/admin/orders`, `/admin/enquiries` and `/admin/subscribers` read and update
+rows as the signed-in admin. They need the policies in
+`supabase/migrations/20260918_admin_inbox.sql` (admin select/update on
+`orders`, select/update on `enquiries`, select/delete on `offer_signups`).
+It is idempotent — paste it into the Supabase SQL editor and run it; running
+it twice changes nothing. Without it, reads come back empty (RLS filters
+rather than errors) and updates are reported as refused, never as saved.
 
 ### Why the totals are computed twice
 

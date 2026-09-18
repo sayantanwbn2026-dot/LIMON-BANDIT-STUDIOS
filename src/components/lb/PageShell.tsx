@@ -4,7 +4,8 @@ import { setNavPole, type NavPole } from "@/lib/nav-pole";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "./GridRules";
 import { MarginNotes } from "./Section";
-import { chapter, neighbours, type ChapterKey } from "@/data/routes";
+import { type Chapter, type ChapterKey } from "@/data/routes";
+import { useChapter, useChapterNeighbours } from "@/cms/hooks";
 
 /**
  * The frame every inner route sits in: header band, breadcrumb, and the
@@ -50,7 +51,7 @@ export function PageShell({
  * so adding a route never lands on a broken header.
  */
 function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
-  const c = chapter(key);
+  const c = useChapter(key);
 
   return (
     <header className="relative w-full overflow-hidden">
@@ -90,7 +91,7 @@ function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
 
 /** Two half-width doors: the room you came from, and the next one along. */
 function ChapterNav({ current }: { current: ChapterKey }) {
-  const { prev, next } = neighbours(current);
+  const { prev, next } = useChapterNeighbours(current);
 
   return (
     <nav aria-label="Chapters" className="relative w-full border-t border-line bg-surface">
@@ -103,13 +104,7 @@ function ChapterNav({ current }: { current: ChapterKey }) {
   );
 }
 
-function ChapterPanel({
-  chapter: c,
-  direction,
-}: {
-  chapter: ReturnType<typeof chapter>;
-  direction: "prev" | "next";
-}) {
+function ChapterPanel({ chapter: c, direction }: { chapter: Chapter; direction: "prev" | "next" }) {
   const isNext = direction === "next";
   return (
     <Link

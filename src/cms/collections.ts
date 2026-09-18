@@ -262,6 +262,32 @@ const wall: Collection = {
   ],
 };
 
+const film: Collection = {
+  key: "page.home.film",
+  title: "Room A film",
+  description:
+    "The full-screen film on the home page. Until a video is set, the still frame shows on its own and the play controls stay hidden.",
+  group: "page",
+  page: "home",
+  shape: "object",
+  fields: [
+    {
+      kind: "url",
+      name: "video",
+      label: "Video file (MP4)",
+      placeholder: "https://… or /video/room-a.mp4",
+      help: "A link to an MP4, or a file placed in public/video. Keep it short, muted-friendly and under ~15 MB — it loops as ambient footage. Leave empty to show the still only.",
+    },
+    image(
+      "poster",
+      "Still frame",
+      1600,
+      900,
+      "Landscape 16:9. Shown before the film plays, and instead of it when there is no video.",
+    ),
+  ],
+};
+
 const testimonials: Collection = {
   key: "page.home.testimonials",
   title: "Testimonials",
@@ -841,6 +867,50 @@ const crew: Collection = {
 };
 
 /* ------------------------------------------------------------------ *
+ * LEGAL — terms, privacy, shipping & returns (/legal/<slug>)
+ * ------------------------------------------------------------------ */
+
+const legal: Collection = {
+  key: "global.legal",
+  title: "Legal pages",
+  description:
+    "Terms, privacy, and shipping & returns. Linked from the footer and from checkout. The committed text is a working draft written from how the site behaves — have it reviewed before relying on it.",
+  group: "global",
+  shape: "list",
+  titleField: "title",
+  itemNoun: "page",
+  fields: [
+    text("slug", "Web address", {
+      required: true,
+      mono: true,
+      help: "The page lives at /legal/<this>. The footer links to terms, privacy and shipping-returns — keep those three.",
+    }),
+    text("title", "Title", { required: true }),
+    text("updated", "Last updated", {
+      mono: true,
+      placeholder: "2026-09-18",
+      help: "Change this whenever the policy changes. YYYY-MM-DD.",
+    }),
+    area("standfirst", "Summary", { rows: 2, help: "One or two lines under the title." }),
+    {
+      kind: "list",
+      name: "body",
+      label: "Body",
+      titleField: "text",
+      itemNoun: "block",
+      fields: [
+        choice("kind", "Block type", [
+          { value: "p", label: "Paragraph" },
+          { value: "h2", label: "Heading" },
+          { value: "list", label: "Bullet list" },
+        ]),
+        area("text", "Text", { rows: 4, help: "For a bullet list, put one item per line." }),
+      ],
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------ *
  * JOURNAL
  * ------------------------------------------------------------------ */
 
@@ -920,12 +990,14 @@ export const collections: Collection[] = [
   seo,
   tickers,
   faq,
+  legal,
   // home
   homeSections,
   services,
   doors,
   metrics,
   wall,
+  film,
   testimonials,
   processSteps,
   // rooms

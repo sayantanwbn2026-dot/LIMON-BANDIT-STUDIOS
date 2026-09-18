@@ -40,10 +40,20 @@ export const offers: Offer[] = [
 /** The code the flash popup hands out. */
 export const FLASH_OFFER = offers[0];
 
-/** Case-insensitive lookup that also enforces the expiry. */
-export function findOffer(code: string | null | undefined): Offer | null {
+/**
+ * Case-insensitive lookup that also enforces the expiry.
+ *
+ * Takes the list to search: the live one is the CMS's `commerce.offers`
+ * (which is also what `submitOrder` validates against on the server), and
+ * checking the compiled list here would reject a code an editor had just
+ * created — or accept one they had just retired.
+ */
+export function findOffer(
+  code: string | null | undefined,
+  list: readonly Pick<Offer, "code" | "percent" | "label" | "expires">[] = offers,
+): Offer | null {
   if (!code) return null;
-  const found = offers.find((o) => o.code.toLowerCase() === code.trim().toLowerCase());
+  const found = list.find((o) => o.code.toLowerCase() === code.trim().toLowerCase());
   if (!found) return null;
   if (found.expires && new Date(found.expires) < new Date(new Date().toDateString())) return null;
   return found;

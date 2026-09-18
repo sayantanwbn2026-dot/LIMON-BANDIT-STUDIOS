@@ -5,10 +5,21 @@ a few minutes in a browser.
 
 ---
 
-## 0. The four switches only you can flip
+## 0. The switches only you can flip
 
 Each of these lives in a dashboard the site cannot reach for you. None needs a
 code change — the site is already built to use them the moment they are on.
+
+### Open the admin inbox — ~1 minute
+
+Supabase → **SQL Editor** → New query → paste the whole of
+[`supabase/migrations/20260918_admin_inbox.sql`](../supabase/migrations/20260918_admin_inbox.sql)
+→ **Run**.
+
+It lets admins (and only admins) read and update orders, enquiries and the
+mailing list, which is what `/admin/orders`, `/admin/enquiries` and
+`/admin/subscribers` need. Safe to run more than once. Until it has run, those
+screens may show nothing even when there are orders.
 
 ### Get told about orders and enquiries — pick ONE, ~1 minute
 

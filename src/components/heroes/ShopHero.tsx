@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { chapter } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 
 /**
  * SHOP — the run, under the house lockup.
@@ -19,7 +19,7 @@ import { chapter } from "@/data/routes";
  * impression of one.
  */
 export function ShopHero() {
-  const c = chapter("shop");
+  const c = useChapter("shop");
 
   return (
     <HeroFrame chapter="shop">

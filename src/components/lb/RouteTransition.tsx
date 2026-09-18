@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
-import { chapters } from "@/data/routes";
+import { useChapters } from "@/cms/hooks";
 
 /**
  * Navigation between chapters: an acid rule sweeps the top of the viewport,
@@ -25,6 +25,11 @@ export function RouteTransition() {
   const wipeRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
   const [message, setMessage] = useState("");
+  /* Read through a ref so a CMS refresh does not re-run the arrival effect
+   * (which would replay the transition on a page that did not change). */
+  const chapters = useChapters();
+  const chaptersRef = useRef(chapters);
+  chaptersRef.current = chapters;
 
   /* ---- outgoing: fade + wipe, before the new route commits ---- */
   useEffect(() => {
@@ -78,7 +83,7 @@ export function RouteTransition() {
     /* Announce from the route table, not document.title — the head is
      * updated asynchronously after this effect, so reading it here reports
      * the page the user just left. */
-    const arrived = chapters.find((c) => c.to === pathname);
+    const arrived = chaptersRef.current.find((c) => c.to === pathname);
     setMessage(`${arrived?.title ?? "Page"} — loaded`);
 
     /* Focus after paint. Moving it inside this effect is too early: the

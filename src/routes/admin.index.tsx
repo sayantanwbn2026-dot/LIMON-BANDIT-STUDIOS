@@ -5,6 +5,7 @@ import { AdminHeading } from "@/components/admin/AdminShell";
 import { PAGES } from "@/cms/schema";
 import { collections, pageCollections } from "@/cms/collections";
 import { recentChanges, commerceStats, type AuditRow } from "@/cms/admin";
+import { inboxCounts } from "@/cms/inbox";
 import { inr } from "@/lib/money";
 
 export const Route = createFileRoute("/admin/")({
@@ -22,11 +23,16 @@ export const Route = createFileRoute("/admin/")({
 function Dashboard() {
   const [changes, setChanges] = useState<AuditRow[]>([]);
   const [stats, setStats] = useState({ orders: 0, revenue: 0, signups: 0, wishlist: 0 });
+  const [waiting, setWaiting] = useState<{ orders: number | null; enquiries: number | null }>({
+    orders: null,
+    enquiries: null,
+  });
 
   useEffect(() => {
     let alive = true;
     void recentChanges(8).then((r) => alive && setChanges(r));
     void commerceStats(30).then((s) => alive && setStats(s));
+    void inboxCounts().then((w) => alive && setWaiting(w));
     return () => {
       alive = false;
     };
@@ -38,6 +44,22 @@ function Dashboard() {
         title="Dashboard"
         standfirst="Everything on the website can be changed from here. Pick a page to edit what appears on it, or Global for the things that appear everywhere."
       />
+
+      {/* What needs a person today, above the numbers that only need reading. */}
+      <div className="mb-6 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2">
+        <Waiting
+          to="/admin/orders"
+          count={waiting.orders}
+          one="order to pack or ship"
+          many="orders to pack or ship"
+        />
+        <Waiting
+          to="/admin/enquiries"
+          count={waiting.enquiries}
+          one="enquiry waiting for a reply"
+          many="enquiries waiting for a reply"
+        />
+      </div>
 
       <div className="grid grid-cols-2 gap-px border border-line bg-line lg:grid-cols-4">
         <Stat label="Orders — 30 days" value={String(stats.orders)} />
@@ -123,5 +145,37 @@ function Stat({ label, value }: { label: string; value: string }) {
         {value}
       </p>
     </div>
+  );
+}
+
+function Waiting({
+  to,
+  count,
+  one,
+  many,
+}: {
+  to: "/admin/orders" | "/admin/enquiries";
+  count: number | null;
+  one: string;
+  many: string;
+}) {
+  const hot = (count ?? 0) > 0;
+  return (
+    <Link
+      to={to}
+      className={`group flex items-center justify-between gap-4 p-5 transition-colors duration-300 ${
+        hot ? "bg-acid text-accent-text" : "bg-surface-deep text-text hover:bg-surface-raised"
+      }`}
+    >
+      <span className="flex items-baseline gap-3">
+        <span className="tnum font-display text-[34px] font-extrabold leading-none tracking-[-0.03em]">
+          {count === null ? "—" : count}
+        </span>
+        <span className="font-ui text-[14px]">
+          {count === null ? "Open the inbox to check access" : count === 1 ? one : many}
+        </span>
+      </span>
+      <ArrowUpRight size={16} className="shrink-0" />
+    </Link>
   );
 }

@@ -35,6 +35,7 @@ import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
 import { FlashOffer } from "@/components/shop/FlashOffer";
 import { AuthLanding } from "@/components/shop/AuthLanding";
 import { ContentProvider } from "@/cms/content";
+import { liveDocs } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
 
 /**
@@ -218,6 +219,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
   }),
 
+  /* Every CMS document, read once on the server and dehydrated with the
+   * page (cms/live.ts). `staleTime: Infinity` so a client-side navigation
+   * does not refetch it — ContentProvider keeps it fresh from there. */
+  loader: async () => ({ cms: await liveDocs() }),
+  staleTime: Infinity,
+  shouldReload: false,
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -279,6 +287,7 @@ function SiteChrome() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { cms } = Route.useLoaderData();
   const admin = useRouterState({ select: (s) => s.location.pathname.startsWith("/admin") });
 
   return (
@@ -303,7 +312,7 @@ function RootComponent() {
           because the provider holding it never unmounts. */}
       <MotionConfig reducedMotion="user">
         <AuthProvider>
-          <ContentProvider>
+          <ContentProvider initial={cms}>
             <CartProvider>
               <WishlistProvider>
                 <PlayerProvider>

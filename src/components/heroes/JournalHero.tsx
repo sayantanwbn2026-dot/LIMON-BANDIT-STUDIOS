@@ -1,6 +1,6 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
-import { chapter } from "@/data/routes";
+import { useChapter } from "@/cms/hooks";
 import { usePosts } from "@/cms/hooks";
 
 /**
@@ -16,7 +16,7 @@ import { usePosts } from "@/cms/hooks";
  */
 export function JournalHero() {
   const posts = usePosts();
-  const c = chapter("journal");
+  const c = useChapter("journal");
   const issue = String(posts.length).padStart(2, "0");
 
   /* The bone panel starts *below* the navbar rather than under it. The bar is

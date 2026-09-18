@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, Pause, Play } from "lucide-react";
 import { GridRules } from "@/components/lb/GridRules";
 import { MarginNotes, Eyebrow } from "@/components/lb/Section";
-import { images } from "@/generated/images";
+import { images, type ImageEntry } from "@/generated/images";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import { useSection } from "@/cms/hooks";
+import { useFilm, useSection } from "@/cms/hooks";
 
 /**
  * A night in Room A — the film, opening to full screen as you scroll.
@@ -28,17 +28,20 @@ import { useSection } from "@/cms/hooks";
  * index.tsx alongside Hero, ThreeWaysIn, DropRail and Services.
  *
  * WHEN THERE IS NO FILM YET
- * There is no video in the repository, so `poster` carries the frame and
- * the <video> simply has nothing to play. That is deliberate rather than
- * broken: drop a file at VIDEO_SRC and it plays with no other change. The
- * scroll opening, the controls and the layout are identical either way, so
- * this can be shown to a client as-is.
+ * The video and its still come from the CMS ("Room A film" on the home
+ * page). With no video set, the still carries the frame on its own and the
+ * play/mute controls are not drawn — there is nothing for them to act on.
+ * It used to point at a hard-coded /video/room-a.mp4 that did not exist,
+ * which cost a 404 on every home-page load.
  */
 
-/* Drop a file here and it plays. Keep it muted-friendly: the film is
- * ambient, and autoplay with sound is blocked by every browser anyway. */
-const VIDEO_SRC = "/video/room-a.mp4";
-const POSTER = images["room-a"].avif.at(-1)?.url ?? images["room-a"].fallback;
+/* A still can be a manifest key (built-in art, served at its largest AVIF)
+ * or an uploaded URL. */
+function posterUrl(value: string): string {
+  const entry = (images as Record<string, ImageEntry | undefined>)[value];
+  if (entry) return entry.avif.at(-1)?.url ?? entry.fallback;
+  return value || (images["room-a"].avif.at(-1)?.url ?? images["room-a"].fallback);
+}
 
 /* The window it opens from. Percentages of the viewport, so the shape holds
  * from a phone to a 27in display. */
@@ -47,6 +50,9 @@ const OPEN = "inset(0% 0% 0% 0%)";
 
 export function RoomFilm() {
   const copy = useSection("home", "film");
+  const film = useFilm();
+  const src = film.video?.trim() ?? "";
+  const poster = posterUrl(film.poster ?? "");
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -98,7 +104,10 @@ export function RoomFilm() {
         start: "top 70%",
         end: "bottom 30%",
         onToggle: (self) => {
-          if (!v) return;
+          /* Read the ref now rather than the one captured at mount, and
+           * skip when there is no film to play. */
+          const v = video.current;
+          if (!v || !v.currentSrc) return;
           if (self.isActive && !reduced) {
             v.play()
               .then(() => setPlaying(true))
@@ -115,6 +124,12 @@ export function RoomFilm() {
 
     return () => ctx.revert();
   }, []);
+
+  /* The CMS can supply (or change) the film after the element mounted; a
+   * swapped <source> is ignored until the element is told to reload. */
+  useEffect(() => {
+    video.current?.load();
+  }, [src]);
 
   const toggle = () => {
     const v = video.current;
@@ -174,7 +189,7 @@ export function RoomFilm() {
             <video
               ref={video}
               className="h-full w-full object-cover"
-              poster={POSTER}
+              poster={poster}
               muted={muted}
               loop
               playsInline
@@ -182,7 +197,7 @@ export function RoomFilm() {
               /* No `controls`: the page supplies its own, so the film keeps
                * the house's chrome instead of the browser's. */
             >
-              <source src={VIDEO_SRC} type="video/mp4" />
+              {src ? <source src={src} type="video/mp4" /> : null}
             </video>
 
             {/* Nothing is laid over the picture — no scrim, no CRT ruling, no
@@ -195,7 +210,7 @@ export function RoomFilm() {
             {/* Controls only. An autoplaying film has to be stoppable, so
              * these stay — icon buttons with labels for assistive tech, no
              * visible type on the picture. */}
-            <div className="absolute inset-x-0 bottom-0 flex justify-end p-6 md:p-8">
+            <div hidden={!src} className="absolute inset-x-0 bottom-0 flex justify-end p-6 md:p-8">
               <div className="flex shrink-0 items-center gap-3">
                 <button
                   type="button"

@@ -1,5 +1,7 @@
 import { chapter, type ChapterKey } from "@/data/routes";
 import { site } from "@/data/site";
+import { docFrom, lastDocs, liveDocs } from "@/cms/live";
+import { images } from "@/generated/images";
 
 export type PageSeo = {
   title: string;
@@ -15,6 +17,35 @@ export type PageSeo = {
    */
   noindex?: boolean;
 };
+
+/* The brand document as the editor last saved it, synchronously: `head`
+ * cannot await, but every route's loader has already awaited `liveDocs()`
+ * by the time its head runs (the root loader does it for all of them). */
+type SiteDoc = { name?: string; url?: string; ogImage?: string };
+function liveSite() {
+  const doc = docFrom<SiteDoc>(lastDocs(), "global.site");
+  const url = doc.url?.trim();
+  return {
+    name: doc.name?.trim() || site.name,
+    url: url && /^https?:\/\//.test(url) ? url : site.url,
+    ogImage: doc.ogImage?.trim() || site.ogImage,
+  };
+}
+
+/* The share image can be an absolute URL, a site path, or a key from the
+ * image manifest (what the admin's image picker stores for built-in art).
+ * Scrapers need an absolute URL, so all three end up as one. */
+function absoluteImage(value: string, origin: string): string {
+  if (/^https?:\/\//.test(value)) return value;
+  const entry = (images as Record<string, { fallback: string } | undefined>)[value];
+  const path = entry ? entry.fallback : value;
+  return new URL(path, origin).href;
+}
+
+/** The production origin, for anything that needs absolute links. */
+export function siteOrigin(): string {
+  return liveSite().url;
+}
 
 /**
  * The only way a route should build its <head>.
@@ -32,8 +63,9 @@ export function pageHead({
   image,
   noindex,
 }: PageSeo) {
-  const url = new URL(path, site.url).href;
-  const img = image ?? site.ogImage;
+  const live = liveSite();
+  const url = new URL(path, live.url).href;
+  const img = absoluteImage(image ?? live.ogImage, live.url);
   return {
     meta: [
       { title },
@@ -44,7 +76,7 @@ export function pageHead({
       { property: "og:type", content: ogType },
       { property: "og:url", content: url },
       { property: "og:image", content: img },
-      { property: "og:site_name", content: site.name },
+      { property: "og:site_name", content: live.name },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
@@ -82,65 +114,21 @@ export function chapterHead(key: ChapterKey) {
  * instead. `cms_documents` is world-readable, so the publishable key is
  * the right credential and no service role is involved.
  *
- * Three things keep this from becoming a liability on every page view:
- *
- *   - a 60-second process-level cache, because this document changes a
- *     few times a month and is identical for every visitor;
- *   - a 1.5s timeout, so a slow database delays a render by at most that
- *     rather than hanging it;
- *   - every failure path returns the compiled chapter. An unreachable or
- *     unseeded database must degrade to the shipped copy, never to a
- *     page with no title.
+ * The read goes through cms/live.ts — the same cached, time-limited fetch
+ * that feeds the rest of the site — and every failure path returns the
+ * compiled chapter. An unreachable or unseeded database must degrade to
+ * the shipped copy, never to a page with no title.
  * ------------------------------------------------------------------ */
 
 type SeoRow = { key: string; title: string; description: string; to: string };
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
-
-const CACHE_MS = 60_000;
-const FETCH_TIMEOUT_MS = 1500;
-
-let cache: { at: number; rows: SeoRow[] } | null = null;
-let inflight: Promise<SeoRow[]> | null = null;
-
-async function fetchPageSeo(): Promise<SeoRow[]> {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return [];
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/cms_documents?key=eq.global.pages&select=data`,
-      {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        signal: controller.signal,
-      },
-    );
-    if (!res.ok) return [];
-    const rows = (await res.json()) as { data: unknown }[];
-    const doc = rows[0]?.data;
-    return Array.isArray(doc) ? (doc as SeoRow[]) : [];
-  } catch {
-    /* Aborted, offline, or the project is paused. The caller falls back
-     * to the compiled chapter, which is the whole point of seeds. */
-    return [];
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
+/* Reads the same cached store as the rest of the site (cms/live.ts), which
+ * carries the timeout, the cache and the offline fallback this used to
+ * implement for itself. */
 async function pageSeoRows(): Promise<SeoRow[]> {
-  const now = Date.now();
-  if (cache && now - cache.at < CACHE_MS) return cache.rows;
-  /* Collapse a burst of concurrent renders onto one request rather than
-   * letting every in-flight page open its own connection. */
-  inflight ??= fetchPageSeo().then((rows) => {
-    if (rows.length) cache = { at: Date.now(), rows };
-    inflight = null;
-    return rows;
-  });
-  return inflight;
+  const docs = await liveDocs();
+  const rows = docs["global.pages"];
+  return Array.isArray(rows) ? (rows as SeoRow[]) : [];
 }
 
 /**

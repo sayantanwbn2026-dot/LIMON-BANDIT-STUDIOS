@@ -105,13 +105,30 @@ export function Footer() {
       <div className="relative z-[2] border-t border-line">
         <div className="shell flex flex-wrap items-center justify-between gap-4 py-6 font-ui text-[12px] text-mute">
           <span>©2026 Limon Bandit. All rights reserved.</span>
-          <span className="flex gap-6">
-            <a href="/contact" className="tap transition-colors duration-300 hover:text-text">
+          <span className="flex flex-wrap gap-x-6 gap-y-2">
+            {/* Real policy pages now (/legal, CMS-edited). These used to be
+             * two links to /contact labelled Terms and Privacy. */}
+            <Link
+              to="/legal/$slug"
+              params={{ slug: "terms" }}
+              className="tap transition-colors duration-300 hover:text-text"
+            >
               Terms
-            </a>
-            <a href="/contact" className="tap transition-colors duration-300 hover:text-text">
+            </Link>
+            <Link
+              to="/legal/$slug"
+              params={{ slug: "privacy" }}
+              className="tap transition-colors duration-300 hover:text-text"
+            >
               Privacy
-            </a>
+            </Link>
+            <Link
+              to="/legal/$slug"
+              params={{ slug: "shipping-returns" }}
+              className="tap transition-colors duration-300 hover:text-text"
+            >
+              Shipping &amp; returns
+            </Link>
           </span>
         </div>
       </div>

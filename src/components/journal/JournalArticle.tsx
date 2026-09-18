@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { setNavPole } from "@/lib/nav-pole";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
-import { Picture } from "@/components/lb/Picture";
+import { CmsImage } from "@/components/lb/CmsImage";
 import { RiseIn } from "@/components/lb/Reveal";
-import { postNeighbours, type Post } from "@/data/journal";
+import { usePosts, type PostDoc } from "@/cms/hooks";
+
+type Post = PostDoc;
 
 /**
  * A single entry — the one page on the site built for reading rather than
@@ -36,7 +38,16 @@ export function JournalArticle({ entry }: { entry: Post }) {
     return () => setNavPole("primary");
   }, []);
 
-  const around = postNeighbours(entry.slug);
+  /* Neighbours from the CMS list, not the compiled one, so an entry an
+   * editor added links to and from its neighbours like any other. Wraps
+   * like the chapters do. */
+  const posts = usePosts();
+  const around = useMemo(() => {
+    const i = posts.findIndex((p) => p.slug === entry.slug);
+    if (i < 0 || posts.length < 2) return undefined;
+    const n = posts.length;
+    return { prev: posts[(i - 1 + n) % n], next: posts[(i + 1) % n] };
+  }, [posts, entry.slug]);
   const when = new Date(entry.date).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
@@ -103,7 +114,7 @@ export function JournalArticle({ entry }: { entry: Post }) {
         </header>
 
         <div className="shell relative z-[2]">
-          <Picture
+          <CmsImage
             src={entry.image}
             sizes="(max-width: 767px) 100vw, 1200px"
             alt={entry.alt}
@@ -142,15 +153,20 @@ function Block({ block }: { block: Post["body"][number] }) {
     case "list":
       return (
         <ul className="mt-8 border-t border-alt-line">
-          {block.items.map((it) => (
-            <li
-              key={it}
-              className="flex gap-4 border-b border-alt-line py-4 font-ui text-[16px] leading-[1.55] text-alt-mute"
-            >
-              <span aria-hidden="true" className="mt-[10px] h-[6px] w-[6px] shrink-0 bg-acid" />
-              <span>{it}</span>
-            </li>
-          ))}
+          {/* The CMS stores a list as one item per line of `text`. */}
+          {block.text
+            .split("\n")
+            .map((it) => it.trim())
+            .filter(Boolean)
+            .map((it) => (
+              <li
+                key={it}
+                className="flex gap-4 border-b border-alt-line py-4 font-ui text-[16px] leading-[1.55] text-alt-mute"
+              >
+                <span aria-hidden="true" className="mt-[10px] h-[6px] w-[6px] shrink-0 bg-acid" />
+                <span>{it}</span>
+              </li>
+            ))}
         </ul>
       );
 

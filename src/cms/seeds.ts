@@ -14,6 +14,7 @@ import { releases } from "@/data/releases";
 import { tracks } from "@/data/tracks";
 import { crew } from "@/data/crew";
 import { posts } from "@/data/journal";
+import { legal } from "@/data/legal";
 import { drops } from "@/data/drops";
 import { products } from "@/data/shop";
 import { offers } from "@/data/offers";
@@ -274,6 +275,7 @@ export const seeds: Record<string, unknown> = {
   })),
   "page.home.doors": doors.map((d) => ({ ...d })),
   "page.home.metrics": metrics.map((m) => ({ ...m })),
+  "page.home.film": { video: "", poster: "room-a" },
   "page.home.wall": wall.map((w) => ({
     src: w.src,
     alt: w.alt,
@@ -357,6 +359,9 @@ export const seeds: Record<string, unknown> = {
     expires: o.expires ?? "",
   })),
   "commerce.shipping": SHIPPING_SEED,
+
+  // ---- legal ----
+  "global.legal": legal,
 
   // ---- crew ----
   "page.crew.sections": crewSections,

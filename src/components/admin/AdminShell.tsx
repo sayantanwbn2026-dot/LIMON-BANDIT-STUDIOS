@@ -1,6 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  Inbox,
+  Mail,
+  Package,
   BarChart3,
   Globe,
   Image,
@@ -67,6 +70,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <Group label="Overview">
               <Item to="/admin" icon={<LayoutGrid size={14} />} label="Dashboard" exact />
               <Item to="/admin/analytics" icon={<BarChart3 size={14} />} label="Analytics" />
+            </Group>
+
+            <Group label="Inbox">
+              <Item to="/admin/orders" icon={<Package size={14} />} label="Orders" />
+              <Item to="/admin/enquiries" icon={<Inbox size={14} />} label="Enquiries" />
+              <Item to="/admin/subscribers" icon={<Mail size={14} />} label="Subscribers" />
             </Group>
 
             <Group label="Pages">

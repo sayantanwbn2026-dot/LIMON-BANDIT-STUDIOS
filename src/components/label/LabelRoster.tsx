@@ -3,9 +3,8 @@ import { Play } from "lucide-react";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { trackForArtist } from "@/data/tracks";
 import { usePlayer } from "@/lib/player";
-import { useReleases, useSection } from "@/cms/hooks";
+import { useReleases, useSection, useTracks } from "@/cms/hooks";
 
 /**
  * The roster as a drafting index rather than a wall of covers. Hovering or
@@ -18,6 +17,11 @@ export function LabelRoster() {
   const releases = useReleases();
   const [hover, setHover] = useState(0);
   const { play, track, playing } = usePlayer();
+  /* The CMS track list, not the compiled one: the player plays from the CMS
+   * (lib/player), so a track added or re-pointed in the admin has to be
+   * found here too or its row shows no play button. */
+  const tracks = useTracks();
+  const trackForArtist = (artist: string) => tracks.find((t) => t.artist === artist);
   const shown = releases[hover];
 
   return (

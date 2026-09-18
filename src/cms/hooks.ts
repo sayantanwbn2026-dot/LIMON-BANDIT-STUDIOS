@@ -3,6 +3,7 @@ import { useDoc, useList } from "./content";
 import { seeds } from "./seeds";
 import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
+import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
 
 /**
  * The site's read API.
@@ -88,6 +89,78 @@ export function useNeighbours(key: string): { prev: PageDoc; next: PageDoc } {
     return { prev: pages[(i - 1 + n) % n], next: pages[(i + 1) % n] };
   }, [pages, key]);
 }
+
+/* ---------------- chapters: compiled route table + CMS copy ----------------
+ *
+ * The page heroes, breadcrumbs, next/previous doors and the route-change
+ * announcement all read the compiled chapter table in src/data/routes. The
+ * CMS's "Page titles & SEO" collection has a heading, poster wordmark and
+ * standfirst for every chapter — and until these hooks, only its title and
+ * description were read anywhere (by seo.ts). Editing a page heading saved,
+ * and changed nothing on the page.
+ *
+ * Each field falls back to the compiled chapter on its own, so a half-filled
+ * row never renders an empty H1. `key` and `to` always come from the
+ * compiled table: they are routing, not copy, and an editor retyping a path
+ * would otherwise send every "next chapter" door to a 404. */
+export function mergeChapter(c: Chapter, doc?: Partial<PageDoc>): Chapter {
+  if (!doc) return c;
+  const pick = (v: string | undefined, fb: string) => (v && v.trim() ? v : fb);
+  return {
+    ...c,
+    index: pick(doc.index, c.index),
+    name: pick(doc.name, c.name),
+    heading: pick(doc.heading, c.heading),
+    poster: {
+      spread: pick(doc.poster?.spread, c.poster.spread),
+      word: pick(doc.poster?.word, c.poster.word),
+    },
+    standfirst: pick(doc.standfirst, c.standfirst),
+    title: pick(doc.title, c.title),
+    description: pick(doc.description, c.description),
+  };
+}
+
+/** Every chapter, in house order, with the editor's copy applied. */
+export function useChapters(): Chapter[] {
+  const pages = useDoc<unknown>("global.pages");
+  return useMemo(() => {
+    const rows = Array.isArray(pages) ? (pages as PageDoc[]) : [];
+    return compiledChapters.map((c) =>
+      mergeChapter(
+        c,
+        rows.find((r) => r?.key === c.key),
+      ),
+    );
+  }, [pages]);
+}
+
+export function useChapter(key: ChapterKey): Chapter {
+  const all = useChapters();
+  return useMemo(() => all.find((c) => c.key === key) ?? all[0], [all, key]);
+}
+
+/** The chapter before and after, wrapping at both ends. */
+export function useChapterNeighbours(key: ChapterKey): { prev: Chapter; next: Chapter } {
+  const all = useChapters();
+  return useMemo(() => {
+    const i = Math.max(
+      0,
+      all.findIndex((c) => c.key === key),
+    );
+    const n = all.length;
+    return { prev: all[(i - 1 + n) % n], next: all[(i + 1) % n] };
+  }, [all, key]);
+}
+
+export type LegalDoc = {
+  slug: string;
+  title: string;
+  updated: string;
+  standfirst: string;
+  body: BodyBlock[];
+};
+export const useLegal = () => useList<LegalDoc>("global.legal");
 
 export type TickerDoc = {
   proofTicker: string[];
@@ -181,6 +254,9 @@ export const useMetrics = () => useList<MetricDoc>("page.home.metrics");
 
 export type WallDoc = { src: ImageKey | string; alt: string; caption: string; span?: boolean };
 export const useWall = () => useList<WallDoc>("page.home.wall");
+
+export type FilmDoc = { video: string; poster: ImageKey | string };
+export const useFilm = () => useDoc<FilmDoc>("page.home.film");
 
 export type TestimonialDoc = {
   quote: string;

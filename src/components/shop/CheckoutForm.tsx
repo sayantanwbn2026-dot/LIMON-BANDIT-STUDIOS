@@ -10,6 +10,7 @@ import { useCart } from "@/lib/cart";
 import { getSupabase } from "@/lib/supabase";
 import { submitOrder, type PlacedOrder } from "@/lib/orders";
 import { findOffer } from "@/data/offers";
+import { useOffers } from "@/cms/hooks";
 import { inr } from "@/lib/money";
 
 /**
@@ -33,6 +34,7 @@ type FieldKey = "fullName" | "email" | "phone" | "addressLine1" | "city" | "regi
 type Errors = Partial<Record<FieldKey, string>>;
 
 export function CheckoutForm() {
+  const offers = useOffers();
   const { user, openAuth, loading } = useAuth();
   const cart = useCart();
 
@@ -96,7 +98,7 @@ export function CheckoutForm() {
   const err = (k: FieldKey) => (touched[k] ? errors[k] : undefined);
 
   const applyCode = () => {
-    const found = findOffer(codeInput);
+    const found = findOffer(codeInput, offers);
     if (!found) {
       setCodeNote("That code is not one of ours, or it has expired.");
       return;
@@ -381,6 +383,25 @@ export function CheckoutForm() {
               <p className="t-label mt-4 max-w-[44ch] text-mute">
                 No card is taken here. The order goes to the people who pack it, and you pay on
                 delivery.
+              </p>
+              <p className="mt-3 max-w-[52ch] font-ui text-[13px] leading-[1.5] text-mute">
+                By placing the order you agree to our{" "}
+                <Link
+                  to="/legal/$slug"
+                  params={{ slug: "terms" }}
+                  className="text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
+                >
+                  terms
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/legal/$slug"
+                  params={{ slug: "shipping-returns" }}
+                  className="text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
+                >
+                  shipping &amp; returns
+                </Link>
+                .
               </p>
             </div>
           </form>

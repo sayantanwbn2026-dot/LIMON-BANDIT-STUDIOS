@@ -27,11 +27,11 @@ import { seeds } from "./seeds";
  *   A CMS that can take the site down when the database hiccups is a worse
  *   site than one with hardcoded copy.
  *
- *   **Server-render gets the seeds.** There is no session during SSR and no
- *   fetch, so the HTML ships with the committed content and hydration fills
- *   in anything the editor has since changed. That trades a brief flash on
- *   changed sections for never blocking the render — the right way round for
- *   a site whose content changes a few times a month.
+ *   **Server-render gets the live content.** The root loader reads the
+ *   store over REST (cms/live.ts) and passes it in as `initial`, so the HTML
+ *   already carries whatever the editor last saved. The mount fetch below
+ *   still runs, which keeps a long-open tab current and is what `refresh()`
+ *   uses after an admin save.
  */
 
 type Docs = Record<string, unknown>;
@@ -47,9 +47,17 @@ type ContentState = {
 
 const Ctx = createContext<ContentState | null>(null);
 
-export function ContentProvider({ children }: { children: ReactNode }) {
-  const [docs, setDocs] = useState<Docs>({});
-  const [loaded, setLoaded] = useState(false);
+export function ContentProvider({
+  children,
+  initial,
+}: {
+  children: ReactNode;
+  /** Documents fetched by the root loader (see cms/live.ts), so the server
+   * render and the first client render already carry the edited content. */
+  initial?: Docs;
+}) {
+  const [docs, setDocs] = useState<Docs>(initial ?? {});
+  const [loaded, setLoaded] = useState(Boolean(initial && Object.keys(initial).length));
   const [offline, setOffline] = useState(false);
 
   const load = useCallback(async () => {

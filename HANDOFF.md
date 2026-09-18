@@ -214,17 +214,19 @@ permission to an address; the account still has to be registered on the site.
   large change. That moves Supabase off the first-paint path; it will still
   load on every page, because `AuthProvider` checks the session on mount.
 
-- **`Faq.tsx` still has its own accordion**; `components/lb/Accordion.tsx`
-  exists and `/rooms` and `/label` use it. Faq should adopt it.
-- **Lighthouse has never run** — no Chrome reachable from this environment.
-  Every number in `PERF.md` comes from the build output, filesystem or DOM.
-- **`JoinList` still submits nowhere** — `setDone(true)` and the email is
-  discarded. The shop's flash popup now writes addresses to
-  `public.offer_signups`; point `JoinList` at the same table rather than
-  building it a second one. (`ContactForm` composing a `mailto:` is deliberate
-  and can stay.)
-- **404 and error boundary are still generic shadcn** with `rounded-md`, in
-  violation of the 4px radius rule. Pass 5 Job 9.
+- **Done since this list was written:** `Faq` uses the shared `Accordion`;
+  `JoinList` writes to `offer_signups`; the 404 and error screens are the
+  house design (no `rounded-md`).
+- **CMS now server-renders** (`src/cms/live.ts`, see CMS-GUIDE → "How content
+  reaches the page"). Journal posts, legal pages, chapter headings, crew
+  counts, label tracks, discount codes and the Room A film all read the CMS.
+- **Admin inbox** (`/admin/orders`, `/admin/enquiries`, `/admin/subscribers`)
+  needs `supabase/migrations/20260918_admin_inbox.sql` run once in the SQL
+  editor. The Supabase MCP in this environment can no longer see project
+  `vwuuwommxvqtgzlsndip`, so it has not been applied from here.
+- **Legal pages** (`/legal/terms`, `/legal/privacy`, `/legal/shipping-returns`)
+  ship as drafts written from the code — returns window, delivery times and
+  grievance contact are placeholders for the owner to confirm.
 - Placeholder audio is synthesised, not music. Replace `public/audio/*.wav`
   with real masters under the same filenames and delete `scripts/audio.mjs`.
 

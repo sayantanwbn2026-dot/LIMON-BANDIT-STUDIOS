@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as RoomsRouteImport } from './routes/rooms'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as LabelRouteImport } from './routes/label'
 import { Route as CrewRouteImport } from './routes/crew'
@@ -21,12 +22,16 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
+import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminShopRouteImport } from './routes/admin.shop'
 import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminGlobalRouteImport } from './routes/admin.global'
+import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminPagePageRouteImport } from './routes/admin.page.$page'
 
@@ -43,6 +48,11 @@ const ShopRoute = ShopRouteImport.update({
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -90,10 +100,20 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JournalSlugRoute = JournalSlugRouteImport.update({
   id: '/journal/$slug',
   path: '/journal/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/subscribers',
+  path: '/subscribers',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminShopRoute = AdminShopRouteImport.update({
   id: '/shop',
@@ -103,6 +123,11 @@ const AdminShopRoute = AdminShopRouteImport.update({
 const AdminOwnershipRoute = AdminOwnershipRouteImport.update({
   id: '/ownership',
   path: '/ownership',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
@@ -118,6 +143,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 const AdminGlobalRoute = AdminGlobalRouteImport.update({
   id: '/global',
   path: '/global',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEnquiriesRoute = AdminEnquiriesRouteImport.update({
+  id: '/enquiries',
+  path: '/enquiries',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
@@ -139,16 +169,21 @@ export interface FileRoutesByFullPath {
   '/crew': typeof CrewRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
   '/admin/shop': typeof AdminShopRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -160,16 +195,21 @@ export interface FileRoutesByTo {
   '/crew': typeof CrewRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
   '/admin/shop': typeof AdminShopRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/admin': typeof AdminIndexRoute
   '/journal': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -183,16 +223,21 @@ export interface FileRoutesById {
   '/crew': typeof CrewRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rooms': typeof RoomsRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
   '/admin/shop': typeof AdminShopRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
+  '/legal/$slug': typeof LegalSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -207,16 +252,21 @@ export interface FileRouteTypes {
     | '/crew'
     | '/label'
     | '/orders'
+    | '/robots.txt'
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/analytics'
+    | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/orders'
     | '/admin/ownership'
     | '/admin/shop'
+    | '/admin/subscribers'
     | '/journal/$slug'
+    | '/legal/$slug'
     | '/admin/'
     | '/journal/'
     | '/admin/page/$page'
@@ -228,16 +278,21 @@ export interface FileRouteTypes {
     | '/crew'
     | '/label'
     | '/orders'
+    | '/robots.txt'
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/analytics'
+    | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/orders'
     | '/admin/ownership'
     | '/admin/shop'
+    | '/admin/subscribers'
     | '/journal/$slug'
+    | '/legal/$slug'
     | '/admin'
     | '/journal'
     | '/admin/page/$page'
@@ -250,16 +305,21 @@ export interface FileRouteTypes {
     | '/crew'
     | '/label'
     | '/orders'
+    | '/robots.txt'
     | '/rooms'
     | '/shop'
     | '/sitemap.xml'
     | '/admin/analytics'
+    | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
     | '/admin/media'
+    | '/admin/orders'
     | '/admin/ownership'
     | '/admin/shop'
+    | '/admin/subscribers'
     | '/journal/$slug'
+    | '/legal/$slug'
     | '/admin/'
     | '/journal/'
     | '/admin/page/$page'
@@ -273,10 +333,12 @@ export interface RootRouteChildren {
   CrewRoute: typeof CrewRoute
   LabelRoute: typeof LabelRoute
   OrdersRoute: typeof OrdersRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   RoomsRoute: typeof RoomsRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   JournalSlugRoute: typeof JournalSlugRoute
+  LegalSlugRoute: typeof LegalSlugRoute
   JournalIndexRoute: typeof JournalIndexRoute
 }
 
@@ -301,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/rooms'
       fullPath: '/rooms'
       preLoaderRoute: typeof RoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -366,12 +435,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/journal/$slug': {
       id: '/journal/$slug'
       path: '/journal/$slug'
       fullPath: '/journal/$slug'
       preLoaderRoute: typeof JournalSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/shop': {
       id: '/admin/shop'
@@ -385,6 +468,13 @@ declare module '@tanstack/react-router' {
       path: '/ownership'
       fullPath: '/admin/ownership'
       preLoaderRoute: typeof AdminOwnershipRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/media': {
@@ -408,6 +498,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGlobalRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/enquiries': {
+      id: '/admin/enquiries'
+      path: '/enquiries'
+      fullPath: '/admin/enquiries'
+      preLoaderRoute: typeof AdminEnquiriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/analytics'
@@ -427,22 +524,28 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminGlobalRoute: typeof AdminGlobalRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMediaRoute: typeof AdminMediaRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
   AdminOwnershipRoute: typeof AdminOwnershipRoute
   AdminShopRoute: typeof AdminShopRoute
+  AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminPagePageRoute: typeof AdminPagePageRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminGlobalRoute: AdminGlobalRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMediaRoute: AdminMediaRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
   AdminOwnershipRoute: AdminOwnershipRoute,
   AdminShopRoute: AdminShopRoute,
+  AdminSubscribersRoute: AdminSubscribersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminPagePageRoute: AdminPagePageRoute,
 }
@@ -457,10 +560,12 @@ const rootRouteChildren: RootRouteChildren = {
   CrewRoute: CrewRoute,
   LabelRoute: LabelRoute,
   OrdersRoute: OrdersRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   RoomsRoute: RoomsRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   JournalSlugRoute: JournalSlugRoute,
+  LegalSlugRoute: LegalSlugRoute,
   JournalIndexRoute: JournalIndexRoute,
 }
 export const routeTree = rootRouteImport
