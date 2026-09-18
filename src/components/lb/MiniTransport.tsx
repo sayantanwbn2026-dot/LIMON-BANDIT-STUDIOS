@@ -51,7 +51,7 @@ export function MiniTransport() {
         </button>
 
         <div className="min-w-0 flex-1">
-          <div className="truncate font-display text-[13px] font-bold tracking-[-0.01em] text-text">
+          <div className="truncate font-display text-[13px] font-bold uppercase tracking-[-0.01em] text-text">
             {track.title}
           </div>
           <div className="truncate font-ui text-[11px] text-mute">

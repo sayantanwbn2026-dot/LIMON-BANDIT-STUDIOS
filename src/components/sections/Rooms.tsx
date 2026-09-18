@@ -85,10 +85,10 @@ export function Rooms() {
                     }}
                   />
                 ))}
-                <span className="absolute left-0 top-0 z-[3] bg-acid px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text">
+                <span className="absolute left-0 top-0 z-[3] bg-acid px-3 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-accent-text">
                   Fig. {rooms[active].index} — {rooms[active].name}
                 </span>
-                <span className="absolute bottom-0 right-0 z-[3] bg-surface-deep px-3 py-1 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] tnum text-acid-type">
+                <span className="absolute bottom-0 right-0 z-[3] bg-surface-deep px-3 py-1 font-ui text-[11px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                   {rooms[active].rate}
                 </span>
               </div>
@@ -115,13 +115,13 @@ export function Rooms() {
                 className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-10 md:first:border-t-0 md:first:pt-0"
               >
                 <div className="flex items-baseline gap-4">
-                  <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] tnum text-acid-type">
+                  <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
                     {r.index}
                   </span>
-                  <h3 className="font-display text-[28px] font-bold leading-[1.1] tracking-[-0.02em] text-text md:text-[34px]">
+                  <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[34px]">
                     {r.name}
                   </h3>
-                  <span className="ml-auto font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
+                  <span className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute">
                     {r.kind}
                   </span>
                 </div>
@@ -149,7 +149,7 @@ export function Rooms() {
                 <dl className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2">
                   {r.specs.map((s) => (
                     <div key={s.k} className="flex items-baseline gap-2 border-b border-line pb-2">
-                      <dt className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
+                      <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
                         {s.k}
                       </dt>
                       <dd className="ml-auto font-ui text-[12px] font-semibold uppercase tracking-[0.08em] tnum text-text">
@@ -160,7 +160,9 @@ export function Rooms() {
                 </dl>
 
                 <div className="mt-6 flex items-center justify-between">
-                  <span className="t-action tnum text-acid-type">{r.rate}</span>
+                  <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
+                    {r.rate}
+                  </span>
                   <GhostLink label="Book this room" to="/contact" className="text-text" />
                 </div>
               </article>

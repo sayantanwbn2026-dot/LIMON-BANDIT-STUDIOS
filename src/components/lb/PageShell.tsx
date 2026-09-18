@@ -61,7 +61,7 @@ function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
           change in its own right. */}
       <div className="shell relative z-[2] pb-[96px] pt-[120px]">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
+          <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
                 LMN&middot;BNDT
@@ -130,11 +130,11 @@ function ChapterPanel({
       </span>
 
       <span className={`flex items-baseline gap-4 ${isNext ? "md:flex-row-reverse" : ""}`}>
-        <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+        <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
           {c.index}
         </span>
         <span
-          className={`font-display text-[28px] font-bold leading-[1.08] tracking-[-0.02em] text-text transition-transform duration-300 md:text-[34px] ${
+          className={`font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text transition-transform duration-300 md:text-[34px] ${
             isNext ? "group-hover:-translate-x-2" : "group-hover:translate-x-2"
           }`}
         >

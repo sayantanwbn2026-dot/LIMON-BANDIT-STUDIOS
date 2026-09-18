@@ -45,7 +45,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           type="button"
           onClick={() => setNavOpen((v) => !v)}
           aria-expanded={navOpen}
-          className="flex h-10 items-center border border-line px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text"
+          className="flex h-10 items-center border border-line px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-text"
         >
           {navOpen ? "Close" : "Menu"}
         </button>
@@ -94,7 +94,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => void signOut()}
-              className="mt-4 flex h-9 w-full items-center justify-center gap-2 border border-line font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+              className="mt-4 flex h-9 w-full items-center justify-center gap-2 border border-line font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
             >
               <LogOut size={13} />
               Sign out
@@ -103,7 +103,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="mt-2 flex h-9 w-full items-center justify-center border border-line font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+              className="mt-2 flex h-9 w-full items-center justify-center border border-line font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
             >
               View site
             </a>
@@ -119,7 +119,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 function Group({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="mb-5">
-      <p className="px-3 pb-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
+      <p className="px-3 pb-2 font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
         {label}
       </p>
       <ul className="space-y-px">{children}</ul>
@@ -169,7 +169,7 @@ export function AdminHeading({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
       <div className="min-w-0">
-        <h1 className="font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-text lg:text-[34px]">
+        <h1 className="font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text lg:text-[34px]">
           {title}
         </h1>
         {standfirst ? (

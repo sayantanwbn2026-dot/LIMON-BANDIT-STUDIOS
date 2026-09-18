@@ -213,7 +213,7 @@ export function Nav() {
                     "opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo)",
                 }}
               >
-                <span className="lb-menu-link font-display font-bold tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
+                <span className="lb-menu-link font-display font-extrabold uppercase tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
                   {item.label}
                 </span>
                 <span className="t-label tnum text-acid-type transition-colors duration-300 group-hover:text-text">

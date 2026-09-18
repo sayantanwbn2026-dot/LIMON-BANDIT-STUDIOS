@@ -60,7 +60,7 @@ export function Cursor() {
       if (!t || !t.closest) return;
       const play = t.closest<HTMLElement>('[data-cursor="play"]');
       const grow = t.closest<HTMLElement>('a, button, [data-cursor="grow"]');
-      setLabel(play ? "Play" : null);
+      setLabel(play ? "PLAY" : null);
       setGrown(Boolean(play || grow));
     };
 
@@ -92,7 +92,7 @@ export function Cursor() {
         }}
       >
         {label ? (
-          <span className="font-ui text-[9px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+          <span className="font-ui text-[10px] font-bold uppercase tracking-[0.12em] text-acid-type">
             {label}
           </span>
         ) : null}

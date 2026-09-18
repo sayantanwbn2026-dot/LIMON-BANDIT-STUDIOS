@@ -54,7 +54,7 @@ export function LabelSplits() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -67,7 +67,7 @@ export function LabelSplits() {
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
-            <h3 className="font-display text-[24px] font-bold tracking-[-0.02em] text-text">
+            <h3 className="font-display text-[24px] font-bold uppercase tracking-[-0.02em] text-text">
               Send two tracks
             </h3>
             <p className="mt-4 max-w-[46ch] font-ui text-[16px] leading-[1.5] text-mute">
@@ -78,7 +78,9 @@ export function LabelSplits() {
               href="/contact?intent=demo"
               className="group mt-8 flex h-[56px] w-fit items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
             >
-              <span className="t-action text-accent-text">Submit a demo</span>
+              <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
+                Submit a demo
+              </span>
               <ArrowRight size={16} className="text-accent-text lb-arrow" />
             </a>
           </div>

@@ -93,7 +93,7 @@ function MarginNotesDrawn({
    * have to follow it — primary-pole mute on a bone surface is unreadable. */
   const tint =
     tone === "light" ? "text-alt-mute" : tone === "acid" ? "text-accent-text" : "text-mute";
-  const base = `pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${tint} xl:block`;
+  const base = `pointer-events-none absolute top-1/2 z-[3] hidden -translate-y-1/2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint} xl:block`;
   const style: React.CSSProperties = {
     writingMode: "vertical-rl",
     transform: "translateY(-50%) rotate(180deg)",

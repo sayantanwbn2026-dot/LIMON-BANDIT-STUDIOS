@@ -475,7 +475,9 @@ export function Hero() {
                 href="/contact"
                 className="group fill-acid inline-flex h-[56px] w-full items-center justify-between border border-line bg-transparent transition-colors duration-300 md:h-[54px] md:w-[240px]"
               >
-                <span className="pl-6 t-action text-text">Book the room</span>
+                <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
+                  Book the room
+                </span>
                 <ArrowRight size={16} className="mr-6 text-text lb-arrow" />
               </a>
             </div>

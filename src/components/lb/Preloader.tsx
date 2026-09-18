@@ -83,7 +83,7 @@ export function Preloader() {
     >
       <div data-pre-inner className="shell w-full pb-[10vh]">
         <div className="flex items-end justify-between">
-          <span className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute">
+          <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-mute">
             Limon Bandit — Kolkata
           </span>
           <span

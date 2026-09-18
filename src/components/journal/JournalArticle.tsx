@@ -55,7 +55,7 @@ export function JournalArticle({ entry }: { entry: Post }) {
 
         <header className="shell relative z-[2] pb-16 pt-[72px]">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-alt-mute">
+            <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-alt-mute">
               <li>
                 <Link to="/" className="tap transition-colors duration-300 hover:text-alt-text">
                   LMN&middot;BNDT
@@ -92,7 +92,7 @@ export function JournalArticle({ entry }: { entry: Post }) {
           <h1
             data-page-h1
             tabIndex={-1}
-            className="mt-10 max-w-[20ch] font-display text-[34px] font-bold leading-[1.08] tracking-[-0.03em] text-alt-text outline-none md:text-[52px]"
+            className="mt-10 max-w-[20ch] font-display text-[34px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-alt-text outline-none md:text-[52px]"
           >
             {entry.title}
           </h1>
@@ -134,7 +134,7 @@ function Block({ block }: { block: Post["body"][number] }) {
   switch (block.kind) {
     case "h2":
       return (
-        <h2 className="mt-14 font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[28px]">
+        <h2 className="mt-14 font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[28px]">
           {block.text}
         </h2>
       );
@@ -157,7 +157,7 @@ function Block({ block }: { block: Post["body"][number] }) {
     case "quote":
       return (
         <figure className="mt-14 border-l-2 border-acid pl-6 md:pl-8">
-          <blockquote className="font-display text-[20px] font-bold leading-[1.2] tracking-[-0.02em] text-alt-text md:text-[28px]">
+          <blockquote className="font-display text-[20px] font-bold uppercase leading-[1.2] tracking-[-0.02em] text-alt-text md:text-[28px]">
             {block.text}
           </blockquote>
           <figcaption className="t-label mt-4 text-alt-mute">{block.who}</figcaption>
@@ -185,14 +185,14 @@ function ArticleNav({ prev, next }: { prev: Post; next: Post }) {
             params={{ slug: prev.slug }}
             className="group flex h-full flex-col justify-between gap-8 border-b border-alt-line py-12 md:border-b-0 md:border-r md:pr-10"
           >
-            <span className="flex items-center gap-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-alt-mute">
+            <span className="flex items-center gap-3 font-ui text-[11px] font-bold uppercase tracking-[0.16em] text-alt-mute">
               <ArrowLeft
                 size={14}
                 className="text-alt-acid-type transition-transform duration-300 group-hover:-translate-x-1"
               />
               Previous
             </span>
-            <span className="font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[24px]">
+            <span className="font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[24px]">
               {prev.title}
             </span>
           </Link>
@@ -204,11 +204,11 @@ function ArticleNav({ prev, next }: { prev: Post; next: Post }) {
             params={{ slug: next.slug }}
             className="group flex h-full flex-col justify-between gap-8 py-12 md:items-end md:pl-10 md:text-right"
           >
-            <span className="flex items-center gap-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-alt-mute">
+            <span className="flex items-center gap-3 font-ui text-[11px] font-bold uppercase tracking-[0.16em] text-alt-mute">
               Next
               <ArrowRight size={14} className="text-alt-acid-type lb-arrow" />
             </span>
-            <span className="font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[24px]">
+            <span className="font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-alt-text md:text-[24px]">
               {next.title}
             </span>
           </Link>

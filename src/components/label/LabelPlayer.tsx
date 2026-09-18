@@ -76,7 +76,7 @@ export function LabelPlayer() {
           >
             <div>
               <span className="t-label text-mute">{shown.genre}</span>
-              <h3 className="mt-3 font-display text-[28px] font-bold leading-[1.08] tracking-[-0.02em] text-text md:text-[42px]">
+              <h3 className="mt-3 font-display text-[28px] font-extrabold uppercase leading-[1] tracking-[-0.02em] text-text md:text-[42px]">
                 {shown.title}
               </h3>
               <p className="mt-2 font-ui text-[15px] text-mute">
@@ -116,7 +116,7 @@ export function LabelPlayer() {
                   ) : (
                     <Play size={16} className="fill-accent-text text-accent-text" />
                   )}
-                  <span className="t-action text-accent-text">
+                  <span className="font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text">
                     {playing && isLive ? "Pause" : "Play"}
                   </span>
                 </button>
@@ -155,7 +155,7 @@ export function LabelPlayer() {
                   className="group flex w-full items-center gap-6 border-b border-line py-5 text-left transition-colors duration-300 hover:bg-surface-raised"
                 >
                   <span
-                    className={`tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${on ? "text-acid-type" : "text-mute"}`}
+                    className={`tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] ${on ? "text-acid-type" : "text-mute"}`}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -164,7 +164,7 @@ export function LabelPlayer() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span
-                      className={`block truncate font-display text-[16px] font-bold tracking-[-0.01em] ${on ? "text-acid-type" : "text-text"}`}
+                      className={`block truncate font-display text-[16px] font-bold uppercase tracking-[-0.01em] ${on ? "text-acid-type" : "text-text"}`}
                     >
                       {t.title}
                     </span>

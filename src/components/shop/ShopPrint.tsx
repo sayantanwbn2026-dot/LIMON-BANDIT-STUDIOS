@@ -44,7 +44,7 @@ export function ShopPrint() {
             >
               <dt className="t-label text-mute">{s.k}</dt>
               <dd>
-                <span className="tnum mt-4 block font-display text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-acid-type">
+                <span className="tnum mt-4 block font-display text-[42px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-acid-type">
                   {s.v}
                 </span>
                 <span className="mt-4 block max-w-[38ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -63,11 +63,11 @@ export function ShopPrint() {
                 i % 2 === 0 ? "md:pr-10" : "md:border-l md:pl-10"
               }`}
             >
-              <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+              <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                 {s.k}
               </span>
               <span>
-                <span className="block font-display text-[18px] font-bold tracking-[-0.02em] text-text">
+                <span className="block font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
                   {s.t}
                 </span>
                 <span className="mt-2 block max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">

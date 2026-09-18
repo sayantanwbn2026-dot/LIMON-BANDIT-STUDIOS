@@ -27,7 +27,7 @@ export function Process() {
               <span className="font-display text-[14px] font-bold text-acid-type transition-transform duration-300 group-hover:scale-110">
                 {s.index}
               </span>
-              <h3 className="font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-text">
+              <h3 className="font-display text-[28px] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-text">
                 {s.title}
               </h3>
               <p className="font-ui text-[16px] leading-[1.5] text-mute">{s.description}</p>

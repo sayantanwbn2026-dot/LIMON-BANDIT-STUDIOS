@@ -25,7 +25,7 @@ export function Journal() {
             href="/journal"
             className="group flex items-center gap-3 border border-alt-text px-6 py-4 transition-colors duration-300 hover:bg-alt-text"
           >
-            <span className="t-action text-alt-text transition-colors duration-300 group-hover:text-alt-surface">
+            <span className="t-eyebrow text-alt-text transition-colors duration-300 group-hover:text-alt-surface">
               Read everything
             </span>
             <ArrowRight
@@ -50,7 +50,7 @@ export function Journal() {
               <div className="t-label mt-5 text-alt-mute">
                 {p.category} · {p.readTime}
               </div>
-              <h3 className="mt-3 inline font-display text-[18px] font-bold leading-[1.15] tracking-[-0.02em] text-alt-text">
+              <h3 className="mt-3 inline font-display text-[18px] font-bold uppercase leading-[1.15] tracking-[-0.02em] text-alt-text">
                 <span className="relative inline bg-[linear-gradient(var(--accent-dim),var(--accent-dim))] bg-[length:0%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 group-hover:bg-[length:100%_2px]">
                   {p.title}
                 </span>

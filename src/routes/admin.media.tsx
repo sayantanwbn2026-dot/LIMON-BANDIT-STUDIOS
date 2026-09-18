@@ -105,7 +105,7 @@ function MediaLibrary() {
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={busy}
-          className="flex h-11 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
+          className="flex h-11 items-center gap-2 bg-acid px-5 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
         >
           <Upload size={14} />
           {busy ? "Working…" : "Upload images"}
@@ -135,7 +135,7 @@ function MediaLibrary() {
             type="button"
             onClick={() => void onUrl()}
             disabled={busy || !urlDraft.trim()}
-            className="flex h-11 shrink-0 items-center gap-2 border border-line px-4 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
+            className="flex h-11 shrink-0 items-center gap-2 border border-line px-4 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
           >
             <Link2 size={13} />
             Add
@@ -191,7 +191,7 @@ function MediaLibrary() {
                   <button
                     type="button"
                     onClick={() => void copy(row.url)}
-                    className="flex h-8 flex-1 items-center justify-center gap-1.5 border border-line font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
+                    className="flex h-8 flex-1 items-center justify-center gap-1.5 border border-line font-ui text-[10px] font-bold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
                   >
                     {copied === row.url ? <Check size={12} /> : <Copy size={12} />}
                     {copied === row.url ? "Copied" : "Link"}

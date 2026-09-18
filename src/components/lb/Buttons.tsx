@@ -46,7 +46,7 @@ export function CtaButton({
     <>
       <span
         data-mag-label
-        className="pl-6 t-action text-text transition-colors duration-300 group-hover:text-accent-text"
+        className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 group-hover:text-accent-text"
       >
         <RollLabel label={label} />
       </span>
@@ -102,7 +102,7 @@ export function GhostLink({
       </span>
     </>
   );
-  const cls = `group inline-flex items-center gap-2 t-action ${className ?? "text-text"}`;
+  const cls = `group inline-flex items-center gap-2 font-ui text-[13px] font-bold uppercase tracking-[0.14em] ${className ?? "text-text"}`;
   return to ? (
     <Link to={to} className={cls}>
       {inner}

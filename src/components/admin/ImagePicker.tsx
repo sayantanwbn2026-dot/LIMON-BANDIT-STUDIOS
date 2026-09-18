@@ -123,7 +123,7 @@ export function ImagePicker({
 
         <div className="min-w-0 flex-1">
           {/* The requirement, stated before anything is chosen. */}
-          <p className="tnum t-action text-acid-type">
+          <p className="tnum font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-acid-type">
             {width} × {height} px
           </p>
           {note ? (
@@ -150,7 +150,7 @@ export function ImagePicker({
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={busy}
-              className="flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
+              className="flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
             >
               <Upload size={13} />
               {busy ? "Working…" : "Upload"}
@@ -159,7 +159,7 @@ export function ImagePicker({
               type="button"
               onClick={() => setMode((m) => (m === "url" ? "idle" : "url"))}
               disabled={busy}
-              className="flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
+              className="flex h-9 items-center gap-2 border border-line px-3 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50"
             >
               <Link2 size={13} />
               Use a link
@@ -171,7 +171,7 @@ export function ImagePicker({
                   onChange("");
                   setActual(null);
                 }}
-                className="flex h-9 items-center gap-1.5 px-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:text-acid-type"
+                className="flex h-9 items-center gap-1.5 px-2 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:text-acid-type"
               >
                 <X size={13} />
                 Clear
@@ -203,7 +203,7 @@ export function ImagePicker({
                 type="button"
                 onClick={() => void onUrl()}
                 disabled={busy || !urlDraft.trim()}
-                className="h-9 shrink-0 bg-acid px-4 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
+                className="h-9 shrink-0 bg-acid px-4 font-ui text-[11px] font-bold uppercase tracking-[0.1em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:opacity-50"
               >
                 Use
               </button>

@@ -39,7 +39,10 @@ export function Bento() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
-          <a href="/label" className="group inline-flex items-center gap-2 t-action text-text">
+          <a
+            href="/label"
+            className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
+          >
             <span className="wipe-underline">See everything</span>
             <ArrowRight size={14} className="text-acid-type lb-arrow" />
           </a>
@@ -59,7 +62,7 @@ export function Bento() {
               className="h-[72px] w-[72px] shrink-0 object-cover chroma"
             />
             <div className="min-w-0 flex-1">
-              <div className="truncate font-display text-[20px] font-bold tracking-[-0.02em] text-text">
+              <div className="truncate font-display text-[20px] font-extrabold uppercase tracking-[-0.02em] text-text">
                 {shown.title}
               </div>
               <div className="mt-1 truncate font-ui text-[13px] text-mute">{shown.artist}</div>
@@ -102,9 +105,14 @@ export function Bento() {
             alt="The house tee hanging against a concrete wall"
             className="mt-8 aspect-[4/5] w-full object-cover chroma"
           />
-          <div className="mt-6 font-display text-[16px] font-bold text-text">House Tee — Black</div>
+          <div className="mt-6 font-display text-[16px] font-bold uppercase text-text">
+            House Tee — Black
+          </div>
           <div className="tnum mt-2 font-ui text-[14px] text-mute">₹1,299</div>
-          <a href="/shop" className="group mt-5 inline-flex items-center gap-2 t-action text-text">
+          <a
+            href="/shop"
+            className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
+          >
             <span className="wipe-underline">Shop the drop</span>
             <ArrowUpRight size={14} className="text-acid-type" />
           </a>
@@ -119,9 +127,14 @@ export function Bento() {
             alt="Room A set up for a live session"
             className="mt-8 aspect-[4/5] w-full object-cover chroma"
           />
-          <div className="mt-6 font-display text-[16px] font-bold text-text">Four rooms</div>
+          <div className="mt-6 font-display text-[16px] font-bold uppercase text-text">
+            Four rooms
+          </div>
           <div className="mt-2 font-ui text-[14px] text-mute">By the hour or the night</div>
-          <a href="/rooms" className="group mt-5 inline-flex items-center gap-2 t-action text-text">
+          <a
+            href="/rooms"
+            className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
+          >
             <span className="wipe-underline">See the rooms</span>
             <ArrowUpRight size={14} className="text-acid-type" />
           </a>
@@ -130,10 +143,13 @@ export function Bento() {
 
       {/* the roster, stated rather than illustrated */}
       <RiseIn className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-6 border-t border-line pt-12">
-        <p className="max-w-[18ch] font-display text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-text md:text-[34px]">
+        <p className="max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[34px]">
           Forty artists on the roster
         </p>
-        <a href="/crew" className="group inline-flex items-center gap-2 t-action text-text">
+        <a
+          href="/crew"
+          className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
+        >
           <span className="wipe-underline">Hire the crew by the project</span>
           <ArrowUpRight size={14} className="text-acid-type" />
         </a>

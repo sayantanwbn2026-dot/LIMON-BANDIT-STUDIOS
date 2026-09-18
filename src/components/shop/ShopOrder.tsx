@@ -46,7 +46,7 @@ export function ShopOrder() {
                   key={s.k}
                   className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-line py-6"
                 >
-                  <dt className="font-display text-[16px] font-bold tracking-[-0.01em] text-text">
+                  <dt className="font-display text-[16px] font-bold uppercase tracking-[-0.01em] text-text">
                     {s.k}
                   </dt>
                   <dd className="tnum ml-auto order-2 font-ui text-[14px] font-semibold text-acid-type sm:order-none">
@@ -77,7 +77,9 @@ export function ShopOrder() {
                 }}
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
-                <span className="t-action text-accent-text">Back to the catalogue</span>
+                <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
+                  Back to the catalogue
+                </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </a>
               <a

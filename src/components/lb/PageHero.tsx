@@ -55,7 +55,7 @@ export function HeroFrame({
       <div className={`shell relative z-[2] ${bodyClassName ?? "pb-[96px] pt-[120px]"}`}>
         <nav aria-label="Breadcrumb">
           <ol
-            className={`flex flex-wrap items-center gap-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] ${tint.rest}`}
+            className={`flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint.rest}`}
           >
             <li>
               <Link to="/" className={`tap transition-colors duration-300 ${tint.hover}`}>

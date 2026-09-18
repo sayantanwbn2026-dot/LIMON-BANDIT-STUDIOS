@@ -78,7 +78,7 @@ function Guard({ children }: { children: ReactNode }) {
           <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
           <span className="t-label text-mute">Restricted</span>
         </span>
-        <h1 className="font-display text-[34px] font-bold leading-[1.08] tracking-[-0.03em] text-text">
+        <h1 className="font-display text-[34px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
           Staff only
         </h1>
         <p className="mt-6 max-w-[46ch] font-ui text-[15px] leading-[1.6] text-mute">
@@ -89,13 +89,13 @@ function Guard({ children }: { children: ReactNode }) {
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
             to="/admin/login"
-            className="flex h-12 items-center justify-center bg-acid px-7 t-action text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+            className="flex h-12 items-center justify-center bg-acid px-7 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             {user ? "Sign in as someone else" : "Sign in"}
           </Link>
           <a
             href="/"
-            className="flex h-12 items-center justify-center border border-line px-7 t-action text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-12 items-center justify-center border border-line px-7 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
             Back to the site
           </a>

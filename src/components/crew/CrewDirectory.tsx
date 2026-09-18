@@ -59,7 +59,7 @@ export function CrewDirectory() {
                 type="button"
                 onClick={() => setFilter(f)}
                 aria-pressed={on}
-                className={`px-3 py-2 font-ui text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-300 ${
+                className={`px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 ${
                   on
                     ? "bg-acid text-accent-text"
                     : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -81,7 +81,7 @@ export function CrewDirectory() {
             <li key={m.id} className="border-b border-line">
               <article className="group grid grid-cols-1 gap-x-6 gap-y-4 py-8 md:grid-cols-12 md:items-baseline">
                 <div className="md:col-span-4">
-                  <h3 className="font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-text">
+                  <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
                     {m.name}
                   </h3>
                   <p className="t-label mt-2 text-acid-type">{m.discipline}</p>
@@ -110,7 +110,7 @@ export function CrewDirectory() {
                   {m.status !== "Booked" ? (
                     <a
                       href={`/contact?intent=crew&who=${m.id}`}
-                      className="mt-4 inline-flex items-center gap-2 t-action text-text"
+                      className="mt-4 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
                     >
                       <span className="wipe-underline">Hire</span>
                       <ArrowUpRight size={14} className="text-acid-type" />

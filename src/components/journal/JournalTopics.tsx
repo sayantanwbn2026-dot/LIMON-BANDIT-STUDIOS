@@ -42,7 +42,7 @@ export function JournalTopics() {
               } ${i < 3 ? "lg:pr-8" : ""}`}
             >
               <dt className="flex items-baseline gap-3">
-                <span className="font-display text-[20px] font-bold tracking-[-0.02em] text-alt-text">
+                <span className="font-display text-[20px] font-extrabold uppercase tracking-[-0.02em] text-alt-text">
                   {b.category}
                 </span>
                 <span className="tnum t-label text-alt-acid-type">{countFor(b.category)}</span>

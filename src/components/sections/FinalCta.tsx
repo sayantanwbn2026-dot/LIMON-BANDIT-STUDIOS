@@ -57,7 +57,7 @@ export function FinalCta() {
               ))}
             </div>
             <div>
-              <div className="font-display text-[14px] font-bold text-text">
+              <div className="font-display text-[14px] font-bold uppercase text-text">
                 Rana, Kaalo &amp; Shona
               </div>
               <div className="font-ui text-[12px] text-mute">Booked the room this month.</div>
@@ -68,7 +68,9 @@ export function FinalCta() {
             href="/contact"
             className="group mt-10 flex h-[62px] w-full max-w-[320px] items-center justify-between bg-acid transition-colors duration-300 hover:bg-acid-dim"
           >
-            <span className="pl-6 t-action text-accent-text">Book the room</span>
+            <span className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
+              Book the room
+            </span>
             <ArrowRight size={18} className="mr-6 text-accent-text lb-arrow" />
           </a>
 

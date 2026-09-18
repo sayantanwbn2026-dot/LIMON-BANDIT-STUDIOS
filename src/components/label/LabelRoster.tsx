@@ -43,12 +43,12 @@ export function LabelRoster() {
                     onFocus={() => setHover(i)}
                     className="flex items-center gap-6 border-b border-line py-6 transition-colors duration-300 hover:bg-surface-raised"
                   >
-                    <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+                    <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                       {String(i + 1).padStart(2, "0")}
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate font-display text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-text md:text-[24px]">
+                      <span className="block truncate font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text md:text-[24px]">
                         {r.artist}
                       </span>
                       <span className="mt-1 block truncate font-ui text-[13px] text-mute">
@@ -99,7 +99,7 @@ export function LabelRoster() {
                 className="aspect-square w-full border border-line object-cover chroma"
               />
               <div className="mt-4 flex items-baseline justify-between gap-4">
-                <span className="font-display text-[15px] font-bold tracking-[-0.01em] text-text">
+                <span className="font-display text-[15px] font-bold uppercase tracking-[-0.01em] text-text">
                   {shown.title}
                 </span>
                 <span className="tnum font-ui text-[12px] text-mute">{shown.runtime}</span>

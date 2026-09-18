@@ -266,9 +266,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    /* Sentence case by default. Capitals are kept for the two places that
-     * are marks rather than sentences — the hero and the giant wordmark —
-     * and they opt in through t-hero / t-giant. See the note by t-h2. */
+    text-transform: uppercase;
     /* Tailwind's preflight makes headings inherit weight, which would land
      * them on 400 — a Sora weight the site otherwise never uses and would
      * have to ship purely for these. 700 is the ladder's heading weight. */
@@ -741,32 +739,22 @@
   }
 }
 
-/* SENTENCE CASE BELOW THE HERO.
- *
- * Every heading on the site used to be set in capitals at 0.96 leading,
- * which is the voice of a broadsheet: each section shouted its name at the
- * same pitch, and a page of shouting reads as editorial rather than as
- * composed. The copy was always written in sentence case — the capitals
- * were a CSS transform — so this is a change of voice, not of content.
- *
- * Mixed case needs more room than capitals (descenders, ascenders), so the
- * leading opens to 1.04 and the tracking tightens to keep Sora's wide
- * lowercase from drifting apart at display size. */
 @utility t-h2 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(30px, 2.9vw, 46px);
-  letter-spacing: -0.04em;
-  line-height: 1.04;
-  text-wrap: balance;
+  font-size: clamp(28px, 2.7vw, 42px);
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-transform: uppercase;
 }
 
 @utility t-h3 {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 @utility t-giant {
@@ -778,35 +766,20 @@
   text-transform: uppercase;
 }
 
-/* Small capitals stay for eyebrows and data labels — they are signage, and
- * signage is where capitals belong — but quieter: 600 rather than 700, and
- * tracking brought in from 0.14em, which at 12px spaced the letters so far
- * apart they read as individual marks rather than as a word. */
 @utility t-eyebrow {
   font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 @utility t-label {
   font-family: var(--font-ui);
-  font-weight: 500;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* The house action label. Buttons were 13px bold capitals at 0.14em — a
- * poster voice on a control. Sentence case at 14/600 reads as an invitation
- * rather than a command, and matches how every other product people use
- * labels its buttons. */
-@utility t-action {
-  font-family: var(--font-ui);
   font-weight: 600;
-  font-size: 14px;
-  letter-spacing: -0.005em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 @utility t-lead {
@@ -1191,7 +1164,7 @@
 
   .section-head .t-h2 {
     font-size: 30px;
-    line-height: 1.08;
+    line-height: 1.02;
   }
 
   /* Hard breaks written for a wide measure run together here; the words

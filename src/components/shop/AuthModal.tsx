@@ -214,7 +214,7 @@ export function AuthModal() {
                 setBusy(false);
               }
             }}
-            className="flex h-[52px] w-full items-center justify-center gap-3 border border-line-strong bg-transparent t-action text-text transition-colors duration-300 hover:border-acid-type disabled:cursor-wait disabled:opacity-60"
+            className="flex h-[52px] w-full items-center justify-center gap-3 border border-line-strong bg-transparent font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type disabled:cursor-wait disabled:opacity-60"
           >
             <GoogleMark />
             Continue with Google

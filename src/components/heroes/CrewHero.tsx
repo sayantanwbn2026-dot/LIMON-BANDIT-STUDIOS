@@ -46,11 +46,13 @@ export function CrewHero() {
               key={r.role}
               className="group flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-line py-6"
             >
-              <span className="font-display text-[24px] font-bold leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[34px]">
+              <span className="font-display text-[24px] font-extrabold uppercase leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[34px]">
                 {r.role}
               </span>
               <span className="t-label text-mute">{r.note}</span>
-              <span className="tnum ml-auto t-action text-acid-type">{r.count}</span>
+              <span className="tnum ml-auto font-ui text-[12px] font-bold uppercase tracking-[0.18em] text-acid-type">
+                {r.count}
+              </span>
             </li>
           ))}
         </ul>

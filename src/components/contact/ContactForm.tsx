@@ -177,7 +177,7 @@ export function ContactForm() {
               <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
               <span className="t-label text-mute">Received</span>
             </span>
-            <p className="mt-6 font-display text-[28px] font-bold leading-[1.1] tracking-[-0.02em] text-text">
+            <p className="mt-6 font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
               Thanks, {name.trim().split(" ")[0]}. It is with us.
             </p>
             <p className="mt-5 max-w-[52ch] font-ui text-[16px] leading-[1.6] text-mute">
@@ -219,7 +219,7 @@ export function ContactForm() {
                 >
                   <div className="mb-12 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-y border-line py-5">
                     <span className="t-label shrink-0 text-mute">{subject.kind}</span>
-                    <span className="font-display text-[18px] font-bold tracking-[-0.02em] text-text">
+                    <span className="font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
                       {subject.title}
                     </span>
                     {subject.detail ? (
@@ -230,7 +230,7 @@ export function ContactForm() {
                     <button
                       type="button"
                       onClick={() => setSubject(undefined)}
-                      className="ml-auto font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute transition-colors duration-300 hover:text-text"
+                      className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute transition-colors duration-300 hover:text-text"
                     >
                       <span className="wipe-underline">Clear</span>
                     </button>
@@ -250,7 +250,7 @@ export function ContactForm() {
                       type="button"
                       onClick={() => setIntent(i.id)}
                       aria-pressed={on}
-                      className={`px-3 py-2 font-ui text-[13px] font-semibold tracking-[-0.005em] transition-colors duration-300 ${
+                      className={`px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 ${
                         on
                           ? "bg-acid text-accent-text"
                           : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -290,7 +290,7 @@ export function ContactForm() {
             <div className="mt-10">
               <label
                 htmlFor="contact-message"
-                className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
+                className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
               >
                 The message
               </label>
@@ -337,7 +337,9 @@ export function ContactForm() {
                 aria-busy={busy}
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim disabled:cursor-wait disabled:opacity-70"
               >
-                <span className="t-action text-accent-text">{busy ? "Sending…" : "Send it"}</span>
+                <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
+                  {busy ? "Sending…" : "Send it"}
+                </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </button>
               <p className="t-label max-w-[40ch] text-mute">
@@ -383,7 +385,7 @@ function Field({
     <div>
       <label
         htmlFor={id}
-        className="font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-mute"
+        className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
       >
         {label}
       </label>

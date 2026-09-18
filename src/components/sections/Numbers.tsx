@@ -110,7 +110,7 @@ export function Numbers() {
              * beside nothing — it read as a caption for the row above. */}
             <div className="md:col-span-5">
               <div className="flex items-baseline gap-4">
-                <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+                <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="t-label text-mute">{m.label}</span>

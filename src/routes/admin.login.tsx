@@ -94,7 +94,7 @@ function AdminLogin() {
           <span className="t-label text-mute">Content management</span>
         </span>
 
-        <h1 className="mt-6 font-display text-[34px] font-bold leading-[1.08] tracking-[-0.03em] text-text">
+        <h1 className="mt-6 font-display text-[34px] font-extrabold uppercase leading-[1] tracking-[-0.03em] text-text">
           Sign in
         </h1>
 
@@ -127,7 +127,9 @@ function AdminLogin() {
             disabled={busy}
             className="group flex h-[56px] w-full items-center justify-between gap-6 bg-acid px-7 transition-colors duration-300 hover:bg-acid-dim disabled:opacity-60"
           >
-            <span className="t-action text-accent-text">{busy ? "Checking…" : "Sign in"}</span>
+            <span className="font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text">
+              {busy ? "Checking…" : "Sign in"}
+            </span>
             <ArrowRight size={16} className="text-accent-text lb-arrow" />
           </button>
         </form>

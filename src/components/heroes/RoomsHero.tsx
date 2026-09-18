@@ -49,11 +49,11 @@ export function RoomsHero() {
                 key={r.id}
                 className="flex items-baseline gap-5 border-b border-line py-5 md:gap-6"
               >
-                <span className="tnum font-ui text-[11px] font-semibold uppercase tracking-[0.08em] text-acid-type">
+                <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                   {r.index}
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-display text-[16px] font-bold leading-none tracking-[-0.02em] text-text">
+                  <span className="block font-display text-[16px] font-bold uppercase leading-none tracking-[-0.02em] text-text">
                     {r.name}
                   </span>
                   <span className="t-label mt-2 block text-mute">{r.capacity}</span>
