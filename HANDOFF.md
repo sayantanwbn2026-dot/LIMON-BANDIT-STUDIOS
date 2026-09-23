@@ -21,8 +21,9 @@ Set these in the host's environment / secrets — they are **not** in the repo:
 | `SHEETS_WEBHOOK_SECRET`         | the Apps Script option only             |                                              |
 | `SUPABASE_SERVICE_ROLE_KEY`     | stamping "notified" on enquiries/orders | optional; **never** give it a `VITE_` prefix |
 
-Then, once: run `supabase/migrations/20260918_admin_inbox.sql` in the Supabase
-SQL editor, set Brand & contact → _Live website address_ to the real domain
+The admin-inbox policies are already applied to `limon-bandit-shop`
+(`vwuuwommxvqtgzlsndip`, ap-south-1) — see `supabase/migrations/`. Still to do:
+set Brand & contact → _Live website address_ to the real domain
 (canonical links, sitemap and share cards are built from it), and add that
 domain to Supabase → Authentication → URL configuration.
 

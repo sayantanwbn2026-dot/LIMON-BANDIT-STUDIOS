@@ -144,9 +144,7 @@ server both accept any code in it that has not expired.
 through received → confirmed → packed → shipped → delivered and mark them
 paid when the cash comes in; mark enquiries replied so nobody answers twice
 (pressing _Reply by email_ does it for you); export subscribers as CSV for
-your newsletter tool and remove anyone who asks. If an inbox is empty when
-you know it should not be, the database has not yet granted admins access —
-run `supabase/migrations/20260918_admin_inbox.sql` once (see below).
+your newsletter tool and remove anyone who asks.
 
 **Every save is recorded** with who made it and what it replaced, under
 Ownership → Change history.
@@ -240,10 +238,11 @@ Chapter copy (H1, poster, standfirst, breadcrumb name) goes through
 `/admin/orders`, `/admin/enquiries` and `/admin/subscribers` read and update
 rows as the signed-in admin. They need the policies in
 `supabase/migrations/20260918_admin_inbox.sql` (admin select/update on
-`orders`, select/update on `enquiries`, select/delete on `offer_signups`).
-It is idempotent — paste it into the Supabase SQL editor and run it; running
-it twice changes nothing. Without it, reads come back empty (RLS filters
-rather than errors) and updates are reported as refused, never as saved.
+`orders`, select/update on `enquiries`, select/delete on `offer_signups`),
+**applied to limon-bandit-shop on 2026-09-24**. A fresh database — a branch,
+a restore, another environment — needs them again; the file is idempotent.
+Without them, reads come back empty (RLS filters rather than errors) and
+updates are reported as refused, never as saved.
 
 ### Why the totals are computed twice
 

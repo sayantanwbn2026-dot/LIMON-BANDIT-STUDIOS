@@ -10,16 +10,18 @@ a few minutes in a browser.
 Each of these lives in a dashboard the site cannot reach for you. None needs a
 code change — the site is already built to use them the moment they are on.
 
-### Open the admin inbox — ~1 minute
+### Open the admin inbox — DONE (2026-09-24)
 
-Supabase → **SQL Editor** → New query → paste the whole of
+Applied to `limon-bandit-shop`: admins (and only admins) can now read and
+update orders and enquiries, and read and remove mailing-list addresses —
+which is what `/admin/orders`, `/admin/enquiries` and `/admin/subscribers`
+need. Verified: an admin sees every order, a signed-in shopper still sees
+only their own, and a stranger sees none.
+
+Only needed again on a fresh database (a branch, a restore, a second
+environment): run
 [`supabase/migrations/20260918_admin_inbox.sql`](../supabase/migrations/20260918_admin_inbox.sql)
-→ **Run**.
-
-It lets admins (and only admins) read and update orders, enquiries and the
-mailing list, which is what `/admin/orders`, `/admin/enquiries` and
-`/admin/subscribers` need. Safe to run more than once. Until it has run, those
-screens may show nothing even when there are orders.
+in Supabase → SQL Editor. Safe to run more than once.
 
 ### Get told about orders and enquiries — pick ONE, ~1 minute
 

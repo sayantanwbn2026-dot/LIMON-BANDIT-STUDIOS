@@ -7,7 +7,12 @@
 -- and nothing here grants anything to a non-admin. `public.is_admin()` is the
 -- same check the CMS tables already use.
 --
--- Run it in: Supabase dashboard → SQL Editor → paste → Run.
+-- APPLIED on 2026-09-24 to project vwuuwommxvqtgzlsndip (limon-bandit-shop) as
+-- migration `admin_inbox_policies`. Kept here as the record, and so a fresh
+-- database (a branch, a restore, a second environment) can be brought up to
+-- the same state. Re-running it changes nothing.
+--
+-- To run by hand: Supabase dashboard → SQL Editor → paste → Run.
 
 -- orders --------------------------------------------------------------------
 drop policy if exists "orders_admin_select" on public.orders;
