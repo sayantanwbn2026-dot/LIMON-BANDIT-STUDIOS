@@ -15,6 +15,7 @@ import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as LabelRouteImport } from './routes/label'
+import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
 import { Route as CrewRouteImport } from './routes/crew'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -63,6 +64,11 @@ const OrdersRoute = OrdersRouteImport.update({
 const LabelRoute = LabelRouteImport.update({
   id: '/label',
   path: '/label',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
+  id: '/feed.xml',
+  path: '/feed.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CrewRoute = CrewRouteImport.update({
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -193,6 +200,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/label': typeof LabelRoute
   '/orders': typeof OrdersRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/crew'
+    | '/feed.xml'
     | '/label'
     | '/orders'
     | '/robots.txt'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/crew'
+    | '/feed.xml'
     | '/label'
     | '/orders'
     | '/robots.txt'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/crew'
+    | '/feed.xml'
     | '/label'
     | '/orders'
     | '/robots.txt'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   CrewRoute: typeof CrewRoute
+  FeedDotxmlRoute: typeof FeedDotxmlRoute
   LabelRoute: typeof LabelRoute
   OrdersRoute: typeof OrdersRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       path: '/label'
       fullPath: '/label'
       preLoaderRoute: typeof LabelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed.xml': {
+      id: '/feed.xml'
+      path: '/feed.xml'
+      fullPath: '/feed.xml'
+      preLoaderRoute: typeof FeedDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crew': {
@@ -558,6 +578,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   CrewRoute: CrewRoute,
+  FeedDotxmlRoute: FeedDotxmlRoute,
   LabelRoute: LabelRoute,
   OrdersRoute: OrdersRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,

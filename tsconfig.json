@@ -1,5 +1,9 @@
 {
   "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts", "eslint.config.js"],
+  // Tests run on Bun's own runner (`bun test`), which supplies the bun:test
+  // types. They are excluded here so the app typecheck does not need Bun's
+  // type package as a dependency just to know what `expect` is.
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

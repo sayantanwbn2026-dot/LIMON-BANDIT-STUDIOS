@@ -17,6 +17,8 @@ import {
   when,
 } from "@/cms/inbox";
 import { inr } from "@/lib/money";
+import { sendOrderStatusMail } from "@/lib/order-mail";
+import { getSupabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/admin/orders")({
   component: Orders,
@@ -172,12 +174,31 @@ function OrderItemRow({
   const save = async (patch: { status?: OrderStatus; payment_status?: PaymentStatus }) => {
     setBusy(true);
     setNote(null);
-    const res = await updateOrder(r.id, patch);
+    const res = await updateOrder(r.id, patch, r);
+    if (!res.ok) {
+      setBusy(false);
+      setNote(res.error);
+      return;
+    }
+    onSaved(res.data);
+    setNote("Saved.");
+
+    /* Tell the customer, when the new status is one they care about
+     * (confirmed, packed, shipped, delivered, cancelled). The order is
+     * already saved, so a mail failure is reported beside it rather than
+     * undoing anything — and when email is not set up yet it says exactly
+     * that instead of implying the customer was told. */
+    if (patch.status && patch.status !== r.status) {
+      const supabase = await getSupabase();
+      const token = (await supabase?.auth.getSession())?.data.session?.access_token;
+      if (token) {
+        const mail = await sendOrderStatusMail({
+          data: { accessToken: token, orderId: r.id, status: patch.status },
+        });
+        setNote(mail.ok ? `Saved. ${mail.detail}` : `Saved, but ${mail.message}`);
+      }
+    }
     setBusy(false);
-    if (res.ok) {
-      onSaved(res.data);
-      setNote("Saved.");
-    } else setNote(res.error);
   };
 
   const itemCount = r.items.reduce((n, i) => n + (i.qty ?? 0), 0);

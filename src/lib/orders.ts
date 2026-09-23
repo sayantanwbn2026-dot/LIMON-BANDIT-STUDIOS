@@ -35,6 +35,7 @@ import { orderSummary, postNotification } from "./notify";
  */
 
 import { products, shippingFor } from "@/data/shop";
+import { orderConfirmationEmail, sendEmail } from "./email";
 import { findOffer } from "@/data/offers";
 import { discountOf } from "./money";
 
@@ -43,6 +44,8 @@ export type PlacedOrder = {
   reference: string;
   total: number;
   sheetSynced: boolean;
+  /** whether the buyer's confirmation email went out (false when unconfigured) */
+  emailed: boolean;
 };
 
 const lineSchema = z.object({
@@ -276,6 +279,49 @@ export const submitOrder = createServerFn({ method: "POST" })
       status: "received",
     };
 
+    /* Take the stock before writing the order.
+     *
+     * The loop above refuses an item already at zero and clamps a line to
+     * what is left, but nothing used to put the number down again: three
+     * tees from a run of three left the run showing three, and the next
+     * buyer was sold one that did not exist. `reserve_stock` locks the
+     * catalogue row, checks every line against it and decrements in one
+     * transaction, so two checkouts a millisecond apart cannot both take
+     * the last one. Digital items are skipped — they have no run.
+     *
+     * Before the insert rather than after, because stock that is taken and
+     * then given back on a failed insert is correct, while stock taken only
+     * on success is a race with a slow write. */
+    const reserveLines = items.map((i) => ({ product_id: i.product_id, qty: i.qty }));
+    const { data: reserved, error: reserveError } = await asUser.rpc("reserve_stock", {
+      items: reserveLines,
+    });
+    if (reserveError) {
+      /* An unreachable or not-yet-migrated function must not block a sale:
+       * the catalogue check above already ran, so the worst case is the old
+       * behaviour rather than a refused order. */
+      console.error("reserve_stock failed — order continues without it", reserveError);
+    } else if (reserved && (reserved as { ok?: boolean }).ok === false) {
+      const short = (reserved as { shortages?: { title?: string; available?: number }[] })
+        .shortages;
+      const first = short?.[0];
+      throw new Error(
+        first
+          ? first.available
+            ? `Only ${first.available} left of ${first.title ?? "that item"} — adjust the quantity and try again.`
+            : `${first.title ?? "That item"} sold out while you were checking out.`
+          : "Something in your basket just sold out. Check the quantities and try again.",
+      );
+    }
+    const stockTaken =
+      !reserveError && (reserved as { applied?: boolean } | null)?.applied === true;
+
+    const giveStockBack = async () => {
+      if (!stockTaken) return;
+      const { error } = await asUser.rpc("release_stock", { items: reserveLines });
+      if (error) console.error("release_stock failed — stock may read low", error);
+    };
+
     let inserted = await asUser
       .from("orders")
       .insert({ ...base, reference: makeReference() })
@@ -293,6 +339,9 @@ export const submitOrder = createServerFn({ method: "POST" })
     }
 
     if (inserted.error || !inserted.data) {
+      /* The stock was already taken; the order was not written. Put it back
+       * rather than leaving a phantom sale in the catalogue. */
+      await giveStockBack();
       throw new Error(inserted.error?.message ?? "The order could not be saved.");
     }
 
@@ -307,7 +356,27 @@ export const submitOrder = createServerFn({ method: "POST" })
       items,
     });
 
-    return { id: orderId, reference, total, sheetSynced } satisfies PlacedOrder;
+    /* The buyer's receipt. Like the sheet push, it is allowed to fail: the
+     * order is committed by this point, and an unsent email is a smaller
+     * loss than a refused order. The result is reported so the confirmation
+     * screen can say "check your email" only when one was actually sent. */
+    const siteName = (
+      await asUser.from("cms_documents").select("data").eq("key", "global.site").maybeSingle()
+    ).data?.data as { name?: string; email?: string } | undefined;
+
+    const mail = orderConfirmationEmail(
+      { ...base, reference, items },
+      { name: siteName?.name?.trim() || "Limon Bandit", email: siteName?.email },
+    );
+    const sent = await sendEmail({
+      to: base.email,
+      subject: mail.subject,
+      text: mail.text,
+      replyTo: siteName?.email,
+    });
+    if (!sent.ok && sent.configured) console.warn("order confirmation email failed:", sent.detail);
+
+    return { id: orderId, reference, total, sheetSynced, emailed: sent.ok } satisfies PlacedOrder;
   });
 
 type SheetItem = {

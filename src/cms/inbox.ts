@@ -100,6 +100,8 @@ export async function listOrders(): Promise<Result<OrderRow[]>> {
 export async function updateOrder(
   id: string,
   patch: Partial<Pick<OrderRow, "status" | "payment_status">>,
+  /** the row as the screen currently has it, to tell a real change from a re-save */
+  previous?: OrderRow,
 ): Promise<Result<OrderRow>> {
   const supabase = await getSupabase();
   if (!supabase) return fail("The database is not configured.");
@@ -113,7 +115,21 @@ export async function updateOrder(
   /* No row back means RLS filtered the update out — the change did not
    * happen, and saying "saved" here would be a lie. */
   if (!data) return fail(NEEDS_MIGRATION);
-  return { ok: true, data: data as OrderRow };
+  const row = data as OrderRow;
+
+  /* Cancelling returns the run to the shelf. Checkout takes stock when the
+   * order is placed (see reserve_stock in lib/orders), so without this a
+   * cancelled order would keep holding items nobody bought — and the shop
+   * would quietly read as sold out. Only on the transition into cancelled,
+   * so re-saving a cancelled order does not restock it twice. */
+  if (patch.status === "cancelled" && previous && previous.status !== "cancelled") {
+    const { error: releaseError } = await supabase.rpc("release_stock", {
+      items: row.items.map((i) => ({ product_id: i.product_id, qty: i.qty })),
+    });
+    if (releaseError) console.error("release_stock failed after cancelling", releaseError);
+  }
+
+  return { ok: true, data: row };
 }
 
 /* ---------------- enquiries ---------------- */

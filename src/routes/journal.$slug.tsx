@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { JournalArticle } from "@/components/journal/JournalArticle";
 import { liveDocs, listFrom } from "@/cms/live";
 import { usePost, type PostDoc } from "@/cms/hooks";
-import { pageHead } from "@/lib/seo";
+import { articleJsonLd, pageHead } from "@/lib/seo";
 
 /**
  * A journal entry.
@@ -30,6 +30,7 @@ export const Route = createFileRoute("/journal/$slug")({
           description: loaderData.entry.standfirst,
           path: `/journal/${loaderData.entry.slug}`,
           image: loaderData.entry.image,
+          jsonLd: articleJsonLd(loaderData.entry),
           ogType: "article",
         })
       : {},

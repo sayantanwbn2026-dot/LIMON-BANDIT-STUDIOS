@@ -573,7 +573,17 @@ function Confirmation({ order }: { order: PlacedOrder }) {
           </div>
         </dl>
 
+        {/* Only promises an email when one actually went out — see
+         * lib/email.ts, which reports `configured: false` until a mail key
+         * is set. Telling someone to watch their inbox for a message that
+         * was never sent is how a good order becomes a support message. */}
         <p className="mt-8 font-ui text-[16px] leading-[1.6] text-mute">
+          {order.emailed
+            ? "A confirmation is on its way to your email, and we will write again when it ships. "
+            : "Keep the reference above — we will be in touch about delivery. "}
+        </p>
+
+        <p className="mt-4 font-ui text-[16px] leading-[1.6] text-mute">
           {order.sheetSynced
             ? "It is on the logistics sheet. Someone confirms stock by hand, then it ships — three to six days across India, same day in Kolkata if we are passing."
             : "Your order is saved and we can see it. It has not reached the logistics sheet yet, so we will move it across by hand — quote the reference above if you get in touch."}

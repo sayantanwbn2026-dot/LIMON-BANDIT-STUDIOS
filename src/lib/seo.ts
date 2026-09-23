@@ -16,6 +16,13 @@ export type PageSeo = {
    * and would leak a shape of the shop nobody asked to publish.
    */
   noindex?: boolean;
+  /**
+   * Structured data for this page — one object or several. Emitted as
+   * `application/ld+json` in the head, which is what lets Google show the
+   * studio's address and hours, a product's price and stock, or an article
+   * as an article rather than as a blue link.
+   */
+  jsonLd?: object | object[];
 };
 
 /* The brand document as the editor last saved it, synchronously: `head`
@@ -71,6 +78,7 @@ export function pageHead({
   ogType = "website",
   image,
   noindex,
+  jsonLd,
 }: PageSeo) {
   const live = liveSite();
   const url = new URL(path, live.url).href;
@@ -92,6 +100,15 @@ export function pageHead({
       { name: "twitter:image", content: img },
     ],
     links: [{ rel: "canonical", href: url }],
+    scripts: jsonLd
+      ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((block) => ({
+          type: "application/ld+json",
+          /* JSON.stringify escapes nothing dangerous on its own: a "</script>"
+           * inside any CMS string would close this tag early and the rest of
+           * the document would be parsed as markup. */
+          children: JSON.stringify(block).replaceAll("<", "\\u003c"),
+        }))
+      : undefined,
   };
 }
 
@@ -180,4 +197,124 @@ export async function chapterSeo(key: ChapterKey): Promise<PageSeo> {
  */
 export function chapterHeadFrom(key: ChapterKey, data?: PageSeo) {
   return data ? pageHead(data) : chapterHead(key);
+}
+
+/* ------------------------------------------------------------------ *
+ * Structured data
+ *
+ * Built from the CMS documents the loaders already fetched (lastDocs), so
+ * an editor changing the phone number changes what Google shows, and there
+ * is no second copy of the address to drift.
+ * ------------------------------------------------------------------ */
+
+type AddressDoc = { address?: string[]; phone?: string; email?: string; rating?: string };
+
+/** Split the CMS's free-text address lines into the parts schema.org wants. */
+function postalAddress(lines: string[] | undefined) {
+  const rows = (lines ?? []).map((l) => l.trim()).filter(Boolean);
+  if (rows.length === 0) return undefined;
+  const joined = rows.join(", ");
+  const postal = joined.match(/\b[1-9][0-9]{5}\b/)?.[0];
+  /* Second line is "Hatibagan, Kolkata 700006" in the shipped content;
+   * the city is the last word before the PIN. Anything unparseable falls
+   * back to the raw lines, which is still valid — only less specific. */
+  const locality = rows[1]
+    ?.replace(/\b[1-9][0-9]{5}\b/, "")
+    .split(",")
+    .pop()
+    ?.trim();
+  const region = rows[2]?.split(",")[0]?.trim();
+  return {
+    "@type": "PostalAddress",
+    streetAddress: rows[0],
+    ...(locality ? { addressLocality: locality } : {}),
+    ...(region ? { addressRegion: region } : {}),
+    ...(postal ? { postalCode: postal } : {}),
+    addressCountry: "IN",
+  };
+}
+
+/** The house itself — name, where it is, how to reach it, what it is. */
+export function houseJsonLd() {
+  const docs = lastDocs();
+  const site = docFrom<SiteDoc & AddressDoc & { description?: string; tagline?: string }>(
+    docs,
+    "global.site",
+  );
+  const social = docs["global.social"];
+  const live = liveSite();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "MusicGroup"],
+    "@id": `${live.url}#house`,
+    name: live.name,
+    url: live.url,
+    image: absoluteImage(live.ogImage, live.url),
+    ...(site.description ? { description: site.description } : {}),
+    ...(site.phone ? { telephone: site.phone } : {}),
+    ...(site.email ? { email: site.email } : {}),
+    ...(postalAddress(site.address) ? { address: postalAddress(site.address) } : {}),
+    ...(Array.isArray(social) && social.length
+      ? { sameAs: (social as { url?: string }[]).map((s) => s.url).filter(Boolean) }
+      : {}),
+  };
+}
+
+/** One journal entry, as an article rather than a page. */
+export function articleJsonLd(entry: {
+  title: string;
+  standfirst?: string;
+  date?: string;
+  slug: string;
+  image?: string;
+}) {
+  const live = liveSite();
+  const url = new URL(`/journal/${entry.slug}`, live.url).href;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: entry.title,
+    ...(entry.standfirst ? { description: entry.standfirst } : {}),
+    ...(entry.date && /^\d{4}-\d{2}-\d{2}/.test(entry.date) ? { datePublished: entry.date } : {}),
+    ...(entry.image ? { image: absoluteImage(entry.image, live.url) } : {}),
+    mainEntityOfPage: url,
+    url,
+    publisher: { "@type": "Organization", name: live.name, url: live.url },
+  };
+}
+
+/** The catalogue, so prices and "in stock" can show in search results. */
+export function shopJsonLd() {
+  const docs = lastDocs();
+  const products = docs["commerce.products"];
+  if (!Array.isArray(products) || products.length === 0) return undefined;
+  const live = liveSite();
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${live.name} — the shop`,
+    itemListElement: (products as Record<string, unknown>[]).slice(0, 40).map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Product",
+        name: String(p.title ?? ""),
+        ...(p.blurb ? { description: String(p.blurb) } : {}),
+        ...(p.image ? { image: absoluteImage(String(p.image), live.url) } : {}),
+        ...(p.by ? { brand: { "@type": "Brand", name: String(p.by) } } : {}),
+        offers: {
+          "@type": "Offer",
+          price: Number(p.price ?? 0),
+          priceCurrency: "INR",
+          availability:
+            Number(p.stock ?? 0) > 0 || p.digital
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+          url: new URL("/shop", live.url).href,
+        },
+      },
+    })),
+  };
 }

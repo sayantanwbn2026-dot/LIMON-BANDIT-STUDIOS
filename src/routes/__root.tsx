@@ -205,6 +205,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      /* So a reader's browser or app can find the journal feed without
+         being told it exists. */
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        title: "Limon Bandit — Journal",
+        href: "/feed.xml",
+      },
     ],
   }),
 

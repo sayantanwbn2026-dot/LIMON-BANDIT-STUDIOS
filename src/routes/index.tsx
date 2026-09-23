@@ -20,11 +20,12 @@ import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
-import { chapterHeadFrom, chapterSeo } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeo, houseJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   loader: () => chapterSeo("home"),
-  head: ({ loaderData }) => chapterHeadFrom("home", loaderData),
+  head: ({ loaderData }) =>
+    chapterHeadFrom("home", loaderData ? { ...loaderData, jsonLd: houseJsonLd() } : undefined),
   component: Index,
 });
 
