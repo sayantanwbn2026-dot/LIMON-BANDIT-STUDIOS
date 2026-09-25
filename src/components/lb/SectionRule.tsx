@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useRouter } from "@tanstack/react-router";
 import { ensureGsap, ScrollTrigger } from "@/lib/motion";
 
 /**
@@ -28,6 +29,8 @@ import { ensureGsap, ScrollTrigger } from "@/lib/motion";
  * and on a thirty-screen page you cross most of these several times.
  */
 export function SectionRule() {
+  const router = useRouter();
+
   useEffect(() => {
     const gsap = ensureGsap();
     if (!gsap) return;
@@ -53,18 +56,43 @@ export function SectionRule() {
       });
     };
 
-    scan();
-
     /* Routes swap their whole subtree under a persistent root, so new
      * headers appear without this component remounting. */
     const mo = new MutationObserver(() => scan());
-    mo.observe(document.body, { childList: true, subtree: true });
+
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      scan();
+      mo.observe(document.body, { childList: true, subtree: true });
+    };
+
+    /* NOT ON MOUNT — wait until the page has hydrated.
+     *
+     * This component is mounted above the router, so its effect runs before
+     * React has finished hydrating the streamed route below it. Marking a
+     * header `data-in` in that window put an attribute into the DOM that
+     * React had not rendered, and hydration reported a mismatch on every
+     * section in view at load. The rule still drew; React logged a wall of
+     * console error for something entirely intentional, which is how a real
+     * mismatch later gets ignored.
+     *
+     * `onRendered` fires once the router has committed its matches, which is
+     * after hydration. The timer is a safety net for the case where that
+     * event has already passed before this subscription exists — a second is
+     * far longer than hydration takes, and the observer catches up anything
+     * that scrolled past in the meantime. */
+    const unsubscribe = router.subscribe("onRendered", start);
+    const fallback = window.setTimeout(start, 1000);
 
     return () => {
+      unsubscribe();
+      window.clearTimeout(fallback);
       mo.disconnect();
       triggers.forEach((t) => t.kill());
     };
-  }, []);
+  }, [router]);
 
   return null;
 }
