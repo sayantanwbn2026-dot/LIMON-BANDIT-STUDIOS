@@ -43,6 +43,10 @@ type AuthState = {
 
   signUp: (input: SignUpInput) => Promise<AuthResult>;
   signIn: (email: string, password: string) => Promise<AuthResult>;
+  /** Email a six-digit code. Creates the account on first use. */
+  sendEmailCode: (email: string, fullName?: string) => Promise<AuthResult>;
+  /** Exchange that code for a session. */
+  verifyEmailCode: (email: string, code: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<AuthResult>;
   updatePassword: (password: string) => Promise<AuthResult>;
@@ -61,7 +65,7 @@ type AuthState = {
   setMode: (m: AuthMode) => void;
 };
 
-export type AuthMode = "signin" | "signup" | "reset" | "update";
+export type AuthMode = "signin" | "code" | "password" | "signup" | "reset" | "update";
 
 export type SignUpInput = {
   email: string;
@@ -309,6 +313,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true };
   }, []);
 
+  /* ---------------- passwordless: a code in the email ----------------
+   *
+   * The house default. A six-digit code beats a password on both sides of
+   * the counter: nobody reuses a code, there is nothing to leak from this
+   * database that would open someone's other accounts, and nobody is locked
+   * out because they cannot remember which password they used. It also
+   * removes the confirm-email step — arriving with the code IS the proof
+   * the address is real.
+   *
+   * `shouldCreateUser: true` means one door for new and returning people:
+   * the form asks for an email, and whether that is a first visit or a
+   * tenth is the database's problem, not the visitor's.
+   *
+   * Supabase sends a link or a code depending on the email template. This
+   * needs `{{ .Token }}` in the Magic Link template — see SHEET-SETUP; with
+   * the default template the person gets a link, which still signs them in
+   * but makes the code box on screen a lie.
+   */
+  const sendEmailCode = useCallback(
+    async (email: string, fullName?: string): Promise<AuthResult> => {
+      const supabase = await getSupabase();
+      if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: {
+          shouldCreateUser: true,
+          /* Only used for an account created by this code, and only as a
+           * display name. Supabase ignores it for an existing user. */
+          data: fullName?.trim() ? { full_name: fullName.trim() } : undefined,
+          emailRedirectTo: `${window.location.origin}/?confirmed=1`,
+        },
+      });
+      if (error) return { ok: false, message: readableAuthError(error.message) };
+      return { ok: true };
+    },
+    [],
+  );
+
+  const verifyEmailCode = useCallback(async (email: string, code: string): Promise<AuthResult> => {
+    const supabase = await getSupabase();
+    if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+
+    /* `type: "email"` covers both cases — a code for an existing account
+     * and the one that just created it. Digits only, because people paste
+     * them with spaces out of the mail app. */
+    const { error } = await supabase.auth.verifyOtp({
+      email: email.trim().toLowerCase(),
+      token: code.replace(/\D/g, ""),
+      type: "email",
+    });
+    if (error) return { ok: false, message: readableAuthError(error.message) };
+    return { ok: true };
+  }, []);
+
   const signIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     const supabase = await getSupabase();
     if (!supabase) return { ok: false, message: NOT_CONFIGURED };
@@ -435,6 +494,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       configured: isSupabaseConfigured,
       signUp,
       signIn,
+      sendEmailCode,
+      verifyEmailCode,
       signOut,
       resetPassword,
       updatePassword,
@@ -453,6 +514,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       signUp,
       signIn,
+      sendEmailCode,
+      verifyEmailCode,
       signOut,
       resetPassword,
       updatePassword,

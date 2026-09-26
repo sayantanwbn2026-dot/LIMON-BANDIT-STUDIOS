@@ -138,7 +138,10 @@ export function AuthLanding() {
     const raf = requestAnimationFrame(pin);
 
     if (arrival.kind === "error") {
-      openAuth(arrival.message, arrival.expired ? "signup" : "signin");
+      /* An expired link lands on the email step, which sends a fresh code —
+       * the shortest way back in. It used to open the sign-up form, which
+       * told someone who already has an account to make another one. */
+      openAuth(arrival.message, "signin");
     }
 
     return () => {

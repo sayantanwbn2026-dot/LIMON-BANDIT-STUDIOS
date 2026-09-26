@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Modal } from "@/components/lb/Modal";
 import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
 import { useAuth, type AuthMode } from "@/lib/auth";
@@ -15,12 +15,33 @@ import { useAuth, type AuthMode } from "@/lib/auth";
  * Signing in successfully does not just close this: the provider re-runs the
  * action that was interrupted, so the tee lands in the basket without anyone
  * pressing Add again.
+ *
+ * TWO DOORS, NEITHER OF THEM A PASSWORD
+ *
+ *   Google      — one tap, nothing to type, nothing to remember.
+ *   A code      — six digits to the address given. First visit or tenth,
+ *                 same form: the code proves the address, so there is no
+ *                 separate "confirm your email" step to lose people in.
+ *
+ * Passwords are still accepted for accounts that already have one (and for
+ * the admin, who must be able to get in when email is slow), but they are
+ * behind a link rather than the front door. A password on a shop this size
+ * is a liability someone else's breach can trigger: people reuse them, this
+ * database would be storing the hash of something that opens their bank, and
+ * every one of them is a "forgot password" round trip waiting to happen. A
+ * code cannot be reused, cannot be phished from a leak elsewhere, and
+ * expires by itself.
  */
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
+const CODE_LENGTH = 6;
+/* Matches Supabase's own minimum interval between one-time codes for the
+ * same address. A shorter countdown would invite a second press that the
+ * server refuses, which reads as the site being broken. */
+const RESEND_SECONDS = 60;
 
-type Errors = Partial<Record<"email" | "password" | "fullName" | "phone", string>>;
+type Errors = Partial<Record<"email" | "password" | "fullName" | "phone" | "code", string>>;
 
 export function AuthModal() {
   const {
@@ -29,6 +50,8 @@ export function AuthModal() {
     setMode,
     signIn,
     signUp,
+    sendEmailCode,
+    verifyEmailCode,
     resetPassword,
     updatePassword,
     resendConfirmation,
@@ -41,20 +64,27 @@ export function AuthModal() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [notice, setNotice] = useState<{ tone: "bad" | "good"; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
-  /* Shown only after a sign-in fails specifically because the account
-   * was never confirmed — the one failure a visitor can fix alone. */
+  /* Shown only after a password sign-in fails specifically because the
+   * account was never confirmed — the one failure a visitor can fix alone. */
   const [canResend, setCanResend] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  /* The address the code actually went to, so the screen can name it even
+   * if the field is edited afterwards. */
+  const sentTo = useRef("");
 
   const mode = gate.mode;
 
-  /* Clear the form between openings — leaving a typed password sitting in a
-   * closed dialog is both a surprise and a small hazard on a shared laptop. */
+  /* Clear the form between openings — leaving a typed password or a live
+   * code sitting in a closed dialog is both a surprise and a small hazard
+   * on a shared laptop. */
   useEffect(() => {
     if (gate.open) return;
     setPassword("");
+    setCode("");
     setErrors({});
     setNotice(null);
     setBusy(false);
@@ -67,14 +97,28 @@ export function AuthModal() {
     setCanResend(false);
   }, [mode]);
 
+  /* Counts the resend button back down to zero, once per second, and only
+   * while there is something to count. */
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = window.setTimeout(() => setCooldown((n) => n - 1), 1000);
+    return () => window.clearTimeout(t);
+  }, [cooldown]);
+
   const validate = (): Errors => {
     const e: Errors = {};
     /* "update" runs on a recovery session that already knows who the
      * visitor is, so it asks for a password and nothing else. */
-    if (mode !== "update" && !EMAIL.test(email)) {
+    if (mode !== "update" && mode !== "code" && !EMAIL.test(email)) {
       e.email = "That address will not reach you — check it.";
     }
-    if (mode !== "reset" && password.length < MIN_PASSWORD) {
+    if (mode === "code" && code.replace(/\D/g, "").length !== CODE_LENGTH) {
+      e.code = `The code is ${CODE_LENGTH} digits.`;
+    }
+    if (
+      (mode === "password" || mode === "signup" || mode === "update") &&
+      password.length < MIN_PASSWORD
+    ) {
       e.password = `At least ${MIN_PASSWORD} characters.`;
     }
     if (mode === "signup") {
@@ -84,6 +128,18 @@ export function AuthModal() {
     return e;
   };
 
+  const requestCode = async (): Promise<boolean> => {
+    const res = await sendEmailCode(email, fullName);
+    if (!res.ok) {
+      setNotice({ tone: "bad", text: res.message });
+      return false;
+    }
+    sentTo.current = email.trim();
+    setCooldown(RESEND_SECONDS);
+    setCode("");
+    return true;
+  };
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setNotice(null);
@@ -91,13 +147,30 @@ export function AuthModal() {
     const found = validate();
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      const firstBad = (["fullName", "email", "password", "phone"] as const).find((k) => found[k]);
+      const firstBad = (["fullName", "email", "code", "password", "phone"] as const).find(
+        (k) => found[k],
+      );
       if (firstBad) document.getElementById(`auth-${firstBad}`)?.focus();
       return;
     }
 
     setBusy(true);
     try {
+      /* ---- the default door: email, then a code ---- */
+      if (mode === "signin") {
+        if (await requestCode()) setMode("code");
+        return;
+      }
+
+      if (mode === "code") {
+        const res = await verifyEmailCode(sentTo.current || email, code);
+        /* On success the provider closes this and releases the pending
+         * action, so there is nothing to do here but report a failure. */
+        if (!res.ok) setNotice({ tone: "bad", text: res.message });
+        return;
+      }
+
+      /* ---- the password doors, for accounts that already have one ---- */
       if (mode === "reset") {
         const res = await resetPassword(email);
         setNotice(
@@ -121,10 +194,8 @@ export function AuthModal() {
         return;
       }
 
-      if (mode === "signin") {
+      if (mode === "password") {
         const res = await signIn(email, password);
-        /* On success the provider closes this and releases the pending
-         * action, so there is nothing to do here but report a failure. */
         if (!res.ok) {
           setNotice({ tone: "bad", text: res.message });
           setCanResend(Boolean(res.unconfirmed));
@@ -148,7 +219,20 @@ export function AuthModal() {
     }
   };
 
-  const onResend = async () => {
+  const onResendCode = async () => {
+    if (cooldown > 0) return;
+    setBusy(true);
+    setNotice(null);
+    try {
+      if (await requestCode()) {
+        setNotice({ tone: "good", text: `Sent again to ${sentTo.current}.` });
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onResendConfirmation = async () => {
     setBusy(true);
     try {
       const res = await resendConfirmation(email);
@@ -165,20 +249,27 @@ export function AuthModal() {
 
   const heading: Record<AuthMode, string> = {
     signin: "Sign in",
+    code: "Check your email",
+    password: "Sign in with a password",
     signup: "Become a member",
     reset: "Reset your password",
     update: "Choose a new password",
   };
 
-  const standfirst = gate.reason
-    ? gate.reason
-    : mode === "signup"
-      ? "Members can cart, wishlist and order. It takes a minute."
-      : mode === "reset"
-        ? "We will email you a link to set a new one."
-        : mode === "update"
-          ? "Pick something you have not used here before. At least 8 characters."
-          : "Welcome back.";
+  const standfirst =
+    mode === "code"
+      ? `We sent a ${CODE_LENGTH}-digit code to ${sentTo.current || "your inbox"}. Type it below, or press the link in the same email.`
+      : gate.reason
+        ? gate.reason
+        : mode === "signup"
+          ? "Members can cart, wishlist and order. It takes a minute."
+          : mode === "reset"
+            ? "We will email you a link to set a new one."
+            : mode === "update"
+              ? "Pick something you have not used here before. At least 8 characters."
+              : mode === "password"
+                ? "For accounts made before we moved to codes."
+                : "No password to remember. We email you a code.";
 
   return (
     <Modal open={gate.open} onClose={closeAuth} title={heading[mode]} standfirst={standfirst}>
@@ -192,13 +283,10 @@ export function AuthModal() {
         </div>
       ) : null}
 
-      {/* Google first, when it exists. It is the one path with no password
-       * to invent and no confirmation email to wait for — which on this
-       * project, with confirmation still switched on, is the difference
-       * between shopping now and shopping after an inbox round trip.
-       * Hidden entirely until the provider is enabled, rather than shown
+      {/* Google first: one tap, no code to wait for. Hidden entirely until
+       * the provider is enabled on the Supabase project, rather than shown
        * and broken. */}
-      {googleEnabled && (mode === "signin" || mode === "signup") ? (
+      {googleEnabled && (mode === "signin" || mode === "signup" || mode === "password") ? (
         <div className="mb-8">
           <button
             type="button"
@@ -241,7 +329,7 @@ export function AuthModal() {
           />
         ) : null}
 
-        {mode !== "update" ? (
+        {mode !== "update" && mode !== "code" ? (
           <Field
             id="auth-email"
             label="Email"
@@ -256,7 +344,25 @@ export function AuthModal() {
           />
         ) : null}
 
-        {mode !== "reset" ? (
+        {mode === "code" ? (
+          <Field
+            id="auth-code"
+            label="Your code"
+            inputMode="numeric"
+            value={code}
+            /* Digits only, because people paste them with spaces out of the
+             * mail app, and capped at six so a double paste cannot silently
+             * make the code wrong. */
+            onChange={(v) => setCode(v.replace(/\D/g, "").slice(0, CODE_LENGTH))}
+            error={errors.code}
+            placeholder="000000"
+            autoComplete="one-time-code"
+            required
+            hint="Straight from the email. It is only good for an hour."
+          />
+        ) : null}
+
+        {mode === "password" || mode === "signup" || mode === "update" ? (
           <Field
             id="auth-password"
             label={mode === "update" ? "New password" : "Password"}
@@ -292,28 +398,40 @@ export function AuthModal() {
         <SubmitButton
           label={
             mode === "signin"
-              ? "Sign in"
-              : mode === "signup"
-                ? "Create account"
-                : mode === "update"
-                  ? "Save new password"
-                  : "Send link"
+              ? "Email me a code"
+              : mode === "code"
+                ? "Sign in"
+                : mode === "password"
+                  ? "Sign in"
+                  : mode === "signup"
+                    ? "Create account"
+                    : mode === "update"
+                      ? "Save new password"
+                      : "Send link"
           }
-          busyLabel={mode === "signup" ? "Creating…" : mode === "update" ? "Saving…" : "Sending…"}
+          busyLabel={
+            mode === "code"
+              ? "Checking…"
+              : mode === "signup"
+                ? "Creating…"
+                : mode === "update"
+                  ? "Saving…"
+                  : "Sending…"
+          }
           busy={busy}
           disabled={!configured}
         />
       </form>
 
-      {/* The escape hatch from the one failure a visitor can fix alone.
-       * Without it, an unconfirmed account is a closed loop: signing in
-       * is refused, and signing up again is refused too because the
+      {/* The escape hatch from the one failure a password visitor can fix
+       * alone. Without it, an unconfirmed account is a closed loop: signing
+       * in is refused, and signing up again is refused too because the
        * account already exists. */}
       {canResend ? (
         <div className="mt-6 border-t border-line pt-6">
           <button
             type="button"
-            onClick={onResend}
+            onClick={onResendConfirmation}
             disabled={busy}
             className="t-label text-acid-type underline underline-offset-4 transition-opacity duration-300 hover:opacity-70 disabled:opacity-40"
           >
@@ -322,14 +440,41 @@ export function AuthModal() {
         </div>
       ) : null}
 
-      {mode === "update" ? null : (
+      {mode === "code" ? (
+        <div className="mt-8 space-y-3 border-t border-line pt-6">
+          <p className="font-ui text-[13px] text-mute">
+            Nothing yet?{" "}
+            <button
+              type="button"
+              onClick={onResendCode}
+              disabled={busy || cooldown > 0}
+              className="font-semibold text-text transition-colors duration-300 hover:text-acid-type disabled:text-mute"
+            >
+              <span className={cooldown > 0 ? "" : "wipe-underline"}>
+                {cooldown > 0 ? `Send another in ${cooldown}s` : "Send another"}
+              </span>
+            </button>
+          </p>
+          <Switch
+            prompt="Wrong address?"
+            label="Use a different one"
+            onClick={() => setMode("signin")}
+          />
+        </div>
+      ) : mode === "update" ? null : (
         <div className="mt-8 space-y-3 border-t border-line pt-6">
           {mode === "signin" ? (
+            <Switch
+              prompt="Made an account before we moved to codes?"
+              label="Use your password"
+              onClick={() => setMode("password")}
+            />
+          ) : mode === "password" ? (
             <>
               <Switch
-                prompt="No account yet?"
-                label="Become a member"
-                onClick={() => setMode("signup")}
+                prompt="Would rather not?"
+                label="Email me a code instead"
+                onClick={() => setMode("signin")}
               />
               <Switch
                 prompt="Forgotten it?"

@@ -33,11 +33,17 @@ export const Route = createFileRoute("/admin/login")({
 });
 
 function AdminLogin() {
-  const { signIn, signOut, user, loading } = useAuth();
+  const { signIn, signOut, sendEmailCode, verifyEmailCode, user, loading } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  /* The house default is a code to the address; a password still works for
+   * whoever set one. Both end at the same `checkAdmin()` — being able to
+   * sign in has never been the same as being allowed in here. */
+  const [how, setHow] = useState<"code" | "password">("code");
+  const [code, setCode] = useState("");
+  const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +65,17 @@ function AdminLogin() {
     setError(null);
     setBusy(true);
 
-    const res = await signIn(email, password);
+    /* Step one of the code path only sends it — there is nothing to check
+     * yet, so it returns before touching the admin list. */
+    if (how === "code" && !sent) {
+      const asked = await sendEmailCode(email);
+      setBusy(false);
+      if (!asked.ok) setError(asked.message);
+      else setSent(true);
+      return;
+    }
+
+    const res = how === "code" ? await verifyEmailCode(email, code) : await signIn(email, password);
     if (!res.ok) {
       setBusy(false);
       setError(res.message);
@@ -110,15 +126,29 @@ function AdminLogin() {
             autoComplete="email"
             required
           />
-          <Field
-            id="admin-password"
-            label="Password"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            autoComplete="current-password"
-            required
-          />
+          {how === "password" ? (
+            <Field
+              id="admin-password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={setPassword}
+              autoComplete="current-password"
+              required
+            />
+          ) : sent ? (
+            <Field
+              id="admin-code"
+              label="Your code"
+              inputMode="numeric"
+              value={code}
+              onChange={(v) => setCode(v.replace(/\D/g, "").slice(0, 6))}
+              placeholder="000000"
+              autoComplete="one-time-code"
+              required
+              hint={`Six digits, sent to ${email.trim()}.`}
+            />
+          ) : null}
 
           {error ? <FormNotice>{error}</FormNotice> : null}
 
@@ -128,11 +158,32 @@ function AdminLogin() {
             className="group flex h-[56px] w-full items-center justify-between gap-6 bg-acid px-7 transition-colors duration-300 hover:bg-acid-dim disabled:opacity-60"
           >
             <span className="font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text">
-              {busy ? "Checking…" : "Sign in"}
+              {busy
+                ? how === "code" && !sent
+                  ? "Sending…"
+                  : "Checking…"
+                : how === "code" && !sent
+                  ? "Email me a code"
+                  : "Sign in"}
             </span>
             <ArrowRight size={16} className="text-accent-text lb-arrow" />
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={() => {
+            setHow((h) => (h === "code" ? "password" : "code"));
+            setSent(false);
+            setCode("");
+            setError(null);
+          }}
+          className="mt-6 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
+        >
+          <span className="wipe-underline">
+            {how === "code" ? "Use a password instead" : "Email me a code instead"}
+          </span>
+        </button>
 
         <p className="t-label mt-8 text-mute">
           Editing the website. Not the same as a shop account — this one has to be on the admin
