@@ -163,7 +163,7 @@ export function ActiveFilters({
           <button
             type="button"
             onClick={c.clear}
-            className="flex h-9 items-center gap-2 border border-line-strong px-3 font-ui text-[12px] text-text transition-colors duration-300 hover:border-acid-type"
+            className="flex h-11 items-center gap-2 border border-line-strong px-3 font-ui text-[12px] text-text transition-colors duration-300 hover:border-acid-type"
           >
             {c.label}
             <X size={13} aria-hidden="true" />
@@ -176,7 +176,7 @@ export function ActiveFilters({
           <button
             type="button"
             onClick={onClearAll}
-            className="h-9 px-2 font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
+            className="tap h-11 px-2 font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
           >
             Clear all
           </button>

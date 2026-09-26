@@ -48,6 +48,11 @@ export function HeroFrame({
 
   return (
     <header
+      /* Marks this page as opening with a hero — the navbar floats over one
+       * transparently and only goes solid further down. A page without the
+       * mark starts its content directly under the bar, so the bar has to
+       * be solid from the first pixel (see Nav). */
+      data-hero
       className={`relative w-full overflow-hidden ${surface ?? "bg-surface-deep"} ${className ?? ""}`}
     >
       <GridRules tone={tone} />

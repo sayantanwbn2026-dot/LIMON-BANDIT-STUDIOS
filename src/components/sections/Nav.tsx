@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useNavItems, useSite, useSocialLink } from "@/cms/hooks";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
@@ -36,6 +36,24 @@ export function Nav() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  /* How far down the bar stays transparent.
+   *
+   * Over a hero it floats — that is the design, and the hero is built to be
+   * read through it. A page with no hero starts its content immediately
+   * under the bar, and floating there means the logotype sits on top of
+   * whatever the page opens with (on a product page, the price). So: 600px
+   * where there is a hero, almost immediately where there is not.
+   *
+   * Read from the DOM after each navigation rather than from a list of
+   * routes, because the question is "does this page open with a hero", and
+   * the page itself is the only thing that knows. */
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const threshold = useRef(600);
+  useEffect(() => {
+    threshold.current = document.querySelector("[data-hero]") ? 600 : 24;
+    setScrolled(window.scrollY > threshold.current);
+  }, [pathname]);
   const navPole = useNavPole();
 
   useEffect(() => {
@@ -61,7 +79,7 @@ export function Nav() {
     let last = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 600);
+      setScrolled(y > threshold.current);
       const dy = y - last;
       if (Math.abs(dy) < 8) return;
       const focusInside = navRef.current?.contains(document.activeElement) ?? false;

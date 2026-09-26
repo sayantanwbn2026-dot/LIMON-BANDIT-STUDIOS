@@ -191,7 +191,7 @@ export function ProductPage({ product }: { product: Product }) {
               {ratings.count > 0 ? (
                 <a
                   href="#reviews"
-                  className="mt-4 inline-flex items-center gap-2 font-ui text-[13px] text-mute hover:text-text"
+                  className="tap mt-4 inline-flex items-center gap-2 font-ui text-[13px] text-mute hover:text-text"
                 >
                   <Stars value={ratings.average} />
                   <span className="tnum">
@@ -235,7 +235,7 @@ export function ProductPage({ product }: { product: Product }) {
                     <Link
                       to="/legal/$slug"
                       params={{ slug: "shipping-returns" }}
-                      className="font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
+                      className="tap font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
                     >
                       Returns in 7 days
                     </Link>
@@ -310,7 +310,7 @@ export function ProductPage({ product }: { product: Product }) {
                   onClick={() =>
                     gated("Sign in to keep a wishlist.", () => void wishlist.toggle(product.id))
                   }
-                  className="inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
+                  className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
                   <Heart size={15} className={saved && user ? "fill-acid text-acid" : ""} />
                   {saved && user ? "Saved" : "Save for later"}
@@ -318,7 +318,7 @@ export function ProductPage({ product }: { product: Product }) {
                 <button
                   type="button"
                   onClick={() => void share()}
-                  className="inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
+                  className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
                   <Share2 size={15} />
                   {shareNote ?? "Share"}

@@ -199,7 +199,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
                 type="button"
                 onClick={() => void remove()}
                 disabled={busy}
-                className="inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
+                className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
               >
                 <Trash2 size={14} /> Delete yours
               </button>
@@ -264,7 +264,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
               <button
                 type="button"
                 onClick={() => setWriting(false)}
-                className="flex h-[48px] items-center px-2 font-ui text-[13px] text-mute hover:text-text"
+                className="tap flex h-[48px] items-center px-2 font-ui text-[13px] text-mute hover:text-text"
               >
                 Cancel
               </button>

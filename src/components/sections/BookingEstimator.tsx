@@ -5,6 +5,7 @@ import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { useRooms, useSection } from "@/cms/hooks";
 import { inr } from "@/lib/money";
+import { parseRate } from "@/lib/rates";
 
 /**
  * "What would a session actually cost?"
@@ -23,19 +24,6 @@ import { inr } from "@/lib/money";
  * button carries the room and the hours into the contact form so nobody
  * retypes what they just chose.
  */
-
-type Rate = { amount: number; unit: "hour" | "night" } | null;
-
-/** "₹2,400 / hr" -> 2400 an hour. Anything unexpected -> null. */
-export function parseRate(line: string | undefined): Rate {
-  if (!line) return null;
-  const m = line.match(/([\d,]+)\s*\/\s*([a-z]+)/i);
-  if (!m) return null;
-  const amount = Number(m[1].replace(/,/g, ""));
-  if (!Number.isFinite(amount) || amount <= 0) return null;
-  const unit = /night|day/i.test(m[2]) ? "night" : "hour";
-  return { amount, unit };
-}
 
 /* Two hours is the house minimum on the hourly rooms; a lockout is sold by
  * the night and nobody books half of one. */
