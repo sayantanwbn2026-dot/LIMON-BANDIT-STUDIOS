@@ -346,6 +346,8 @@ export const seeds: Record<string, unknown> = {
     price: p.price,
     compareAt: p.compareAt ?? 0,
     image: p.image,
+    /* The CMS stores gallery rows as objects, one image field each. */
+    gallery: (p.gallery ?? []).map((url) => ({ url })),
     blurb: p.blurb,
     sizes: p.sizes ? [...p.sizes] : [],
     run: p.run,

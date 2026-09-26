@@ -1,14 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Check, Heart, Minus, Plus, Share2, Truck } from "lucide-react";
+import {
+  Banknote,
+  Check,
+  ChevronDown,
+  Heart,
+  Minus,
+  Plus,
+  RotateCcw,
+  Share2,
+  Truck,
+} from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
-import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
 import { useOffers, useProducts, useShipping, type ProductDoc as Product } from "@/cms/hooks";
 import { remember } from "@/lib/recent";
+import { ProductGallery } from "./ProductGallery";
 import { ProductRail } from "./ProductRail";
 import { Reviews, Stars } from "./Reviews";
 import { useRatings } from "@/lib/reviews";
@@ -25,6 +35,28 @@ import { useRatings } from "@/lib/reviews";
  *
  * The sheet stays. It is the right answer for "add this, I already know what
  * it is" from the grid; this is the right answer for "tell me about it".
+ *
+ * Four things this page does deliberately, each fixing something the first
+ * version got wrong:
+ *
+ *   The picture stays put and the words scroll (as on every large shop). It
+ *   also stops growing: a square photograph in a wide column pushed the
+ *   price and the size picker below the fold, so the one decision the page
+ *   exists for started off screen.
+ *
+ *   Nothing is disabled to mean "not yet". The buy buttons used to grey out
+ *   until a size was chosen, which reads as a broken button rather than an
+ *   instruction — the screenshot that prompted this looked like a colour
+ *   bug. They are always live; pressing one without a size scrolls to the
+ *   sizes, focuses the first, and says why. Feedback beats a dead control.
+ *
+ *   One loud button. "Add to cart" carries the acid; "Buy now" is quiet
+ *   beside it. Two equally shouting CTAs make the choice, not the product,
+ *   the thing you have to think about (Von Restorff, Hick).
+ *
+ *   The long tail is folded away. The spec table and the returns detail are
+ *   behind disclosures, open to anyone who wants them and out of the way of
+ *   everyone who does not.
  *
  * On a phone the buy controls leave the flow and stick to the bottom edge,
  * where a thumb is, so a long page never puts the price out of reach.
@@ -43,6 +75,10 @@ export function ProductPage({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [shareNote, setShareNote] = useState<string | null>(null);
+  /** Set when someone tries to buy without choosing a size. */
+  const [nudge, setNudge] = useState(false);
+
+  const sizeRef = useRef<HTMLDivElement>(null);
 
   const needsSize = Boolean(product.sizes?.length);
   const gone = product.stock <= 0;
@@ -60,6 +96,7 @@ export function ProductPage({ product }: { product: Product }) {
     setQty(1);
     setAdded(false);
     setShareNote(null);
+    setNudge(false);
   }, [product.id]);
 
   /* "Recently viewed" is the one piece of memory a shop can keep without
@@ -74,8 +111,6 @@ export function ProductPage({ product }: { product: Product }) {
       .filter(Boolean);
     return [product.image, ...extra];
   }, [product.image, product.gallery]);
-  const [shot, setShot] = useState(0);
-  useEffect(() => setShot(0), [product.id]);
 
   /* Same kind first, then the same maker — the two ways someone browsing a
    * tee actually continues: another tee, or more of that artist. */
@@ -85,21 +120,38 @@ export function ProductPage({ product }: { product: Product }) {
     return [...others].sort((a, b) => score(a) - score(b)).slice(0, 8);
   }, [all, product]);
 
+  const sizeMissing = needsSize && !size;
+
+  /**
+   * The instruction a disabled button cannot give.
+   *
+   * Takes the eye to the sizes, puts the keyboard there too, and leaves a
+   * line of text behind for anyone who is being read to. Returns true when
+   * it handled the press, so the buy handlers can simply stop.
+   */
+  const askForSize = useCallback(() => {
+    if (!sizeMissing) return false;
+    setNudge(true);
+    const box = sizeRef.current;
+    box?.scrollIntoView({ behavior: "smooth", block: "center" });
+    box?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    window.setTimeout(() => setNudge(false), 1800);
+    return true;
+  }, [sizeMissing]);
+
   const gated = (reason: string, action: () => void) => requireAuth(reason, action);
 
   const addToCart = () => {
-    if (gone) return;
-    if (needsSize && !size) return;
+    if (gone || askForSize()) return;
     gated("Sign in to start a basket.", () => {
       cart.add(product.id, needsSize ? size : null, qty);
       setAdded(true);
-      window.setTimeout(() => setAdded(false), 2000);
+      window.setTimeout(() => setAdded(false), 4000);
     });
   };
 
   const buyNow = () => {
-    if (gone) return;
-    if (needsSize && !size) return;
+    if (gone || askForSize()) return;
     gated("Sign in to check out.", () => {
       cart.add(product.id, needsSize ? size : null, qty);
       void navigate({ to: "/checkout" });
@@ -123,8 +175,6 @@ export function ProductPage({ product }: { product: Product }) {
     }
   };
 
-  const sizeMissing = needsSize && !size;
-
   return (
     <main id="main" className="relative w-full bg-surface-deep pt-[var(--nav-h)]">
       <section className="relative w-full">
@@ -133,47 +183,17 @@ export function ProductPage({ product }: { product: Product }) {
         <div className="shell relative z-[2] pb-16 pt-10">
           <Breadcrumb title={product.title} />
 
-          <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:gap-16">
-            {/* ---- the picture ---- */}
-            <div>
-              <div className="relative border border-line bg-surface">
-                <CmsImage
-                  src={gallery[shot] ?? product.image}
-                  alt={product.title}
-                  sizes="(max-width: 1023px) 100vw, 640px"
-                  priority
-                  className="chroma aspect-square w-full object-cover"
-                />
-                {off ? (
-                  <span className="absolute left-0 top-0 bg-acid px-3 py-1 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-accent-text">
-                    {off}% off
-                  </span>
-                ) : null}
-              </div>
-
-              {gallery.length > 1 ? (
-                <ul className="mt-3 flex gap-3 overflow-x-auto no-scrollbar">
-                  {gallery.map((g, i) => (
-                    <li key={`${g}-${i}`} className="shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => setShot(i)}
-                        aria-label={`View image ${i + 1}`}
-                        aria-pressed={i === shot}
-                        className={`block h-[72px] w-[72px] border ${
-                          i === shot ? "border-acid-type" : "border-line hover:border-line-strong"
-                        }`}
-                      >
-                        <CmsImage
-                          src={g}
-                          alt=""
-                          sizes="72px"
-                          className="chroma h-full w-full object-cover"
-                        />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+          <div className="mt-8 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:gap-16">
+            {/* ---- the picture ----
+             * Sticky from `lg` up: the gallery is the thing you keep looking
+             * back at while reading the rest, and on a desktop there is room
+             * to leave it there. */}
+            <div className="relative lg:sticky lg:top-[calc(var(--nav-h)+24px)]">
+              <ProductGallery images={gallery} title={product.title} />
+              {off ? (
+                <span className="pointer-events-none absolute left-0 top-0 bg-acid px-3 py-1 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-accent-text">
+                  {off}% off
+                </span>
               ) : null}
             </div>
 
@@ -206,12 +226,18 @@ export function ProductPage({ product }: { product: Product }) {
                   {inr(product.price)}
                 </span>
                 {product.compareAt && product.compareAt > product.price ? (
-                  <span className="tnum font-ui text-[16px] text-mute line-through">
-                    {inr(product.compareAt)}
-                  </span>
+                  <>
+                    <span className="tnum font-ui text-[16px] text-mute line-through">
+                      {inr(product.compareAt)}
+                    </span>
+                    {/* The number people actually want: what they keep. */}
+                    <span className="tnum font-ui text-[14px] font-semibold text-acid-type">
+                      Save {inr(product.compareAt - product.price)}
+                    </span>
+                  </>
                 ) : null}
-                <span className="font-ui text-[13px] text-mute">Taxes included</span>
               </div>
+              <p className="mt-1 font-ui text-[13px] text-mute">Taxes included</p>
 
               <p className="mt-5 max-w-[52ch] font-ui text-[15px] leading-[1.6] text-mute">
                 {product.blurb}
@@ -229,15 +255,22 @@ export function ProductPage({ product }: { product: Product }) {
               </p>
 
               {needsSize ? (
-                <div className="mt-8">
+                <div ref={sizeRef} className="mt-8 scroll-mt-[calc(var(--nav-h)+24px)]">
                   <div className="flex items-baseline justify-between gap-4">
-                    <h2 className="t-label text-mute">Size</h2>
+                    <h2 className="t-label text-mute">
+                      Size{" "}
+                      {size ? (
+                        <span className="text-text">· {size}</span>
+                      ) : (
+                        <span className="text-mute opacity-70">· required</span>
+                      )}
+                    </h2>
                     <Link
                       to="/legal/$slug"
                       params={{ slug: "shipping-returns" }}
                       className="tap font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
                     >
-                      Returns in 7 days
+                      Size &amp; fit
                     </Link>
                   </div>
                   <ul className="mt-3 flex flex-wrap gap-2">
@@ -245,12 +278,17 @@ export function ProductPage({ product }: { product: Product }) {
                       <li key={s}>
                         <button
                           type="button"
-                          onClick={() => setSize(s)}
+                          onClick={() => {
+                            setSize(s);
+                            setNudge(false);
+                          }}
                           aria-pressed={size === s}
                           className={`flex h-12 min-w-12 items-center justify-center border px-4 font-ui text-[14px] font-semibold transition-colors duration-300 ${
                             size === s
                               ? "border-acid-type bg-acid text-accent-text"
-                              : "border-line text-text hover:border-acid-type"
+                              : nudge
+                                ? "border-acid-type text-text"
+                                : "border-line text-text hover:border-acid-type"
                           }`}
                         >
                           {s}
@@ -258,9 +296,19 @@ export function ProductPage({ product }: { product: Product }) {
                       </li>
                     ))}
                   </ul>
-                  {sizeMissing ? (
-                    <p className="mt-3 font-ui text-[13px] text-mute">Pick a size to continue.</p>
-                  ) : null}
+                  {/* One live region for the whole page. Silent until the
+                   * buttons have something to say, so it is never read out
+                   * on arrival. */}
+                  <p
+                    aria-live="polite"
+                    className={`mt-3 font-ui text-[13px] ${nudge ? "text-acid-type" : "text-mute"}`}
+                  >
+                    {nudge
+                      ? "Pick a size first — then add it to the basket."
+                      : size
+                        ? `Size ${size} selected.`
+                        : "Pick a size to continue."}
+                  </p>
                 </div>
               ) : null}
 
@@ -290,19 +338,49 @@ export function ProductPage({ product }: { product: Product }) {
                       <Plus size={15} />
                     </button>
                   </div>
+                  {qty >= max ? (
+                    <p className="font-ui text-[12px] text-mute">
+                      {max === product.stock ? "That is the whole run." : "Twenty per order."}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 
               {/* ---- buy ---- */}
-              <div className="mt-8 hidden gap-3 lg:flex">
+              <div className="mt-8 hidden lg:block">
                 <BuyButtons
                   gone={gone}
                   added={added}
-                  disabled={sizeMissing}
                   onAdd={addToCart}
                   onBuy={buyNow}
+                  onViewCart={() => cart.setOpen(true)}
                 />
               </div>
+
+              {/* On a phone the basket lives in the bar pinned to the bottom
+               * edge, so the only button missing from the flow is the other
+               * path — and putting a second acid button here would mean two
+               * of them on screen at once, which is one too many. */}
+              {!gone ? (
+                <button
+                  type="button"
+                  onClick={buyNow}
+                  className="mt-8 flex h-[52px] w-full items-center justify-center border border-line-strong font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text lg:hidden"
+                >
+                  Buy now
+                </button>
+              ) : null}
+
+              {/* The three things that decide the sale once the price is
+               * read, together in one strip rather than scattered down the
+               * page as prose. */}
+              {!product.digital ? (
+                <ul className="mt-6 grid grid-cols-3 gap-3 border-y border-line py-4">
+                  <Assurance icon={<Banknote size={15} />} label="Cash on delivery" />
+                  <Assurance icon={<RotateCcw size={15} />} label="7-day returns" />
+                  <Assurance icon={<Truck size={15} />} label="Ships in 48 hrs" />
+                </ul>
+              ) : null}
 
               <div className="mt-6 flex flex-wrap items-center gap-5">
                 <button
@@ -347,16 +425,39 @@ export function ProductPage({ product }: { product: Product }) {
                 </div>
               ) : null}
 
-              <dl className="mt-8 border-t border-line">
-                <Spec k="Run" v={product.run} />
-                <Spec k="Kind" v={product.kind} />
-                {product.department !== "unisex" ? <Spec k="Cut" v={product.department} /> : null}
-                <Spec k="Catalogue" v={product.index} />
-                <Spec
-                  k="Payment"
-                  v={product.digital ? "No delivery — digital" : "Cash on delivery"}
-                />
-              </dl>
+              {/* Progressive disclosure: everything below is detail nobody
+               * needs in order to decide, and a wall of it is what makes a
+               * product page feel like a form. */}
+              <div className="mt-8 border-t border-line">
+                <Disclosure title="Details" defaultOpen>
+                  <dl>
+                    <Spec k="Run" v={product.run} />
+                    <Spec k="Kind" v={product.kind} />
+                    {product.department !== "unisex" ? (
+                      <Spec k="Cut" v={product.department} />
+                    ) : null}
+                    <Spec k="Catalogue" v={product.index} />
+                    <Spec
+                      k="Payment"
+                      v={product.digital ? "No delivery — digital" : "Cash on delivery"}
+                    />
+                  </dl>
+                </Disclosure>
+                <Disclosure title="Delivery & returns">
+                  <p className="font-ui text-[14px] leading-[1.6] text-mute">
+                    {product.digital
+                      ? "Nothing ships. The file reaches you by email once the order is confirmed, and a digital item cannot be returned."
+                      : "Packed and sent from the building in Kolkata, usually within two working days. Unworn, tags on, seven days from the day it reaches you — tell us and we collect it."}{" "}
+                    <Link
+                      to="/legal/$slug"
+                      params={{ slug: "shipping-returns" }}
+                      className="tap text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
+                    >
+                      Full terms
+                    </Link>
+                  </p>
+                </Disclosure>
+              </div>
             </div>
           </div>
         </div>
@@ -377,8 +478,9 @@ export function ProductPage({ product }: { product: Product }) {
       {/* ---- the phone's buy bar ----
        * Fixed to the bottom edge from the moment the page opens: on a long
        * page the price and the button would otherwise be a scroll away from
-       * wherever someone happens to be reading. Sits above the home
-       * indicator on an iPhone. */}
+       * wherever someone happens to be reading. One button, because a thumb
+       * bar is the worst possible place to offer a choice. Sits above the
+       * home indicator on an iPhone. */}
       <div className="sticky bottom-0 z-[60] border-t border-line bg-surface-deep/95 backdrop-blur-sm lg:hidden">
         <div className="shell flex items-center gap-3 py-3 pb-[calc(12px+env(safe-area-inset-bottom,0px))]">
           <div className="min-w-0 flex-1">
@@ -386,75 +488,154 @@ export function ProductPage({ product }: { product: Product }) {
               {inr(product.price * qty)}
             </p>
             <p className="truncate font-ui text-[12px] text-mute">
-              {gone ? "Sold out" : sizeMissing ? "Pick a size first" : `${qty} × ${product.title}`}
+              {gone
+                ? "Sold out"
+                : added
+                  ? "In your basket"
+                  : sizeMissing
+                    ? "Size needed"
+                    : `${qty} × ${size ?? product.kind}`}
             </p>
           </div>
-          <BuyButtons
-            gone={gone}
-            added={added}
-            disabled={sizeMissing}
-            onAdd={addToCart}
-            onBuy={buyNow}
-            compact
-          />
+          {gone ? (
+            <span className="flex h-[52px] shrink-0 items-center justify-center border border-line px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
+              Sold out
+            </span>
+          ) : added ? (
+            <button
+              type="button"
+              onClick={() => cart.setOpen(true)}
+              className="flex h-[52px] shrink-0 items-center justify-center gap-2 bg-acid px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text"
+            >
+              <Check size={16} /> View basket
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={addToCart}
+              className="flex h-[52px] shrink-0 items-center justify-center bg-acid px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 active:opacity-80"
+            >
+              Add to basket
+            </button>
+          )}
         </div>
       </div>
     </main>
   );
 }
 
+/**
+ * The buy controls, desktop.
+ *
+ * Neither button is ever disabled — see the note at the top of the file.
+ * "Add to cart" is the only acid thing in the column, so there is never a
+ * question about where to press; "Buy now" is available to anyone who
+ * already knows they want it and would rather skip the basket.
+ *
+ * Once something is added the primary button becomes the next step, which is
+ * the basket. A confirmation that does nothing is a confirmation you have to
+ * read and then dismiss with your own idea of what to do next.
+ */
 function BuyButtons({
   gone,
   added,
-  disabled,
   onAdd,
   onBuy,
-  compact,
+  onViewCart,
 }: {
   gone: boolean;
   added: boolean;
-  disabled: boolean;
   onAdd: () => void;
   onBuy: () => void;
-  compact?: boolean;
+  onViewCart: () => void;
 }) {
   if (gone) {
     return (
-      <span className="flex h-[52px] flex-1 items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
-        Sold out
-      </span>
+      <div className="flex flex-col gap-3">
+        <span className="flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
+          Sold out
+        </span>
+        <p className="font-ui text-[13px] text-mute">
+          The run is finished. The list hears about the next one first.
+        </p>
+      </div>
     );
   }
   return (
-    <>
-      <button
-        type="button"
-        onClick={onAdd}
-        disabled={disabled}
-        className={`flex h-[52px] items-center justify-center gap-2 border border-line-strong px-5 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-40 ${
-          compact ? "shrink-0" : "flex-1"
-        }`}
-      >
-        {added ? <Check size={16} className="text-acid-type" /> : null}
-        {added ? "Added" : compact ? "Add" : "Add to cart"}
-      </button>
+    <div className="flex flex-col gap-3">
+      {added ? (
+        <button
+          type="button"
+          onClick={onViewCart}
+          className="flex h-[56px] items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 hover:opacity-90"
+        >
+          <Check size={16} /> In your basket — view it
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={onAdd}
+          className="flex h-[56px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 hover:opacity-90"
+        >
+          Add to basket
+        </button>
+      )}
       <button
         type="button"
         onClick={onBuy}
-        disabled={disabled}
-        className={`flex h-[52px] items-center justify-center bg-acid px-5 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 hover:opacity-90 disabled:opacity-40 ${
-          compact ? "shrink-0" : "flex-1"
-        }`}
+        className="flex h-[52px] items-center justify-center border border-line-strong font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
       >
         Buy now
       </button>
-    </>
+    </div>
+  );
+}
+
+/** One of the three promises in the strip under the buy buttons. */
+function Assurance({ icon, label }: { icon: ReactNode; label: string }) {
+  return (
+    <li className="flex flex-col items-center gap-2 text-center">
+      <span className="text-acid-type">{icon}</span>
+      <span className="font-ui text-[11px] font-semibold uppercase leading-[1.3] tracking-[0.08em] text-mute">
+        {label}
+      </span>
+    </li>
+  );
+}
+
+/**
+ * A section you can fold away.
+ *
+ * `<details>` rather than state and a conditional: it opens without
+ * JavaScript, it is findable by the browser's own in-page search even while
+ * closed, and the keyboard behaviour is the platform's rather than ours.
+ */
+function Disclosure({
+  title,
+  defaultOpen,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <details open={defaultOpen} className="group border-b border-line">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
+        <h2 className="t-label text-text">{title}</h2>
+        <ChevronDown
+          size={16}
+          className="shrink-0 text-mute transition-transform duration-300 group-open:-rotate-180"
+        />
+      </summary>
+      <div className="pb-5">{children}</div>
+    </details>
   );
 }
 
 function Spec({ k, v }: { k: string; v: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-6 border-b border-line py-3">
+    <div className="flex items-baseline justify-between gap-6 border-t border-line py-3 first:border-t-0 first:pt-0">
       <dt className="t-label text-mute">{k}</dt>
       <dd className="font-ui text-[14px] capitalize text-text">{v}</dd>
     </div>
@@ -541,7 +722,7 @@ function DeliveryEstimate({
 
   return (
     <div className="mt-8 border border-line p-5">
-      <h2 className="flex items-center gap-2 t-label text-mute">
+      <h2 className="t-label flex items-center gap-2 text-mute">
         <Truck size={14} className="text-acid-type" /> Delivery
       </h2>
 

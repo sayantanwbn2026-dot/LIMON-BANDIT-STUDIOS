@@ -178,6 +178,68 @@ export const images = {
     ],
     "fallback": "/img/limon-mascot-1024.webp"
   },
+  "merch-tee-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/merch-tee-detail-480.avif",
+        "size": 5422
+      },
+      {
+        "w": 768,
+        "url": "/img/merch-tee-detail-768.avif",
+        "size": 9147
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/merch-tee-detail-480.webp",
+        "size": 5850
+      },
+      {
+        "w": 768,
+        "url": "/img/merch-tee-detail-768.webp",
+        "size": 10118
+      }
+    ],
+    "fallback": "/img/merch-tee-detail-768.jpg"
+  },
+  "merch-tee-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/merch-tee-flat-480.avif",
+        "size": 7450
+      },
+      {
+        "w": 768,
+        "url": "/img/merch-tee-flat-768.avif",
+        "size": 13707
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/merch-tee-flat-480.webp",
+        "size": 7542
+      },
+      {
+        "w": 768,
+        "url": "/img/merch-tee-flat-768.webp",
+        "size": 14204
+      }
+    ],
+    "fallback": "/img/merch-tee-flat-768.jpg"
+  },
   "merch-tee": {
     "width": 1000,
     "height": 1250,
@@ -208,6 +270,68 @@ export const images = {
       }
     ],
     "fallback": "/img/merch-tee-768.jpg"
+  },
+  "release-01-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-01-detail-480.avif",
+        "size": 14926
+      },
+      {
+        "w": 768,
+        "url": "/img/release-01-detail-768.avif",
+        "size": 26472
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-01-detail-480.webp",
+        "size": 23676
+      },
+      {
+        "w": 768,
+        "url": "/img/release-01-detail-768.webp",
+        "size": 41708
+      }
+    ],
+    "fallback": "/img/release-01-detail-768.jpg"
+  },
+  "release-01-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-01-flat-480.avif",
+        "size": 15435
+      },
+      {
+        "w": 768,
+        "url": "/img/release-01-flat-768.avif",
+        "size": 28163
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-01-flat-480.webp",
+        "size": 24092
+      },
+      {
+        "w": 768,
+        "url": "/img/release-01-flat-768.webp",
+        "size": 42740
+      }
+    ],
+    "fallback": "/img/release-01-flat-768.jpg"
   },
   "release-01": {
     "width": 900,
@@ -240,6 +364,68 @@ export const images = {
     ],
     "fallback": "/img/release-01-768.jpg"
   },
+  "release-02-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-02-detail-480.avif",
+        "size": 9681
+      },
+      {
+        "w": 768,
+        "url": "/img/release-02-detail-768.avif",
+        "size": 16796
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-02-detail-480.webp",
+        "size": 10884
+      },
+      {
+        "w": 768,
+        "url": "/img/release-02-detail-768.webp",
+        "size": 19500
+      }
+    ],
+    "fallback": "/img/release-02-detail-768.jpg"
+  },
+  "release-02-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-02-flat-480.avif",
+        "size": 10265
+      },
+      {
+        "w": 768,
+        "url": "/img/release-02-flat-768.avif",
+        "size": 18028
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-02-flat-480.webp",
+        "size": 12120
+      },
+      {
+        "w": 768,
+        "url": "/img/release-02-flat-768.webp",
+        "size": 21544
+      }
+    ],
+    "fallback": "/img/release-02-flat-768.jpg"
+  },
   "release-02": {
     "width": 900,
     "height": 900,
@@ -270,6 +456,68 @@ export const images = {
       }
     ],
     "fallback": "/img/release-02-768.jpg"
+  },
+  "release-03-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-03-detail-480.avif",
+        "size": 6170
+      },
+      {
+        "w": 768,
+        "url": "/img/release-03-detail-768.avif",
+        "size": 11591
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-03-detail-480.webp",
+        "size": 8388
+      },
+      {
+        "w": 768,
+        "url": "/img/release-03-detail-768.webp",
+        "size": 14568
+      }
+    ],
+    "fallback": "/img/release-03-detail-768.jpg"
+  },
+  "release-03-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-03-flat-480.avif",
+        "size": 6815
+      },
+      {
+        "w": 768,
+        "url": "/img/release-03-flat-768.avif",
+        "size": 13987
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-03-flat-480.webp",
+        "size": 8710
+      },
+      {
+        "w": 768,
+        "url": "/img/release-03-flat-768.webp",
+        "size": 16194
+      }
+    ],
+    "fallback": "/img/release-03-flat-768.jpg"
   },
   "release-03": {
     "width": 900,
@@ -302,6 +550,68 @@ export const images = {
     ],
     "fallback": "/img/release-03-768.jpg"
   },
+  "release-04-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-04-detail-480.avif",
+        "size": 12315
+      },
+      {
+        "w": 768,
+        "url": "/img/release-04-detail-768.avif",
+        "size": 21079
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-04-detail-480.webp",
+        "size": 20352
+      },
+      {
+        "w": 768,
+        "url": "/img/release-04-detail-768.webp",
+        "size": 35150
+      }
+    ],
+    "fallback": "/img/release-04-detail-768.jpg"
+  },
+  "release-04-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-04-flat-480.avif",
+        "size": 19659
+      },
+      {
+        "w": 768,
+        "url": "/img/release-04-flat-768.avif",
+        "size": 38051
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-04-flat-480.webp",
+        "size": 32204
+      },
+      {
+        "w": 768,
+        "url": "/img/release-04-flat-768.webp",
+        "size": 60812
+      }
+    ],
+    "fallback": "/img/release-04-flat-768.jpg"
+  },
   "release-04": {
     "width": 900,
     "height": 900,
@@ -332,6 +642,68 @@ export const images = {
       }
     ],
     "fallback": "/img/release-04-768.jpg"
+  },
+  "release-05-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-05-detail-480.avif",
+        "size": 5175
+      },
+      {
+        "w": 768,
+        "url": "/img/release-05-detail-768.avif",
+        "size": 9638
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-05-detail-480.webp",
+        "size": 6262
+      },
+      {
+        "w": 768,
+        "url": "/img/release-05-detail-768.webp",
+        "size": 11428
+      }
+    ],
+    "fallback": "/img/release-05-detail-768.jpg"
+  },
+  "release-05-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-05-flat-480.avif",
+        "size": 6098
+      },
+      {
+        "w": 768,
+        "url": "/img/release-05-flat-768.avif",
+        "size": 10896
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-05-flat-480.webp",
+        "size": 7802
+      },
+      {
+        "w": 768,
+        "url": "/img/release-05-flat-768.webp",
+        "size": 13770
+      }
+    ],
+    "fallback": "/img/release-05-flat-768.jpg"
   },
   "release-05": {
     "width": 900,
@@ -364,6 +736,68 @@ export const images = {
     ],
     "fallback": "/img/release-05-768.jpg"
   },
+  "release-06-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-06-detail-480.avif",
+        "size": 17699
+      },
+      {
+        "w": 768,
+        "url": "/img/release-06-detail-768.avif",
+        "size": 31143
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-06-detail-480.webp",
+        "size": 25146
+      },
+      {
+        "w": 768,
+        "url": "/img/release-06-detail-768.webp",
+        "size": 43864
+      }
+    ],
+    "fallback": "/img/release-06-detail-768.jpg"
+  },
+  "release-06-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/release-06-flat-480.avif",
+        "size": 20443
+      },
+      {
+        "w": 768,
+        "url": "/img/release-06-flat-768.avif",
+        "size": 37459
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/release-06-flat-480.webp",
+        "size": 29848
+      },
+      {
+        "w": 768,
+        "url": "/img/release-06-flat-768.webp",
+        "size": 52340
+      }
+    ],
+    "fallback": "/img/release-06-flat-768.jpg"
+  },
   "release-06": {
     "width": 900,
     "height": 900,
@@ -394,6 +828,68 @@ export const images = {
       }
     ],
     "fallback": "/img/release-06-768.jpg"
+  },
+  "room-a-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-a-detail-480.avif",
+        "size": 7994
+      },
+      {
+        "w": 768,
+        "url": "/img/room-a-detail-768.avif",
+        "size": 13981
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-a-detail-480.webp",
+        "size": 9504
+      },
+      {
+        "w": 768,
+        "url": "/img/room-a-detail-768.webp",
+        "size": 16686
+      }
+    ],
+    "fallback": "/img/room-a-detail-768.jpg"
+  },
+  "room-a-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-a-flat-480.avif",
+        "size": 14095
+      },
+      {
+        "w": 768,
+        "url": "/img/room-a-flat-768.avif",
+        "size": 24995
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-a-flat-480.webp",
+        "size": 19208
+      },
+      {
+        "w": 768,
+        "url": "/img/room-a-flat-768.webp",
+        "size": 34024
+      }
+    ],
+    "fallback": "/img/room-a-flat-768.jpg"
   },
   "room-a": {
     "width": 1600,
@@ -446,6 +942,68 @@ export const images = {
     ],
     "fallback": "/img/room-a-1024.jpg"
   },
+  "room-b-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-b-detail-480.avif",
+        "size": 14765
+      },
+      {
+        "w": 768,
+        "url": "/img/room-b-detail-768.avif",
+        "size": 30401
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-b-detail-480.webp",
+        "size": 19870
+      },
+      {
+        "w": 768,
+        "url": "/img/room-b-detail-768.webp",
+        "size": 36846
+      }
+    ],
+    "fallback": "/img/room-b-detail-768.jpg"
+  },
+  "room-b-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-b-flat-480.avif",
+        "size": 19933
+      },
+      {
+        "w": 768,
+        "url": "/img/room-b-flat-768.avif",
+        "size": 41845
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-b-flat-480.webp",
+        "size": 30342
+      },
+      {
+        "w": 768,
+        "url": "/img/room-b-flat-768.webp",
+        "size": 61254
+      }
+    ],
+    "fallback": "/img/room-b-flat-768.jpg"
+  },
   "room-b": {
     "width": 1024,
     "height": 1280,
@@ -486,6 +1044,68 @@ export const images = {
       }
     ],
     "fallback": "/img/room-b-1024.jpg"
+  },
+  "room-booth-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-booth-detail-480.avif",
+        "size": 5097
+      },
+      {
+        "w": 768,
+        "url": "/img/room-booth-detail-768.avif",
+        "size": 9643
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-booth-detail-480.webp",
+        "size": 6542
+      },
+      {
+        "w": 768,
+        "url": "/img/room-booth-detail-768.webp",
+        "size": 12284
+      }
+    ],
+    "fallback": "/img/room-booth-detail-768.jpg"
+  },
+  "room-booth-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-booth-flat-480.avif",
+        "size": 5796
+      },
+      {
+        "w": 768,
+        "url": "/img/room-booth-flat-768.avif",
+        "size": 11714
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-booth-flat-480.webp",
+        "size": 7898
+      },
+      {
+        "w": 768,
+        "url": "/img/room-booth-flat-768.webp",
+        "size": 15692
+      }
+    ],
+    "fallback": "/img/room-booth-flat-768.jpg"
   },
   "room-booth": {
     "width": 1024,
@@ -528,6 +1148,68 @@ export const images = {
     ],
     "fallback": "/img/room-booth-1024.jpg"
   },
+  "room-lockout-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-lockout-detail-480.avif",
+        "size": 2412
+      },
+      {
+        "w": 768,
+        "url": "/img/room-lockout-detail-768.avif",
+        "size": 4124
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-lockout-detail-480.webp",
+        "size": 2766
+      },
+      {
+        "w": 768,
+        "url": "/img/room-lockout-detail-768.webp",
+        "size": 5032
+      }
+    ],
+    "fallback": "/img/room-lockout-detail-768.jpg"
+  },
+  "room-lockout-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/room-lockout-flat-480.avif",
+        "size": 11591
+      },
+      {
+        "w": 768,
+        "url": "/img/room-lockout-flat-768.avif",
+        "size": 23475
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/room-lockout-flat-480.webp",
+        "size": 17534
+      },
+      {
+        "w": 768,
+        "url": "/img/room-lockout-flat-768.webp",
+        "size": 34968
+      }
+    ],
+    "fallback": "/img/room-lockout-flat-768.jpg"
+  },
   "room-lockout": {
     "width": 1024,
     "height": 1280,
@@ -568,6 +1250,68 @@ export const images = {
       }
     ],
     "fallback": "/img/room-lockout-1024.jpg"
+  },
+  "split-corridor-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/split-corridor-detail-480.avif",
+        "size": 10145
+      },
+      {
+        "w": 768,
+        "url": "/img/split-corridor-detail-768.avif",
+        "size": 17799
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/split-corridor-detail-480.webp",
+        "size": 13080
+      },
+      {
+        "w": 768,
+        "url": "/img/split-corridor-detail-768.webp",
+        "size": 23374
+      }
+    ],
+    "fallback": "/img/split-corridor-detail-768.jpg"
+  },
+  "split-corridor-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/split-corridor-flat-480.avif",
+        "size": 12116
+      },
+      {
+        "w": 768,
+        "url": "/img/split-corridor-flat-768.avif",
+        "size": 24884
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/split-corridor-flat-480.webp",
+        "size": 15650
+      },
+      {
+        "w": 768,
+        "url": "/img/split-corridor-flat-768.webp",
+        "size": 30136
+      }
+    ],
+    "fallback": "/img/split-corridor-flat-768.jpg"
   },
   "split-corridor": {
     "width": 1792,
@@ -620,6 +1364,68 @@ export const images = {
     ],
     "fallback": "/img/split-corridor-1024.jpg"
   },
+  "wall-01-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-01-detail-480.avif",
+        "size": 5584
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-01-detail-768.avif",
+        "size": 9480
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-01-detail-480.webp",
+        "size": 7958
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-01-detail-768.webp",
+        "size": 12762
+      }
+    ],
+    "fallback": "/img/wall-01-detail-768.jpg"
+  },
+  "wall-01-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-01-flat-480.avif",
+        "size": 10286
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-01-flat-768.avif",
+        "size": 18075
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-01-flat-480.webp",
+        "size": 15642
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-01-flat-768.webp",
+        "size": 26778
+      }
+    ],
+    "fallback": "/img/wall-01-flat-768.jpg"
+  },
   "wall-01": {
     "width": 1024,
     "height": 1280,
@@ -660,6 +1466,68 @@ export const images = {
       }
     ],
     "fallback": "/img/wall-01-1024.jpg"
+  },
+  "wall-02-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-02-detail-480.avif",
+        "size": 13365
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-02-detail-768.avif",
+        "size": 24829
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-02-detail-480.webp",
+        "size": 18606
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-02-detail-768.webp",
+        "size": 33854
+      }
+    ],
+    "fallback": "/img/wall-02-detail-768.jpg"
+  },
+  "wall-02-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-02-flat-480.avif",
+        "size": 13995
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-02-flat-768.avif",
+        "size": 26504
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-02-flat-480.webp",
+        "size": 19558
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-02-flat-768.webp",
+        "size": 36576
+      }
+    ],
+    "fallback": "/img/wall-02-flat-768.jpg"
   },
   "wall-02": {
     "width": 1024,
@@ -702,6 +1570,68 @@ export const images = {
     ],
     "fallback": "/img/wall-02-1024.jpg"
   },
+  "wall-03-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-03-detail-480.avif",
+        "size": 7361
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-03-detail-768.avif",
+        "size": 13035
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-03-detail-480.webp",
+        "size": 8714
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-03-detail-768.webp",
+        "size": 15590
+      }
+    ],
+    "fallback": "/img/wall-03-detail-768.jpg"
+  },
+  "wall-03-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-03-flat-480.avif",
+        "size": 5422
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-03-flat-768.avif",
+        "size": 9525
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-03-flat-480.webp",
+        "size": 6576
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-03-flat-768.webp",
+        "size": 11994
+      }
+    ],
+    "fallback": "/img/wall-03-flat-768.jpg"
+  },
   "wall-03": {
     "width": 1024,
     "height": 1365,
@@ -743,6 +1673,68 @@ export const images = {
     ],
     "fallback": "/img/wall-03-1024.jpg"
   },
+  "wall-04-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-04-detail-480.avif",
+        "size": 9690
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-04-detail-768.avif",
+        "size": 17115
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-04-detail-480.webp",
+        "size": 11994
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-04-detail-768.webp",
+        "size": 20780
+      }
+    ],
+    "fallback": "/img/wall-04-detail-768.jpg"
+  },
+  "wall-04-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-04-flat-480.avif",
+        "size": 12301
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-04-flat-768.avif",
+        "size": 24018
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-04-flat-480.webp",
+        "size": 16296
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-04-flat-768.webp",
+        "size": 30250
+      }
+    ],
+    "fallback": "/img/wall-04-flat-768.jpg"
+  },
   "wall-04": {
     "width": 1280,
     "height": 800,
@@ -783,6 +1775,68 @@ export const images = {
       }
     ],
     "fallback": "/img/wall-04-1024.jpg"
+  },
+  "wall-05-detail": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-05-detail-480.avif",
+        "size": 6628
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-05-detail-768.avif",
+        "size": 11906
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-05-detail-480.webp",
+        "size": 8558
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-05-detail-768.webp",
+        "size": 15600
+      }
+    ],
+    "fallback": "/img/wall-05-detail-768.jpg"
+  },
+  "wall-05-flat": {
+    "width": 1000,
+    "height": 1250,
+    "aspect": 0.8,
+    "alpha": false,
+    "avif": [
+      {
+        "w": 480,
+        "url": "/img/wall-05-flat-480.avif",
+        "size": 10328
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-05-flat-768.avif",
+        "size": 19802
+      }
+    ],
+    "webp": [
+      {
+        "w": 480,
+        "url": "/img/wall-05-flat-480.webp",
+        "size": 13862
+      },
+      {
+        "w": 768,
+        "url": "/img/wall-05-flat-768.webp",
+        "size": 25802
+      }
+    ],
+    "fallback": "/img/wall-05-flat-768.jpg"
   },
   "wall-05": {
     "width": 1024,
