@@ -312,9 +312,41 @@ export function shopJsonLd() {
             Number(p.stock ?? 0) > 0 || p.digital
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
-          url: new URL("/shop", live.url).href,
+          url: new URL(`/shop/${String(p.id ?? "")}`, live.url).href,
         },
       },
     })),
+  };
+}
+
+/** One product, for its own page: price, stock and what it is. */
+export function productJsonLd(p: {
+  id: string;
+  title: string;
+  blurb?: string;
+  by?: string;
+  image?: string;
+  price: number;
+  stock: number;
+  digital?: boolean;
+}) {
+  const live = liveSite();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: p.title,
+    ...(p.blurb ? { description: p.blurb } : {}),
+    ...(p.image ? { image: absoluteImage(p.image, live.url) } : {}),
+    ...(p.by ? { brand: { "@type": "Brand", name: p.by } } : {}),
+    sku: p.id,
+    offers: {
+      "@type": "Offer",
+      price: p.price,
+      priceCurrency: "INR",
+      availability:
+        p.stock > 0 || p.digital ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: new URL(`/shop/${p.id}`, live.url).href,
+      seller: { "@type": "Organization", name: live.name },
+    },
   };
 }

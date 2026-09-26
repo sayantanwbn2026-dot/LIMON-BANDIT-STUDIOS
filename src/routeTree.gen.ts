@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ShopIdRouteImport } from './routes/shop_.$id'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
@@ -105,6 +106,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const ShopIdRoute = ShopIdRouteImport.update({
+  id: '/shop_/$id',
+  path: '/shop/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/shop/$id': typeof ShopIdRoute
   '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/shop/$id': typeof ShopIdRoute
   '/admin': typeof AdminIndexRoute
   '/journal': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/shop_/$id': typeof ShopIdRoute
   '/admin/': typeof AdminIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/admin/page/$page': typeof AdminPagePageRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/journal/$slug'
     | '/legal/$slug'
+    | '/shop/$id'
     | '/admin/'
     | '/journal/'
     | '/admin/page/$page'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/journal/$slug'
     | '/legal/$slug'
+    | '/shop/$id'
     | '/admin'
     | '/journal'
     | '/admin/page/$page'
@@ -332,6 +343,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/journal/$slug'
     | '/legal/$slug'
+    | '/shop_/$id'
     | '/admin/'
     | '/journal/'
     | '/admin/page/$page'
@@ -352,6 +364,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   JournalSlugRoute: typeof JournalSlugRoute
   LegalSlugRoute: typeof LegalSlugRoute
+  ShopIdRoute: typeof ShopIdRoute
   JournalIndexRoute: typeof JournalIndexRoute
 }
 
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/shop_/$id': {
+      id: '/shop_/$id'
+      path: '/shop/$id'
+      fullPath: '/shop/$id'
+      preLoaderRoute: typeof ShopIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/legal/$slug': {
       id: '/legal/$slug'
@@ -587,6 +607,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   JournalSlugRoute: JournalSlugRoute,
   LegalSlugRoute: LegalSlugRoute,
+  ShopIdRoute: ShopIdRoute,
   JournalIndexRoute: JournalIndexRoute,
 }
 export const routeTree = rootRouteImport

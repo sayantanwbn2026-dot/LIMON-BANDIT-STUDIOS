@@ -368,6 +368,10 @@ export const useShopStages = () => useList<StepDoc>("page.shop.stages");
 
 export type ProductDoc = {
   id: string;
+  /** extra shots for the product page; the main `image` is always first.
+   * Rows come from the CMS as `{ url }`; a bare string is accepted too, so
+   * a hand-edited document does not break the page. */
+  gallery?: ({ url?: string } | string)[];
   index: string;
   title: string;
   by: string;

@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Heart, Check, Plus } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { CmsImage } from "@/components/lb/CmsImage";
+import { Stars } from "./Reviews";
+import { useRatingMap } from "@/lib/reviews";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
@@ -42,6 +45,7 @@ export function ProductCard({
   const { requireAuth } = useAuth();
   const cart = useCart();
   const wishlist = useWishlist();
+  const rating = useRatingMap().get(product.id);
 
   const [size, setSize] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
@@ -74,9 +78,13 @@ export function ProductCard({
     <li id={`product-${product.id}`} className="bg-surface-deep">
       <article className="group flex h-full flex-col">
         <div className="relative">
-          <button
-            type="button"
-            onClick={() => onOpen(product)}
+          {/* The picture and the name go to the product's own page; the
+           * quick-add below stays on the grid. Someone who wants to look
+           * gets a page they can share, someone who already knows gets one
+           * tap — the two intentions stopped sharing a button. */}
+          <Link
+            to="/shop/$id"
+            params={{ id: product.id }}
             aria-label={`View ${product.title}`}
             className="block w-full overflow-hidden"
             style={{ aspectRatio: "4 / 5" }}
@@ -91,7 +99,7 @@ export function ProductCard({
                 opacity: gone ? 0.4 : 1,
               }}
             />
-          </button>
+          </Link>
 
           <span className="tnum pointer-events-none absolute left-0 top-0 bg-surface-deep px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-acid-type">
             {product.index}
@@ -129,17 +137,24 @@ export function ProductCard({
         </div>
 
         <div className="flex flex-1 flex-col border-t border-line p-3 sm:p-6">
-          <button
-            type="button"
-            onClick={() => onOpen(product)}
+          <Link
+            to="/shop/$id"
+            params={{ id: product.id }}
             className="text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.05] sm:tracking-[-0.02em]"
           >
             {product.title}
-          </button>
+          </Link>
 
           <p className="mt-1 truncate font-ui text-[11px] text-mute sm:mt-2 sm:text-[13px]">
             {product.by}
           </p>
+
+          {rating && rating.count > 0 ? (
+            <p className="mt-1 flex items-center gap-1.5 font-ui text-[11px] text-mute">
+              <Stars value={rating.average} size={11} />
+              <span className="tnum">({rating.count})</span>
+            </p>
+          ) : null}
 
           {/* Below `sm` these live in the sheet — see the note at the top. */}
           <p className="mt-3 hidden font-ui text-[13px] leading-[1.5] text-mute sm:block">

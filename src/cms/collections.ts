@@ -758,6 +758,15 @@ const products: Collection = {
       help: "Optional. Shown struck through beside the price.",
     }),
     image("image", "Photo", 1000, 1250, "Portrait 4:5. Shown in a two-column grid on phones."),
+    {
+      kind: "list",
+      name: "gallery",
+      label: "More photos",
+      itemNoun: "photo",
+      titleField: "url",
+      help: "Extra shots, shown as thumbnails on the product page. The photo above is always the first one.",
+      fields: [image("url", "Photo", 1000, 1250, "Portrait 4:5, like the main photo.")],
+    },
     area("blurb", "Blurb", { rows: 2, required: true }),
     strings("sizes", "Sizes", {
       itemLabel: "Size",
