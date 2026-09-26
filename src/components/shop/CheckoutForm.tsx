@@ -66,6 +66,21 @@ export function CheckoutForm() {
     setPhone((v) => v || meta?.phone || "");
   }, [user]);
 
+  /* The PIN they already typed into a product page's delivery estimate.
+   *
+   * Asking for it twice in one visit is the kind of small insult that makes
+   * a checkout feel like paperwork — and this is the same key the estimator
+   * writes, so the window quoted on the product page and the address the
+   * parcel goes to cannot disagree. */
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("lb-pin");
+      if (saved && PIN.test(saved)) setPostcode((v) => v || saved);
+    } catch {
+      /* private mode, or storage disabled — the box simply starts empty */
+    }
+  }, []);
+
   useEffect(() => {
     if (loading || user) return;
     openAuth("Sign in to check out. Your cart is waiting.");
@@ -170,6 +185,17 @@ export function CheckoutForm() {
       setPlaced(result);
       cart.clear();
       cart.clearOffer();
+
+      /* Keep the delivery estimate honest next time: the PIN a parcel
+       * actually went to is a better default than the one they were idly
+       * checking on a product page. */
+      if (!digital) {
+        try {
+          window.localStorage.setItem("lb-pin", postcode.trim());
+        } catch {
+          /* nothing to do — the order is placed either way */
+        }
+      }
     } catch (e) {
       setFailure(
         e instanceof Error

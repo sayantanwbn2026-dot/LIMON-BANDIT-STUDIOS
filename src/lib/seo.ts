@@ -187,6 +187,35 @@ export async function chapterSeo(key: ChapterKey): Promise<PageSeo> {
 }
 
 /**
+ * A chapter's SEO *and* its structured data, both resolved in the loader.
+ *
+ * The comment on `liveSite` above claims `head` can read `lastDocs()`
+ * because the loader has already awaited `liveDocs()`. That holds on the
+ * server. It does not hold in the browser on the first pass after
+ * hydration, where `head` is handed the server's *serialized* loaderData
+ * and nothing in the client has fetched a document yet — so a JSON-LD
+ * block built inside `head` was in the server's HTML and missing from the
+ * client's tree. React reported a head mismatch, declined to patch it, and
+ * the page quietly lost the structured data it exists to emit.
+ *
+ * Building it here fixes both halves: the block travels with the rest of
+ * the loader's answer, so the two sides render the identical object. The
+ * call is safe because `chapterSeo` has just awaited `liveDocs()` — the
+ * cache `build()` reads is warm on whichever side is running.
+ *
+ * Routes whose structured data comes from their own `loaderData` (a
+ * product, a journal entry) never had this problem and do not need this.
+ */
+export async function chapterSeoWith(
+  key: ChapterKey,
+  build: () => object | object[] | undefined,
+): Promise<PageSeo> {
+  const seo = await chapterSeo(key);
+  const jsonLd = build();
+  return jsonLd ? { ...seo, jsonLd } : seo;
+}
+
+/**
  * What a chapter route's `head` should call.
  *
  * `loaderData` is optional in the router's types — `head` also runs for

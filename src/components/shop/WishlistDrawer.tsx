@@ -117,7 +117,7 @@ export function WishlistDrawer() {
                   type="button"
                   onClick={() => void wishlist.remove(p.id)}
                   aria-label={`Remove ${p.title} from your wishlist`}
-                  className="h-8 w-8 shrink-0 text-mute transition-colors duration-300 hover:text-acid-type"
+                  className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-acid-type"
                 >
                   <Trash2 size={15} />
                 </button>

@@ -13,12 +13,11 @@ import { FinalCta } from "@/components/sections/FinalCta";
 import { BookingEstimator } from "@/components/sections/BookingEstimator";
 import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
-import { chapterHeadFrom, chapterSeo, houseJsonLd } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeoWith, houseJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  loader: () => chapterSeo("home"),
-  head: ({ loaderData }) =>
-    chapterHeadFrom("home", loaderData ? { ...loaderData, jsonLd: houseJsonLd() } : undefined),
+  loader: () => chapterSeoWith("home", houseJsonLd),
+  head: ({ loaderData }) => chapterHeadFrom("home", loaderData),
   component: Index,
 });
 

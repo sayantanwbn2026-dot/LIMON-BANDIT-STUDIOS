@@ -4,17 +4,11 @@ import { ShopHero } from "@/components/heroes/ShopHero";
 import { ShopCatalog } from "@/components/shop/ShopCatalog";
 import { ShopPrint } from "@/components/shop/ShopPrint";
 import { ShopOrder } from "@/components/shop/ShopOrder";
-import { chapterHeadFrom, chapterSeo, shopJsonLd } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeoWith, shopJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/shop")({
-  loader: () => chapterSeo("shop"),
-  head: ({ loaderData }) => {
-    const list = shopJsonLd();
-    return chapterHeadFrom(
-      "shop",
-      loaderData && list ? { ...loaderData, jsonLd: list } : loaderData,
-    );
-  },
+  loader: () => chapterSeoWith("shop", shopJsonLd),
+  head: ({ loaderData }) => chapterHeadFrom("shop", loaderData),
   component: Shop,
 });
 
