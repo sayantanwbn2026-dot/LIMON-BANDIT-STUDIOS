@@ -78,6 +78,27 @@ export function lastDocs(): Docs {
   return cache?.docs ?? {};
 }
 
+/**
+ * Hand the browser the documents the server already fetched.
+ *
+ * `head` is a static function: it runs on the server while rendering the
+ * HTML and again in the browser while hydrating, and both runs must produce
+ * the same tags. Anything it reads from here was warm on the server and
+ * stone cold in the browser, so the canonical link, the share image and the
+ * structured data were computed from the live documents server-side and
+ * from the committed seeds client-side. React reported it as a mismatch in
+ * <head> and refused to patch it — and the moment the live site address
+ * differs from the compiled one, every page would have shipped two answers.
+ *
+ * The root component calls this with its loader data, during render, before
+ * any route's head is built. Same documents, same tags, both sides.
+ */
+export function primeDocs(docs: Docs | undefined): void {
+  if (!docs || Object.keys(docs).length === 0) return;
+  if (cache && cache.docs === docs) return;
+  cache = { at: Date.now(), docs };
+}
+
 /** One document from a fetched set, falling back to its seed. */
 export function docFrom<T>(docs: Docs, key: string): T {
   const stored = docs[key];

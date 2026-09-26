@@ -60,7 +60,17 @@ export function readEnquiry(search: string): Enquiry {
   const roomId = q.get("room");
   if (roomId) {
     const r = rooms.find((x) => x.id === roomId);
-    if (r) return { intent, subject: { kind: "Room", title: r.name, detail: r.rate } };
+    if (r) {
+      /* The estimator on the home page sends the length along with the room,
+       * so the message says "Room A (₹2,400 / hr · 4 hours)" rather than
+       * making someone retype the thing they just chose. */
+      const hours = Number(q.get("hours"));
+      const length =
+        Number.isFinite(hours) && hours > 0
+          ? ` · ${hours} ${/night/i.test(r.rate) ? (hours === 1 ? "night" : "nights") : "hours"}`
+          : "";
+      return { intent, subject: { kind: "Room", title: r.name, detail: `${r.rate}${length}` } };
+    }
   }
 
   const whoId = q.get("who");

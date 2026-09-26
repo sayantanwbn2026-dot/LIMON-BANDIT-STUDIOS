@@ -1,23 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/sections/Hero";
 import { ProofBand } from "@/components/sections/ProofBand";
-import { IdentityMarquee } from "@/components/sections/IdentityMarquee";
-import { Services } from "@/components/sections/Services";
 import { ThreeWaysIn } from "@/components/sections/ThreeWaysIn";
 import { Rooms } from "@/components/sections/Rooms";
-import { Founder } from "@/components/sections/Founder";
-import { RoomFilm } from "@/components/sections/RoomFilm";
 import { Numbers } from "@/components/sections/Numbers";
 import { Roster } from "@/components/sections/Roster";
 import { DropRail } from "@/components/sections/DropRail";
-import { Wall } from "@/components/sections/Wall";
-import { Rates } from "@/components/sections/Rates";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { Process } from "@/components/sections/Process";
 import { Faq } from "@/components/sections/Faq";
-import { Journal } from "@/components/sections/Journal";
 import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
+import { BookingEstimator } from "@/components/sections/BookingEstimator";
 import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
 import { chapterHeadFrom, chapterSeo, houseJsonLd } from "@/lib/seo";
@@ -55,18 +48,18 @@ function Index() {
         <ScrollDepth>
           <ProofBand />
         </ScrollDepth>
-        <ScrollDepth>
-          <IdentityMarquee />
-        </ScrollDepth>
-        <Services />
+
+        {/* Three doors, and they open. The page's own navigation. */}
         <ThreeWaysIn />
         <Rooms />
 
+        {/* Was a table of three plans and a paragraph each — 2,000px of
+            reading to reach a number you then had to do arithmetic on. Now
+            two questions and a total that moves as you answer them. */}
         <ScrollDepth>
-          <Founder />
+          <BookingEstimator />
         </ScrollDepth>
 
-        <RoomFilm />
         <ScrollDepth>
           <Numbers />
         </ScrollDepth>
@@ -76,28 +69,11 @@ function Index() {
 
         <DropRail />
 
-        {/* Bento was here: a third pass at "rooms, label, shop, crew", after
-            Services said it as an overview and ThreeWaysIn said it as three
-            calls to action. 2,095px on a phone to repeat the page's own
-            point. The component is kept (nothing else imports it) in case
-            the inline player it carried is wanted back somewhere. */}
-        <ScrollDepth>
-          <Rates />
-        </ScrollDepth>
         <ScrollDepth>
           <Testimonials />
         </ScrollDepth>
         <ScrollDepth>
-          <Process />
-        </ScrollDepth>
-        <ScrollDepth>
-          <Wall />
-        </ScrollDepth>
-        <ScrollDepth>
           <Faq />
-        </ScrollDepth>
-        <ScrollDepth>
-          <Journal />
         </ScrollDepth>
         <ScrollDepth>
           <JoinList />

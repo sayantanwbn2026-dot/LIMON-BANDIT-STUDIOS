@@ -34,7 +34,7 @@ import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
 import { FlashOffer } from "@/components/shop/FlashOffer";
 import { AuthLanding } from "@/components/shop/AuthLanding";
 import { ContentProvider } from "@/cms/content";
-import { liveDocs } from "@/cms/live";
+import { liveDocs, primeDocs } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
 
 /**
@@ -285,6 +285,9 @@ function SiteChrome() {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { cms } = Route.useLoaderData();
+  /* During render, not in an effect: every route's `head` is built while
+   * this subtree renders, and they read these documents (see primeDocs). */
+  primeDocs(cms);
   const admin = useRouterState({ select: (s) => s.location.pathname.startsWith("/admin") });
 
   return (
