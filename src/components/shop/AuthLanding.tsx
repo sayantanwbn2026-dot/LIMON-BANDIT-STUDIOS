@@ -174,7 +174,7 @@ export function AuthLanding() {
           type="button"
           onClick={() => setDismissed(true)}
           aria-label="Dismiss"
-          className="-mr-2 flex h-9 w-9 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-text"
+          className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-text"
         >
           <X size={15} />
         </button>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Heart, Minus, Plus } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
 import { CmsImage } from "@/components/lb/CmsImage";
@@ -40,6 +40,9 @@ export function ProductSheet({
   const [size, setSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  /** Set when Add is pressed with no size chosen. */
+  const [nudge, setNudge] = useState(false);
+  const sizeRef = useRef<HTMLFieldSetElement>(null);
 
   /* Reset per product, not per open: reopening the same tee should not forget
    * the size you just picked, but opening a different one must not inherit it. */
@@ -47,6 +50,7 @@ export function ProductSheet({
     setSize(null);
     setQty(1);
     setAdded(false);
+    setNudge(false);
   }, [product?.id]);
 
   if (!product) return null;
@@ -76,7 +80,25 @@ export function ProductSheet({
     requireAuth(reason, action);
   };
 
+  /**
+   * The instruction a disabled button cannot give.
+   *
+   * The sheet used to grey Add out and relabel it "Pick a size", which says
+   * the right words in a control nobody can press — a screen reader moving
+   * by interactive element skips it, and a thumb that lands on it gets
+   * nothing back. Same treatment as the product page: stay live, and on a
+   * press with no size take the eye and the keyboard to the sizes.
+   */
+  const askForSize = () => {
+    if (!needsSize || size) return false;
+    setNudge(true);
+    sizeRef.current?.querySelector("button")?.focus();
+    window.setTimeout(() => setNudge(false), 1800);
+    return true;
+  };
+
   const add = () => {
+    if (askForSize()) return;
     gated(`Sign in to add ${product.title} to your cart.`, () => {
       cart.add(product.id, needsSize ? size : null, qty);
       if (!user) return;
@@ -148,25 +170,38 @@ export function ProductSheet({
       </div>
 
       {needsSize && !gone ? (
-        <fieldset className="mt-7">
-          <legend className="t-label text-mute">Size</legend>
+        <fieldset ref={sizeRef} className="mt-7">
+          <legend className="t-label text-mute">
+            Size {size ? <span className="text-text">· {size}</span> : null}
+          </legend>
           <div className="mt-3 flex flex-wrap gap-2">
             {product.sizes!.map((s) => (
               <button
                 key={s}
                 type="button"
-                onClick={() => setSize(s)}
+                onClick={() => {
+                  setSize(s);
+                  setNudge(false);
+                }}
                 aria-pressed={size === s}
                 className={`h-12 min-w-[52px] px-3 font-ui text-[12px] font-bold uppercase tracking-[0.1em] transition-colors duration-300 ${
                   size === s
                     ? "bg-acid text-accent-text"
-                    : "border border-line text-mute hover:border-acid-type hover:text-text"
+                    : nudge
+                      ? "border border-acid-type text-text"
+                      : "border border-line text-mute hover:border-acid-type hover:text-text"
                 }`}
               >
                 {s}
               </button>
             ))}
           </div>
+          <p
+            aria-live="polite"
+            className={`mt-3 font-ui text-[12px] ${nudge ? "text-acid-type" : "text-mute"}`}
+          >
+            {nudge ? "Pick a size first." : size ? `Size ${size} selected.` : " "}
+          </p>
         </fieldset>
       ) : null}
 
@@ -229,11 +264,10 @@ export function ProductSheet({
           <button
             type="button"
             onClick={add}
-            disabled={needsSize && !size}
-            className="flex h-[56px] flex-1 items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-mute"
+            className="flex h-[56px] flex-1 items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
             {added ? <Check size={15} /> : null}
-            {added ? "Added" : needsSize && !size ? "Pick a size" : "Add to cart"}
+            {added ? "Added" : "Add to cart"}
           </button>
         )}
       </div>

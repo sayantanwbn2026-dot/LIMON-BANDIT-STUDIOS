@@ -175,7 +175,7 @@ export function ShopCatalog() {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear the search"
-              className="flex h-11 w-9 items-center justify-center text-mute hover:text-text"
+              className="-mr-1 flex h-11 w-11 shrink-0 items-center justify-center text-mute hover:text-text"
             >
               <X size={15} />
             </button>
