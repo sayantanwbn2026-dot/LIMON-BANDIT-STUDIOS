@@ -59,7 +59,7 @@ export function CrewDirectory() {
                 type="button"
                 onClick={() => setFilter(f)}
                 aria-pressed={on}
-                className={`px-3 py-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 ${
+                className={`flex h-11 items-center px-4 font-ui text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 ${
                   on
                     ? "bg-acid text-accent-text"
                     : "border border-line text-mute hover:border-acid-type hover:text-text"

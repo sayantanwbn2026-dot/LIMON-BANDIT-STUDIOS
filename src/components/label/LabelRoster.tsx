@@ -72,7 +72,7 @@ export function LabelRoster() {
                         type="button"
                         onClick={() => play(t.id)}
                         aria-label={`Play ${r.title} by ${r.artist}`}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
+                        className="flex h-11 w-11 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                       >
                         <Play
                           size={12}

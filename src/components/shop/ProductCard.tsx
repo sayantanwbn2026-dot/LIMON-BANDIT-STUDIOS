@@ -140,7 +140,7 @@ export function ProductCard({
           <Link
             to="/shop/$id"
             params={{ id: product.id }}
-            className="text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.05] sm:tracking-[-0.02em]"
+            className="tap text-left font-display text-[14px] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-text transition-colors duration-300 hover:text-acid-type sm:text-[18px] sm:leading-[1.05] sm:tracking-[-0.02em]"
           >
             {product.title}
           </Link>

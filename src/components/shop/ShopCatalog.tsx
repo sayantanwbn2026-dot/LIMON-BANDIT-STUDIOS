@@ -199,7 +199,7 @@ export function ShopCatalog() {
                       onClick={() => setCategory(c.id)}
                       aria-pressed={on}
                       disabled={n === 0}
-                      className={`flex h-10 items-baseline gap-1.5 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:gap-2 lg:py-2 lg:tracking-[0.14em] ${
+                      className={`flex h-11 items-baseline gap-1.5 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:gap-2 lg:py-2 lg:tracking-[0.14em] ${
                         on
                           ? "bg-acid text-accent-text"
                           : "border border-line text-mute hover:border-acid-type hover:text-text"
@@ -274,7 +274,7 @@ export function ShopCatalog() {
               <button
                 type="button"
                 onClick={() => setPanelOpen(true)}
-                className="flex h-10 items-center gap-2 border border-line px-3 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type lg:hidden"
+                className="flex h-11 items-center gap-2 border border-line px-3 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type lg:hidden"
               >
                 <SlidersHorizontal size={14} />
                 Filter &amp; sort

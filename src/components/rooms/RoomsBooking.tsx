@@ -67,7 +67,7 @@ export function RoomsBooking() {
               </a>
               <a
                 href={`tel:${site.phone.replace(/\s+/g, "")}`}
-                className="tnum font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
+                className="tap tnum font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
                 or call {site.phone}
               </a>

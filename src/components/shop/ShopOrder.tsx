@@ -84,7 +84,7 @@ export function ShopOrder() {
               </a>
               <a
                 href={`mailto:${site.email}`}
-                className="font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
+                className="tap font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
                 or email {site.email}
               </a>

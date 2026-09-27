@@ -84,7 +84,7 @@ export function CrewHiring() {
               </a>
               <a
                 href="/contact?intent=join-crew"
-                className="font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
+                className="tap font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
                 or apply to join the list
               </a>
