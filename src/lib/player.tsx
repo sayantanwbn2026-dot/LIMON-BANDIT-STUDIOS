@@ -10,6 +10,7 @@ import {
 } from "react";
 import { type Track } from "@/data/tracks";
 import { useTracks } from "@/cms/hooks";
+import { attach, resume } from "./audio-graph";
 
 type PlayerState = {
   track: Track | null;
@@ -25,6 +26,14 @@ type PlayerState = {
   next: () => void;
   prev: () => void;
   stop: () => void;
+  /**
+   * Load a track and park it at a moment WITHOUT playing it.
+   *
+   * For links that carry a timestamp. Starting sound on arrival is the
+   * reason people browse muted, so a shared moment arms the transport and
+   * waits to be pressed.
+   */
+  cue: (id: string, seconds: number) => void;
 };
 
 const Ctx = createContext<PlayerState | null>(null);
@@ -46,6 +55,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [failed, setFailed] = useState(false);
+  /** A seek that has to wait for metadata before it can be applied. */
+  const pending = useRef<number | null>(null);
 
   const play = useCallback(
     (id: string) => {
@@ -53,6 +64,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (!t) return;
       const el = ref.current;
       if (!el) return;
+
+      /* The rooms and the analyser live on a Web Audio graph that can
+       * only be built from a user gesture — and every play starts here.
+       * If it cannot be built, `attach` says so and the element plays to
+       * the speakers exactly as it always did. */
+      attach(el);
+      resume();
 
       if (track?.id === id) {
         if (el.paused) void el.play().catch(() => setFailed(true));
@@ -69,9 +87,31 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     [track],
   );
 
+  const cue = useCallback(
+    (id: string, seconds: number) => {
+      const t = tracks.find((x) => x.id === id);
+      const el = ref.current;
+      if (!t || !el) return;
+      setFailed(false);
+      setTrack(t);
+      setTime(seconds);
+      setDuration(0);
+      pending.current = seconds;
+      /* `preload="none"` is the default on this element, so the metadata
+       * this needs has to be asked for explicitly. */
+      el.preload = "metadata";
+      el.src = t.src;
+      el.load();
+    },
+    [tracks],
+  );
+
   const toggle = useCallback(() => {
     const el = ref.current;
     if (!el || !track) return;
+    /* Safari suspends the context with the tab; waking it here costs
+     * nothing and is the difference between silence and sound. */
+    resume();
     if (el.paused) void el.play().catch(() => setFailed(true));
     else el.pause();
   }, [track]);
@@ -129,8 +169,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       next: () => jump(1),
       prev: () => jump(-1),
       stop,
+      cue,
     }),
-    [track, playing, time, duration, failed, play, toggle, seek, step, jump, stop],
+    [track, playing, time, duration, failed, play, toggle, seek, step, jump, stop, cue],
   );
 
   return (
@@ -142,7 +183,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
         onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onLoadedMetadata={(e) => {
+          setDuration(e.currentTarget.duration);
+          /* A cued moment can only be applied once the browser knows how
+           * long the file is. */
+          const want = pending.current;
+          pending.current = null;
+          if (want != null && Number.isFinite(e.currentTarget.duration)) {
+            e.currentTarget.currentTime = Math.max(0, Math.min(e.currentTarget.duration, want));
+            setTime(e.currentTarget.currentTime);
+          }
+        }}
         onError={() => {
           setFailed(true);
           setPlaying(false);

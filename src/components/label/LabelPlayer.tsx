@@ -1,6 +1,9 @@
-import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, Link2, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { Waveform } from "@/components/lb/Waveform";
+import { Spectrum } from "@/components/lb/Spectrum";
+import { RoomDial } from "./RoomDial";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { clock, usePlayer } from "@/lib/player";
@@ -13,8 +16,29 @@ import { useSection, useTracks } from "@/cms/hooks";
 export function LabelPlayer() {
   const copy = useSection("label", "player");
   const tracks = useTracks();
-  const { track, playing, time, duration, failed, play, toggle, seek, step, next, prev } =
+  const { track, playing, time, duration, failed, play, toggle, seek, step, next, prev, cue } =
     usePlayer();
+  const [cued, setCued] = useState<number | null>(null);
+  const armed = useRef(false);
+
+  /* A shared moment: ?t=<track>&at=<seconds>.
+   *
+   * Read straight off the URL rather than through the route's search
+   * schema — this is one optional pair on one page, and giving the whole
+   * route a validated search shape for it would make every link to /label
+   * care about it. Runs once; re-reading on every render would fight the
+   * listener the moment they scrubbed away from the cued point. */
+  useEffect(() => {
+    if (armed.current) return;
+    armed.current = true;
+    const q = new URLSearchParams(window.location.search);
+    const id = q.get("t");
+    const at = Number(q.get("at"));
+    if (!id || !tracks.some((t) => t.id === id)) return;
+    const seconds = Number.isFinite(at) && at > 0 ? at : 0;
+    cue(id, seconds);
+    setCued(seconds);
+  }, [cue, tracks]);
 
   /* Before anything is chosen, show the first track's artwork and waveform so
    * the section is not an empty box waiting to be clicked. */
@@ -60,12 +84,18 @@ export function LabelPlayer() {
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[280px_1fr] lg:gap-12">
-          <CmsImage
-            src={shown.cover}
-            alt={`Cover art for ${shown.title} by ${shown.artist}`}
-            sizes="(max-width: 1023px) 100vw, 280px"
-            className="aspect-square w-full border border-line object-cover chroma"
-          />
+          <div>
+            <CmsImage
+              src={shown.cover}
+              alt={`Cover art for ${shown.title} by ${shown.artist}`}
+              sizes="(max-width: 1023px) 100vw, 280px"
+              className="chroma aspect-square w-full border border-line object-cover"
+            />
+            {/* The FFT of what is actually coming out, drawn the way the
+             * wall of a control room draws it. Falls to the floor when
+             * nothing is playing, because there is nothing to draw. */}
+            <Spectrum active={playing && isLive} className="mt-3 block h-[56px] w-full" />
+          </div>
 
           <div
             role="group"
@@ -83,6 +113,26 @@ export function LabelPlayer() {
                 {shown.artist} · <span className="tnum">{shown.year}</span>
               </p>
             </div>
+
+            {cued !== null && !playing ? (
+              <p
+                role="status"
+                className="mt-6 flex flex-wrap items-center gap-3 border border-acid-type px-4 py-3 font-ui text-[13px] text-text"
+              >
+                Someone sent you this at <span className="tnum">{clock(cued)}</span>.
+                <button
+                  type="button"
+                  onClick={() => {
+                    play(shown.id);
+                    seek(cued);
+                    setCued(null);
+                  }}
+                  className="inline-flex h-11 items-center bg-acid px-4 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-accent-text"
+                >
+                  Play from {clock(cued)}
+                </button>
+              </p>
+            ) : null}
 
             <div className="mt-10">
               <Waveform
@@ -138,6 +188,15 @@ export function LabelPlayer() {
               <p className="t-label mt-4 text-mute">
                 {failed ? "Preview unavailable" : "Space plays · ← → scrub 5s · Home and End jump"}
               </p>
+
+              <RoomDial onWake={() => play(shown.id)} />
+
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <ShareAt id={shown.id} at={isLive ? time : 0} />
+                <span className="font-ui text-[12px] text-mute">
+                  Links carry the moment — whoever opens it lands on this bar.
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -178,5 +237,47 @@ export function LabelPlayer() {
         </ul>
       </div>
     </section>
+  );
+}
+
+/**
+ * A link to a moment, not to a page.
+ *
+ * Sending someone "listen to the bit at 1:12" and making them find 1:12 is
+ * the small rudeness every music page commits. This copies a link that
+ * opens on the track, cued to the second you were on — the label route
+ * reads it back and arms the transport there.
+ *
+ * It does not autoplay at the other end. Sound that starts by itself is
+ * the reason people keep their browsers muted, and the player's rule —
+ * playback only ever begins from a gesture — is worth more than the
+ * flourish of having it already running.
+ */
+function ShareAt({ id, at }: { id: string; at: number }) {
+  const [done, setDone] = useState(false);
+
+  const copy = async () => {
+    const url = new URL(window.location.href);
+    url.hash = "";
+    url.searchParams.set("t", id);
+    url.searchParams.set("at", String(Math.floor(at)));
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setDone(true);
+      window.setTimeout(() => setDone(false), 2200);
+    } catch {
+      /* Clipboard refused — the button simply does not claim success. */
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={() => void copy()}
+      className="inline-flex h-11 items-center gap-2 border border-line px-4 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type"
+    >
+      {done ? <Check size={14} className="text-acid-type" /> : <Link2 size={14} />}
+      {done ? "Link copied" : `Copy link at ${clock(at)}`}
+    </button>
   );
 }
