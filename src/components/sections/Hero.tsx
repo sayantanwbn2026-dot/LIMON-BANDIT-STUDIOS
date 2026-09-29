@@ -4,7 +4,6 @@ import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { Picture } from "@/components/lb/Picture";
-import { HeroFilm } from "./HeroFilm";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
@@ -465,12 +464,7 @@ export function Hero() {
       {/* ---------------- corner stations ---------------- */}
       <div className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7]">
         <div className="shell">
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-end lg:justify-between">
-            {/* bottom-left, desktop only — the film. Below `lg` this corner
-             * belongs to the mascot's stance and the full-width CTA, so
-             * HeroFilm draws nothing there and the row stays justify-end. */}
-            <HeroFilm />
-
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-end">
             {/* bottom-right */}
             <div data-hero-station className="md:text-right">
               {/* Full-bleed on a phone. A 240px box pinned to one corner left

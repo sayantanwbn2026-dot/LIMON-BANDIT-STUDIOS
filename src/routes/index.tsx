@@ -11,6 +11,7 @@ import { Faq } from "@/components/sections/Faq";
 import { JoinList } from "@/components/sections/JoinList";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { BookingEstimator } from "@/components/sections/BookingEstimator";
+import { RoomFilm } from "@/components/sections/RoomFilm";
 import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
 import { chapterHeadFrom, chapterSeoWith, houseJsonLd } from "@/lib/seo";
@@ -51,6 +52,13 @@ function Index() {
         {/* Three doors, and they open. The page's own navigation. */}
         <ThreeWaysIn />
         <Rooms />
+
+        {/* A night in Room A, opening to the full viewport as you scroll.
+            NOT wrapped in ScrollDepth: its stage is `position: sticky`, and a
+            transformed ancestor re-bases sticky against the transform instead
+            of the viewport — the same reason Hero, ThreeWaysIn and DropRail
+            sit outside it. */}
+        <RoomFilm />
 
         {/* Was a table of three plans and a paragraph each — 2,000px of
             reading to reach a number you then had to do arithmetic on. Now
