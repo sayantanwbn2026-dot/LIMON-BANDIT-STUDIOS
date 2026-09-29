@@ -207,7 +207,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
             {note ? <p className="font-ui text-[13px] text-acid-type">{note}</p> : null}
           </div>
         ) : (
-          <form onSubmit={submit} className="mt-8 max-w-[560px] border border-line p-6">
+          <form onSubmit={submit} className="ui-card mt-8 max-w-[560px] p-6">
             <fieldset>
               <legend className="t-label text-mute">Your rating</legend>
               <div className="mt-3 flex gap-1">
@@ -235,7 +235,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
                 value={title}
                 onChange={(e) => setTitle(e.target.value.slice(0, 80))}
                 placeholder="Optional"
-                className="mt-2 h-11 w-full border-b border-line bg-transparent font-ui text-[15px] text-text outline-none focus:border-acid-type"
+                className="ui-field mt-2 h-11 w-full px-3.5 font-ui text-[15px] text-text outline-none"
               />
             </label>
 

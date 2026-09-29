@@ -116,6 +116,13 @@
 }
 
 [data-theme="light"] {
+  /* Lit from above here too, but a dark shadow on a bone surface reads at
+     a fraction of the alpha it needs on near-black. */
+  --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.07), var(--edge-hi);
+  --elev-2: 0 8px 24px -8px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.07), var(--edge-hi);
+  --elev-3: 0 28px 72px -20px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.1), var(--edge-hi);
+
   /* Same widening, mirrored. The bone pole had a four-value gap between
      its ground and its surface, so it flattened for the same reason. */
   --surface-deep: #e7e7e3;
@@ -167,8 +174,38 @@
    * keeps the tap target at its 48px minimum. */
   --nav-h: calc(64px + env(safe-area-inset-top, 0px));
 
-  /* shadcn compatibility shims (unused chrome, kept square) */
-  --radius: 0px;
+  /* ------------------------------------------------------------------
+   * THE SURFACE LAYER
+   *
+   * The page was drawn entirely in 1px hairlines on flat fills: correct,
+   * austere, and indistinguishable from an unstyled form. Everything a
+   * control needs in order to look *made* — a corner, an edge that catches
+   * light, a shadow that says which plane it sits on, an answer when you
+   * touch it — was missing, so the house style read as "basic" rather
+   * than as restraint.
+   *
+   * These numbers are the whole upgrade. Set --r-control and --r-surface
+   * to 0 and the site is back to hard corners exactly as it was; nothing
+   * else needs touching. That is deliberate — the radius is the one
+   * judgement call here, and it should be one line to reverse.
+   *
+   * ELEVATION ON A NEAR-BLACK PAGE IS NOT A SHADOW.
+   * A black shadow on #050505 is invisible. Depth comes from a hairline of
+   * light along the top edge — the way a real panel catches a ceiling lamp
+   * — with the ambient shadow only doing the work of separating a raised
+   * plane from a lighter one beneath it. Which is why every level carries
+   * --edge-hi and only the top two carry much blur. */
+  --r-control: 8px; /* buttons, inputs, chips — anything you press */
+  --r-surface: 12px; /* cards, panels, dialogs — anything you read */
+  --r-media: 10px; /* framed photographs */
+
+  --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.5), var(--edge-hi);
+  --elev-2: 0 8px 24px -8px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.4), var(--edge-hi);
+  --elev-3: 0 28px 72px -20px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.5), var(--edge-hi);
+
+  /* shadcn compatibility shims */
+  --radius: var(--r-control);
   --background: var(--surface);
   --foreground: var(--text);
   --border: var(--line);
@@ -222,6 +259,34 @@
 @layer base {
   * {
     border-color: var(--line);
+    border-radius: 0;
+  }
+
+  /* Anything with a FULL border is a card, a panel or a control — this
+   * codebase writes those as `border border-line`, so `[class~="border"]`
+   * selects exactly that set and leaves the structural single-edge rules
+   * (`border-t`, `border-b`, the section boundaries, the tickers) square.
+   * That is what keeps the page's architecture hard while the things you
+   * touch soften. */
+  :where([class~="border"]) {
+    border-radius: var(--r-surface);
+  }
+
+  /* Things you press are tighter than things you read. After the card
+   * rule, so a bordered button takes the control radius. */
+  button,
+  input,
+  select,
+  textarea,
+  :where(a, button, summary)[class*="bg-acid"] {
+    border-radius: var(--r-control);
+  }
+
+  /* The escape hatch, for the places where a hard corner is the point:
+   * a full-bleed frame, a rule, a crop that has to meet the grid. */
+  .sharp,
+  .sharp > img,
+  :where([class~="border"]).sharp {
     border-radius: 0;
   }
 
@@ -1490,4 +1555,113 @@
   .lb-lit:active {
     scale: 1;
   }
+}
+
+/* ------------------------------------------------------------------
+ * COMPONENT SURFACES
+ *
+ * Unlayered on purpose: these have to beat the Tailwind utilities they
+ * sit beside, and the file already uses that mechanism elsewhere.
+ *
+ * Three classes carry the whole upgrade, so the vocabulary stays small
+ * enough to hold in your head — a thing you read (card), a thing you
+ * type into (field), a thing that floats over the page (panel).
+ * ------------------------------------------------------------------ */
+
+/* A card: the plane a product, a room or an entry sits on. It lifts on
+ * hover, which is the cheapest possible way to say "this is one object
+ * and you can press it" — the grid used to be a wireframe of abutting
+ * rectangles with nothing to separate one tee from the next. */
+.ui-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-surface);
+  box-shadow: var(--elev-1);
+  transition:
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .ui-card:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--elev-2);
+    /* `translate`, not `transform` — GSAP writes transform on some of
+     * these and the two would fight. */
+    translate: 0 -2px;
+  }
+}
+
+.ui-card:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: var(--elev-2);
+}
+
+/* A field: a box you type into, rather than a line you type above.
+ *
+ * The underline field is the more editorial choice and it is why the
+ * forms read as a document rather than as an application — an
+ * underline gives no target, no hover, and nowhere to put a focus
+ * ring that does not collide with the text. */
+.ui-field {
+  background-color: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.ui-field:hover {
+  border-color: var(--line-strong);
+}
+
+/* The ring rather than an outline: an outline cannot follow the radius
+ * on older engines and cannot be tinted. 16% acid reads as a glow at
+ * arm's length and disappears in a screenshot, which is right — it is
+ * feedback, not decoration. */
+.ui-field:focus-within {
+  border-color: var(--accent-type);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* The house has no red. Errors are acid, as they are everywhere else. */
+.ui-field.is-error {
+  border-color: var(--accent-type);
+}
+
+/* A panel: anything floating over the page. The only place on the site
+ * that earns a real shadow, because it is the only place with a page
+ * visibly behind it to separate from. */
+.ui-panel {
+  border-radius: var(--r-surface);
+  box-shadow: var(--elev-3);
+}
+
+/* A drawer is pinned to an edge; rounding the side it is attached to
+ * would float it off the screen. */
+.ui-panel-drawer {
+  border-radius: var(--r-surface) 0 0 var(--r-surface);
+  box-shadow: var(--elev-3);
+}
+
+/* A sheet rises from the bottom edge on a phone and becomes an ordinary
+ * dialog once there is room. */
+.ui-panel-sheet {
+  border-radius: var(--r-surface) var(--r-surface) 0 0;
+  box-shadow: var(--elev-3);
+}
+
+@media (min-width: 640px) {
+  .ui-panel-sheet {
+    border-radius: var(--r-surface);
+  }
+}
+
+/* Framed photography keeps its own, slightly tighter corner. */
+.ui-media {
+  border-radius: var(--r-media);
+  overflow: hidden;
 }

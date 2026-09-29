@@ -80,7 +80,7 @@ export function Roster() {
             href="/label"
             data-release
             data-cursor="play"
-            className={`group relative block overflow-hidden border border-line ${r.span} ${r.height}`}
+            className={`ui-card group relative block overflow-hidden ${r.span} ${r.height}`}
           >
             <CmsImage
               src={r.cover}

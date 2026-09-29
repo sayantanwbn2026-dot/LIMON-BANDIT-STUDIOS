@@ -336,7 +336,7 @@ export function ContactForm() {
                   aria-invalid={Boolean(err("message"))}
                   aria-describedby={err("message") ? "contact-message-error" : undefined}
                   placeholder="Dates, the project, the budget you actually have."
-                  className="w-full resize-y bg-transparent py-4 font-ui text-[16px] leading-[1.5] text-text outline-none placeholder:text-[color:var(--placeholder)]"
+                  className="ui-field w-full resize-y px-3.5 py-4 font-ui text-[16px] leading-[1.5] text-text outline-none placeholder:text-[color:var(--placeholder)]"
                 />
               </div>
               <ErrorLine id="contact-message-error" message={err("message")} />

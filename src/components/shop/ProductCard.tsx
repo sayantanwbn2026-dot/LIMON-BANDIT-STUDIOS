@@ -75,7 +75,7 @@ export function ProductCard({
   };
 
   return (
-    <li id={`product-${product.id}`} className="bg-surface-deep">
+    <li id={`product-${product.id}`} className="ui-card overflow-hidden">
       <article className="group flex h-full flex-col">
         <div className="relative">
           {/* The picture and the name go to the product's own page; the

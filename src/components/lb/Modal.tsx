@@ -133,13 +133,17 @@ export function Modal({
     transition: `transform ${EXIT_MS}ms cubic-bezier(0.16, 1, 0.3, 1), opacity ${EXIT_MS}ms cubic-bezier(0.16, 1, 0.3, 1)`,
   };
 
+  /* `ui-panel*` carries the radius and the one real shadow on the site —
+   * this is the only place with a page visibly behind it to separate
+   * from. The drawer and the sheet round only the edges they are NOT
+   * attached to, or they would float off the screen. */
   const panelClass = drawer
-    ? "absolute inset-y-0 right-0 flex w-full max-w-[440px] flex-col border-l border-line bg-surface-deep"
+    ? "ui-panel-drawer absolute inset-y-0 right-0 flex w-full max-w-[440px] flex-col border-l border-line bg-surface"
     : sheet
       ? /* Pinned to the bottom edge on a phone, centred from `sm` up. The
            safe-area inset keeps the last control clear of the home bar. */
-        "absolute inset-x-0 bottom-0 flex max-h-[90svh] flex-col border-t border-line bg-surface-deep pb-[env(safe-area-inset-bottom,0px)] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[92svh] sm:w-[calc(100%-32px)] sm:max-w-[560px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:border sm:pb-0"
-      : "absolute left-1/2 top-1/2 flex max-h-[92svh] w-[calc(100%-32px)] max-w-[520px] -translate-x-1/2 -translate-y-1/2 flex-col border border-line bg-surface-deep";
+        "ui-panel-sheet absolute inset-x-0 bottom-0 flex max-h-[90svh] flex-col border-t border-line bg-surface pb-[env(safe-area-inset-bottom,0px)] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[92svh] sm:w-[calc(100%-32px)] sm:max-w-[560px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:border sm:pb-0"
+      : "ui-panel absolute left-1/2 top-1/2 flex max-h-[92svh] w-[calc(100%-32px)] max-w-[520px] -translate-x-1/2 -translate-y-1/2 flex-col border border-line bg-surface";
 
   return (
     <>

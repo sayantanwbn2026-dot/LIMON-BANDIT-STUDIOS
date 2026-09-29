@@ -381,7 +381,7 @@ export function CheckoutForm() {
               >
                 Anything we should know
               </label>
-              <div className="mt-3 border-b border-line lb-field-line transition-colors duration-300 focus-within:border-line-strong">
+              <div className="ui-field mt-2 px-3.5">
                 <textarea
                   id="co-note"
                   rows={3}
@@ -483,7 +483,7 @@ export function CheckoutForm() {
                   value={codeInput}
                   onChange={(e) => setCodeInput(e.target.value)}
                   placeholder={cart.offer ? cart.offer.code : "BANDIT10"}
-                  className="h-11 min-w-0 flex-1 border-b border-line bg-transparent font-ui text-[14px] uppercase tracking-[0.08em] text-text outline-none transition-colors duration-300 focus:border-acid-type placeholder:text-[color:var(--placeholder)]"
+                  className="ui-field h-11 min-w-0 flex-1 px-3 font-ui text-[14px] uppercase tracking-[0.08em] text-text outline-none placeholder:text-[color:var(--placeholder)]"
                 />
                 <button
                   type="button"

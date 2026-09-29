@@ -46,11 +46,7 @@ export function Field({
         {label}
         {required ? <span className="ml-1 text-acid-type">*</span> : null}
       </label>
-      <div
-        className={`mt-3 border-b lb-field-line transition-colors duration-300 focus-within:border-line-strong ${
-          error ? "border-acid-type" : "border-line"
-        }`}
-      >
+      <div className={`ui-field mt-2 px-3.5 ${error ? "is-error" : ""}`}>
         <input
           id={id}
           type={type}

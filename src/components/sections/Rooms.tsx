@@ -69,7 +69,7 @@ export function Rooms() {
           {/* sticky visual */}
           <div className="hidden lg:block">
             <div className="sticky top-[14vh]">
-              <div className="relative border border-line" style={{ aspectRatio: "4 / 5" }}>
+              <div className="ui-card relative overflow-hidden" style={{ aspectRatio: "4 / 5" }}>
                 {rooms.map((r, i) => (
                   <CmsImage
                     key={r.id}
@@ -130,7 +130,7 @@ export function Rooms() {
                   src={r.image}
                   sizes="(max-width: 1023px) 100vw, 45vw"
                   alt={`${r.name} — ${r.kind} at Limon Bandit`}
-                  className="mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
+                  className="ui-media mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
                   style={{
                     filter: "brightness(var(--img-brightness)) contrast(1.08)",
                   }}

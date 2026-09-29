@@ -38,7 +38,7 @@ export function ProductRail({
               <Link
                 to="/shop/$id"
                 params={{ id: p.id }}
-                className="group block border border-line transition-colors duration-300 hover:border-acid-type"
+                className="ui-card group block overflow-hidden"
               >
                 <CmsImage
                   src={p.image}

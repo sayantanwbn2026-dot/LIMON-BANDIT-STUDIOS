@@ -157,7 +157,7 @@ export function ShopCatalog() {
         </div>
 
         {/* ---- search ---- */}
-        <div className="mt-10 flex items-center gap-2 border border-line px-3 focus-within:border-acid-type lg:mt-12 lg:max-w-[420px]">
+        <div className="ui-field mt-10 flex items-center gap-2 px-3 lg:mt-12 lg:max-w-[420px]">
           <Search size={16} className="shrink-0 text-mute" aria-hidden="true" />
           <label className="sr-only" htmlFor="shop-search">
             Search the shop

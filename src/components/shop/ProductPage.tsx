@@ -749,7 +749,7 @@ function DeliveryEstimate({
           value={pin}
           onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
           placeholder="PIN code"
-          className="h-11 min-w-0 flex-1 border border-line bg-transparent px-3 font-ui text-[14px] text-text outline-none placeholder:text-[color:var(--placeholder)] focus:border-acid-type"
+          className="ui-field h-11 min-w-0 flex-1 px-3 font-ui text-[14px] text-text outline-none placeholder:text-[color:var(--placeholder)]"
         />
         <button
           type="submit"
