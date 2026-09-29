@@ -75,7 +75,7 @@ export function Toolbar<T extends string>({
 
 export function InboxError({ message }: { message: string }) {
   return (
-    <div role="alert" className="border border-acid-type bg-surface-deep p-5">
+    <div role="alert" className="border border-danger bg-surface-deep p-5">
       <p className="t-label text-acid-type">Cannot load this</p>
       <p className="mt-2 max-w-[70ch] font-ui text-[14px] leading-[1.55] text-text">{message}</p>
     </div>

@@ -211,7 +211,7 @@ export function ImagePicker({
           ) : null}
 
           {error ? (
-            <p role="alert" className="mt-2 font-ui text-[12px] leading-[1.45] text-acid-type">
+            <p role="alert" className="mt-2 font-ui text-[12px] leading-[1.45] text-danger">
               {error}
             </p>
           ) : null}

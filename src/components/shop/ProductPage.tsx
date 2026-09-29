@@ -12,6 +12,7 @@ import {
   Truck,
 } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
+import { Button } from "@/components/lb/Button";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
@@ -362,13 +363,15 @@ export function ProductPage({ product }: { product: Product }) {
                * path — and putting a second acid button here would mean two
                * of them on screen at once, which is one too many. */}
               {!gone ? (
-                <button
-                  type="button"
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  full
                   onClick={buyNow}
-                  className="mt-8 flex h-[52px] w-full items-center justify-center border border-line-strong font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text lg:hidden"
+                  className="mt-8 lg:hidden"
                 >
                   Buy now
-                </button>
+                </Button>
               ) : null}
 
               {/* The three things that decide the sale once the price is
@@ -564,29 +567,17 @@ function BuyButtons({
   return (
     <div className="flex flex-col gap-3">
       {added ? (
-        <button
-          type="button"
-          onClick={onViewCart}
-          className="flex h-[56px] items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 hover:opacity-90"
-        >
+        <Button variant="primary" size="lg" full onClick={onViewCart}>
           <Check size={16} /> In your basket — view it
-        </button>
+        </Button>
       ) : (
-        <button
-          type="button"
-          onClick={onAdd}
-          className="flex h-[56px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 hover:opacity-90"
-        >
+        <Button variant="primary" size="lg" full onClick={onAdd}>
           Add to basket
-        </button>
+        </Button>
       )}
-      <button
-        type="button"
-        onClick={onBuy}
-        className="flex h-[52px] items-center justify-center border border-line-strong font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
-      >
+      <Button variant="secondary" size="lg" full onClick={onBuy}>
         Buy now
-      </button>
+      </Button>
     </div>
   );
 }

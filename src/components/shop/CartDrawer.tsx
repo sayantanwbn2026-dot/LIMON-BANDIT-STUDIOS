@@ -4,6 +4,7 @@ import { Minus, Plus, Trash2, Undo2 } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { useCart } from "@/lib/cart";
+import { buttonClass } from "@/lib/button";
 import { useShipping } from "@/cms/hooks";
 import { inr } from "@/lib/money";
 
@@ -106,7 +107,12 @@ export function CartDrawer() {
           <Link
             to="/shop"
             onClick={() => cart.setOpen(false)}
-            className="mt-8 flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
+            className={buttonClass({
+              variant: "secondary",
+              size: "lg",
+              full: true,
+              className: "mt-8",
+            })}
           >
             Go to the shop
           </Link>
@@ -273,7 +279,7 @@ export function CartDrawer() {
             <Link
               to="/checkout"
               onClick={() => cart.setOpen(false)}
-              className="mt-4 flex h-[56px] items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
+              className={buttonClass({ size: "lg", full: true, className: "mt-4" })}
             >
               Checkout
             </Link>

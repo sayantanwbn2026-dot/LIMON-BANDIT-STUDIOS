@@ -109,6 +109,40 @@
   --accent-type: #e9ff00;
   --alt-accent-type: #5f6b00;
 
+  /* ---- state ----
+   * THERE IS NO --warn, AND THAT IS THE POINT.
+   *
+   * Acid already means attention here: "Only 2 left of this run", a flash
+   * offer, a live mark. A second yellow beside #E9FF00 would give the
+   * page two warning colours of nearly the same hue and no way to tell
+   * them apart. So acid stays the warning, and exactly two colours are
+   * added — for the two things acid CANNOT say.
+   *
+   * It had to say them anyway until now. A validation error, "sold out",
+   * "order placed" and "payment failed" were all the same yellow, so
+   * state had to be read rather than seen, which is the least
+   * application-like thing about the interface.
+   *
+   * Both sit deliberately off the primary: a coral rather than a fire
+   * engine, and a green cooled towards teal so it cannot be taken for
+   * acid's yellow-green at a glance. Measured against every surface they
+   * can land on (#050505 / #101010 / #1a1a1a), worst case:
+   *
+   *   --danger  #ff8b7a   7.65:1
+   *   --ok      #3ecf8e   8.72:1
+   *
+   * The ink tokens are what sits ON a filled one. They flip with the pole
+   * because the fills do — near-black on the dark pole's light fills,
+   * bone on the bone pole's dark ones. */
+  --danger: #ff8b7a;
+  --danger-ink: #080808;
+  --ok: #3ecf8e;
+  --ok-ink: #080808;
+  --alt-danger: #b42318;
+  --alt-danger-ink: #f4f4f0;
+  --alt-ok: #0d6b45;
+  --alt-ok-ink: #f4f4f0;
+
   /* 0.2 → 0.08. The rules are solid and end-faded now (GridRules.tsx), so
    * they read at a fraction of the alpha the dashed version needed. */
   --grid-rule: rgba(255, 255, 255, 0.08);
@@ -116,6 +150,16 @@
 }
 
 [data-theme="light"] {
+  /* The pole swaps, so the pair swaps with it. */
+  --danger: #b42318;
+  --danger-ink: #f4f4f0;
+  --ok: #0d6b45;
+  --ok-ink: #f4f4f0;
+  --alt-danger: #ff8b7a;
+  --alt-danger-ink: #080808;
+  --alt-ok: #3ecf8e;
+  --alt-ok-ink: #080808;
+
   /* Lit from above here too, but a dark shadow on a bone surface reads at
      a fraction of the alpha it needs on near-black. */
   --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -237,6 +281,14 @@
   --color-alt-acid-type: var(--alt-accent-type); /* type + fine strokes, alt pole */
   --color-acid-dim: var(--accent-dim);
   --color-accent-text: var(--accent-text);
+
+  /* state — acid remains the warning; these are failure and success */
+  --color-danger: var(--danger);
+  --color-danger-ink: var(--danger-ink);
+  --color-ok: var(--ok);
+  --color-ok-ink: var(--ok-ink);
+  --color-alt-danger: var(--alt-danger);
+  --color-alt-ok: var(--alt-ok);
 
   /* neon — decorative only, never used for type */
   --color-neon-cool: var(--neon-cool);
@@ -1627,9 +1679,16 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-/* The house has no red. Errors are acid, as they are everywhere else. */
+/* A field that failed now says so in the failure colour rather than in
+ * the brand's. The ring follows, so focusing a bad field does not
+ * suddenly repaint it as if it had been fixed. */
 .ui-field.is-error {
-  border-color: var(--accent-type);
+  border-color: var(--danger);
+}
+
+.ui-field.is-error:focus-within {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent);
 }
 
 /* A panel: anything floating over the page. The only place on the site

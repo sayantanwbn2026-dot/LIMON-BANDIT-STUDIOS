@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Heart, Minus, Plus } from "lucide-react";
 import { Modal } from "@/components/lb/Modal";
+import { Button } from "@/components/lb/Button";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
@@ -261,14 +262,10 @@ export function ProductSheet({
             Sold out
           </span>
         ) : (
-          <button
-            type="button"
-            onClick={add}
-            className="flex h-[56px] flex-1 items-center justify-center gap-2 bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
-          >
+          <Button variant="primary" size="lg" onClick={add} className="flex-1">
             {added ? <Check size={15} /> : null}
             {added ? "Added" : "Add to cart"}
-          </button>
+          </Button>
         )}
       </div>
 

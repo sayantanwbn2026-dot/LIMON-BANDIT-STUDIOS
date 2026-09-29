@@ -4,6 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
+import { buttonClass } from "@/lib/button";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
@@ -622,10 +623,7 @@ function Confirmation({ order }: { order: PlacedOrder }) {
           >
             Your orders <ArrowRight size={16} />
           </Link>
-          <Link
-            to="/shop"
-            className="flex h-[56px] items-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
-          >
+          <Link to="/shop" className={buttonClass({ variant: "secondary", size: "lg" })}>
             Back to the shop
           </Link>
         </div>

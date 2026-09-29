@@ -346,7 +346,7 @@ export function ContactForm() {
              * keeps everything they typed and offers their own mail app as the
              * way round it, so a server problem never costs the message. */}
             {failed ? (
-              <div role="alert" className="mt-10 border-l-2 border-acid-type pl-4">
+              <div role="alert" className="mt-10 border-l-2 border-danger pl-4">
                 <p className="font-ui text-[14px] leading-[1.5] text-text">{failed}</p>
                 <button
                   type="button"
@@ -417,11 +417,7 @@ function Field({
       >
         {label}
       </label>
-      <div
-        className={`mt-3 border-b lb-field-line transition-colors duration-300 focus-within:border-line-strong ${
-          error ? "border-acid-type" : "border-line"
-        }`}
-      >
+      <div className={`ui-field mt-2 px-3.5 ${error ? "is-error" : ""}`}>
         <input
           id={id}
           type={type}
@@ -443,7 +439,7 @@ function Field({
 /** Errors sit under their own field and are announced, per the house rules. */
 function ErrorLine({ id, message }: { id: string; message?: string }) {
   return (
-    <p id={id} role="alert" aria-live="polite" className="t-label mt-3 min-h-[1em] text-acid-type">
+    <p id={id} role="alert" aria-live="polite" className="t-label mt-2 min-h-[1em] text-danger">
       {message ?? ""}
     </p>
   );

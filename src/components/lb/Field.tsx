@@ -74,7 +74,7 @@ export function Field({
 /** Errors sit under their own field and are announced, per the house rules. */
 export function ErrorLine({ id, message }: { id: string; message?: string }) {
   return (
-    <p id={id} role="alert" aria-live="polite" className="t-label mt-2 min-h-[1em] text-acid-type">
+    <p id={id} role="alert" aria-live="polite" className="t-label mt-2 min-h-[1em] text-danger">
       {message ?? ""}
     </p>
   );
@@ -93,7 +93,7 @@ export function FormNotice({
       role="alert"
       aria-live="polite"
       className={`border-l-2 py-2 pl-4 font-ui text-[13px] leading-[1.5] ${
-        tone === "good" ? "border-acid text-text" : "border-acid-type text-mute"
+        tone === "good" ? "border-ok text-text" : "border-danger text-text"
       }`}
     >
       {children}
