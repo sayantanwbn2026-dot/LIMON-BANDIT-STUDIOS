@@ -23,6 +23,7 @@ import { ProductGallery } from "./ProductGallery";
 import { ProductRail } from "./ProductRail";
 import { Reviews, Stars } from "./Reviews";
 import { useRatings } from "@/lib/reviews";
+import { useToast } from "@/lib/toast";
 
 /**
  * One product, on its own page.
@@ -71,11 +72,11 @@ export function ProductPage({ product }: { product: Product }) {
   const offers = useOffers();
   const shipping = useShipping();
   const ratings = useRatings(product.id);
+  const toast = useToast();
 
   const [size, setSize] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
-  const [shareNote, setShareNote] = useState<string | null>(null);
   /** Set when someone tries to buy without choosing a size. */
   const [nudge, setNudge] = useState(false);
 
@@ -96,7 +97,6 @@ export function ProductPage({ product }: { product: Product }) {
     setSize(null);
     setQty(1);
     setAdded(false);
-    setShareNote(null);
     setNudge(false);
   }, [product.id]);
 
@@ -147,6 +147,10 @@ export function ProductPage({ product }: { product: Product }) {
     gated("Sign in to start a basket.", () => {
       cart.add(product.id, needsSize ? size : null, qty);
       setAdded(true);
+      toast.ok(`${product.title} is in your basket.`, {
+        label: "View",
+        onClick: () => cart.setOpen(true),
+      });
       window.setTimeout(() => setAdded(false), 4000);
     });
   };
@@ -168,11 +172,16 @@ export function ProductPage({ product }: { product: Product }) {
       if (navigator.share) await navigator.share(data);
       else {
         await navigator.clipboard.writeText(url);
-        setShareNote("Link copied.");
-        window.setTimeout(() => setShareNote(null), 2000);
+        toast.ok("Link copied.");
       }
-    } catch {
-      /* A cancelled share is not a failure and must not be reported as one. */
+    } catch (e) {
+      /* A cancelled share is not a failure and must not be reported as
+       * one — the native sheet throws AbortError when you dismiss it.
+       * Everything else IS a failure: a clipboard write can be refused
+       * outright (permissions, an insecure context), and swallowing that
+       * leaves someone pressing Share and getting silence forever. */
+      if (e instanceof DOMException && e.name === "AbortError") return;
+      toast.error("Could not copy the link — your browser blocked it.");
     }
   };
 
@@ -389,7 +398,11 @@ export function ProductPage({ product }: { product: Product }) {
                 <button
                   type="button"
                   onClick={() =>
-                    gated("Sign in to keep a wishlist.", () => void wishlist.toggle(product.id))
+                    gated("Sign in to keep a wishlist.", () => {
+                      const had = wishlist.has(product.id);
+                      void wishlist.toggle(product.id);
+                      toast.ok(had ? "Removed from your list." : "Saved to your list.");
+                    })
                   }
                   className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
@@ -402,7 +415,7 @@ export function ProductPage({ product }: { product: Product }) {
                   className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
                   <Share2 size={15} />
-                  {shareNote ?? "Share"}
+                  Share
                 </button>
               </div>
 

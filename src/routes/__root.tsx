@@ -28,12 +28,14 @@ import { PlayerProvider } from "@/lib/player";
 import { AuthProvider } from "@/lib/auth";
 import { CartProvider } from "@/lib/cart";
 import { WishlistProvider } from "@/lib/wishlist";
+import { ToastProvider } from "@/lib/toast";
 import { AuthModal } from "@/components/shop/AuthModal";
 import { CartDrawer } from "@/components/shop/CartDrawer";
 import { WishlistDrawer } from "@/components/shop/WishlistDrawer";
 import { FlashOffer } from "@/components/shop/FlashOffer";
 import { AuthLanding } from "@/components/shop/AuthLanding";
 import { ContentProvider } from "@/cms/content";
+import { Toaster } from "@/components/lb/Toaster";
 import { liveDocs, primeDocs } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
 
@@ -315,19 +317,24 @@ function RootComponent() {
           The gate's pending action (see lib/auth) only survives navigation
           because the provider holding it never unmounts. */}
       <>
-        <AuthProvider>
-          <ContentProvider initial={cms}>
-            <CartProvider>
-              <WishlistProvider>
-                <PlayerProvider>
-                  <Analytics />
-                  {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-                  {admin ? <Outlet /> : <SiteChrome />}
-                </PlayerProvider>
-              </WishlistProvider>
-            </CartProvider>
-          </ContentProvider>
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <ContentProvider initial={cms}>
+              <CartProvider>
+                <WishlistProvider>
+                  <PlayerProvider>
+                    <Analytics />
+                    {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                    {admin ? <Outlet /> : <SiteChrome />}
+                    {/* Outside the chrome switch: the admin needs to be
+                     * able to say "saved" too. */}
+                    <Toaster />
+                  </PlayerProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </ContentProvider>
+          </AuthProvider>
+        </ToastProvider>
       </>
     </QueryClientProvider>
   );

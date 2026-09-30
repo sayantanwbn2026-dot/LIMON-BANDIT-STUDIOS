@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Button } from "./Button";
 
 /**
  * The house form field, lifted out of ContactForm so the login popup and the
@@ -115,15 +116,20 @@ export function SubmitButton({
   disabled?: boolean;
   full?: boolean;
 }) {
+  /* The shared submit now runs through the same Button as everything
+   * else, which is where it picks up the spinner — this used to swap its
+   * own label to "Working…" and otherwise sit perfectly still, so on a
+   * slow connection it read as frozen rather than as busy. */
   return (
-    <button
+    <Button
       type="submit"
-      disabled={busy || disabled}
-      className={`flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim disabled:cursor-not-allowed disabled:opacity-50 ${
-        full ? "w-full" : ""
-      }`}
+      size="lg"
+      full={full}
+      disabled={disabled}
+      loading={busy}
+      loadingLabel={busyLabel ?? "Working…"}
     >
-      {busy ? (busyLabel ?? "Working…") : label}
-    </button>
+      {label}
+    </Button>
   );
 }
