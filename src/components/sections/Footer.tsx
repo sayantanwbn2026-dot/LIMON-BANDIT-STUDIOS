@@ -81,26 +81,19 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="relative z-[2] mt-16 flex items-end justify-between">
-        <span
-          aria-hidden="true"
-          className="block w-full select-none whitespace-nowrap px-[var(--page-margin)] font-display font-extrabold uppercase leading-[0.8] tracking-[-0.05em]"
-          style={{
-            fontSize: "clamp(90px, 15vw, 260px)",
-            /* --emboss-deep, not --emboss: this sits on --surface-deep. */
-            color: "var(--emboss-deep)",
-            marginBottom: "-0.18em",
-          }}
-        >
-          Limon Bandit
-        </span>
+      {/* The mascot, on his own line. He used to be absolutely positioned
+       * over the wordmark's last letter, which put a picture on top of a
+       * word — two marks fighting for the same corner. */}
+      <div className="relative z-[2] mt-16 flex justify-end px-[var(--page-margin)]">
         <Picture
           src="limon-mascot"
           sizes="120px"
           alt=""
-          className="pointer-events-none absolute bottom-0 right-[var(--page-margin)] h-[8vw] max-h-[120px] w-auto opacity-[0.12]"
+          className="pointer-events-none h-[10vw] max-h-[112px] w-auto opacity-[0.14]"
         />
       </div>
+
+      <Wordmark name={site.name} />
 
       <div className="relative z-[2] border-t border-line">
         <div className="shell flex flex-wrap items-center justify-between gap-4 py-6 font-ui text-[12px] text-mute">
@@ -133,5 +126,61 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/**
+ * The name across the foot of the page, fitting the page exactly.
+ *
+ * It was a <span> at `clamp(90px, 15vw, 260px)` with `whitespace-nowrap`,
+ * and the two halves of that disagree: the font size was derived from the
+ * VIEWPORT width while the text width is a property of the STRING. At 1440
+ * "Limon Bandit" came out around 1,420px against a 1,300px measure, so the
+ * footer's `overflow-hidden` took the end off it — the screenshot that
+ * prompted this reads "LIMON BAND" and half a D.
+ *
+ * Tuning the vw coefficient would fix it for these twelve characters and
+ * break again the moment anybody edits the studio name, which is a CMS
+ * field and therefore a thing that WILL change.
+ *
+ * So: SVG, with `textLength` set to the viewBox width. The renderer is
+ * then obliged to make the line exactly that wide whatever the string, and
+ * the box scales to the page. `lengthAdjust="spacing"` puts the difference
+ * into the gaps between letters rather than stretching the glyphs — the
+ * letterforms stay Sora's, and tracking is something this design already
+ * does deliberately.
+ *
+ * The viewBox height is the cap height at this weight, so the baseline
+ * lands on the rule below without the negative margin the old markup used
+ * to drag it there.
+ */
+function Wordmark({ name }: { name: string }) {
+  const text = (name || "Limon Bandit").trim();
+
+  return (
+    <div aria-hidden="true" className="relative z-[2] select-none px-[var(--page-margin)] pt-6">
+      <svg
+        viewBox="0 0 1000 116"
+        preserveAspectRatio="xMidYMax meet"
+        className="block h-auto w-full overflow-visible"
+        role="presentation"
+      >
+        <text
+          x="0"
+          y="104"
+          textLength="1000"
+          lengthAdjust="spacing"
+          fill="var(--emboss-deep)"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 800,
+            fontSize: "128px",
+            textTransform: "uppercase",
+          }}
+        >
+          {text.toUpperCase()}
+        </text>
+      </svg>
+    </div>
   );
 }
