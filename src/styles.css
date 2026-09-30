@@ -1137,6 +1137,19 @@
 @media (min-width: 768px) {
   .section-head {
     column-gap: 0;
+    /* EVERYTHING HANGS FROM ONE LINE.
+     *
+     * The cells used to stretch to the tallest of them, and the supporting
+     * column sets its content with `items-end`, so a one-line standfirst
+     * sat on the BOTTOM of a two-line heading's row. Three elements, three
+     * different vertical starts, which is what read as scattered — the
+     * parts were fine, the alignment was not.
+     *
+     * `start` also shrinks each cell to its own content, so the `items-end`
+     * written at a couple of dozen call sites stops having a tall box to
+     * fall to the bottom of and quietly becomes a no-op. That is the point:
+     * one line here instead of an edit in twenty-seven files. */
+    align-items: start;
     /* Cancel the shell's gutter so the columns span the RULES box and their
      * boundaries land on the rules exactly. The gutter is then re-applied
      * inside each cell, below. */
@@ -1179,8 +1192,36 @@
 
 @media (min-width: 1024px) {
   .section-head {
-    grid-template-columns: repeat(4, 1fr);
+    /* NOT four equal columns.
+     *
+     * An eyebrow is two or three words and was being given a full quarter
+     * of the measure, which left it stranded a long way from the heading
+     * it labels while the heading — the only thing anyone reads — was
+     * squeezed into 50% and broke a short line into two with one word on
+     * the second.
+     *
+     * The tracks are weighted instead: the label column takes what a label
+     * needs, and the two it gives up go to the heading. Still four tracks,
+     * so every `col-span-*` at every call site means exactly what it did
+     * before, and the boundaries still land on the drafting rules. */
+    grid-template-columns: 0.66fr 1.12fr 1.12fr 1.1fr;
     row-gap: 0;
+  }
+
+  /* A heading is a measure, not a column width.
+   *
+   * `balance` is the actual fix for the thing that looked wrong: the
+   * browser tries every break and picks the one that makes the lines
+   * evenest, so "THREE THINGS WORTH YOUR / TIME" stops stranding one word
+   * on a line of its own. It does this for EVERY heading on the site,
+   * including ones written later, which a hand-placed line break cannot.
+   *
+   * The ch cap is the backstop beneath it — balance only chooses among
+   * breaks the measure already allows, and on a very wide screen a short
+   * heading would otherwise run to a single 90-character line. */
+  .section-head h2 {
+    max-width: 26ch;
+    text-wrap: balance;
   }
 }
 
