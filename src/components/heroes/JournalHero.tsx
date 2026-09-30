@@ -29,6 +29,10 @@ export function JournalHero() {
       chapter="journal"
       tone="dark"
       surface="bg-surface"
+      /* The masthead is set as a newspaper front page; a lemon in a
+       * leather jacket standing in the margin of it is a different joke
+       * from the one this hero is telling. */
+      mascot={false}
       className="mt-[var(--nav-h)]"
       bodyClassName="pb-[96px] pt-[72px]"
     >

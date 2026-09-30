@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules, type Tone } from "./GridRules";
+import { Picture } from "./Picture";
 import { MarginNotes } from "./Section";
 import { type ChapterKey } from "@/data/routes";
 import { useChapter } from "@/cms/hooks";
@@ -31,6 +32,7 @@ export function HeroFrame({
   surface,
   className,
   bodyClassName,
+  mascot = true,
   children,
 }: {
   chapter: ChapterKey;
@@ -41,6 +43,15 @@ export function HeroFrame({
   className?: string;
   /** override the inner padding when a hero needs a different rhythm */
   bodyClassName?: string;
+  /**
+   * Stand the mascot at the foot of the hero, as he stands on the home
+   * page. On by default: every chapter should open as the same building.
+   *
+   * Pass false for a hero that needs the whole band — the Journal
+   * masthead is set as a newspaper and a lemon in a leather jacket
+   * standing in the margin of it is a different joke.
+   */
+  mascot?: boolean;
   children: ReactNode;
 }) {
   const c = useChapter(key);
@@ -58,7 +69,23 @@ export function HeroFrame({
       <GridRules tone={tone} />
       <MarginNotes index={c.index} name={c.name} tone={tone} />
 
-      <div className={`shell relative z-[2] ${bodyClassName ?? "pb-[96px] pt-[120px]"}`}>
+      {/* HE GETS HIS OWN BAND RATHER THAN FLOATING OVER THE CONTENT.
+       *
+       * Three of the six chapter heroes carry something in their right
+       * column — the rooms ledger, the label's figures, the contact card —
+       * and all three are set on transparent ground, so a mascot behind
+       * them would read straight through the type. Extra bottom padding
+       * gives him a strip of his own at the foot of the band, standing on
+       * the boundary rule exactly as he stands on the home page's.
+       *
+       * Desktop only. On a phone the hero is already the tallest thing
+       * between the reader and the page, and 200px of lemon is not what
+       * that space is for. */}
+      <div
+        className={`shell relative z-[2] ${bodyClassName ?? "pb-[96px] pt-[120px]"} ${
+          mascot ? "lg:pb-[248px] xl:pb-[288px]" : ""
+        }`}
+      >
         <nav aria-label="Breadcrumb">
           <ol
             className={`flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint.rest}`}
@@ -79,6 +106,23 @@ export function HeroFrame({
 
         {children}
       </div>
+
+      {mascot ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 right-[var(--page-margin)] z-[1] hidden h-[190px] w-auto lg:block xl:h-[230px]"
+        >
+          <Picture
+            src="limon-mascot"
+            alt=""
+            sizes="260px"
+            className="block h-full w-auto object-contain"
+            /* The home hero's treatment, so the two read as one figure in
+             * one building rather than two different lemons. */
+            style={{ filter: "saturate(0.92) drop-shadow(0 30px 60px var(--limon-shadow))" }}
+          />
+        </div>
+      ) : null}
 
       <BoundaryRule tone={tone} ticks className="bottom-0" />
     </header>
