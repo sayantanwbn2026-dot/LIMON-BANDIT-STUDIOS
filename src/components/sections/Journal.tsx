@@ -9,28 +9,28 @@ export function Journal() {
   const posts = usePosts();
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
-    <Section tone="light" className="border-t border-alt-line pt-[96px] pb-[120px]">
+    <Section tone="dark" className="border-t border-line pt-[96px] pb-[120px]">
       <div className="section-head">
         <div className="md:col-span-1">
           <div className="flex items-center gap-3">
-            <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-alt-acid-type" />
-            <span className="t-eyebrow text-alt-text">{copy.eyebrow}</span>
+            <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid-type" />
+            <span className="t-eyebrow text-text">{copy.eyebrow}</span>
           </div>
         </div>
         <div className="md:col-span-2">
-          <WordReveal as="h2" className="t-h2 text-alt-text" text={copy.heading} />
+          <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
           <a
             href="/journal"
-            className="group flex items-center gap-3 border border-alt-text px-6 py-4 transition-colors duration-300 hover:bg-alt-text"
+            className="group flex items-center gap-3 border border-line-strong px-6 py-4 transition-colors duration-300 hover:bg-text"
           >
-            <span className="t-eyebrow text-alt-text transition-colors duration-300 group-hover:text-alt-surface">
+            <span className="t-eyebrow text-text transition-colors duration-300 group-hover:text-surface-deep">
               Read everything
             </span>
             <ArrowRight
               size={15}
-              className="text-alt-text transition-colors duration-300 group-hover:text-alt-surface lb-arrow"
+              className="text-text transition-colors duration-300 group-hover:text-surface-deep lb-arrow"
             />
           </a>
         </div>
@@ -45,12 +45,12 @@ export function Journal() {
                 src={p.image}
                 sizes="(max-width: 767px) 100vw, 30vw"
                 alt={p.alt}
-                className="chroma aspect-[4/3] w-full border border-alt-line object-cover"
+                className="chroma aspect-[4/3] w-full border border-line object-cover"
               />
-              <div className="t-label mt-5 text-alt-mute">
+              <div className="t-label mt-5 text-mute">
                 {p.category} · {p.readTime}
               </div>
-              <h3 className="mt-3 inline font-display text-[18px] font-bold uppercase leading-[1.15] tracking-[-0.02em] text-alt-text">
+              <h3 className="mt-3 inline font-display text-[18px] font-bold uppercase leading-[1.15] tracking-[-0.02em] text-text">
                 <span className="relative inline bg-[linear-gradient(var(--accent-dim),var(--accent-dim))] bg-[length:0%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 group-hover:bg-[length:100%_2px]">
                   {p.title}
                 </span>

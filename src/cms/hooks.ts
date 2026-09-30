@@ -229,19 +229,21 @@ export type ServiceDoc = {
 };
 export const useServices = () => useList<ServiceDoc>("page.home.services");
 
-export type DoorDoc = {
-  index: string;
+export type FeaturedDoc = {
+  eyebrow: string;
   title: string;
-  description: string;
-  cta: string;
+  blurb: string;
+  meta: string;
+  image: ImageKey | string;
+  /** an in-app path like /shop/p01, or a full https:// address */
   to: string;
-  surface: string;
-  text: string;
-  muted: string;
-  border: string;
-  indexColor: string;
+  cta: string;
 };
-export const useDoors = () => useList<DoorDoc>("page.home.doors");
+export const useFeatured = () => useList<FeaturedDoc>("page.home.featured");
+
+/** One row per home-page section, in the order the page renders them. */
+export type HomeOrderDoc = { section: string; on: boolean };
+export const useHomeOrder = () => useList<HomeOrderDoc>("page.home.order");
 
 export type MetricDoc = {
   label: string;

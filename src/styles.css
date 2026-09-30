@@ -149,48 +149,6 @@
   --alt-grid-rule: rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] {
-  /* The pole swaps, so the pair swaps with it. */
-  --danger: #b42318;
-  --danger-ink: #f4f4f0;
-  --ok: #0d6b45;
-  --ok-ink: #f4f4f0;
-  --alt-danger: #ff8b7a;
-  --alt-danger-ink: #080808;
-  --alt-ok: #3ecf8e;
-  --alt-ok-ink: #080808;
-
-  /* Lit from above here too, but a dark shadow on a bone surface reads at
-     a fraction of the alpha it needs on near-black. */
-  --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.07), var(--edge-hi);
-  --elev-2: 0 8px 24px -8px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.07), var(--edge-hi);
-  --elev-3: 0 28px 72px -20px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.1), var(--edge-hi);
-
-  /* Same widening, mirrored. The bone pole had a four-value gap between
-     its ground and its surface, so it flattened for the same reason. */
-  --surface-deep: #e7e7e3;
-  --surface: #f1f1ef;
-  --surface-raised: #fbfbf9;
-  --line: #cfcfc9;
-  --line-strong: #b3b3ad;
-  --text: #080808;
-  --mute: #545450;
-
-  --alt-surface: #101010;
-  --alt-surface-deep: #050505;
-  --alt-line: #2e2e2e;
-  --alt-line-strong: #454545;
-  --alt-text: #f4f4f0;
-  --alt-mute: #b4b4b0;
-
-  --accent-type: #5f6b00;
-  --alt-accent-type: #e9ff00;
-
-  --grid-rule: rgba(0, 0, 0, 0.08);
-  --alt-grid-rule: rgba(255, 255, 255, 0.08);
-}
-
 :root {
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
@@ -456,11 +414,6 @@
   [data-theme="dark"] {
     --grid-rule: rgba(255, 255, 255, 0.05);
     --alt-grid-rule: rgba(0, 0, 0, 0.05);
-  }
-
-  [data-theme="light"] {
-    --grid-rule: rgba(0, 0, 0, 0.05);
-    --alt-grid-rule: rgba(255, 255, 255, 0.05);
   }
 
   /* ---------------- swipe rails ----------------

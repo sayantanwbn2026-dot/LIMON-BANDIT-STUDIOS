@@ -76,7 +76,6 @@ export function Waveform({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [peaks, setPeaks] = useState<Float32Array | null>(null);
   const [failed, setFailed] = useState(false);
-  const [themeTick, setThemeTick] = useState(0);
 
   useEffect(() => {
     let alive = true;
@@ -90,13 +89,11 @@ export function Waveform({
     };
   }, [src]);
 
-  /* Colours are CSS variables; a theme flip has to force a redraw or the
-   * waveform keeps the previous theme's ink until the next timeupdate. */
-  useEffect(() => {
-    const ob = new MutationObserver(() => setThemeTick((n) => n + 1));
-    ob.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => ob.disconnect();
-  }, []);
+  /* The MutationObserver that used to sit here watched data-theme and
+   * forced a redraw on a theme flip, because the bar colours are CSS
+   * variables and the canvas would otherwise keep the old ink until the
+   * next timeupdate. There is one theme now, so there is nothing to
+   * watch. */
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -128,7 +125,7 @@ export function Waveform({
       ctx.fillStyle = i / count <= progress ? played : unplayed;
       ctx.fillRect(x, mid - h / 2, barW, h);
     }
-  }, [peaks, progress, height, themeTick]);
+  }, [peaks, progress, height]);
 
   const handleSeek = (e: React.MouseEvent<HTMLElement>) => {
     if (!onSeek) return;

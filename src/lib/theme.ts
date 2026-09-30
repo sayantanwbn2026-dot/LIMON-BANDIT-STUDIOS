@@ -1,90 +1,41 @@
-import { useCallback, useEffect, useState } from "react";
+/**
+ * There is one theme, and it is dark.
+ *
+ * The site used to offer a bone theme behind a toggle in the nav, follow
+ * the OS preference when nobody had chosen, and persist the choice in
+ * localStorage. All of that is gone: a music house that looks like a
+ * control room at two in the morning does not have a daytime variant, and
+ * maintaining a second full palette — including a second set of contrast
+ * measurements for every token — bought nothing it was worth.
+ *
+ * WHAT DID NOT GO: the `--alt-*` pole.
+ * Those tokens are a design device, not the old light theme. A section
+ * can choose to sit on the bone panel (Faq, the Journal index) and the
+ * alt tokens are what it paints with. They invert against the theme
+ * rather than being a theme of their own, so removing the preference
+ * leaves them untouched.
+ *
+ * This module survives only to put the attribute on <html> before first
+ * paint and to colour the browser chrome. It has no state, no listener
+ * and nothing to read back, so there is no hook any more.
+ */
 
-export type Theme = "dark" | "light";
-
-export const THEME_KEY = "lb-theme";
-
-const META = { dark: "#050505", light: "#f1f1ef" } as const;
+export const SURFACE_DEEP = "#050505";
 
 /**
- * Runs blocking in <head>, before first paint, so the stored theme is on
- * <html> by the time any pixel is drawn. Without this the page would paint
- * dark and then snap to light on hydration.
+ * Runs blocking in <head>. Now that the value is constant this could be a
+ * static attribute in the markup — but the attribute is what every
+ * `[data-theme="dark"]` token block keys off, and setting it here keeps
+ * the stylesheet's contract with the document in one obvious place rather
+ * than split between JSX and CSS.
  *
- * Kept dependency-free and wrapped in try/catch: localStorage throws in
- * private-mode Safari and inside sandboxed iframes, and a throw here would
- * abort head parsing.
+ * It also clears any preference an earlier visit stored, so a returning
+ * visitor who once chose the bone theme is not left with a stale key in
+ * their browser for a feature that no longer exists.
  */
 export const THEME_INIT_SCRIPT = `(function(){try{
-var s=localStorage.getItem(${JSON.stringify(THEME_KEY)});
-var t=(s==="light"||s==="dark")?s:(window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
-document.documentElement.setAttribute("data-theme",t);
+document.documentElement.setAttribute("data-theme","dark");
 var m=document.querySelector('meta[name="theme-color"]');
-if(m)m.setAttribute("content",t==="light"?${JSON.stringify(META.light)}:${JSON.stringify(META.dark)});
+if(m)m.setAttribute("content",${JSON.stringify(SURFACE_DEEP)});
+localStorage.removeItem("lb-theme");
 }catch(e){}})();`;
-
-function readDom(): Theme {
-  if (typeof document === "undefined") return "dark";
-  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-}
-
-function stored(): Theme | null {
-  try {
-    const v = localStorage.getItem(THEME_KEY);
-    return v === "light" || v === "dark" ? v : null;
-  } catch {
-    return null;
-  }
-}
-
-function apply(theme: Theme) {
-  const root = document.documentElement;
-  root.setAttribute("data-theme", theme);
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", META[theme]);
-}
-
-/**
- * `theme` starts as "dark" on both server and client so hydration matches;
- * the real value is read from the DOM (already set by THEME_INIT_SCRIPT)
- * in an effect. Only the toggle's label depends on it, so the one-frame
- * correction is invisible.
- */
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>("dark");
-
-  useEffect(() => {
-    setTheme(readDom());
-  }, []);
-
-  /* Follow the OS only while the user has expressed no preference. */
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: light)");
-    const onChange = (e: MediaQueryListEvent) => {
-      if (stored()) return;
-      const next: Theme = e.matches ? "light" : "dark";
-      apply(next);
-      setTheme(next);
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
-  const toggle = useCallback(() => {
-    const next: Theme = readDom() === "dark" ? "light" : "dark";
-    const root = document.documentElement;
-
-    /* Crossfade colour only, and only for this switch — never on load. */
-    root.classList.add("theme-switching");
-    window.setTimeout(() => root.classList.remove("theme-switching"), 450);
-
-    apply(next);
-    try {
-      localStorage.setItem(THEME_KEY, next);
-    } catch {
-      /* preference simply won't persist */
-    }
-    setTheme(next);
-  }, []);
-
-  return { theme, toggle };
-}

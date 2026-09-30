@@ -112,7 +112,7 @@ export function Rooms() {
               <article
                 key={r.id}
                 data-room-item
-                className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-10 md:first:border-t-0 md:first:pt-0"
+                className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-7 md:first:border-t-0 md:first:pt-0"
               >
                 <div className="flex items-baseline gap-4">
                   <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
@@ -126,40 +126,30 @@ export function Rooms() {
                   </span>
                 </div>
 
-                <CmsImage
-                  src={r.image}
-                  sizes="(max-width: 1023px) 100vw, 45vw"
-                  alt={`${r.name} — ${r.kind} at Limon Bandit`}
-                  className="ui-media mt-6 block h-[220px] w-full border border-line object-cover lg:hidden"
-                  style={{
-                    filter: "brightness(var(--img-brightness)) contrast(1.08)",
-                  }}
-                />
-
-                <p className="mt-5 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
+                <p className="mt-4 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
                   {r.blurb}
                 </p>
 
-                {/* One column on a phone. Two columns of a label/value pair
-                 * inside 390px leaves ~150px for the value, which broke
-                 * "Four cue mixes" over three lines and "One + engineer"
-                 * over two — a spec sheet that reads as damaged text. Full
-                 * width gives every row its label left, value right, on one
-                 * line, which is how the shop and contact rows already set. */}
-                <dl className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2">
-                  {r.specs.map((s) => (
-                    <div key={s.k} className="flex items-baseline gap-2 border-b border-line pb-2">
-                      <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
-                        {s.k}
-                      </dt>
-                      <dd className="ml-auto font-ui text-[12px] font-semibold uppercase tracking-[0.08em] tnum text-text">
-                        {s.v}
-                      </dd>
-                    </div>
+                {/* TWO specs, not four, and on one line.
+                 *
+                 * This was a full label/value sheet per room — four rooms x
+                 * four rows, stacked, and the tallest thing left on the home
+                 * page. The whole sheet already exists on /rooms, which is
+                 * where somebody comparing rooms is going anyway; here it
+                 * only has to be enough to tell one room from the next. The
+                 * first two specs are the ones that do that (capacity and
+                 * what is in it), and they read as a caption rather than as
+                 * a table. */}
+                <p className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-ui text-[12px] font-semibold uppercase tracking-[0.08em] text-mute">
+                  {r.specs.slice(0, 2).map((s, n) => (
+                    <span key={s.k} className="tnum">
+                      {n > 0 ? <span className="pr-3 text-line-strong">&middot;</span> : null}
+                      {s.v}
+                    </span>
                   ))}
-                </dl>
+                </p>
 
-                <div className="mt-6 flex items-center justify-between">
+                <div className="mt-4 flex items-center justify-between">
                   <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                     {r.rate}
                   </span>

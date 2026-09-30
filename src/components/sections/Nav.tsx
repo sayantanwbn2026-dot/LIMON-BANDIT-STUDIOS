@@ -4,7 +4,6 @@ import { useNavItems, useSite, useSocialLink } from "@/cms/hooks";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { useNavPole } from "@/lib/nav-pole";
-import { ThemeToggle } from "@/components/lb/ThemeToggle";
 import { Picture } from "@/components/lb/Picture";
 import { ShopBar } from "@/components/shop/ShopBar";
 
@@ -160,7 +159,6 @@ export function Nav() {
               below `sm` the controls drop to 44px and the theme toggle moves
               into the menu, where it is one tap away and nothing is lost. */}
           <div className="flex items-center gap-1.5 sm:gap-3">
-            <ThemeToggle className="hidden sm:flex" />
             <ShopBar />
             <button
               ref={triggerRef}
@@ -201,7 +199,6 @@ export function Nav() {
             <div className="flex items-center gap-2">
               {/* The bar's toggle is hidden below `sm` to make room for the
                   cart and account controls, so it lives here on phones. */}
-              <ThemeToggle className="sm:hidden" />
               <button
                 type="button"
                 onClick={() => {

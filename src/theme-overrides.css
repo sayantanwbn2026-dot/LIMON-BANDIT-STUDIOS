@@ -1,10 +1,15 @@
 /* ------------------------------------------------------------------
  * LIMON BANDIT — theme overrides
  *
- * The ONLY places light mode needs bespoke values. Everything else
- * inverts automatically via the semantic pole tokens in styles.css.
- * Each token below is consumed by exactly one mechanic; keep this
- * list short and auditable.
+ * The values the mechanics below cannot derive from the semantic pole
+ * tokens in styles.css. Each is consumed by exactly one mechanic; keep
+ * the list short and auditable.
+ *
+ * THERE IS ONE THEME. The site was dark-or-bone by preference and is now
+ * dark, full stop. The `--alt-*` pole tokens are NOT the old light theme
+ * and have not gone anywhere — they are a design device, the bone panel
+ * a section can choose to sit on, and they invert against whatever the
+ * theme is rather than being a theme of their own.
  * ------------------------------------------------------------------ */
 
 :root,
@@ -98,49 +103,6 @@
 
   /* translucent navbar once it leaves the hero */
   --nav-solid: rgba(5, 5, 5, 0.88);
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-
-  /* 1 — grain sits lighter and multiplies into bone */
-  --noise-opacity: 0.035;
-  --noise-blend: multiply;
-
-  /* 2 */
-  --hero-vignette: #f5f5f2;
-
-  /* 3 */
-  --wordmark-from: #080808;
-  --wordmark-to: #4a4a48;
-
-  /* 3b */
-  --alt-wordmark-from: #f4f4f0;
-  --alt-wordmark-to: #8a8a86;
-
-  /* 4 — the bloom becomes a soft dark grounding field */
-  --backlight: rgba(8, 8, 8, 0.1);
-
-  /* 5 */
-  --limon-shadow: rgba(0, 0, 0, 0.22);
-
-  /* 6 — lift greyscale so photography doesn't sit heavier than bone */
-  --img-brightness: 1.04;
-
-  /* 7 — embossed into bone instead of into ink. 1.16:1 on #F1F1EF,
-   *     matching the dark pole's 1.17:1. Same warning applies: this is
-   *     a relationship to --surface, so re-measure it if that moves. */
-  --emboss: #e1e1df;
-
-  /* 7b — 1.15:1 on #E7E7E3, matching the dark pole's footer. */
-  --emboss-deep: #d8d8d5;
-
-  /* 8 */
-  --placeholder: #6b6b68;
-
-  --scrim: rgba(241, 241, 239, 0.88);
-
-  --nav-solid: rgba(237, 237, 234, 0.88);
 }
 
 /* ---- 6 — consumed by the `mono` utility in styles.css, and by the few

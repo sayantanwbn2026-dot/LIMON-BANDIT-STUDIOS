@@ -1,4 +1,5 @@
 import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
+import { HOME_SECTIONS } from "./home-sections";
 import { seeds } from "./seeds";
 
 /**
@@ -197,27 +198,68 @@ const services: Collection = {
   ],
 };
 
-const doors: Collection = {
-  key: "page.home.doors",
-  title: "Three ways in",
+const featured: Collection = {
+  key: "page.home.featured",
+  title: "Featured — the three cards",
   description:
-    "The three doors. Colours are part of the design — change the text, leave the colours unless you know the palette.",
+    "The first thing anyone sees under the hero. Put whatever you most want booked or bought at the top; the order of the rows here is the order on the page. Three works best — two looks thin, four stops being a choice.",
   group: "page",
   page: "home",
   shape: "list",
   titleField: "title",
-  itemNoun: "door",
+  itemNoun: "feature",
   fields: [
-    text("index", "Number", { mono: true, placeholder: "/01" }),
-    text("title", "Title", { required: true }),
-    area("description", "Description", { rows: 3 }),
-    text("cta", "Button label", { required: true }),
-    text("to", "Links to", { mono: true, required: true }),
-    text("surface", "Background colour", { mono: true, help: "CSS colour or var()." }),
-    text("text", "Text colour", { mono: true }),
-    text("muted", "Muted text colour", { mono: true }),
-    text("border", "Border colour", { mono: true }),
-    text("indexColor", "Number colour", { mono: true }),
+    text("eyebrow", "Small label", {
+      placeholder: "Studio time",
+      help: "Two or three words above the title, saying what kind of thing this is.",
+    }),
+    text("title", "Title", { required: true, placeholder: "Room A" }),
+    area("blurb", "One line under the title", {
+      rows: 2,
+      help: "One sentence. The card is a door, not a page — say just enough to make someone open it.",
+    }),
+    text("meta", "Figure on the right", {
+      placeholder: "₹2,400 / hr",
+      help: "A price, a rate, a run size. Leave empty if there is no number worth showing.",
+    }),
+    image("image", "Photo", 1024, 1280, "Portrait. The card crops to 4:5."),
+    text("to", "Where it opens", {
+      mono: true,
+      required: true,
+      placeholder: "/shop/p01",
+      help: "Open the page you want this card to go to, then copy everything in the address bar after the domain. /rooms for the rooms, /shop/p01 for one product, /label for the label. An address from another site (https://…) also works and opens in a new tab.",
+    }),
+    text("cta", "Button label", { placeholder: "See the room" }),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
+ * The order of the home page itself
+ *
+ * A list rather than a number on each section: the admin's list editor
+ * already moves rows up and down, so "the order of these rows is the
+ * order of the page" needs no new interface and no arithmetic from the
+ * editor. Switching a row off hides that section without losing the
+ * settings behind it.
+ * ------------------------------------------------------------------ */
+
+const homeOrder: Collection = {
+  key: "page.home.order",
+  title: "Home page order",
+  description:
+    "Every section of the home page, top to bottom. Move a row to move the section; switch one off to hide it without losing anything. The hero is always first and is not listed.",
+  group: "page",
+  page: "home",
+  shape: "list",
+  titleField: "section",
+  itemNoun: "section",
+  fields: [
+    choice(
+      "section",
+      "Section",
+      HOME_SECTIONS.map((s) => ({ value: s.key, label: s.label })),
+    ),
+    { kind: "boolean", name: "on", label: "Show this section" },
   ],
 };
 
@@ -1002,8 +1044,9 @@ export const collections: Collection[] = [
   legal,
   // home
   homeSections,
+  homeOrder,
+  featured,
   services,
-  doors,
   metrics,
   wall,
   film,

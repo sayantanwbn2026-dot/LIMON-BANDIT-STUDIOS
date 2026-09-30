@@ -22,20 +22,20 @@ export function JournalIndex() {
   const [lead, ...rest] = posts;
 
   return (
-    <section className="relative w-full bg-alt-surface pb-[96px] pt-[96px]">
-      <GridRules tone="light" />
-      <BoundaryRule tone="light" className="top-0" />
+    <section className="relative w-full bg-surface pb-[96px] pt-[96px]">
+      <GridRules tone="dark" />
+      <BoundaryRule tone="dark" className="top-0" />
 
       <div className="shell relative z-[2]">
         <div className="section-head">
           <div className="md:col-span-1">
-            <Eyebrow tone="light">{copy.eyebrow}</Eyebrow>
+            <Eyebrow tone="dark">{copy.eyebrow}</Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-alt-text">{copy.heading}</h2>
+            <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[16px] leading-[1.5] text-alt-mute">{copy.standfirst}</p>
+            <p className="font-ui text-[16px] leading-[1.5] text-mute">{copy.standfirst}</p>
           </div>
         </div>
 
@@ -44,7 +44,7 @@ export function JournalIndex() {
           <Link
             to="/journal/$slug"
             params={{ slug: lead.slug }}
-            className="block overflow-hidden border border-alt-line"
+            className="block overflow-hidden border border-line"
           >
             <CmsImage
               src={lead.image}
@@ -60,45 +60,45 @@ export function JournalIndex() {
 
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-4">
-              <span className="t-label text-alt-acid-type">{lead.category}</span>
-              <span aria-hidden="true" className="h-[9px] w-[9px] border border-alt-acid-type" />
-              <span className="t-label tnum text-alt-mute">{lead.readTime}</span>
+              <span className="t-label text-acid-type">{lead.category}</span>
+              <span aria-hidden="true" className="h-[9px] w-[9px] border border-acid-type" />
+              <span className="t-label tnum text-mute">{lead.readTime}</span>
             </div>
 
-            <h3 className="mt-6 max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-alt-text md:text-[42px]">
+            <h3 className="mt-6 max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.02] tracking-[-0.03em] text-text md:text-[42px]">
               {lead.title}
             </h3>
 
             <Link
               to="/journal/$slug"
               params={{ slug: lead.slug }}
-              className="mt-8 inline-flex w-fit items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-text"
+              className="mt-8 inline-flex w-fit items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
             >
               <span className="wipe-underline">Read the entry</span>
-              <ArrowUpRight size={14} className="text-alt-acid-type" />
+              <ArrowUpRight size={14} className="text-acid-type" />
             </Link>
           </div>
         </article>
 
         {/* the rest, as an index */}
-        <ul className="mt-12 border-t border-alt-line">
+        <ul className="mt-12 border-t border-line">
           {rest.map((p, i) => (
             <li key={p.title}>
               <Link
                 to="/journal/$slug"
                 params={{ slug: p.slug }}
-                className="group grid grid-cols-1 items-center gap-x-8 gap-y-4 border-b border-alt-line py-8 md:grid-cols-12"
+                className="group grid grid-cols-1 items-center gap-x-8 gap-y-4 border-b border-line py-8 md:grid-cols-12"
               >
-                <span className="tnum t-label text-alt-acid-type md:col-span-1">
+                <span className="tnum t-label text-acid-type md:col-span-1">
                   {String(i + 2).padStart(2, "0")}
                 </span>
 
                 <span className="md:col-span-2">
-                  <span className="t-label text-alt-mute">{p.category}</span>
+                  <span className="t-label text-mute">{p.category}</span>
                 </span>
 
                 <span className="md:col-span-6">
-                  <span className="block max-w-[34ch] font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-alt-text transition-transform duration-300 group-hover:translate-x-2 md:text-[24px]">
+                  <span className="block max-w-[34ch] font-display text-[20px] font-bold uppercase leading-[1.1] tracking-[-0.02em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[24px]">
                     {p.title}
                   </span>
                 </span>
@@ -108,14 +108,14 @@ export function JournalIndex() {
                     src={p.image}
                     alt=""
                     sizes="140px"
-                    className="h-[72px] w-full border border-alt-line object-cover"
+                    className="h-[72px] w-full border border-line object-cover"
                     style={{
                       filter: "brightness(var(--img-brightness)) contrast(1.08)",
                     }}
                   />
                 </span>
 
-                <span className="t-label tnum text-alt-mute md:col-span-1 md:text-right">
+                <span className="t-label tnum text-mute md:col-span-1 md:text-right">
                   {p.readTime}
                 </span>
               </Link>
@@ -123,7 +123,7 @@ export function JournalIndex() {
           ))}
         </ul>
 
-        <p className="t-label mt-8 max-w-[52ch] text-alt-mute">
+        <p className="t-label mt-8 max-w-[52ch] text-mute">
           Individual entries are not written up yet — every link lands back on this index.
         </p>
       </div>

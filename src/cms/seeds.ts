@@ -3,7 +3,8 @@ import { chapters } from "@/data/routes";
 import { proofTicker, partners, testimonialTicker, ctaChecklist, metaChips } from "@/data/tickers";
 import { faq } from "@/data/faq";
 import { services } from "@/data/services";
-import { doors } from "@/data/doors";
+import { featured } from "@/data/featured";
+import { DEFAULT_HOME_ORDER } from "./home-sections";
 import { metrics } from "@/data/metrics";
 import { wall } from "@/data/wall";
 import { testimonials } from "@/data/testimonials";
@@ -273,7 +274,8 @@ export const seeds: Record<string, unknown> = {
     alt: s.alt,
     to: s.to,
   })),
-  "page.home.doors": doors.map((d) => ({ ...d })),
+  "page.home.featured": featured.map((f) => ({ ...f })),
+  "page.home.order": DEFAULT_HOME_ORDER.map((r) => ({ ...r })),
   "page.home.metrics": metrics.map((m) => ({ ...m })),
   "page.home.film": { video: "", poster: "room-a" },
   "page.home.wall": wall.map((w) => ({

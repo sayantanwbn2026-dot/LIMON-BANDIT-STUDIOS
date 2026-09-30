@@ -36,7 +36,12 @@ export const homeSections: SectionCopy[] = [
     heading: "Turning a room, a roster,\nand a print run\ninto one house",
     standfirst: "Four operations, one building. Each one exists because the last one needed it.",
   },
-  { id: "doors", eyebrow: "Three ways in", heading: "Pick your door.", standfirst: "" },
+  {
+    id: "featured",
+    eyebrow: "Start here",
+    heading: "Three things worth your time",
+    standfirst: "Chosen this month, in this order. Each card opens the thing itself.",
+  },
   {
     id: "rooms",
     eyebrow: "Four rooms, one building",
