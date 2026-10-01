@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Tone } from "./GridRules";
+import { Picture } from "./Picture";
 
 /**
  * The landing page's lockup, as a component every page can wear.
@@ -49,6 +50,7 @@ export function PosterLockup({
   word,
   srText,
   tone = "dark",
+  mascot = true,
   className,
 }: {
   /** letter-spread across the full measure, e.g. "Studio" */
@@ -58,6 +60,16 @@ export function PosterLockup({
   /** the real heading, announced instead of the decorative halves */
   srText: string;
   tone?: Tone;
+  /**
+   * Stand the mascot in front of the word, the way he stands in front of
+   * "BANDIT" on the home page. On by default — every chapter should open
+   * as the same building.
+   *
+   * Pass false for a hero that needs the word on its own — the Journal
+   * masthead is set as a newspaper front page, and a lemon in a leather
+   * jacket standing in the margin of it is a different joke.
+   */
+  mascot?: boolean;
   className?: string;
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -166,6 +178,39 @@ export function PosterLockup({
           </span>
         </span>
       </h1>
+
+      {/* HE STANDS IN FRONT OF THE WORD, exactly as he stands in front of
+       * "BANDIT" on the home page — not pinned to a corner of the hero, not
+       * a fixed-pixel icon, but the same figure doing the same job: the
+       * large, central, confidently-lit thing every chapter opens with.
+       *
+       * Negative margin rather than absolute positioning. He is a normal
+       * flow sibling pulled up to overlap the word's lower glyphs, so the
+       * space he needs is reserved automatically — whatever comes after
+       * this component keeps its own margin and simply lands below the
+       * real, combined height of word-plus-mascot. No fixed clearance
+       * number to keep in sync with his size, here or at any call site.
+       *
+       * Desktop only, matching the viewport floor on HeroFrame: a phone's
+       * hero is already the tallest thing on the way to the page, and a
+       * large mascot plus a full-screen floor both lose to "get to the
+       * content" there. */}
+      {mascot ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none mx-auto hidden lg:-mt-[11vh] lg:flex lg:h-[30vh] lg:w-[220px] lg:justify-center xl:-mt-[14vh] xl:h-[36vh] xl:w-[260px] 2xl:-mt-[16vh] 2xl:h-[40vh] 2xl:w-[300px]"
+        >
+          <Picture
+            src="limon-mascot"
+            alt=""
+            sizes="(max-width: 1279px) 220px, (max-width: 1535px) 260px, 300px"
+            className="block h-full w-full object-contain"
+            /* The home hero's exact treatment, so the two read as one
+             * figure in one building rather than two different lemons. */
+            style={{ filter: "saturate(0.92) drop-shadow(0 24px 48px var(--limon-shadow))" }}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

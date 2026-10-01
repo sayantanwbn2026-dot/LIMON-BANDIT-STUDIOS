@@ -29,10 +29,6 @@ export function JournalHero() {
       chapter="journal"
       tone="dark"
       surface="bg-surface"
-      /* The masthead is set as a newspaper front page; a lemon in a
-       * leather jacket standing in the margin of it is a different joke
-       * from the one this hero is telling. */
-      mascot={false}
       className="mt-[var(--nav-h)]"
       bodyClassName="pb-[96px] pt-[72px]"
     >
@@ -48,13 +44,17 @@ export function JournalHero() {
         </span>
       </div>
 
-      {/* Ordinary primary-pole fill now that the panel is dark. */}
+      {/* Ordinary primary-pole fill now that the panel is dark. mascot
+       * false: the masthead is set as a newspaper front page, and a lemon
+       * in a leather jacket standing in the margin of it is a different
+       * joke from the one this hero is telling. */}
       <PosterLockup
         className="mt-12"
         tone="dark"
         spread={c.poster.spread}
         word={c.poster.word}
         srText={c.heading}
+        mascot={false}
       />
 
       <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,58ch)_1fr] lg:gap-20">

@@ -1,14 +1,32 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules, type Tone } from "./GridRules";
-import { Picture } from "./Picture";
 import { MarginNotes } from "./Section";
 import { type ChapterKey } from "@/data/routes";
 import { useChapter } from "@/cms/hooks";
 
 /**
- * The chrome every page hero shares — drafting grid, margin notes, breadcrumb
- * and the closing boundary rule — with the middle left open.
+ * The chrome every page hero shares — drafting grid, margin notes and the
+ * closing boundary rule — with the middle left open.
+ *
+ * NO BREADCRUMB. There used to be a "LMN·BNDT / <chapter>" trail under the
+ * nav on every chapter page. The nav's own logotype already goes to "/" and
+ * the nav's own menu already names every chapter, so the trail repeated
+ * information that was one glance away twice over, and it put a line of
+ * filing-system chrome under a hero that is trying to read as one confident
+ * opening rather than a breadcrumb trail.
+ *
+ * FITS THE VIEWPORT, like the landing page. `min-h-[100svh]` at `lg` and up
+ * is a floor, not a fixed height: a hero with little to say (Shop, Crew)
+ * now opens as a full first screen the way the home page's does, and a hero
+ * with a lot to say (the Rooms ledger, the Label figures) simply runs past
+ * the floor exactly as it always could — nothing is clipped, because this
+ * is `min-height`, not `height`.
+ *
+ * Below `lg` the floor is not applied, for the same reason the mascot
+ * (see PosterLockup) does not stand there either: the hero is already the
+ * tallest thing between the reader and the page on a phone, and forcing a
+ * full screen of mostly air under a two-line standfirst is not what this
+ * is for.
  *
  * Two contracts the rest of the app depends on and which must survive any
  * hero design: the element is a <header> (RouteTransition rises `main >
@@ -20,19 +38,12 @@ import { useChapter } from "@/cms/hooks";
  * chapter change in its own right.
  */
 
-const crumbTint: Record<Tone, { rest: string; here: string; hover: string }> = {
-  dark: { rest: "text-mute", here: "text-text", hover: "hover:text-text" },
-  light: { rest: "text-alt-mute", here: "text-alt-text", hover: "hover:text-alt-text" },
-  acid: { rest: "text-accent-text", here: "text-accent-text", hover: "hover:text-accent-text" },
-};
-
 export function HeroFrame({
   chapter: key,
   tone = "dark",
   surface,
   className,
   bodyClassName,
-  mascot = true,
   children,
 }: {
   chapter: ChapterKey;
@@ -43,19 +54,9 @@ export function HeroFrame({
   className?: string;
   /** override the inner padding when a hero needs a different rhythm */
   bodyClassName?: string;
-  /**
-   * Stand the mascot at the foot of the hero, as he stands on the home
-   * page. On by default: every chapter should open as the same building.
-   *
-   * Pass false for a hero that needs the whole band — the Journal
-   * masthead is set as a newspaper and a lemon in a leather jacket
-   * standing in the margin of it is a different joke.
-   */
-  mascot?: boolean;
   children: ReactNode;
 }) {
   const c = useChapter(key);
-  const tint = crumbTint[tone];
 
   return (
     <header
@@ -64,65 +65,14 @@ export function HeroFrame({
        * mark starts its content directly under the bar, so the bar has to
        * be solid from the first pixel (see Nav). */
       data-hero
-      className={`relative w-full overflow-hidden ${surface ?? "bg-surface-deep"} ${className ?? ""}`}
+      className={`relative w-full overflow-hidden ${surface ?? "bg-surface-deep"} lg:min-h-[100svh] ${className ?? ""}`}
     >
       <GridRules tone={tone} />
       <MarginNotes index={c.index} name={c.name} tone={tone} />
 
-      {/* HE GETS HIS OWN BAND RATHER THAN FLOATING OVER THE CONTENT.
-       *
-       * Three of the six chapter heroes carry something in their right
-       * column — the rooms ledger, the label's figures, the contact card —
-       * and all three are set on transparent ground, so a mascot behind
-       * them would read straight through the type. Extra bottom padding
-       * gives him a strip of his own at the foot of the band, standing on
-       * the boundary rule exactly as he stands on the home page's.
-       *
-       * Desktop only. On a phone the hero is already the tallest thing
-       * between the reader and the page, and 200px of lemon is not what
-       * that space is for. */}
-      <div
-        className={`shell relative z-[2] ${bodyClassName ?? "pb-[96px] pt-[120px]"} ${
-          mascot ? "lg:pb-[248px] xl:pb-[288px]" : ""
-        }`}
-      >
-        <nav aria-label="Breadcrumb">
-          <ol
-            className={`flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] ${tint.rest}`}
-          >
-            <li>
-              <Link to="/" className={`tap transition-colors duration-300 ${tint.hover}`}>
-                LMN&middot;BNDT
-              </Link>
-            </li>
-            <li aria-hidden="true" className="opacity-50">
-              /
-            </li>
-            <li aria-current="page" className={tint.here}>
-              {c.name}
-            </li>
-          </ol>
-        </nav>
-
+      <div className={`shell relative z-[2] ${bodyClassName ?? "pb-[96px] pt-[120px]"}`}>
         {children}
       </div>
-
-      {mascot ? (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 right-[var(--page-margin)] z-[1] hidden h-[190px] w-auto lg:block xl:h-[230px]"
-        >
-          <Picture
-            src="limon-mascot"
-            alt=""
-            sizes="260px"
-            className="block h-full w-auto object-contain"
-            /* The home hero's treatment, so the two read as one figure in
-             * one building rather than two different lemons. */
-            style={{ filter: "saturate(0.92) drop-shadow(0 30px 60px var(--limon-shadow))" }}
-          />
-        </div>
-      ) : null}
 
       <BoundaryRule tone={tone} ticks className="bottom-0" />
     </header>
