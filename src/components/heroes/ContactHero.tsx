@@ -28,14 +28,10 @@ export function ContactHero() {
   const c = useChapter("contact");
 
   return (
-    <HeroFrame chapter="contact">
-      <PosterLockup
-        className="mt-10"
-        spread={c.poster.spread}
-        word={c.poster.word}
-        srText={c.heading}
-      />
-
+    <HeroFrame
+      chapter="contact"
+      lockup={<PosterLockup spread={c.poster.spread} word={c.poster.word} srText={c.heading} />}
+    >
       <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-20">
         <div>
           <p className="t-lead max-w-[44ch] text-mute">{c.standfirst}</p>

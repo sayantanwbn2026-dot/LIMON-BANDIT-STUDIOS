@@ -19,14 +19,10 @@ export function LabelHero() {
   const c = useChapter("label");
 
   return (
-    <HeroFrame chapter="label">
-      <PosterLockup
-        className="mt-10"
-        spread={c.poster.spread}
-        word={c.poster.word}
-        srText={c.heading}
-      />
-
+    <HeroFrame
+      chapter="label"
+      lockup={<PosterLockup spread={c.poster.spread} word={c.poster.word} srText={c.heading} />}
+    >
       <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-20">
         <div>
           <p className="t-lead max-w-[44ch] text-mute">{c.standfirst}</p>

@@ -19,14 +19,10 @@ export function RoomsHero() {
   const c = useChapter("rooms");
 
   return (
-    <HeroFrame chapter="rooms">
-      <PosterLockup
-        className="mt-10"
-        spread={c.poster.spread}
-        word={c.poster.word}
-        srText={c.heading}
-      />
-
+    <HeroFrame
+      chapter="rooms"
+      lockup={<PosterLockup spread={c.poster.spread} word={c.poster.word} srText={c.heading} />}
+    >
       <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
         <div className="lg:pr-16">
           <p className="t-lead max-w-[46ch] text-mute">{c.standfirst}</p>

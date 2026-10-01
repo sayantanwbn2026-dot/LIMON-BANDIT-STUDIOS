@@ -22,14 +22,10 @@ export function ShopHero() {
   const c = useChapter("shop");
 
   return (
-    <HeroFrame chapter="shop">
-      <PosterLockup
-        className="mt-10"
-        spread={c.poster.spread}
-        word={c.poster.word}
-        srText={c.heading}
-      />
-
+    <HeroFrame
+      chapter="shop"
+      lockup={<PosterLockup spread={c.poster.spread} word={c.poster.word} srText={c.heading} />}
+    >
       <p className="t-lead mt-14 max-w-[48ch] text-mute">{c.standfirst}</p>
 
       <RiseIn delay={0.1} className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">

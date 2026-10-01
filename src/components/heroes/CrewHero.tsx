@@ -30,14 +30,10 @@ export function CrewHero() {
   }));
 
   return (
-    <HeroFrame chapter="crew">
-      <PosterLockup
-        className="mt-10"
-        spread={c.poster.spread}
-        word={c.poster.word}
-        srText={c.heading}
-      />
-
+    <HeroFrame
+      chapter="crew"
+      lockup={<PosterLockup spread={c.poster.spread} word={c.poster.word} srText={c.heading} />}
+    >
       <div className="mt-14 max-w-[52ch]">
         <p className="t-lead text-text">{c.standfirst}</p>
       </div>
