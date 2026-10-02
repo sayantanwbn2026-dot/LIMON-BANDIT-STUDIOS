@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { liveDocs, listFrom } from "@/cms/live";
 import { siteOrigin } from "@/lib/seo";
-import type { LegalDoc, PostDoc } from "@/cms/hooks";
+import type { LegalDoc, PostDoc, ProductDoc } from "@/cms/hooks";
 
 interface SitemapEntry {
   path: string;
@@ -49,6 +49,20 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "yearly" as const,
             priority: "0.5",
           })),
+          /* Every product has its own indexable page carrying Product
+           * structured data — name, price, availability — and until now not
+           * one of them was listed here. The only way in was the shop grid,
+           * so the twenty pages most likely to earn a search result were the
+           * twenty a crawler had to find by accident. Priority sits above
+           * the policy pages and below the chapters: a tee is worth more to
+           * this site than the returns policy and less than the shop. */
+          ...listFrom<ProductDoc>(docs, "commerce.products")
+            .filter((p) => p.id)
+            .map((p) => ({
+              path: `/shop/${p.id}`,
+              changefreq: "weekly" as const,
+              priority: "0.6",
+            })),
           ...listFrom<LegalDoc>(docs, "global.legal").map((d) => ({
             path: `/legal/${d.slug}`,
             lastmod: isoDay(d.updated),
