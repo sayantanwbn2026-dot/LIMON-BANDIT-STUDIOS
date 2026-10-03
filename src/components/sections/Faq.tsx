@@ -91,12 +91,30 @@ export function Faq() {
               <p className="font-ui text-[13px] text-alt-mute">
                 The rest are answered where they apply.
               </p>
-              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+              {/* A STACKED LIST ON A PHONE, A ROW ON A DESKTOP.
+               *
+               * This was one wrapped flex row at every width, and on a phone
+               * it wrapped to four lines at a 28px pitch. Each link carries
+               * the site's invisible 44px touch box, so at that pitch the
+               * boxes overlapped by 16px and the LATER sibling silently won
+               * the tap — aiming just under "Booking a room" opened "Orders
+               * & returns". The stylesheet already warns about exactly this
+               * for stacked lists; this list was added after that note and
+               * never got the treatment.
+               *
+               * The remedy is the one the footer uses: stop relying on the
+               * overlay and give each row real height. `py-3` on a block
+               * link makes a 45px row that cannot collide with its
+               * neighbour, with a rule between them so four destinations
+               * read as a list rather than a run of links. From `sm` up it
+               * goes back to the inline row, where a pointer is precise and
+               * the horizontal set is tighter. */}
+              <ul className="mt-2 flex flex-col sm:mt-3 sm:flex-row sm:flex-wrap sm:gap-x-6">
                 {ELSEWHERE.map((e) => (
-                  <li key={e.to}>
+                  <li key={e.to} className="border-b border-alt-line last:border-0 sm:border-0">
                     <Link
                       to={e.to}
-                      className="tap inline-flex items-center gap-1.5 font-ui text-[13px] font-semibold text-alt-text transition-opacity duration-300 hover:opacity-70"
+                      className="tap flex items-center gap-1.5 py-3 font-ui text-[13px] font-semibold text-alt-text transition-opacity duration-300 hover:opacity-70 sm:inline-flex sm:py-1"
                     >
                       <span className="wipe-underline">{e.label}</span>
                       <ArrowRight size={13} className="text-alt-acid-type" />

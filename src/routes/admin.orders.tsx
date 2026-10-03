@@ -19,6 +19,7 @@ import {
 import { inr } from "@/lib/money";
 import { sendOrderStatusMail } from "@/lib/order-mail";
 import { getSupabase } from "@/lib/supabase";
+import { SkeletonRows } from "@/components/lb/Skeleton";
 
 export const Route = createFileRoute("/admin/orders")({
   component: Orders,
@@ -113,7 +114,7 @@ function Orders() {
       {error ? (
         <InboxError message={error} />
       ) : rows === null ? (
-        <p className="t-label text-mute">Loading…</p>
+        <SkeletonRows rows={6} label="the orders" />
       ) : (
         <>
           <Toolbar<Tab>

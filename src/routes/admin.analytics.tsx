@@ -11,6 +11,7 @@ import {
   type TopPath,
 } from "@/cms/admin";
 import { inboxCounts } from "@/cms/inbox";
+import { Skeleton, SkeletonRows, SkeletonStats } from "@/components/lb/Skeleton";
 import { inr } from "@/lib/money";
 
 export const Route = createFileRoute("/admin/analytics")({
@@ -167,30 +168,44 @@ function Analytics() {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-px border border-line bg-line lg:grid-cols-4">
-        <Stat label="Page views" value={summary ? String(views) : "—"} />
-        <Stat label="Visitors" value={summary ? String(summary.unique_sessions) : "—"} />
-        <Stat label="Enquiries" value={ins ? String(ins.enquiries.total) : "—"} />
-        <Stat label="Orders" value={String(shop.orders)} />
-      </div>
+      {/* Em-dashes in every tile said "we have no numbers for you", which is
+       * the same thing this screen says when a range genuinely has no data.
+       * A placeholder distinguishes "not yet" from "none". */}
+      {loading ? (
+        <>
+          <SkeletonStats label="the figures" />
+          <div className="mt-px">
+            <SkeletonStats />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-px border border-line bg-line lg:grid-cols-4">
+            <Stat label="Page views" value={summary ? String(views) : "—"} />
+            <Stat label="Visitors" value={summary ? String(summary.unique_sessions) : "—"} />
+            <Stat label="Enquiries" value={ins ? String(ins.enquiries.total) : "—"} />
+            <Stat label="Orders" value={String(shop.orders)} />
+          </div>
 
-      <div className="mt-px grid grid-cols-2 gap-px border border-t-0 border-line bg-line lg:grid-cols-4">
-        <Stat label="Revenue" value={inr(shop.revenue)} />
-        <Stat
-          label="Average order"
-          value={ins && ins.orders.averageOrder > 0 ? inr(ins.orders.averageOrder) : "—"}
-        />
-        <Stat
-          label="Orders per 100 views"
-          value={per100 === null ? "—" : per100.toFixed(1)}
-          note={views > 0 && views < 200 ? "too little traffic to mean much yet" : undefined}
-        />
-        <Stat
-          label="Reviews"
-          value={ins && ins.reviews.count > 0 ? `${ins.reviews.average} / 5` : "—"}
-          note={ins && ins.reviews.count > 0 ? `${ins.reviews.count} all time` : undefined}
-        />
-      </div>
+          <div className="mt-px grid grid-cols-2 gap-px border border-t-0 border-line bg-line lg:grid-cols-4">
+            <Stat label="Revenue" value={inr(shop.revenue)} />
+            <Stat
+              label="Average order"
+              value={ins && ins.orders.averageOrder > 0 ? inr(ins.orders.averageOrder) : "—"}
+            />
+            <Stat
+              label="Orders per 100 views"
+              value={per100 === null ? "—" : per100.toFixed(1)}
+              note={views > 0 && views < 200 ? "too little traffic to mean much yet" : undefined}
+            />
+            <Stat
+              label="Reviews"
+              value={ins && ins.reviews.count > 0 ? `${ins.reviews.average} / 5` : "—"}
+              note={ins && ins.reviews.count > 0 ? `${ins.reviews.count} all time` : undefined}
+            />
+          </div>
+        </>
+      )}
 
       <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">
         <section>
@@ -198,7 +213,12 @@ function Analytics() {
             Traffic
           </h2>
           {loading ? (
-            <p className="t-label mt-5 text-mute">Loading…</p>
+            /* The chart's own box, so the two sections beside it do not
+             * shuffle when 30 bars arrive. */
+            <div className="mt-6 border border-line bg-surface-deep p-5">
+              <Skeleton h={180} radius="var(--r-media)" />
+              <Skeleton h={10} w="30%" className="mt-3" />
+            </div>
           ) : daily.length === 0 ? (
             <Empty />
           ) : (
@@ -230,9 +250,11 @@ function Analytics() {
             What people asked for
           </h2>
           {!ins || ins.enquiries.byIntent.length === 0 ? (
-            <p className="t-label mt-5 text-mute">
-              {loading ? "Loading…" : "No enquiries in this window."}
-            </p>
+            loading ? (
+              <SkeletonRows rows={4} label="the enquiries" className="mt-6" />
+            ) : (
+              <p className="t-label mt-5 text-mute">No enquiries in this window.</p>
+            )
           ) : (
             <ul className="mt-6 border-t border-line">
               {ins.enquiries.byIntent.map((r) => (
@@ -280,9 +302,11 @@ function Analytics() {
             Orders
           </h2>
           {!ins || ins.orders.byStatus.length === 0 ? (
-            <p className="t-label mt-5 text-mute">
-              {loading ? "Loading…" : "No orders in this window."}
-            </p>
+            loading ? (
+              <SkeletonRows rows={3} label="the orders" className="mt-6" />
+            ) : (
+              <p className="t-label mt-5 text-mute">No orders in this window.</p>
+            )
           ) : (
             <dl className="mt-6 border-t border-line">
               {ins.orders.byStatus.map((r) => (
@@ -295,9 +319,11 @@ function Analytics() {
             Selling
           </h2>
           {!ins || ins.orders.topSellers.length === 0 ? (
-            <p className="t-label mt-5 text-mute">
-              {loading ? "Loading…" : "Nothing sold in this window."}
-            </p>
+            loading ? (
+              <SkeletonRows rows={3} label="the best sellers" className="mt-6" />
+            ) : (
+              <p className="t-label mt-5 text-mute">Nothing sold in this window.</p>
+            )
           ) : (
             <ul className="mt-6 border-t border-line">
               {ins.orders.topSellers.map((p) => (
@@ -325,7 +351,7 @@ function Analytics() {
             The shelf
           </h2>
           {!ins ? (
-            <p className="t-label mt-5 text-mute">Loading…</p>
+            <SkeletonRows rows={3} label="the stock levels" className="mt-6" />
           ) : ins.stock.soldOut.length === 0 && ins.stock.low.length === 0 ? (
             <p className="mt-5 font-ui text-[13px] leading-[1.6] text-mute">
               Nothing is low. Digital items are not counted — there is no run to run out of.

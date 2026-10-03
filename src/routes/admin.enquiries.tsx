@@ -15,6 +15,7 @@ import {
   when,
 } from "@/cms/inbox";
 import { useIntents } from "@/cms/hooks";
+import { SkeletonRows } from "@/components/lb/Skeleton";
 
 export const Route = createFileRoute("/admin/enquiries")({
   component: Enquiries,
@@ -74,7 +75,7 @@ function Enquiries() {
       {error ? (
         <InboxError message={error} />
       ) : rows === null ? (
-        <p className="t-label text-mute">Loading…</p>
+        <SkeletonRows rows={6} label="the enquiries" />
       ) : (
         <>
           <Toolbar<Tab>

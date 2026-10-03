@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Copy, Check, Link2, Trash2, Upload } from "lucide-react";
 import { AdminHeading } from "@/components/admin/AdminShell";
+import { SkeletonRows } from "@/components/lb/Skeleton";
 import {
   ACCEPT_ATTR,
   addExternal,
@@ -157,7 +158,7 @@ function MediaLibrary() {
       ) : null}
 
       {rows === null ? (
-        <p className="t-label mt-10 text-mute">Loading…</p>
+        <SkeletonRows rows={5} label="the media library" className="mt-10" />
       ) : rows.length === 0 ? (
         <p className="mt-10 max-w-[52ch] font-ui text-[14px] leading-[1.6] text-mute">
           Nothing uploaded yet. The images currently on the site are built into the code and do not

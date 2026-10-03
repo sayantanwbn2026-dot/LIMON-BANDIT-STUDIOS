@@ -3,6 +3,7 @@ import { Star, Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getSupabase } from "@/lib/supabase";
 import { useAllReviews, useRatings } from "@/lib/reviews";
+import { Button } from "@/components/lb/Button";
 
 /**
  * What other people thought.
@@ -253,21 +254,25 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
 
             {note ? <p className="mt-4 font-ui text-[13px] text-acid-type">{note}</p> : null}
 
+            {/* The shared Button, not a hand-rolled one. This was the last
+             * submit on the site still dimming itself and swapping its own
+             * label: no spinner, so under a slow write it looked like a
+             * button that had simply gone grey. `Button` says it twice —
+             * spinner for liveness, label for meaning — which is the rule
+             * the rest of the site's submits already follow. */}
             <div className="mt-6 flex flex-wrap gap-3">
-              <button
+              <Button
                 type="submit"
-                disabled={busy}
-                className="flex h-[48px] items-center bg-acid px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text disabled:opacity-60"
+                loading={busy}
+                loadingLabel="Saving…"
+                variant="primary"
+                size="md"
               >
-                {busy ? "Saving…" : own ? "Save changes" : "Post review"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setWriting(false)}
-                className="tap flex h-[48px] items-center px-2 font-ui text-[13px] text-mute hover:text-text"
-              >
+                {own ? "Save changes" : "Post review"}
+              </Button>
+              <Button type="button" variant="ghost" size="md" onClick={() => setWriting(false)}>
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         )}

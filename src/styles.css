@@ -1718,3 +1718,84 @@
   border-radius: var(--r-media);
   overflow: hidden;
 }
+
+/* ---------------- loading placeholders ----------------
+ * See components/lb/Skeleton.tsx for why these exist at all.
+ *
+ * The sweep is a 200%-wide gradient slid across a fixed box, not an opacity
+ * pulse: on a near-black surface a pulse reads as a flicker or a failing
+ * element, while a travelling highlight reads as work in progress and is the
+ * convention people already know from everywhere else.
+ *
+ * `--surface-raised` under `--line` keeps it on the same two greys the rest
+ * of the furniture uses, so a screen full of placeholders still looks like
+ * this site rather than like a generic loader dropped on top of it.
+ *
+ * REDUCED MOTION KEEPS THE BLOCK. Only the travel stops. A placeholder whose
+ * whole job is to say "something is coming" cannot answer that request by
+ * becoming invisible, so the flat tint stays and sits a little lighter than
+ * the animated base — at rest the gradient's mid-point is what the eye
+ * averages to, and matching it keeps the two paths looking the same weight.
+ * -------------------------------------------------- */
+.lb-skeleton {
+  background-color: var(--surface-raised);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--line) 85%, white) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: lb-skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes lb-skeleton-sweep {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-skeleton {
+    animation: none;
+    background-image: none;
+    background-color: color-mix(in oklab, var(--line) 70%, var(--surface-raised));
+  }
+}
+
+/* ---------------- form controls, on a touchscreen ----------------
+ * iOS Safari zooms the whole viewport when you focus a field whose
+ * font-size is under 16px, and it does NOT zoom back out when you leave. So
+ * tapping the shop's search box threw the page to ~1.07x and left the
+ * visitor pinching to recover, on the one screen where they were trying to
+ * type. The sort select at 12px was the worst of them. The site sets no
+ * `maximum-scale` — pinch-zoom is somebody's only way to read it — so this
+ * is the only lever that stops the jump.
+ *
+ * 26 controls across the site and the admin were under the line, at 12, 13,
+ * 14 and 15px. They are raised here rather than at 26 call sites, the same
+ * way the mobile vertical rhythm above is: plain unlayered rules, so they
+ * outrank the `text-[14px]` utilities they shadow without !important.
+ *
+ * 16px is already on the type scale, so nothing new enters it. Only things
+ * you type into are touched — buttons, labels and headings keep their sizes.
+ *
+ * THE BOUNDS. Coarse pointer, because an iPad zooms on focus exactly like an
+ * iPhone and its 820px portrait width sails over a phone-only breakpoint.
+ * Bounded at 1023px as well, because this changes layout — the same reason
+ * the footer's padding rule stays narrow while the invisible 44px hit areas
+ * apply to every coarse pointer. A touchscreen laptop keeps the desktop
+ * design it was drawn for.
+ * ------------------------------------------------------------------ */
+@media (pointer: coarse) and (max-width: 1023px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}

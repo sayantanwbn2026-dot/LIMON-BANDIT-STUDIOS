@@ -266,7 +266,13 @@ export function ProductPage({ product }: { product: Product }) {
 
               {needsSize ? (
                 <div ref={sizeRef} className="mt-8 scroll-mt-[calc(var(--nav-h)+24px)]">
-                  <div className="flex items-baseline justify-between gap-4">
+                  {/* min-h-11 and centred, not baseline-aligned: "Size & fit"
+                   * carries the invisible 44px touch box, and on a phone that
+                   * box reached 13px below an 18px row — through the 12px gap
+                   * and into the first size button, which sits on top and took
+                   * the tap. A 44px row holds the box inside itself, and the
+                   * gap below grew to 16px so the two can never meet. */}
+                  <div className="flex min-h-11 items-center justify-between gap-4">
                     <h2 className="t-label text-mute">
                       Size{" "}
                       {size ? (
@@ -283,7 +289,7 @@ export function ProductPage({ product }: { product: Product }) {
                       Size &amp; fit
                     </Link>
                   </div>
-                  <ul className="mt-3 flex flex-wrap gap-2">
+                  <ul className="mt-4 flex flex-wrap gap-2">
                     {product.sizes?.map((s) => (
                       <li key={s}>
                         <button

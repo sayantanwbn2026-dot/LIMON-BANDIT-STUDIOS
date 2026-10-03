@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { myOrders } from "@/lib/orders";
 import { inr } from "@/lib/money";
 import { pageHead } from "@/lib/seo";
+import { SkeletonRows } from "@/components/lb/Skeleton";
 
 /**
  * Order history.
@@ -97,7 +98,9 @@ function Orders() {
               }
             />
           ) : rows === null ? (
-            <p className="t-label text-mute">Loading…</p>
+            /* Shaped like the order rows below, so the page does not jump when
+             * they land and a slow connection looks like it is working. */
+            <SkeletonRows rows={3} label="your orders" />
           ) : rows.length === 0 ? (
             <Empty
               body="Nothing ordered yet. The runs are small and they do not come back."
