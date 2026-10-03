@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
@@ -108,13 +109,14 @@ export function CrewDirectory() {
                   </span>
                   <span className={`t-label mt-2 block ${statusTint[m.status]}`}>{m.status}</span>
                   {m.status !== "Booked" ? (
-                    <a
-                      href={`/contact?intent=crew&who=${m.id}`}
+                    <Link
+                      to="/contact"
+                      search={{ intent: "crew", who: m.id }}
                       className="mt-4 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
                     >
                       <span className="wipe-underline">Hire</span>
                       <ArrowUpRight size={14} className="text-acid-type" />
-                    </a>
+                    </Link>
                   ) : null}
                 </div>
               </article>

@@ -233,9 +233,11 @@ export async function commerceStats(days = 30) {
  *     two different numbers for the same thing on two screens of the same
  *     admin. One definition, in one place; the Insights page calls it.
  *
- *   What is about to run out?
+ *   What is selling, and what is about to run out?
  *     Stock lives in a CMS document, so "what is nearly gone" was a
- *     thing you found out by scrolling the product list.
+ *     thing you found out by scrolling the product list, and "what is
+ *     moving" was not answerable at all — line items sit inside each
+ *     order's JSONB and nothing added them up.
  *
  *   What do people think of it?
  *     Reviews are written, averaged on the product page, and never
@@ -247,19 +249,20 @@ export async function commerceStats(days = 30) {
  * ------------------------------------------------------------------ */
 
 export type IntentCount = { intent: string; count: number };
+export type SoldItem = { id: string; title: string; qty: number; revenue: number };
 export type StatusCount = { status: string; count: number };
 export type LowStockItem = { id: string; title: string; stock: number };
 
 export type Insights = {
   enquiries: { total: number; byIntent: IntentCount[] };
-  orders: { byStatus: StatusCount[]; averageOrder: number };
+  orders: { byStatus: StatusCount[]; averageOrder: number; topSellers: SoldItem[] };
   stock: { soldOut: LowStockItem[]; low: LowStockItem[] };
   reviews: { count: number; average: number };
 };
 
 const EMPTY_INSIGHTS: Insights = {
   enquiries: { total: 0, byIntent: [] },
-  orders: { byStatus: [], averageOrder: 0 },
+  orders: { byStatus: [], averageOrder: 0, topSellers: [] },
   stock: { soldOut: [], low: [] },
   reviews: { count: 0, average: 0 },
 };
@@ -275,7 +278,7 @@ export async function insights(days = 30): Promise<Insights> {
 
   const [enq, ord, products, reviews] = await Promise.all([
     supabase.from("enquiries").select("intent").gte("created_at", since),
-    supabase.from("orders").select("status, total_inr").gte("created_at", since),
+    supabase.from("orders").select("status, total_inr, items").gte("created_at", since),
     supabase.from("cms_documents").select("data").eq("key", "commerce.products").maybeSingle(),
     supabase.from("product_reviews").select("rating"),
   ]);
@@ -292,7 +295,11 @@ export async function insights(days = 30): Promise<Insights> {
   };
 
   const enqRows = (enq.data ?? []) as { intent: string }[];
-  const ordRows = (ord.data ?? []) as { status: string | null; total_inr: number | null }[];
+  const ordRows = (ord.data ?? []) as {
+    status: string | null;
+    total_inr: number | null;
+    items: { product_id?: string; title?: string; qty?: number; line_inr?: number }[] | null;
+  }[];
   const revRows = (reviews.data ?? []) as { rating: number | null }[];
 
   const revenue = ordRows.reduce((n, r) => n + (r.total_inr ?? 0), 0);
@@ -315,6 +322,31 @@ export async function insights(days = 30): Promise<Insights> {
     stock: Number(p.stock ?? 0),
   });
 
+  /* WHAT IS SELLING.
+   *
+   * Line items live in `orders.items` as JSONB, not in a join table, so this
+   * is aggregated here rather than in SQL. Keyed on product_id and NOT on
+   * title: the title is a snapshot of what the thing was called on the day
+   * it sold, so renaming a product in the CMS would otherwise split its
+   * history into two rows. The most recent title wins for display, which is
+   * the one an editor will recognise.
+   *
+   * Quantity decides the order, not revenue — "what is moving" and "what
+   * earns" are different questions, and the second is already answered by
+   * revenue and average order above. */
+  const sold = new Map<string, SoldItem>();
+  for (const o of ordRows) {
+    for (const it of o.items ?? []) {
+      const id = it.product_id;
+      if (!id) continue;
+      const row = sold.get(id) ?? { id, title: String(it.title ?? id), qty: 0, revenue: 0 };
+      row.qty += Number(it.qty ?? 0);
+      row.revenue += Number(it.line_inr ?? 0);
+      if (it.title) row.title = String(it.title);
+      sold.set(id, row);
+    }
+  }
+
   return {
     enquiries: {
       total: enqRows.length,
@@ -323,6 +355,7 @@ export async function insights(days = 30): Promise<Insights> {
     orders: {
       byStatus: tally(ordRows, "status").map((r) => ({ status: r.k, count: r.count })),
       averageOrder: ordRows.length ? Math.round(revenue / ordRows.length) : 0,
+      topSellers: [...sold.values()].sort((a, b) => b.qty - a.qty).slice(0, 5),
     },
     stock: {
       soldOut: physical.filter((p) => Number(p.stock ?? 0) <= 0).map(asItem),

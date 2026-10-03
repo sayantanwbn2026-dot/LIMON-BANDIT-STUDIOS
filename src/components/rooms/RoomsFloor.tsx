@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
@@ -193,15 +194,16 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
           </div>
           <p className="t-label mt-2 text-mute">Engineer included</p>
         </div>
-        <a
-          href={`/contact?intent=booking&room=${r.id}`}
+        <Link
+          to="/contact"
+          search={{ intent: "booking", room: r.id }}
           className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
         >
           <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
             Book {r.name}
           </span>
           <ArrowRight size={16} className="text-accent-text lb-arrow" />
-        </a>
+        </Link>
       </div>
     </article>
   );

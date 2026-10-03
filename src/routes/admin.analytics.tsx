@@ -292,6 +292,36 @@ function Analytics() {
           )}
 
           <h2 className="mt-10 font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
+            Selling
+          </h2>
+          {!ins || ins.orders.topSellers.length === 0 ? (
+            <p className="t-label mt-5 text-mute">
+              {loading ? "Loading…" : "Nothing sold in this window."}
+            </p>
+          ) : (
+            <ul className="mt-6 border-t border-line">
+              {ins.orders.topSellers.map((p) => (
+                <li
+                  key={p.id}
+                  className="flex items-baseline justify-between gap-4 border-b border-line py-3"
+                >
+                  <Link
+                    to="/shop/$id"
+                    params={{ id: p.id }}
+                    className="truncate font-ui text-[13px] text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
+                  >
+                    {p.title}
+                  </Link>
+                  <span className="tnum shrink-0 font-ui text-[13px] font-semibold text-text">
+                    {p.qty}
+                    <span className="pl-2 font-normal text-mute">{inr(p.revenue)}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <h2 className="mt-10 font-display text-[18px] font-extrabold uppercase tracking-[-0.02em] text-text">
             The shelf
           </h2>
           {!ins ? (

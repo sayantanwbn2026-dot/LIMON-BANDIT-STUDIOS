@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Minus, Plus } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
@@ -175,15 +176,19 @@ export function BookingEstimator() {
                   }`}
             </p>
 
-            <a
-              href={`/contact?intent=booking&room=${encodeURIComponent(room.id)}&hours=${n}`}
+            {/* The router serialises `search`, so the manual
+             * encodeURIComponent this replaces is not just unnecessary —
+             * doing both would double-encode a room id containing a space. */}
+            <Link
+              to="/contact"
+              search={{ intent: "booking", room: room.id, hours: n }}
               className="group mt-6 flex h-[56px] w-full items-center justify-between gap-4 bg-acid px-6 transition-opacity duration-300 hover:opacity-90"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                 Ask for this slot
               </span>
               <ArrowRight size={16} className="text-accent-text lb-arrow" />
-            </a>
+            </Link>
             <p className="t-label mt-4 text-mute">
               An estimate, not an invoice — confirmed when we reply.
             </p>
