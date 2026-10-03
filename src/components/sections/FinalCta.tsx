@@ -1,4 +1,5 @@
 import { ArrowRight, Check, Star } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
@@ -64,15 +65,15 @@ export function FinalCta() {
             </div>
           </div>
 
-          <a
-            href="/contact"
+          <Link
+            to="/contact"
             className="group mt-10 flex h-[62px] w-full max-w-[320px] items-center justify-between bg-acid transition-colors duration-300 hover:bg-acid-dim"
           >
             <span className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
               Book the room
             </span>
             <ArrowRight size={18} className="mr-6 text-accent-text lb-arrow" />
-          </a>
+          </Link>
 
           <div className="mt-12 flex flex-wrap items-start justify-between gap-10">
             <ul className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2">

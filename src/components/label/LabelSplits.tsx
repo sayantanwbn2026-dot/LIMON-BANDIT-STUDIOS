@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
@@ -74,15 +75,16 @@ export function LabelSplits() {
               Two finished songs and a sentence about what you are building. We answer everyone,
               including the no&apos;s, and we tell you why.
             </p>
-            <a
-              href="/contact?intent=demo"
+            <Link
+              to="/contact"
+              search={{ intent: "demo" }}
               className="group mt-8 flex h-[56px] w-fit items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                 Submit a demo
               </span>
               <ArrowRight size={16} className="text-accent-text lb-arrow" />
-            </a>
+            </Link>
           </div>
 
           <div>

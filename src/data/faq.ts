@@ -1,11 +1,22 @@
 export type FaqTopic = "booking" | "label" | "shop" | "crew";
-export type FaqItem = { question: string; answer: string; topic: FaqTopic };
+
+/**
+ * `home` marks the handful that also answer on the front page.
+ *
+ * The home section used to take `faq.slice(0, 4)` — whichever four happened
+ * to sit at the top of the master list. That was editable, but only by
+ * reordering the whole list, which silently reordered the Rooms, Label, Shop
+ * and Crew pages as well. An explicit flag lets the house choose its four
+ * front-page questions without touching the order anywhere else.
+ */
+export type FaqItem = { question: string; answer: string; topic: FaqTopic; home?: boolean };
 
 // REPLACE — pre-booking questions
 export const faq: FaqItem[] = [
   {
     topic: "booking",
     question: "How do I book a room?",
+    home: true,
     answer:
       "Send us the dates and what you're recording. We confirm within a few hours and hold the slot for 48 hours without a deposit.",
   },
@@ -24,12 +35,14 @@ export const faq: FaqItem[] = [
   {
     topic: "label",
     question: "How do I submit to the label?",
+    home: true,
     answer:
       "Two finished tracks and a sentence about what you're building. We answer everyone, including the no's.",
   },
   {
     topic: "shop",
     question: "Do you ship merch outside Kolkata?",
+    home: true,
     answer:
       "Yes, across India. Runs are small and we don't restock, so a sold-out size stays sold out.",
   },
@@ -48,6 +61,7 @@ export const faq: FaqItem[] = [
   {
     topic: "crew",
     question: "Can I hire only the crew?",
+    home: true,
     answer: "Yes. Directors, cover artists, and engineers can be booked without recording here.",
   },
   {

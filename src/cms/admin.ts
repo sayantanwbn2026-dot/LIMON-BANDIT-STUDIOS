@@ -208,3 +208,137 @@ export async function commerceStats(days = 30) {
     wishlist: wishlist.count ?? 0,
   };
 }
+
+/* ------------------------------------------------------------------ *
+ * The rest of the picture
+ *
+ * The dashboard knew about traffic, orders, revenue, signups and
+ * wishlist saves. Everything below is a question the house was asking
+ * the database by hand, or not asking at all:
+ *
+ *   What came in through the form, and what did people want?
+ *     Enquiries are the studio's entire inbound path and did not appear
+ *     on the dashboard in any form.
+ *
+ *   Where are the orders?
+ *     A count of orders says how many; a breakdown by status says how many
+ *     are still the house's problem.
+ *
+ *     NOT counted here: "how many need a person today". The dashboard
+ *     already answers that through `inboxCounts()`, which treats an order
+ *     as open at received, confirmed OR packed and an enquiry as open until
+ *     it is replied or closed — and reads all time, because a backlog does
+ *     not expire when it falls out of a 30-day window. An earlier draft of
+ *     this file recomputed both with narrower rules, which would have put
+ *     two different numbers for the same thing on two screens of the same
+ *     admin. One definition, in one place; the Insights page calls it.
+ *
+ *   What is about to run out?
+ *     Stock lives in a CMS document, so "what is nearly gone" was a
+ *     thing you found out by scrolling the product list.
+ *
+ *   What do people think of it?
+ *     Reviews are written, averaged on the product page, and never
+ *     summarised for the house.
+ *
+ * All of it reads through the same RLS the rest of the admin does: a
+ * non-admin asking these questions gets empty results, not an error, so
+ * a stale session degrades to a quiet dashboard rather than a broken one.
+ * ------------------------------------------------------------------ */
+
+export type IntentCount = { intent: string; count: number };
+export type StatusCount = { status: string; count: number };
+export type LowStockItem = { id: string; title: string; stock: number };
+
+export type Insights = {
+  enquiries: { total: number; byIntent: IntentCount[] };
+  orders: { byStatus: StatusCount[]; averageOrder: number };
+  stock: { soldOut: LowStockItem[]; low: LowStockItem[] };
+  reviews: { count: number; average: number };
+};
+
+const EMPTY_INSIGHTS: Insights = {
+  enquiries: { total: 0, byIntent: [] },
+  orders: { byStatus: [], averageOrder: 0 },
+  stock: { soldOut: [], low: [] },
+  reviews: { count: 0, average: 0 },
+};
+
+/** Anything at or below this is worth seeing before it sells out. */
+const LOW_STOCK_AT = 5;
+
+export async function insights(days = 30): Promise<Insights> {
+  const supabase = await getSupabase();
+  if (!supabase) return EMPTY_INSIGHTS;
+
+  const since = new Date(Date.now() - days * 86400_000).toISOString();
+
+  const [enq, ord, products, reviews] = await Promise.all([
+    supabase.from("enquiries").select("intent").gte("created_at", since),
+    supabase.from("orders").select("status, total_inr").gte("created_at", since),
+    supabase.from("cms_documents").select("data").eq("key", "commerce.products").maybeSingle(),
+    supabase.from("product_reviews").select("rating"),
+  ]);
+
+  /* Count by a column without a GROUP BY round trip: these are tens of
+   * rows, not millions, and one select beats four. */
+  const tally = <T extends string>(rows: { [k: string]: unknown }[], col: string) => {
+    const m = new Map<T, number>();
+    for (const r of rows) {
+      const k = (String(r[col] ?? "") || "—") as T;
+      m.set(k, (m.get(k) ?? 0) + 1);
+    }
+    return [...m.entries()].map(([k, count]) => ({ k, count })).sort((a, b) => b.count - a.count);
+  };
+
+  const enqRows = (enq.data ?? []) as { intent: string }[];
+  const ordRows = (ord.data ?? []) as { status: string | null; total_inr: number | null }[];
+  const revRows = (reviews.data ?? []) as { rating: number | null }[];
+
+  const revenue = ordRows.reduce((n, r) => n + (r.total_inr ?? 0), 0);
+  const ratings = revRows.map((r) => r.rating ?? 0).filter((n) => n > 0);
+
+  /* Stock is a field inside the catalogue document, not a table, so the
+   * "nearly gone" list is computed here rather than queried. Digital items
+   * have no run to exhaust and are skipped — the same rule reserve_stock
+   * follows, so the two cannot disagree about what "sold out" means. */
+  const catalogue = (products.data?.data ?? []) as {
+    id?: string;
+    title?: string;
+    stock?: number;
+    digital?: boolean;
+  }[];
+  const physical = Array.isArray(catalogue) ? catalogue.filter((p) => p?.id && !p.digital) : [];
+  const asItem = (p: (typeof physical)[number]): LowStockItem => ({
+    id: String(p.id),
+    title: String(p.title ?? p.id),
+    stock: Number(p.stock ?? 0),
+  });
+
+  return {
+    enquiries: {
+      total: enqRows.length,
+      byIntent: tally(enqRows, "intent").map((r) => ({ intent: r.k, count: r.count })),
+    },
+    orders: {
+      byStatus: tally(ordRows, "status").map((r) => ({ status: r.k, count: r.count })),
+      averageOrder: ordRows.length ? Math.round(revenue / ordRows.length) : 0,
+    },
+    stock: {
+      soldOut: physical.filter((p) => Number(p.stock ?? 0) <= 0).map(asItem),
+      low: physical
+        .filter((p) => {
+          const n = Number(p.stock ?? 0);
+          return n > 0 && n <= LOW_STOCK_AT;
+        })
+        .map(asItem)
+        .sort((a, b) => a.stock - b.stock),
+    },
+    reviews: {
+      count: ratings.length,
+      average: ratings.length
+        ? Math.round((ratings.reduce((n, r) => n + r, 0) / ratings.length) * 10) / 10
+        : 0,
+    },
+  };
+}

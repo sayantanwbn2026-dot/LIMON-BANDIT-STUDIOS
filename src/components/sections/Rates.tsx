@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
@@ -40,12 +41,12 @@ export function Rates() {
         <div className="flex items-end md:col-span-1">
           <p className="font-ui text-[16px] leading-[1.5] text-mute">
             Need something custom?{" "}
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="tap text-text underline decoration-acid-type underline-offset-4"
             >
               Let&apos;s talk →
-            </a>
+            </Link>
           </p>
         </div>
       </div>
@@ -144,13 +145,14 @@ export function Rates() {
                     </span>
                     <span className="mt-1 block font-ui text-[14px] text-mute">{price.unit}</span>
 
-                    <a
-                      href="/contact?intent=booking"
+                    <Link
+                      to="/contact"
+                      search={{ intent: "booking" }}
                       className="group mt-6 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
                     >
                       <span className="wipe-underline">Book {r.plan}</span>
                       <ArrowUpRight size={14} className="text-acid-type" />
-                    </a>
+                    </Link>
                   </div>
                 </article>
               </RiseIn>

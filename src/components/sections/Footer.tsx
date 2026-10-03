@@ -24,13 +24,13 @@ export function Footer() {
             <p className="mt-6 max-w-[28ch] font-ui text-[14px] leading-[1.5] text-mute">
               {site.description}
             </p>
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="group mt-8 flex w-fit items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
             >
               <span className="t-eyebrow text-text">Let&apos;s collaborate</span>
               <ArrowRight size={15} className="text-acid-type lb-arrow" />
-            </a>
+            </Link>
           </div>
 
           <nav aria-label="Footer navigation">

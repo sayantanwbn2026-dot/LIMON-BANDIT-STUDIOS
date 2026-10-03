@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
@@ -55,13 +56,13 @@ export function Roster() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
-          <a
-            href="/label"
+          <Link
+            to="/label"
             className="group flex items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
             <span className="t-eyebrow text-text">Hear the label</span>
             <ArrowRight size={15} className="text-acid-type lb-arrow" />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -75,9 +76,9 @@ export function Roster() {
         style={{ ["--rail-h" as string]: "400px" }}
       >
         {releases.map((r) => (
-          <a
+          <Link
             key={r.title}
-            href="/label"
+            to="/label"
             data-release
             data-cursor="play"
             className={`ui-card group relative block overflow-hidden ${r.span} ${r.height}`}
@@ -108,7 +109,7 @@ export function Roster() {
               </div>
               <div className="mt-1 font-ui text-[12px] text-mute">{r.title}</div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </Section>

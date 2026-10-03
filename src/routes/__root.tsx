@@ -95,7 +95,14 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+/* `error` is `unknown`, not `Error`.
+ *
+ * That is the router's own type for it, and it is the honest one: anything
+ * can be thrown, and a boundary that assumes otherwise is one `throw "nope"`
+ * away from a crash inside the crash screen. Nothing here reads a property
+ * off it — it is logged and handed to the reporter, both of which take
+ * unknown — so narrowing it would buy nothing. */
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {

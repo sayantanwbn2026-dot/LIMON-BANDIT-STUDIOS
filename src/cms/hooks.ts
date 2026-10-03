@@ -207,8 +207,25 @@ export function useSection(page: PageKey, id: string): SectionCopy {
   }, [rows, page, id]);
 }
 
-export type FaqItem = { question: string; answer: string; topic: string };
+export type FaqItem = { question: string; answer: string; topic: string; home?: boolean };
 export const useFaq = () => useList<FaqItem>("global.faq");
+
+/**
+ * The few questions the front page answers.
+ *
+ * Falls back to the top of the list when nothing is ticked, so an older
+ * document with no `home` flag on any row still shows four questions rather
+ * than an empty section. `HOME_FAQ_LIMIT` lives beside the hook because both
+ * the section and the "and the rest are over there" line need the same number.
+ */
+export const HOME_FAQ_LIMIT = 4;
+export function useHomeFaq(): FaqItem[] {
+  const all = useFaq();
+  return useMemo(() => {
+    const picked = all.filter((f) => f.home);
+    return (picked.length > 0 ? picked : all).slice(0, HOME_FAQ_LIMIT);
+  }, [all]);
+}
 
 export function useFaqByTopic(topic: string): FaqItem[] {
   const all = useFaq();
@@ -244,6 +261,10 @@ export const useFeatured = () => useList<FeaturedDoc>("page.home.featured");
 /** One row per home-page section, in the order the page renders them. */
 export type HomeOrderDoc = { section: string; on: boolean };
 export const useHomeOrder = () => useList<HomeOrderDoc>("page.home.order");
+
+/** The hero's one button. The wordmark above it is the logo, not content. */
+export type HomeHeroDoc = { cta: string; to: string };
+export const useHomeHero = () => useDoc<HomeHeroDoc>("page.home.hero");
 
 export type MetricDoc = {
   label: string;

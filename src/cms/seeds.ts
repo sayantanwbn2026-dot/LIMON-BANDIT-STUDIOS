@@ -260,7 +260,12 @@ export const seeds: Record<string, unknown> = {
     ctaChecklist: [...ctaChecklist],
     metaChips: [...metaChips],
   },
-  "global.faq": faq.map((f) => ({ question: f.question, answer: f.answer, topic: f.topic })),
+  "global.faq": faq.map((f) => ({
+    question: f.question,
+    answer: f.answer,
+    topic: f.topic,
+    home: Boolean(f.home),
+  })),
 
   // ---- home ----
   "page.home.sections": homeSections,
@@ -276,6 +281,9 @@ export const seeds: Record<string, unknown> = {
   })),
   "page.home.featured": featured.map((f) => ({ ...f })),
   "page.home.order": DEFAULT_HOME_ORDER.map((r) => ({ ...r })),
+  /* The floor for the hero button — what the page shipped with when it was
+   * hardcoded, so switching it to the CMS changes nothing on screen. */
+  "page.home.hero": { cta: "Book the room", to: "/contact" },
   "page.home.metrics": metrics.map((m) => ({ ...m })),
   "page.home.film": { video: "", poster: "room-a" },
   "page.home.wall": wall.map((w) => ({

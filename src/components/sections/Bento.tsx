@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight, Pause, Play } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
@@ -39,13 +40,13 @@ export function Bento() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
-          <a
-            href="/label"
+          <Link
+            to="/label"
             className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
             <span className="wipe-underline">See everything</span>
             <ArrowRight size={14} className="text-acid-type lb-arrow" />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -109,13 +110,13 @@ export function Bento() {
             House Tee — Black
           </div>
           <div className="tnum mt-2 font-ui text-[14px] text-mute">₹1,299</div>
-          <a
-            href="/shop"
+          <Link
+            to="/shop"
             className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
             <span className="wipe-underline">Shop the drop</span>
             <ArrowUpRight size={14} className="text-acid-type" />
-          </a>
+          </Link>
         </RiseIn>
 
         {/* the room */}
@@ -131,13 +132,13 @@ export function Bento() {
             Four rooms
           </div>
           <div className="mt-2 font-ui text-[14px] text-mute">By the hour or the night</div>
-          <a
-            href="/rooms"
+          <Link
+            to="/rooms"
             className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
             <span className="wipe-underline">See the rooms</span>
             <ArrowUpRight size={14} className="text-acid-type" />
-          </a>
+          </Link>
         </RiseIn>
       </div>
 
@@ -146,13 +147,13 @@ export function Bento() {
         <p className="max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[34px]">
           Forty artists on the roster
         </p>
-        <a
-          href="/crew"
+        <Link
+          to="/crew"
           className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
         >
           <span className="wipe-underline">Hire the crew by the project</span>
           <ArrowUpRight size={14} className="text-acid-type" />
-        </a>
+        </Link>
       </RiseIn>
     </Section>
   );

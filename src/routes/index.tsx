@@ -2,6 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/sections/Hero";
 import { Featured } from "@/components/sections/Featured";
 import { ProofBand } from "@/components/sections/ProofBand";
+import { Services } from "@/components/sections/Services";
+import { Bento } from "@/components/sections/Bento";
+import { Wall } from "@/components/sections/Wall";
+import { Process } from "@/components/sections/Process";
+import { Journal } from "@/components/sections/Journal";
 import { Rooms } from "@/components/sections/Rooms";
 import { RoomFilm } from "@/components/sections/RoomFilm";
 import { Numbers } from "@/components/sections/Numbers";
@@ -45,13 +50,18 @@ export const Route = createFileRoute("/")({
 const SECTIONS: Record<HomeSectionKey, { render: () => React.ReactNode; depth: boolean }> = {
   featured: { render: () => <Featured />, depth: true },
   proof: { render: () => <ProofBand />, depth: true },
+  services: { render: () => <Services />, depth: false },
+  bento: { render: () => <Bento />, depth: true },
   rooms: { render: () => <Rooms />, depth: false },
   film: { render: () => <RoomFilm />, depth: false },
   estimator: { render: () => <BookingEstimator />, depth: true },
   numbers: { render: () => <Numbers />, depth: true },
   roster: { render: () => <Roster />, depth: true },
   drops: { render: () => <DropRail />, depth: false },
+  wall: { render: () => <Wall />, depth: true },
+  process: { render: () => <Process />, depth: true },
   testimonials: { render: () => <Testimonials />, depth: true },
+  journal: { render: () => <Journal />, depth: true },
   faq: { render: () => <Faq />, depth: true },
   join: { render: () => <JoinList />, depth: true },
   cta: { render: () => <FinalCta />, depth: true },
@@ -70,18 +80,25 @@ function Index() {
    *   answer to a stale row.
    *
    *   A section that exists in the code but is in nobody's stored order —
-   *   anything shipped since the document was last saved. Appended at the
-   *   end rather than hidden, so a new section is never invisible while an
-   *   editor waits for someone to tell them it is there. They can then put
-   *   it where they want it. */
+   *   anything shipped since the document was last saved. It is appended,
+   *   but at ITS OWN default rather than switched on.
+   *
+   *   That distinction matters and the first version of this got it wrong.
+   *   The reasoning was "a new section should never be invisible", which is
+   *   true of the admin — every section in HOME_SECTIONS is always listed
+   *   and always toggleable there. It is not true of the page: appending at
+   *   `on: true` meant that adding a section to the registry published it
+   *   to the live front page the moment it was deployed, with nobody having
+   *   asked for it. Five sections went into the registry in this very
+   *   commit; shipping them switched on would have been exactly that bug. */
   const chosen = order.filter((r) => r.on !== false && r.section in SECTIONS);
-  const named = new Set(chosen.map((r) => r.section));
-  const missing = HOME_SECTIONS.filter((s) => !order.some((r) => r.section === s.key)).map((s) => ({
+  const named = new Set(order.map((r) => r.section));
+  const missing = HOME_SECTIONS.filter((s) => s.on && !named.has(s.key)).map((s) => ({
     section: s.key,
     on: true,
   }));
 
-  const rows = [...chosen, ...missing.filter((m) => !named.has(m.section))];
+  const rows = [...chosen, ...missing];
 
   return (
     <>

@@ -4,7 +4,7 @@ import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Accordion } from "@/components/lb/Accordion";
 import { Picture } from "@/components/lb/Picture";
-import { useFaq, useSection } from "@/cms/hooks";
+import { useFaq, useHomeFaq, useSection } from "@/cms/hooks";
 
 /**
  * The landing-page FAQ.
@@ -18,16 +18,17 @@ import { useFaq, useSection } from "@/cms/hooks";
  * behind "Show all"; a desktop got all ten, which is where most of the
  * length actually was.
  *
- * It shows the first four now at every width, and then says where the rest
- * are rather than hiding them behind a toggle that leads nowhere. WHICH
- * four is the CMS's business: they are the first four rows of the Questions
- * list, so reordering there changes what the front page asks.
+ * It shows four now at every width, and then says where the rest are rather
+ * than hiding them behind a toggle that leads nowhere. WHICH four is the
+ * CMS's business, and that used to mean the first four rows of the Questions
+ * list — editable, but only by reordering the master list, which reordered
+ * Rooms, Label, Shop and Crew along with it. Each question now carries its
+ * own "also show on the home page" tick, so choosing the front four costs
+ * nothing anywhere else.
  *
  * It uses the shared Accordion — the same one on /rooms and /label — so a
  * fix to one cannot be forgotten in the other.
  */
-const HOME_QUESTIONS = 4;
-
 /* Where the rest of them live. Each topic in the Questions list is
  * answered in full on one of these. */
 const ELSEWHERE = [
@@ -39,6 +40,7 @@ const ELSEWHERE = [
 export function Faq() {
   const copy = useSection("home", "faq");
   const faq = useFaq();
+  const shown = useHomeFaq();
   return (
     /* 160px top: this is where the page changes chapter, dark to light. */
     <Section tone="light" className="pt-[120px] pb-[96px]">
@@ -64,12 +66,14 @@ export function Faq() {
             <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
               Still stuck?
             </div>
-            <a
-              href="/contact"
+            {/* Router link, not an anchor: this is an in-app route and a
+             * plain href tore the app down and booted it again. */}
+            <Link
+              to="/contact"
               className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface"
             >
               Message us <ArrowRight size={14} />
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -77,12 +81,12 @@ export function Faq() {
           <WordReveal as="h2" className="t-h2 text-alt-text" text={copy.heading} />
 
           <div className="mt-12">
-            <Accordion items={faq.slice(0, HOME_QUESTIONS)} pole="alt" />
+            <Accordion items={shown} pole="alt" />
           </div>
 
           {/* The way on, rather than a "show all" that only unfolds more of
            * the same page. */}
-          {faq.length > HOME_QUESTIONS ? (
+          {faq.length > shown.length ? (
             <div className="mt-8 border-t border-alt-line pt-6">
               <p className="font-ui text-[13px] text-alt-mute">
                 The rest are answered where they apply.
@@ -103,12 +107,12 @@ export function Faq() {
             </div>
           ) : null}
 
-          <a
-            href="/contact"
+          <Link
+            to="/contact"
             className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden"
           >
             Still stuck? Message us <ArrowRight size={14} />
-          </a>
+          </Link>
         </div>
       </div>
     </Section>

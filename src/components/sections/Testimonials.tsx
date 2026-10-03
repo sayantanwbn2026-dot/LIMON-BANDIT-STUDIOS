@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { GridRules } from "@/components/lb/GridRules";
 import { CmsImage } from "@/components/lb/CmsImage";
@@ -70,13 +71,13 @@ export function Testimonials() {
             <WordReveal as="h2" className="t-h2 text-accent-text" text={copy.heading} />
           </div>
           <div className="flex items-end md:col-span-1">
-            <a
-              href="/label"
+            <Link
+              to="/label"
               className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text"
             >
               <span className="wipe-underline">See the roster</span>
               <ArrowRight size={14} className="lb-arrow" />
-            </a>
+            </Link>
           </div>
         </div>
 

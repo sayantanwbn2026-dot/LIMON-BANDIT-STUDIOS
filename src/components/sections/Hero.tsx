@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { Picture } from "@/components/lb/Picture";
+import { useHomeHero } from "@/cms/hooks";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
@@ -471,15 +473,7 @@ export function Hero() {
                * the bottom of the frame unresolved and the eye with nowhere
                * to land; run to the measure it becomes the base the poster
                * stands on, and the touch target doubles for free. */}
-              <a
-                href="/contact"
-                className="group fill-acid inline-flex h-[56px] w-full items-center justify-between border border-line bg-transparent transition-colors duration-300 md:h-[54px] md:w-[240px]"
-              >
-                <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
-                  Book the room
-                </span>
-                <ArrowRight size={16} className="mr-6 text-text lb-arrow" />
-              </a>
+              <HeroCta />
             </div>
           </div>
         </div>
@@ -490,5 +484,56 @@ export function Hero() {
         <BoundaryRule tone="dark" ticks className="bottom-0" />
       </div>
     </section>
+  );
+}
+
+/**
+ * The hero's one button.
+ *
+ * Two things were wrong with the markup this replaces, and only one of them
+ * was about the CMS:
+ *
+ *   The label and the destination were hardcoded. This is the loudest call to
+ *   action on the site and it was the single part of the front page nobody
+ *   could change without a deploy. It reads `page.home.hero` now.
+ *
+ *   It was a plain <a href="/contact"> to an in-app route, which tears the
+ *   app down and boots it again — the slowest possible way to follow the
+ *   fastest link on the page. Internal destinations go through the router.
+ *
+ * Its own component rather than inline JSX because the hero is a long
+ * GSAP-driven file and a hook belongs at the top of the thing that needs it,
+ * not threaded through 200 lines of timeline setup.
+ */
+function HeroCta() {
+  const hero = useHomeHero();
+  const to = hero.to || "/contact";
+  const label = hero.cta || "Book the room";
+  const external = /^https?:\/\//i.test(to);
+
+  const shell =
+    "group fill-acid inline-flex h-[56px] w-full items-center justify-between border border-line bg-transparent transition-colors duration-300 md:h-[54px] md:w-[240px]";
+
+  const body = (
+    <>
+      <span className="pl-6 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
+        {label}
+      </span>
+      <ArrowRight size={16} className="lb-arrow mr-6 text-text" />
+    </>
+  );
+
+  if (external) {
+    return (
+      <a href={to} target="_blank" rel="noreferrer" className={shell}>
+        {body}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to} className={shell}>
+      {body}
+    </Link>
   );
 }

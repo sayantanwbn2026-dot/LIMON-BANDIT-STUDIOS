@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
@@ -21,8 +22,8 @@ export function Journal() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
-          <a
-            href="/journal"
+          <Link
+            to="/journal"
             className="group flex items-center gap-3 border border-line-strong px-6 py-4 transition-colors duration-300 hover:bg-text"
           >
             <span className="t-eyebrow text-text transition-colors duration-300 group-hover:text-surface-deep">
@@ -32,7 +33,7 @@ export function Journal() {
               size={15}
               className="text-text transition-colors duration-300 group-hover:text-surface-deep lb-arrow"
             />
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -40,7 +41,7 @@ export function Journal() {
       <div className="rail-mobile mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {posts.map((p, i) => (
           <RiseIn key={p.title} delay={i * 0.08}>
-            <a href="/journal" className="group block">
+            <Link to="/journal" className="group block">
               <CmsImage
                 src={p.image}
                 sizes="(max-width: 767px) 100vw, 30vw"
@@ -55,7 +56,7 @@ export function Journal() {
                   {p.title}
                 </span>
               </h3>
-            </a>
+            </Link>
           </RiseIn>
         ))}
       </div>

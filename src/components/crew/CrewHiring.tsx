@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
@@ -73,21 +74,23 @@ export function CrewHiring() {
             </ol>
 
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <a
-                href="/contact?intent=crew"
+              <Link
+                to="/contact"
+                search={{ intent: "crew" }}
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
                   Hire the crew
                 </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
-              </a>
-              <a
-                href="/contact?intent=join-crew"
+              </Link>
+              <Link
+                to="/contact"
+                search={{ intent: "join-crew" }}
                 className="tap font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
                 or apply to join the list
-              </a>
+              </Link>
             </div>
           </div>
 

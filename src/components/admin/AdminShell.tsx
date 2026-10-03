@@ -69,7 +69,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <nav aria-label="Admin" className="p-3">
             <Group label="Overview">
               <Item to="/admin" icon={<LayoutGrid size={14} />} label="Dashboard" exact />
-              <Item to="/admin/analytics" icon={<BarChart3 size={14} />} label="Analytics" />
+              <Item to="/admin/analytics" icon={<BarChart3 size={14} />} label="Insights" />
             </Group>
 
             <Group label="Inbox">

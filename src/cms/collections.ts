@@ -234,6 +234,43 @@ const featured: Collection = {
 };
 
 /* ------------------------------------------------------------------ *
+ * The hero
+ *
+ * Only the button. The wordmark is deliberately not editable: LIMON and
+ * BANDIT are measured letter by letter at run time to fit the column
+ * exactly, and each letter is staggered off its own index — a logotype,
+ * not a line of copy, and a text field over it would let someone break
+ * the masthead by typing in it. The one thing that genuinely changes is
+ * where the house wants people to go, which was hardcoded until now:
+ * the loudest call to action on the site and the only part of the front
+ * page an editor could not touch.
+ * ------------------------------------------------------------------ */
+
+const homeHero: Collection = {
+  key: "page.home.hero",
+  title: "Hero button",
+  description:
+    "The button in the bottom corner of the opening screen. The big LIMON BANDIT lettering is the logo and is not editable here.",
+  group: "page",
+  page: "home",
+  shape: "object",
+  fields: [
+    text("cta", "Button label", {
+      required: true,
+      max: 24,
+      placeholder: "Book the room",
+      help: "Three or four words. It is set in capitals on the page, so type it normally.",
+    }),
+    text("to", "Where it opens", {
+      required: true,
+      mono: true,
+      placeholder: "/contact",
+      help: "Open the page you want, then copy everything in the address bar after the domain — /contact, /rooms, /shop. An address from another site (https://…) also works.",
+    }),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
  * The order of the home page itself
  *
  * A list rather than a number on each section: the admin's list editor
@@ -372,7 +409,7 @@ const faq: Collection = {
   key: "global.faq",
   title: "FAQ",
   description:
-    "Every question on the site. The topic decides which page it appears on — booking questions show on Rooms, shop questions on Shop, and so on.",
+    "Every question on the site. The topic decides which page it appears on — booking questions show on Rooms, shop questions on Shop, and so on. Tick “also on the home page” for the few you want answered on the front page as well.",
   group: "global",
   shape: "list",
   titleField: "question",
@@ -386,6 +423,12 @@ const faq: Collection = {
       { value: "shop", label: "Shop" },
       { value: "crew", label: "Crew" },
     ]),
+    {
+      kind: "boolean",
+      name: "home",
+      label: "Also show on the home page",
+      help: "The front page has room for about four. Tick more and it shows the first four of them, in this list’s order.",
+    },
   ],
 };
 
@@ -1045,6 +1088,7 @@ export const collections: Collection[] = [
   // home
   homeSections,
   homeOrder,
+  homeHero,
   featured,
   services,
   metrics,
