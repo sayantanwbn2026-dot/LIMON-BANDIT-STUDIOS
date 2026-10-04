@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Heart, LogOut, Package, ShoppingBag, User } from "lucide-react";
+import { Heart, LogOut, Package, ShoppingBag, User, UserCog } from "lucide-react";
 import { useAuth, displayName } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
@@ -87,6 +87,21 @@ export function ShopBar() {
                     {user.email}
                   </p>
                 </div>
+
+                {/* Account first. The other three are things you DO —
+                 * open a list, check an order, leave — and this is the one
+                 * that is a place: where the details on your next order
+                 * live, and where someone looks when they want to know what
+                 * being signed in actually got them. */}
+                <Link
+                  to="/account"
+                  role="menuitem"
+                  onClick={() => setMenu(false)}
+                  className="flex items-center gap-3 border-b border-line px-4 py-3 font-ui text-[12px] font-semibold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:bg-surface-raised hover:text-text"
+                >
+                  <UserCog size={14} />
+                  Account
+                </Link>
 
                 <MenuButton
                   onClick={() => {

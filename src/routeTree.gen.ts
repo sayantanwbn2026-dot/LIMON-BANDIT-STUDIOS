@@ -9,82 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ShopRouteImport } from './routes/shop'
-import { Route as RoomsRouteImport } from './routes/rooms'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as OrdersRouteImport } from './routes/orders'
-import { Route as LabelRouteImport } from './routes/label'
-import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
-import { Route as CrewRouteImport } from './routes/crew'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as JournalIndexRouteImport } from './routes/journal.index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CrewRouteImport } from './routes/crew'
+import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
+import { Route as LabelRouteImport } from './routes/label'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as RoomsRouteImport } from './routes/rooms'
+import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as ShopIdRouteImport } from './routes/shop_.$id'
-import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
-import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
-import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
-import { Route as AdminShopRouteImport } from './routes/admin.shop'
-import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
-import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
-import { Route as AdminMediaRouteImport } from './routes/admin.media'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as AdminGlobalRouteImport } from './routes/admin.global'
-import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
+import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
+import { Route as AdminGlobalRouteImport } from './routes/admin.global'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
+import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
+import { Route as AdminShopRouteImport } from './routes/admin.shop'
+import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
+import { Route as JournalIndexRouteImport } from './routes/journal.index'
+import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
+import { Route as ShopIdRouteImport } from './routes/shop_.$id'
 import { Route as AdminPagePageRouteImport } from './routes/admin.page.$page'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RoomsRoute = RoomsRouteImport.update({
-  id: '/rooms',
-  path: '/rooms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LabelRoute = LabelRouteImport.update({
-  id: '/label',
-  path: '/label',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
-  id: '/feed.xml',
-  path: '/feed.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CrewRoute = CrewRouteImport.update({
-  id: '/crew',
-  path: '/crew',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -92,14 +53,54 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const JournalIndexRoute = JournalIndexRouteImport.update({
-  id: '/journal/',
-  path: '/journal/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrewRoute = CrewRouteImport.update({
+  id: '/crew',
+  path: '/crew',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
+  id: '/feed.xml',
+  path: '/feed.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabelRoute = LabelRouteImport.update({
+  id: '/label',
+  path: '/label',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomsRoute = RoomsRouteImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -107,54 +108,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const ShopIdRoute = ShopIdRouteImport.update({
-  id: '/shop_/$id',
-  path: '/shop/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LegalSlugRoute = LegalSlugRouteImport.update({
-  id: '/legal/$slug',
-  path: '/legal/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JournalSlugRoute = JournalSlugRouteImport.update({
-  id: '/journal/$slug',
-  path: '/journal/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
-  id: '/subscribers',
-  path: '/subscribers',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminShopRoute = AdminShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminOwnershipRoute = AdminOwnershipRouteImport.update({
-  id: '/ownership',
-  path: '/ownership',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminOrdersRoute = AdminOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminMediaRoute = AdminMediaRouteImport.update({
-  id: '/media',
-  path: '/media',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminGlobalRoute = AdminGlobalRouteImport.update({
-  id: '/global',
-  path: '/global',
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminEnquiriesRoute = AdminEnquiriesRouteImport.update({
@@ -162,10 +118,60 @@ const AdminEnquiriesRoute = AdminEnquiriesRouteImport.update({
   path: '/enquiries',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
+const AdminGlobalRoute = AdminGlobalRouteImport.update({
+  id: '/global',
+  path: '/global',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOwnershipRoute = AdminOwnershipRouteImport.update({
+  id: '/ownership',
+  path: '/ownership',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminShopRoute = AdminShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/subscribers',
+  path: '/subscribers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const JournalIndexRoute = JournalIndexRouteImport.update({
+  id: '/journal/',
+  path: '/journal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalSlugRoute = JournalSlugRouteImport.update({
+  id: '/journal/$slug',
+  path: '/journal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopIdRoute = ShopIdRouteImport.update({
+  id: '/shop_/$id',
+  path: '/shop/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPagePageRoute = AdminPagePageRouteImport.update({
   id: '/page/$page',
@@ -175,6 +181,7 @@ const AdminPagePageRoute = AdminPagePageRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/crew': typeof CrewRoute
@@ -233,6 +241,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/admin': typeof AdminRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -264,6 +273,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/admin'
     | '/checkout'
     | '/contact'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/checkout'
     | '/contact'
     | '/crew'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/admin'
     | '/checkout'
     | '/contact'
@@ -351,6 +363,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
@@ -370,74 +383,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rooms': {
-      id: '/rooms'
-      path: '/rooms'
-      fullPath: '/rooms'
-      preLoaderRoute: typeof RoomsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/label': {
-      id: '/label'
-      path: '/label'
-      fullPath: '/label'
-      preLoaderRoute: typeof LabelRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feed.xml': {
-      id: '/feed.xml'
-      path: '/feed.xml'
-      fullPath: '/feed.xml'
-      preLoaderRoute: typeof FeedDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/crew': {
-      id: '/crew'
-      path: '/crew'
-      fullPath: '/crew'
-      preLoaderRoute: typeof CrewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -447,18 +404,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/journal/': {
-      id: '/journal/'
-      path: '/journal'
-      fullPath: '/journal/'
-      preLoaderRoute: typeof JournalIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crew': {
+      id: '/crew'
+      path: '/crew'
+      fullPath: '/crew'
+      preLoaderRoute: typeof CrewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed.xml': {
+      id: '/feed.xml'
+      path: '/feed.xml'
+      fullPath: '/feed.xml'
+      preLoaderRoute: typeof FeedDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/label': {
+      id: '/label'
+      path: '/label'
+      fullPath: '/label'
+      preLoaderRoute: typeof LabelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rooms': {
+      id: '/rooms'
+      path: '/rooms'
+      fullPath: '/rooms'
+      preLoaderRoute: typeof RoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -468,74 +481,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/shop_/$id': {
-      id: '/shop_/$id'
-      path: '/shop/$id'
-      fullPath: '/shop/$id'
-      preLoaderRoute: typeof ShopIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/legal/$slug': {
-      id: '/legal/$slug'
-      path: '/legal/$slug'
-      fullPath: '/legal/$slug'
-      preLoaderRoute: typeof LegalSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/journal/$slug': {
-      id: '/journal/$slug'
-      path: '/journal/$slug'
-      fullPath: '/journal/$slug'
-      preLoaderRoute: typeof JournalSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/subscribers': {
-      id: '/admin/subscribers'
-      path: '/subscribers'
-      fullPath: '/admin/subscribers'
-      preLoaderRoute: typeof AdminSubscribersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/shop': {
-      id: '/admin/shop'
-      path: '/shop'
-      fullPath: '/admin/shop'
-      preLoaderRoute: typeof AdminShopRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/ownership': {
-      id: '/admin/ownership'
-      path: '/ownership'
-      fullPath: '/admin/ownership'
-      preLoaderRoute: typeof AdminOwnershipRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/orders': {
-      id: '/admin/orders'
-      path: '/orders'
-      fullPath: '/admin/orders'
-      preLoaderRoute: typeof AdminOrdersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/media': {
-      id: '/admin/media'
-      path: '/media'
-      fullPath: '/admin/media'
-      preLoaderRoute: typeof AdminMediaRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/global': {
-      id: '/admin/global'
-      path: '/global'
-      fullPath: '/admin/global'
-      preLoaderRoute: typeof AdminGlobalRouteImport
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/enquiries': {
@@ -545,12 +495,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEnquiriesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/analytics': {
-      id: '/admin/analytics'
-      path: '/analytics'
-      fullPath: '/admin/analytics'
-      preLoaderRoute: typeof AdminAnalyticsRouteImport
+    '/admin/global': {
+      id: '/admin/global'
+      path: '/global'
+      fullPath: '/admin/global'
+      preLoaderRoute: typeof AdminGlobalRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/orders': {
+      id: '/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ownership': {
+      id: '/admin/ownership'
+      path: '/ownership'
+      fullPath: '/admin/ownership'
+      preLoaderRoute: typeof AdminOwnershipRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/shop': {
+      id: '/admin/shop'
+      path: '/shop'
+      fullPath: '/admin/shop'
+      preLoaderRoute: typeof AdminShopRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/journal/': {
+      id: '/journal/'
+      path: '/journal'
+      fullPath: '/journal/'
+      preLoaderRoute: typeof JournalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal/$slug': {
+      id: '/journal/$slug'
+      path: '/journal/$slug'
+      fullPath: '/journal/$slug'
+      preLoaderRoute: typeof JournalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop_/$id': {
+      id: '/shop_/$id'
+      path: '/shop/$id'
+      fullPath: '/shop/$id'
+      preLoaderRoute: typeof ShopIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/page/$page': {
       id: '/admin/page/$page'
@@ -594,6 +614,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
   AdminRoute: AdminRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
