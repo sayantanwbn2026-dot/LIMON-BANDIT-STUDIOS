@@ -14,6 +14,41 @@ A password is kept behind a link for accounts made before codes existed.
 Verified against the live project on **2026-10-04**: 7 accounts, all confirmed,
 all signed in within 30 days.
 
+## Status — applied 2026-10-04
+
+Steps 1, 3 and 4 are **done**, set through the Management API by
+`scripts/auth-config.mjs` and verified by reading the config back:
+
+| Setting              | Was                     | Now                                                 |
+| -------------------- | ----------------------- | --------------------------------------------------- |
+| `site_url`           | `http://localhost:3000` | `http://localhost:5181`                             |
+| `uri_allow_list`     | **empty**               | `http://localhost:5181/**,http://localhost:3000/**` |
+| `mailer_autoconfirm` | `false`                 | `true` (confirm-email off)                          |
+| `mailer_otp_exp`     | `3600`                  | `600`                                               |
+
+The allow list being _empty_ is worth noting: until this ran, Supabase had no
+permitted redirect at all, so every magic link and every Google return would
+have bounced regardless of anything else being right.
+
+**Two are blocked by the plan, not by configuration**, and the API says so in
+its own words:
+
+- **The magic-link template (step 2)** — `400`: _"Email template modification
+  is not available for free tier projects using the default email provider.
+  Please upgrade your plan or configure a custom SMTP provider."_
+
+  **This reorders the work.** Resend is not an optimisation to get to later;
+  it is the prerequisite for the one change that unblocks the code box. Do
+  step 5, then re-run `node scripts/auth-config.mjs --apply` and the template
+  will go in.
+
+- **Leaked-password protection (step 6)** — `402`: _"Configuring leaked
+  password protection via HaveIBeenPwned.org is available on Pro Plans and
+  up."_ Not available on the free tier at any price short of upgrading.
+
+Re-running the script is safe at any time: with no flag it only reads, and
+`--apply` patches each field separately so a refusal costs nothing but itself.
+
 ---
 
 ## Step 1 — URL configuration

@@ -128,7 +128,13 @@ async function call(method, body) {
 /** Never print a template body or anything secret-shaped — just its shape. */
 function show(key, value) {
   if (value === null || value === undefined) return "(unset)";
-  const s = String(value);
+  /* Booleans and numbers are never secrets, and masking them defeats the
+   * verification this script exists for: `password_hibp_enabled` matched the
+   * secret pattern on the word "password" and printed "(set)" for both true
+   * and false, so the one line meant to prove the setting had flipped could
+   * not tell the two apart. Only strings can be secret-shaped. */
+  if (typeof value !== "string") return String(value);
+  const s = value;
   if (/pass|secret|key|token/i.test(key)) return s ? "(set)" : "(unset)";
   if (s.length > 72) return `${s.length} chars, starts "${s.slice(0, 44).replace(/\s+/g, " ")}…"`;
   return s;
@@ -167,8 +173,37 @@ if (!apply) {
   process.exit(0);
 }
 
-const body = Object.fromEntries(Object.entries(INTENT).map(([k, v]) => [k, v.value]));
-await call("PATCH", body);
+/* ONE PATCH PER SETTING.
+ *
+ * A PATCH is all-or-nothing, and this project's plan refuses two of these
+ * outright — the free tier will not accept a custom email template while the
+ * project is still on the built-in mail provider, and leaked-password
+ * protection is Pro and up. Sent as one body, either refusal took all six
+ * settings down with it: a 400, then a 402, and nothing applied either time.
+ *
+ * So each field goes in its own call and stands or falls alone. Four land,
+ * two are reported with the plan's own words, and nothing is lost to a
+ * neighbour's rejection. It costs five extra round trips at human speed,
+ * which is nothing against silently believing a setting was applied.
+ */
+const refused = [];
+for (const [key, { value }] of Object.entries(INTENT)) {
+  const res = await fetch(API, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token()}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ [key]: value }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    let msg = text;
+    try {
+      msg = JSON.parse(text).message ?? text;
+    } catch {
+      /* keep the raw body */
+    }
+    refused.push({ key, status: res.status, msg });
+  }
+}
 
 /* Read back rather than trusting the PATCH's own response: the point of
  * verifying is to see what the server kept, not what we sent it. */
@@ -176,9 +211,12 @@ const after = await call("GET");
 let bad = 0;
 console.log("  After:\n");
 for (const [key, { value }] of Object.entries(INTENT)) {
+  const wasRefused = refused.some((r) => r.key === key);
   const ok = String(after[key]) === String(value);
-  if (!ok) bad++;
-  console.log(`  ${ok ? "ok " : "NO "} ${key}  ${show(key, after[key])}`);
+  /* A field the plan refused is not a failure of this script, and counting
+   * it as one would make a correct run exit non-zero for ever. */
+  if (!ok && !wasRefused) bad++;
+  console.log(`  ${wasRefused ? "-- " : ok ? "ok " : "NO "} ${key}  ${show(key, after[key])}`);
 }
 console.log(
   bad === 0
