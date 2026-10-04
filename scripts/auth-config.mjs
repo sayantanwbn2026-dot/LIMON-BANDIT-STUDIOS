@@ -65,11 +65,25 @@ function fail(message) {
  * reset, and after Google back to WHATEVER page they started on — which is
  * any path on the site. Exact URLs cannot express that.
  *
- * The real domain is not registered yet, so this is localhost only. Adding
- * the production origin later is one more entry in this list.
+ * `site_url` is where Supabase sends anyone whose redirect it cannot honour,
+ * so it has to be production: a visitor on the live site who follows a link
+ * Supabase rejects should land on the live site, not on a localhost address
+ * that means nothing on their phone.
+ *
+ * THE PREVIEW WILDCARD IS NOT OPTIONAL. Vercel gives every deployment its own
+ * hostname — limon-bandit-studios-2nyjgscuo-xexe1.vercel.app was the one live
+ * when this was written — so signing in from a preview build redirects to a
+ * host that will never be in a list of exact URLs. Without the pattern every
+ * preview silently falls back to production, which looks like the link
+ * "not working" on the branch you are actually testing.
  * ------------------------------------------------------------------ */
-const SITE_URL = "http://localhost:5181";
-const REDIRECTS = ["http://localhost:5181/**", "http://localhost:3000/**"];
+const SITE_URL = "https://limon-bandit-studios.vercel.app";
+const REDIRECTS = [
+  "https://limon-bandit-studios.vercel.app/**",
+  "https://limon-bandit-studios-*-xexe1.vercel.app/**",
+  "http://localhost:5181/**",
+  "http://localhost:3000/**",
+];
 
 /* The magic-link email. `{{ .Token }}` IS the six-digit code — the whole
  * reason this script exists is that Supabase's stock template sends only a
