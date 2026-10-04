@@ -108,13 +108,29 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
           {item.title}
         </h3>
 
+        {/* 12px under the title, 8 above it. An even gap on both sides made
+         * the eyebrow, the title and the blurb read as three equals; the
+         * blurb belongs to the title, and the eyebrow labels it. */}
         {item.blurb ? (
-          <p className="card-blurb mt-2 font-ui text-[14px] leading-[1.5] text-mute">
+          <p className="card-blurb mb-5 mt-3 font-ui text-[14px] leading-[1.5] text-mute [text-wrap:pretty]">
             {item.blurb}
           </p>
         ) : null}
 
-        <span className="mt-5 flex items-center gap-2 pt-1 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
+        {/* `mt-auto` PINS THIS TO THE FLOOR OF THE CARD.
+         *
+         * The three cards in this rail already stretch to a common height,
+         * but the link sat wherever the blurb happened to end — measured at
+         * 24px apart across the three, so the row of calls to action was
+         * visibly crooked while the cards around them were square. Pushed
+         * to the bottom, they land on one line whatever the copy does.
+         *
+         * The hairline above it is the same device the room card uses: the
+         * top of a card describes the thing and the bottom of it acts, and
+         * a drawn edge says so where a margin only implies it. `mb-5` on
+         * the blurb is the minimum gap, since `mt-auto` collapses to zero
+         * when a long blurb leaves no free space to absorb. */}
+        <span className="mt-auto flex items-center gap-2 border-t border-line pt-4 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
           <span className="wipe-underline">{item.cta || "Open"}</span>
           {external ? (
             <ArrowUpRight size={15} className="text-acid-type lb-arrow" />

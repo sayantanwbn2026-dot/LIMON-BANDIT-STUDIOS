@@ -114,28 +114,30 @@ export function Rooms() {
                 data-room-item
                 className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-7 md:first:border-t-0 md:first:pt-0"
               >
-                {/* THE NAME GETS ITS OWN LINE ON A PHONE.
+                {/* ONE EYEBROW, NOT TWO THINGS AT OPPOSITE ENDS.
                  *
-                 * All three of these sat on one baseline row, which is right
-                 * on a full-width desktop row and impossible in a rail card:
-                 * the card is 82% of a 375px screen, so about 205px inside
-                 * the padding, and "ROOM A" at 28px wants most of that on its
-                 * own. Sharing the line with "LIVE TRACKING" broke BOTH — the
-                 * name wrapped after "ROOM" and the tag wrapped after "LIVE",
-                 * so a two-word heading and a two-word label became four
-                 * ragged lines.
+                 * The index and the kind are the same rank — both 11px
+                 * labels qualifying the name below — so they belong to each
+                 * other, and `ml-auto` was throwing the kind to the far edge
+                 * of a 205px card. That left a hole across the middle of the
+                 * first line and read as two unrelated fragments floating
+                 * apart rather than as a label with two halves. Sitting
+                 * together at a 12px gap they read as one line: "01 LIVE
+                 * TRACKING", the number in acid and the kind in mute, which
+                 * is hierarchy carried by colour rather than by distance.
                  *
-                 * One markup, reordered rather than duplicated. On a phone
-                 * the two small labels take the first line (the tag pushed
-                 * right by `ml-auto`) and `w-full` drops the name onto its
-                 * own; from `md` the order returns to index, name, tag on a
-                 * single baseline and `ml-auto` pushes the tag to the far
-                 * end exactly as before. */}
-                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                 * `md:ml-auto` puts it back at the far end from the tablet
+                 * up, where the card is a full-width ruled row and the span
+                 * is the point: there the gap is structure, not a hole.
+                 *
+                 * The name still takes its own line on a phone — "ROOM A" at
+                 * 28px wants most of 205px — and rejoins the baseline row
+                 * at `md` via the order swap. */}
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:gap-x-4">
                   <span className="order-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
                     {r.index}
                   </span>
-                  <span className="order-2 ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute md:order-3">
+                  <span className="order-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute md:order-3 md:ml-auto">
                     {r.kind}
                   </span>
                   <h3 className="order-3 w-full font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:order-2 md:w-auto md:text-[34px]">
@@ -143,7 +145,13 @@ export function Rooms() {
                   </h3>
                 </div>
 
-                <p className="card-blurb mt-4 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
+                {/* 12px under the name, not 16. The blurb belongs to the
+                 * heading above it, and an even gap on both sides of the
+                 * name made the three parts read as a list of equals.
+                 *
+                 * `pretty` keeps the clamped second line from ending on a
+                 * single orphaned word. */}
+                <p className="card-blurb mt-3 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute [text-wrap:pretty]">
                   {r.blurb}
                 </p>
 
@@ -162,12 +170,21 @@ export function Rooms() {
                  * second line, so the one row meant to read as a quiet
                  * caption was the most broken-looking thing on the card. */}
 
-                {/* Same problem, same cure. "₹2,400 / hr" and "Book this
-                 * room" could not share 205px either: the price broke after
-                 * the slash and the link broke before "room", leaving its
-                 * arrow stranded on a line of its own. Stacked on a phone,
-                 * still a row from `md`. */}
-                <div className="mt-5 flex flex-col items-start gap-3 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-4">
+                {/* THE ACTION ZONE IS DRAWN OFF, NOT JUST SPACED OFF.
+                 *
+                 * The price and the link used to follow the blurb on nothing
+                 * but a margin, so the card was four things in a column with
+                 * no statement about which belonged together. A hairline
+                 * above them says the top of the card describes the room and
+                 * the bottom of it transacts — the same rule the rest of the
+                 * site uses to separate a section from its furniture.
+                 *
+                 * They are stacked because they could not share 205px: the
+                 * price broke after the slash and the link broke before
+                 * "room", stranding its arrow on a line of its own. The rule
+                 * and the stacking both stop at `md`, where the card becomes
+                 * a full-width ruled row that already has its own edges. */}
+                <div className="mt-5 flex flex-col items-start gap-3 border-t border-line pt-4 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-4 md:border-t-0 md:pt-0">
                   <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                     {r.rate}
                   </span>
