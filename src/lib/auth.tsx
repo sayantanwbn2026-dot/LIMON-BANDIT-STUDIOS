@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, isSupabaseConfigured } from "./supabase";
+import { arrivedFromLink } from "./auth-capture";
 import { useToast } from "./toast";
 
 /**
@@ -202,15 +203,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
          * have switched from the mail app and back, that reads as the link
          * having done nothing.
          *
-         * The query string is cleared with replaceState so a refresh, a
-         * bookmark or a shared URL does not carry a spent sign-in marker
-         * around, and so the message cannot fire twice. */
-        if (event === "SIGNED_IN" && window.location.search.includes("confirmed=1")) {
-          const url = new URL(window.location.href);
-          url.searchParams.delete("confirmed");
-          window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-          setJustSignedIn(true);
-        }
+         * It no longer reads `?confirmed=1`: the capture script in <head>
+         * strips the query before React runs, so that check was looking for
+         * a marker another file had just deleted. `arrivedFromLink` is set
+         * where the session is actually installed and returns true once, so
+         * it cannot drift from the thing it describes and cannot fire
+         * twice on a refresh. */
+        if (event === "SIGNED_IN" && arrivedFromLink()) setJustSignedIn(true);
       });
       unsubscribe = () => sub.subscription.unsubscribe();
     })();

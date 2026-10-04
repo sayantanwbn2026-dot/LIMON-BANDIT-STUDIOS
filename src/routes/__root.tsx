@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { THEME_INIT_SCRIPT } from "../lib/theme";
+import { AUTH_CAPTURE_SCRIPT } from "../lib/auth-capture";
 import { Nav } from "@/components/sections/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { Noise } from "@/components/lb/Noise";
@@ -249,6 +250,15 @@ function RootShell({ children }: { children: ReactNode }) {
             the first paint, which is what prevents a flash of the wrong
             theme on load. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Must also stay in <head> and stay blocking, for a different
+            reason: it is the only code that runs before the router
+            normalises the URL. The session a magic link hands back lives in
+            the hash, and the router strips hash and query during hydration —
+            measured, before the first timer fires — while supabase-js is a
+            dynamic import that has not arrived yet. This copies the tokens
+            out of the address bar before either of those can happen. See
+            lib/auth-capture.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: AUTH_CAPTURE_SCRIPT }} />
       </head>
       <body>
         {children}

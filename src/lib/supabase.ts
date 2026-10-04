@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { markArrivedFromLink, takeAuthHandoff } from "./auth-capture";
 
 /**
  * The browser Supabase client.
@@ -41,15 +42,46 @@ export function getSupabase(): Promise<SupabaseClient | null> {
 
   if (!clientPromise) {
     clientPromise = import("@supabase/supabase-js")
-      .then(({ createClient }) =>
-        createClient(url, key, {
+      .then(async ({ createClient }) => {
+        const client = createClient(url, key, {
           auth: {
             persistSession: true,
             autoRefreshToken: true,
+            /* Left on, but it can no longer be what saves us: this module is
+             * imported dynamically, so by the time the client exists the
+             * router has already stripped the URL it would have read. The
+             * handoff below is the load-bearing half. */
             detectSessionInUrl: true,
           },
-        }),
-      )
+        });
+
+        /* The session a sign-in email handed back, rescued from the address
+         * bar by the blocking script in <head> before anything could drop
+         * it. Applied here rather than in a component so that EVERY caller
+         * of getSupabase() — the auth provider, a loader, a stray effect —
+         * gets a client that is already signed in, instead of a race over
+         * who installs the session first. */
+        const handoff = takeAuthHandoff();
+        if (handoff?.access_token && handoff.refresh_token) {
+          const { error } = await client.auth.setSession({
+            access_token: handoff.access_token,
+            refresh_token: handoff.refresh_token,
+          });
+          if (error) console.error("sign-in link could not be completed", error.message);
+          else markArrivedFromLink();
+        } else if (handoff?.code) {
+          /* PKCE: the query carried a code instead of tokens. Only works in
+           * the browser that asked for the link, because the verifier lives
+           * in its storage — which is the flow's design, not a fault here. */
+          const { error } = await client.auth.exchangeCodeForSession(handoff.code);
+          if (error) console.error("sign-in link could not be completed", error.message);
+          else markArrivedFromLink();
+        } else if (handoff?.error) {
+          console.error("sign-in link rejected:", handoff.error);
+        }
+
+        return client;
+      })
       .catch((e) => {
         /* A failed chunk fetch must not poison the memo — the next caller
          * should be able to try again rather than inherit a rejected promise
