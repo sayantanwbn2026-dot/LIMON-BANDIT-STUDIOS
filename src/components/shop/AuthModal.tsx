@@ -75,6 +75,12 @@ export function AuthModal() {
   /* The address the code actually went to, so the screen can name it even
    * if the field is edited afterwards. */
   const sentTo = useRef("");
+  const formRef = useRef<HTMLFormElement>(null);
+  /* The last complete code this screen submitted by itself. Without it the
+   * auto-submit below would fire again on every re-render while a wrong
+   * code sat in the box — including the re-render its own failure causes,
+   * which is an infinite loop against the auth server. */
+  const autoSent = useRef("");
 
   const mode = gate.mode;
 
@@ -85,6 +91,7 @@ export function AuthModal() {
     if (gate.open) return;
     setPassword("");
     setCode("");
+    autoSent.current = "";
     setErrors({});
     setNotice(null);
     setBusy(false);
@@ -96,6 +103,41 @@ export function AuthModal() {
     setNotice(null);
     setCanResend(false);
   }, [mode]);
+
+  /* ARRIVING AT THE CODE STEP, PUT THE CARET IN THE BOX.
+   *
+   * The step before this was a button press, so focus is left on a button
+   * that no longer exists. Without this the screen asks for six digits and
+   * the keyboard is shut — on a phone that is a tap nobody should have to
+   * find, and for a screen reader it is a silent change of subject. */
+  useEffect(() => {
+    if (mode !== "code") return;
+    const t = window.setTimeout(() => document.getElementById("auth-code")?.focus(), 80);
+    return () => window.clearTimeout(t);
+  }, [mode]);
+
+  /* SIX DIGITS IS THE WHOLE INTENT — DO NOT ALSO ASK FOR A PRESS.
+   *
+   * A one-time code has exactly one meaning: nobody types six digits they
+   * did not mean to submit. Pasting from the mail app and then hunting for
+   * a button is the step that makes a code feel slower than a password,
+   * and on iOS the keyboard's own autofill drops all six in at once — so
+   * the press is a tap on a button the visitor cannot see under the
+   * keyboard.
+   *
+   * `requestSubmit`, not a direct call, so this goes through exactly the
+   * same validation and busy-state path as the button. `autoSent` makes it
+   * fire once per distinct complete code: a wrong code re-renders this
+   * component, and without the guard that re-render would submit it again,
+   * and again, until Supabase started refusing us. Clearing the box on
+   * failure (below) is what lets a corrected code through. */
+  useEffect(() => {
+    if (mode !== "code" || busy) return;
+    if (code.length !== CODE_LENGTH) return;
+    if (autoSent.current === code) return;
+    autoSent.current = code;
+    formRef.current?.requestSubmit();
+  }, [code, mode, busy]);
 
   /* Counts the resend button back down to zero, once per second, and only
    * while there is something to count. */
@@ -137,6 +179,7 @@ export function AuthModal() {
     sentTo.current = email.trim();
     setCooldown(RESEND_SECONDS);
     setCode("");
+    autoSent.current = "";
     return true;
   };
 
@@ -166,7 +209,17 @@ export function AuthModal() {
         const res = await verifyEmailCode(sentTo.current || email, code);
         /* On success the provider closes this and releases the pending
          * action, so there is nothing to do here but report a failure. */
-        if (!res.ok) setNotice({ tone: "bad", text: res.message });
+        if (!res.ok) {
+          setNotice({ tone: "bad", text: res.message });
+          /* Empty the box and put the caret back in it. A wrong code is
+           * never worth editing — you retype it or you paste the right one
+           * — and leaving six stale digits there means select-all before
+           * either. It also re-arms the auto-submit, which will not fire
+           * twice on the same value. */
+          setCode("");
+          autoSent.current = "";
+          document.getElementById("auth-code")?.focus();
+        }
         return;
       }
 
@@ -315,7 +368,7 @@ export function AuthModal() {
         </div>
       ) : null}
 
-      <form onSubmit={onSubmit} noValidate className="space-y-6">
+      <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-6">
         {mode === "signup" ? (
           <Field
             id="auth-fullName"
@@ -358,7 +411,13 @@ export function AuthModal() {
             placeholder="000000"
             autoComplete="one-time-code"
             required
-            hint="Straight from the email. It is only good for an hour."
+            /* Not "good for an hour": the expiry is a dashboard setting and
+             * a shortened one would make this copy a lie in the dangerous
+             * direction. The newest-code warning is the more useful fact
+             * anyway — the common failure is not an expired code, it is
+             * someone pressing resend and then typing the FIRST email's
+             * digits, which the server has already replaced. */
+            hint="Straight from the email. If you asked twice, use the newest one."
           />
         ) : null}
 
