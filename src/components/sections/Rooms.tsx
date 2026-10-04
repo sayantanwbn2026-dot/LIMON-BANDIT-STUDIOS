@@ -114,16 +114,33 @@ export function Rooms() {
                 data-room-item
                 className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-7 md:first:border-t-0 md:first:pt-0"
               >
-                <div className="flex items-baseline gap-4">
-                  <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
+                {/* THE NAME GETS ITS OWN LINE ON A PHONE.
+                 *
+                 * All three of these sat on one baseline row, which is right
+                 * on a full-width desktop row and impossible in a rail card:
+                 * the card is 82% of a 375px screen, so about 205px inside
+                 * the padding, and "ROOM A" at 28px wants most of that on its
+                 * own. Sharing the line with "LIVE TRACKING" broke BOTH — the
+                 * name wrapped after "ROOM" and the tag wrapped after "LIVE",
+                 * so a two-word heading and a two-word label became four
+                 * ragged lines.
+                 *
+                 * One markup, reordered rather than duplicated. On a phone
+                 * the two small labels take the first line (the tag pushed
+                 * right by `ml-auto`) and `w-full` drops the name onto its
+                 * own; from `md` the order returns to index, name, tag on a
+                 * single baseline and `ml-auto` pushes the tag to the far
+                 * end exactly as before. */}
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <span className="order-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
                     {r.index}
                   </span>
-                  <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[34px]">
-                    {r.name}
-                  </h3>
-                  <span className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute">
+                  <span className="order-2 ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute md:order-3">
                     {r.kind}
                   </span>
+                  <h3 className="order-3 w-full font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:order-2 md:w-auto md:text-[34px]">
+                    {r.name}
+                  </h3>
                 </div>
 
                 <p className="card-blurb mt-4 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
@@ -149,7 +166,12 @@ export function Rooms() {
                   ))}
                 </p>
 
-                <div className="mt-4 flex items-center justify-between">
+                {/* Same problem, same cure. "₹2,400 / hr" and "Book this
+                 * room" could not share 205px either: the price broke after
+                 * the slash and the link broke before "room", leaving its
+                 * arrow stranded on a line of its own. Stacked on a phone,
+                 * still a row from `md`. */}
+                <div className="mt-5 flex flex-col items-start gap-3 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-4">
                   <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                     {r.rate}
                   </span>

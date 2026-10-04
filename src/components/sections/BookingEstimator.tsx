@@ -87,7 +87,10 @@ export function BookingEstimator() {
                           : "border-line hover:border-line-strong"
                       }`}
                     >
-                      <span className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text">
+                      {/* balance, so a two-word room name splits evenly
+                       * instead of leaving one word alone on the second
+                       * line of a narrow picker tile. */}
+                      <span className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text [text-wrap:balance]">
                         {r.name}
                       </span>
                       <span className="font-ui text-[12px] text-mute">{r.capacity}</span>

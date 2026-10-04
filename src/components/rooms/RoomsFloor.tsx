@@ -132,14 +132,20 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
       data-room-chapter
       className="scroll-mt-[120px] border-t border-line py-[96px] first:border-t-0"
     >
-      <div className="flex items-baseline gap-4">
-        <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
+      {/* The name takes its own line on a phone — the same fix, and for the
+       * same reason, as the rail card on the home page. "THE LOCKOUT" at
+       * 28px wants about 190px and the column is 311px, so sharing the row
+       * with the kind label wrapped the heading in two. Reordered rather
+       * than duplicated: labels first and the name below on a phone, one
+       * baseline row from `md`. */}
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span className="order-1 tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
           {r.index}
         </span>
-        <h3 className="font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:text-[42px]">
+        <span className="t-label order-2 ml-auto text-mute md:order-3">{r.kind}</span>
+        <h3 className="order-3 w-full font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:order-2 md:w-auto md:text-[42px]">
           {r.name}
         </h3>
-        <span className="t-label ml-auto text-mute">{r.kind}</span>
       </div>
 
       <div className={`mt-10 flex flex-col gap-10 ${reverse ? "lg:flex-col-reverse" : ""}`}>
@@ -199,7 +205,12 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
         <Link
           to="/contact"
           search={{ intent: "booking", room: r.id }}
-          className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
+          /* Tighter box on a phone. "Book The Lockout" plus an arrow could
+           * not fit between two 32px paddings and a 24px gap in a 311px
+           * column, so the label broke in two and the arrow sat beside a
+           * two-line button. 24px of padding and a 16px gap give it back
+           * the room it needs; the desktop button is unchanged. */
+          className="group flex h-[56px] items-center justify-between gap-4 bg-acid px-6 transition-colors duration-300 hover:bg-acid-dim md:gap-6 md:px-8"
         >
           <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
             Book {r.name}

@@ -180,7 +180,11 @@ export function LabelPlayer() {
                   <SkipForward size={16} />
                 </button>
 
-                <span className="tnum ml-auto font-ui text-[13px] text-mute">
+                {/* A timecode is one token, never two lines. On a phone the
+                 * transport row left this about 68px and it broke after the
+                 * slash — "00:00 /" above "00:00" reads as a fault in the
+                 * player rather than as a time. */}
+                <span className="tnum ml-auto whitespace-nowrap font-ui text-[13px] text-mute">
                   {clock(isLive ? time : 0)} / {clock(isLive ? duration : 0)}
                 </span>
               </div>
