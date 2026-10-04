@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { explainNotifyStatus, notifyStatus, type NotifyStatus } from "@/lib/notify-status";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, Mail, MessageCircle, Phone } from "lucide-react";
 import { AdminHeading } from "@/components/admin/AdminShell";
@@ -44,12 +45,16 @@ const tabOf = (s: OrderStatus): Exclude<Tab, "all"> =>
  */
 function Orders() {
   const [rows, setRows] = useState<OrderRow[] | null>(null);
+  const [notify, setNotify] = useState<NotifyStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("open");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => {
+    void notifyStatus()
+      .then(setNotify)
+      .catch(() => setNotify(null));
     void listOrders().then((r) => (r.ok ? setRows(r.data) : setError(r.error)));
   }, []);
 
@@ -110,6 +115,23 @@ function Orders() {
         title="Orders"
         standfirst="Every order from the shop. Move each one along as it is packed and shipped, and mark it paid when the cash comes in."
       />
+
+      {/* Said once at the top, not implied order by order. Without it every
+          row reads "Sheet: not synced" and there is no way to tell a setting
+          nobody filled in from a webhook that is failing — or, worse, from
+          one that is working while the result cannot be recorded. */}
+      {notify && explainNotifyStatus(notify).tone !== "ok" ? (
+        <div
+          className={`mb-6 border p-5 ${
+            explainNotifyStatus(notify).tone === "bad" ? "border-danger" : "border-line"
+          }`}
+        >
+          <p className="t-label text-acid-type">Notifications</p>
+          <p className="mt-3 max-w-[72ch] font-ui text-[13px] leading-[1.6] text-mute">
+            {explainNotifyStatus(notify).text}
+          </p>
+        </div>
+      ) : null}
 
       {error ? (
         <InboxError message={error} />
