@@ -47,7 +47,7 @@ export function Featured() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1 md:justify-end">
-          <p className="max-w-[28ch] font-ui text-[14px] leading-[1.5] text-mute">
+          <p className="section-lede max-w-[28ch] font-ui text-[14px] leading-[1.5] text-mute">
             {copy.standfirst}
           </p>
         </div>
@@ -109,7 +109,9 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
         </h3>
 
         {item.blurb ? (
-          <p className="mt-2 font-ui text-[14px] leading-[1.5] text-mute">{item.blurb}</p>
+          <p className="card-blurb mt-2 font-ui text-[14px] leading-[1.5] text-mute">
+            {item.blurb}
+          </p>
         ) : null}
 
         <span className="mt-5 flex items-center gap-2 pt-1 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">

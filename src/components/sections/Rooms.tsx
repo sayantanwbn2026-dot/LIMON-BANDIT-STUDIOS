@@ -126,7 +126,7 @@ export function Rooms() {
                   </span>
                 </div>
 
-                <p className="mt-4 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
+                <p className="card-blurb mt-4 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute">
                   {r.blurb}
                 </p>
 

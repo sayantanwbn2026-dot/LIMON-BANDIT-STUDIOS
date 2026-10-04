@@ -42,7 +42,7 @@ export function FinalCta() {
 
           <WordReveal as="h2" className="t-hero mt-8 text-text" text={copy.heading} />
 
-          <p className="t-lead mt-8 max-w-[520px] text-mute">{copy.standfirst}</p>
+          <p className="section-lede t-lead mt-8 max-w-[520px] text-mute">{copy.standfirst}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <div className="flex">

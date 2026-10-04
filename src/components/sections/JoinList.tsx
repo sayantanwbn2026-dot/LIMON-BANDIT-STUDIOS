@@ -87,7 +87,7 @@ export function JoinList() {
               {copy.eyebrow}
             </Eyebrow>
             <h2 className="t-h2 mt-6 max-w-[14ch] text-text">{copy.heading}</h2>
-            <p className="mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">
+            <p className="section-lede mt-6 max-w-[42ch] font-ui text-[15px] leading-[1.5] text-mute">
               {copy.standfirst}
             </p>
           </div>

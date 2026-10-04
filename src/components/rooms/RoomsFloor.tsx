@@ -155,7 +155,9 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
         />
 
         <div>
-          <p className="max-w-[52ch] font-ui text-[16px] leading-[1.5] text-mute">{r.blurb}</p>
+          <p className="card-blurb max-w-[52ch] font-ui text-[16px] leading-[1.5] text-mute">
+            {r.blurb}
+          </p>
 
           <dl className="mt-8 grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
             {r.specs.map((s) => (

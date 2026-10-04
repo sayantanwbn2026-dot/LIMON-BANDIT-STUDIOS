@@ -21,7 +21,7 @@ export function Footer() {
             <div className="text-text">
               <Logotype />
             </div>
-            <p className="mt-6 max-w-[28ch] font-ui text-[14px] leading-[1.5] text-mute">
+            <p className="section-lede mt-6 max-w-[28ch] font-ui text-[14px] leading-[1.5] text-mute">
               {site.description}
             </p>
             <Link

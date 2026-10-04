@@ -1799,3 +1799,54 @@
     line-height: 1.3;
   }
 }
+
+/* ---------------- a phone reads less ----------------
+ * A phone was being handed the desktop page's entire word count down a
+ * 375px column: the home page ran to sixteen and a half screens and a
+ * thousand words, and every section paid for an eyebrow, a heading, a
+ * supporting sentence that restated the heading, and then a multi-line
+ * blurb on every card inside it. Nothing was broken — it measured clean
+ * for overflow and tap targets — it was simply exhausting, which is a
+ * failure a measurement does not catch.
+ *
+ * THE LEDE GOES. `.section-lede` marks the supporting sentence under a
+ * section heading, and only that: the one line whose job is to add
+ * colour to a heading that already carries the meaning. It is the right
+ * thing to drop first because dropping it costs the least — on a desktop
+ * it sits in its own column beside the heading and reads as a caption,
+ * while on a phone it stacks underneath and reads as another paragraph
+ * to get through before the actual content starts.
+ *
+ * WHAT IS DELIBERATELY NOT MARKED: hero standfirsts. The opening
+ * sentence of a page is the one piece of prose a visitor most needs —
+ * it says what this place is — and a phone is exactly where that matters
+ * most. Cutting the page's first sentence to save a line is the wrong
+ * trade, so every `heroes/*` lede stays.
+ *
+ * `display: none` rather than clamping, and yes, that hides it from a
+ * screen reader on a phone too. That is the honest reading of the
+ * decision: this sentence is supplementary everywhere, and a visitor
+ * using a screen reader on a phone benefits from a shorter page for the
+ * same reason everyone else does. Anything a visitor actually needs is
+ * not in a lede.
+ * -------------------------------------------------- */
+@media (max-width: 767px) {
+  .section-lede {
+    display: none;
+  }
+
+  /* CARD BLURBS GET TWO LINES.
+   *
+   * Clamped, not hidden — unlike a lede, a card's blurb is the only
+   * description that card has, and a card with a title and nothing else
+   * is a worse answer than a card with a sentence and a half. Two lines
+   * keeps the sense and stops a rail of four cards costing four
+   * paragraphs. The full text stays in the DOM, so a screen reader and
+   * the browser's find-in-page still get all of it. */
+  .card-blurb {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}

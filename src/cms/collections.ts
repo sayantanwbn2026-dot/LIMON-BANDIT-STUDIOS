@@ -284,7 +284,7 @@ const homeOrder: Collection = {
   key: "page.home.order",
   title: "Home page order",
   description:
-    "Every section of the home page, top to bottom. Move a row to move the section; switch one off to hide it without losing anything. The hero is always first and is not listed.",
+    "Every section of the home page, top to bottom. Move a row to move the section; switch one off to hide it without losing anything. “Also show on phones” keeps a section on a desktop while dropping it from the phone, which reads the same page one swipe at a time. The hero is always first and is not listed.",
   group: "page",
   page: "home",
   shape: "list",
@@ -297,6 +297,12 @@ const homeOrder: Collection = {
       HOME_SECTIONS.map((s) => ({ value: s.key, label: s.label })),
     ),
     { kind: "boolean", name: "on", label: "Show this section" },
+    {
+      kind: "boolean",
+      name: "phone",
+      label: "Also show on phones",
+      help: "Switch off for sections a phone does not need. The page is read one thumb-swipe at a time there, so a section that earns its place on a desktop can still be the one worth losing on a 375px screen.",
+    },
   ],
 };
 

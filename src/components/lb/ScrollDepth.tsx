@@ -25,7 +25,17 @@ import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
  * assumption the cue would be invisible there; the opposite is true, because
  * a phone shows one section at a time and the arrival is the whole frame.
  */
-export function ScrollDepth({ children }: { children: ReactNode }) {
+export function ScrollDepth({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  /** Goes on the OUTER wrapper. The home page uses it to drop a section on
+   * phones with `max-md:hidden`, which must land on the element that owns
+   * the height — putting it on the inner, transformed child would leave
+   * this wrapper standing with a collapsed box inside it. */
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -109,7 +119,7 @@ export function ScrollDepth({ children }: { children: ReactNode }) {
      * `clip` rather than `hidden` so it creates no scroll container: it is
      * the one value allowed to pair with a visible cross axis, so the
      * section still paints freely above and below while it scales. */
-    <div style={{ overflowX: "clip", overflowY: "visible" }}>
+    <div className={className} style={{ overflowX: "clip", overflowY: "visible" }}>
       <div ref={ref} data-depth style={{ transformOrigin: "50% 50%" }}>
         {children}
       </div>

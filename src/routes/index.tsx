@@ -96,6 +96,7 @@ function Index() {
   const missing = HOME_SECTIONS.filter((s) => s.on && !named.has(s.key)).map((s) => ({
     section: s.key,
     on: true,
+    phone: s.phone,
   }));
 
   const rows = [...chosen, ...missing];
@@ -113,10 +114,26 @@ function Index() {
         {rows.map((row) => {
           const entry = SECTIONS[row.section as HomeSectionKey];
           if (!entry) return null;
+
+          /* HIDDEN ON A PHONE IN CSS, NOT IN JAVASCRIPT.
+           *
+           * The obvious version of this reads the viewport width and returns
+           * null — and breaks the page, because the server has no viewport.
+           * It would render the full set, the client would render the short
+           * one, and React would find a different tree than the HTML it was
+           * given. `max-md:hidden` is decided by the stylesheet at paint
+           * time, so both sides render identically and the phone simply
+           * never pays for the section's height. */
+          const phone = row.phone !== false ? "" : "max-md:hidden";
+
           return entry.depth ? (
-            <ScrollDepth key={row.section}>{entry.render()}</ScrollDepth>
+            <ScrollDepth key={row.section} className={phone}>
+              {entry.render()}
+            </ScrollDepth>
           ) : (
-            <div key={row.section}>{entry.render()}</div>
+            <div key={row.section} className={phone}>
+              {entry.render()}
+            </div>
           );
         })}
       </main>

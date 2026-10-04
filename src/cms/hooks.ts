@@ -259,7 +259,7 @@ export type FeaturedDoc = {
 export const useFeatured = () => useList<FeaturedDoc>("page.home.featured");
 
 /** One row per home-page section, in the order the page renders them. */
-export type HomeOrderDoc = { section: string; on: boolean };
+export type HomeOrderDoc = { section: string; on: boolean; phone?: boolean };
 export const useHomeOrder = () => useList<HomeOrderDoc>("page.home.order");
 
 /** The hero's one button. The wordmark above it is the logo, not content. */

@@ -163,7 +163,9 @@ export function RoomFilm() {
             <h2 className="t-h2 text-text">{copy.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
-            <p className="font-ui text-[15px] leading-[1.5] text-mute">{copy.standfirst}</p>
+            <p className="section-lede font-ui text-[15px] leading-[1.5] text-mute">
+              {copy.standfirst}
+            </p>
           </div>
         </div>
       </div>

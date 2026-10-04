@@ -57,7 +57,7 @@ export function BookingEstimator() {
           <WordReveal as="h2" className="t-h2 text-text" text={copy.heading} />
         </div>
         <div className="flex items-end md:col-span-1">
-          <p className="font-ui text-[15px] leading-[1.5] text-mute">
+          <p className="section-lede font-ui text-[15px] leading-[1.5] text-mute">
             Pick a room and a length. The number moves with you.
           </p>
         </div>
