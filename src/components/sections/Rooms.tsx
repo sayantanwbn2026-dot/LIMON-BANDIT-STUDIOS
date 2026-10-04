@@ -147,24 +147,20 @@ export function Rooms() {
                   {r.blurb}
                 </p>
 
-                {/* TWO specs, not four, and on one line.
+                {/* NO SPECS HERE.
                  *
-                 * This was a full label/value sheet per room — four rooms x
-                 * four rows, stacked, and the tallest thing left on the home
-                 * page. The whole sheet already exists on /rooms, which is
-                 * where somebody comparing rooms is going anyway; here it
-                 * only has to be enough to tell one room from the next. The
-                 * first two specs are the ones that do that (capacity and
-                 * what is in it), and they read as a caption rather than as
-                 * a table. */}
-                <p className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-ui text-[12px] font-semibold uppercase tracking-[0.08em] text-mute">
-                  {r.specs.slice(0, 2).map((s, n) => (
-                    <span key={s.k} className="tnum">
-                      {n > 0 ? <span className="pr-3 text-line-strong">&middot;</span> : null}
-                      {s.v}
-                    </span>
-                  ))}
-                </p>
+                 * This was a full label/value sheet, then two of them on one
+                 * line, and it is now none. Each step was the same argument
+                 * carried further: the whole sheet already exists on /rooms,
+                 * which is where somebody comparing rooms is going anyway,
+                 * and a card in a rail is a door — it has to say what the
+                 * room IS and what it costs, not brief you on it.
+                 *
+                 * The two-spec version also could not survive the card it
+                 * lived in. "480 SQ FT - API 1608 - 16CH" in 205px wrapped
+                 * mid-list and left a separator dangling at the head of the
+                 * second line, so the one row meant to read as a quiet
+                 * caption was the most broken-looking thing on the card. */}
 
                 {/* Same problem, same cure. "₹2,400 / hr" and "Book this
                  * room" could not share 205px either: the price broke after

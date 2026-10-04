@@ -148,7 +148,13 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
         </h3>
       </div>
 
-      <div className={`mt-10 flex flex-col gap-10 ${reverse ? "lg:flex-col-reverse" : ""}`}>
+      {/* 24px between a room's parts on a phone, 40 from `md`. The chapter is
+       * one subject — photograph, description, spec sheet — and 40px gaps
+       * stacked in a 375px column read as four separate things rather than
+       * one room. */}
+      <div
+        className={`mt-6 flex flex-col gap-6 md:mt-10 md:gap-10 ${reverse ? "lg:flex-col-reverse" : ""}`}
+      >
         <CmsImage
           src={r.image}
           alt={`${r.name} — ${r.kind} at Limon Bandit`}
@@ -181,7 +187,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
       </div>
 
       {/* three detail crops */}
-      <div className="mt-10 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-3 gap-3 md:mt-10 md:gap-4">
         {r.crops.map((c, i) => (
           <CmsImage
             key={`${c}-${i}`}
@@ -194,7 +200,12 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
       </div>
 
       {/* rate card */}
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border border-line bg-surface-raised p-8">
+      {/* The rate card spent 244px on a phone to show a price and a button:
+       * `p-8` on both axes, a 24px gap, and the two children wrapping onto
+       * separate rows anyway. Stacked deliberately at 20px padding and a
+       * 16px gap it is the same information in roughly half the height, and
+       * the button goes full-width rather than sitting half-way across. */}
+      <div className="ui-card mt-6 flex flex-col gap-4 border border-line bg-surface-raised p-5 md:mt-10 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-6 md:p-8">
         <div>
           <span className="t-label text-mute">From</span>
           <div className="tnum mt-2 font-display text-[28px] font-extrabold uppercase tracking-[-0.02em] text-acid-type">

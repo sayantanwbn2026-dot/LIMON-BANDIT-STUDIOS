@@ -87,10 +87,15 @@ export function BookingEstimator() {
                           : "border-line hover:border-line-strong"
                       }`}
                     >
-                      {/* balance, so a two-word room name splits evenly
-                       * instead of leaving one word alone on the second
-                       * line of a narrow picker tile. */}
-                      <span className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text [text-wrap:balance]">
+                      {/* 13px on a phone, where this tile is about 103px
+                       * wide inside its padding — two columns of a 263px
+                       * panel. "THE LOCKOUT" set at 15px does not fit that
+                       * and broke in two, which left one tile two lines
+                       * taller than its neighbours and the grid ragged.
+                       * `balance` stays for any room name long enough to
+                       * wrap even here, so it splits evenly rather than
+                       * dropping a single word onto its own line. */}
+                      <span className="font-display text-[13px] font-extrabold uppercase tracking-[-0.01em] text-text [text-wrap:balance] md:text-[15px]">
                         {r.name}
                       </span>
                       <span className="font-ui text-[12px] text-mute">{r.capacity}</span>
