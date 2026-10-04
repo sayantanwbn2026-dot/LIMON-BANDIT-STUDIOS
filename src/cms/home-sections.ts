@@ -30,10 +30,18 @@
  *
  * `on` is whether it ships switched ON. It is NOT the same as whether it
  * appears in the admin: every section here is always listed and always
- * toggleable. Five of them are off because they were cut from the page
- * for length, not deleted — the components are built, their content is
- * still edited in the CMS, and the only thing standing between them and
- * the live page is this switch.
+ * toggleable. Six of them are off because they were cut from the page,
+ * not deleted — the components are built, their content is still edited
+ * in the CMS, and the only thing standing between them and the live page
+ * is this switch.
+ *
+ * The rate estimator is the newest of the six and the only one cut for a
+ * reason other than length. It is a working calculator and it stays built,
+ * but a price on the front page answers a question nobody has asked yet:
+ * somebody arriving at the house is deciding whether this is the kind of
+ * place they want, and a rate card invites them to compare on cost before
+ * they have seen a room. The rates are on /rooms beside the room they
+ * belong to, which is where the question actually gets asked.
  *
  * Deliberately NOT here: the hero. It is the page's masthead, it is
  * always first, and an interface that lets someone put it third is an
@@ -67,7 +75,7 @@ export const HOME_SECTIONS: { key: HomeSectionKey; label: string; on: boolean; p
     { key: "bento", label: "What's inside — track, tee, room", on: false, phone: true },
     { key: "rooms", label: "The rooms", on: true, phone: true },
     { key: "film", label: "The film (opens as you scroll)", on: true, phone: false },
-    { key: "estimator", label: "What it costs", on: true, phone: true },
+    { key: "estimator", label: "What it costs — the rate estimator", on: false, phone: true },
     { key: "numbers", label: "Headline numbers", on: true, phone: false },
     { key: "roster", label: "The roster", on: true, phone: true },
     { key: "drops", label: "From the shop", on: true, phone: true },
