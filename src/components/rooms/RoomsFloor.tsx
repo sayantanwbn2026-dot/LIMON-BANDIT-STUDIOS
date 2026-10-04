@@ -147,7 +147,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
           src={r.image}
           alt={`${r.name} — ${r.kind} at Limon Bandit`}
           sizes="(max-width: 1023px) 100vw, 60vw"
-          className="w-full border border-line object-cover"
+          className="ui-media w-full border border-line object-cover"
           style={{
             aspectRatio: reverse ? "16 / 9" : "4 / 3",
             filter: "brightness(var(--img-brightness)) contrast(1.08)",
@@ -180,7 +180,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
             src={c}
             alt=""
             sizes="(max-width: 1023px) 33vw, 20vw"
-            className="aspect-square w-full border border-line object-cover chroma"
+            className="ui-media aspect-square w-full border border-line object-cover chroma"
           />
         ))}
       </div>

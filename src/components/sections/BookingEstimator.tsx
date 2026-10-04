@@ -155,7 +155,7 @@ export function BookingEstimator() {
               src={room.image}
               alt={room.name}
               sizes="(max-width: 1023px) 100vw, 380px"
-              className="mono aspect-[16/10] w-full border border-line object-cover"
+              className="ui-media mono aspect-[16/10] w-full border border-line object-cover"
             />
             <p className="mt-4 font-ui text-[14px] leading-[1.5] text-mute">{room.bestFor}</p>
           </div>

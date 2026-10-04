@@ -432,7 +432,7 @@ export function ProductPage({ product }: { product: Product }) {
               />
 
               {offers.length ? (
-                <div className="mt-8 border border-line p-5">
+                <div className="ui-card mt-8 border border-line p-5">
                   <h2 className="t-label text-mute">Offers</h2>
                   <ul className="mt-3 space-y-2">
                     {offers.slice(0, 3).map((o) => (
@@ -716,7 +716,7 @@ function DeliveryEstimate({
 
   if (digital) {
     return (
-      <div className="mt-8 flex items-start gap-3 border border-line p-5">
+      <div className="ui-card mt-8 flex items-start gap-3 border border-line p-5">
         <Truck size={16} className="mt-[2px] shrink-0 text-acid-type" />
         <p className="font-ui text-[14px] leading-[1.5] text-text">
           Digital — nothing ships. The file reaches you by email after the order.
@@ -731,7 +731,7 @@ function DeliveryEstimate({
   const local = /^7000[0-1][0-9]$/.test(checked ?? "");
 
   return (
-    <div className="mt-8 border border-line p-5">
+    <div className="ui-card mt-8 border border-line p-5">
       <h2 className="t-label flex items-center gap-2 text-mute">
         <Truck size={14} className="text-acid-type" /> Delivery
       </h2>

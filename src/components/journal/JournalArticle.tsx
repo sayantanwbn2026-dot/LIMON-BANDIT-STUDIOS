@@ -115,7 +115,7 @@ export function JournalArticle({ entry }: { entry: Post }) {
             src={entry.image}
             sizes="(max-width: 767px) 100vw, 1200px"
             alt={entry.alt}
-            className="aspect-[16/9] w-full border border-line object-cover"
+            className="ui-media aspect-[16/9] w-full border border-line object-cover"
           />
         </div>
 

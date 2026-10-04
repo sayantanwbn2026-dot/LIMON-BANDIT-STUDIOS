@@ -40,7 +40,7 @@ export function Process() {
                   src={s.thumb}
                   sizes="120px"
                   alt={s.alt}
-                  className="h-[120px] w-[120px] scale-90 border border-line object-cover opacity-0 chroma transition-all duration-[400ms] group-hover:scale-100 group-hover:opacity-100"
+                  className="ui-media h-[120px] w-[120px] scale-90 border border-line object-cover opacity-0 chroma transition-all duration-[400ms] group-hover:scale-100 group-hover:opacity-100"
                 />
               </div>
             </div>

@@ -46,7 +46,7 @@ export function Journal() {
                 src={p.image}
                 sizes="(max-width: 767px) 100vw, 30vw"
                 alt={p.alt}
-                className="chroma aspect-[4/3] w-full border border-line object-cover"
+                className="ui-media chroma aspect-[4/3] w-full border border-line object-cover"
               />
               <div className="t-label mt-5 text-mute">
                 {p.category} · {p.readTime}

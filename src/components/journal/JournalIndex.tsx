@@ -108,7 +108,7 @@ export function JournalIndex() {
                     src={p.image}
                     alt=""
                     sizes="140px"
-                    className="h-[72px] w-full border border-line object-cover"
+                    className="ui-media h-[72px] w-full border border-line object-cover"
                     style={{
                       filter: "brightness(var(--img-brightness)) contrast(1.08)",
                     }}

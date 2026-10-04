@@ -89,7 +89,7 @@ export function LabelPlayer() {
               src={shown.cover}
               alt={`Cover art for ${shown.title} by ${shown.artist}`}
               sizes="(max-width: 1023px) 100vw, 280px"
-              className="chroma aspect-square w-full border border-line object-cover"
+              className="ui-media chroma aspect-square w-full border border-line object-cover"
             />
             {/* The FFT of what is actually coming out, drawn the way the
              * wall of a control room draws it. Falls to the floor when
