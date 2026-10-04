@@ -16,6 +16,11 @@ all signed in within 30 days.
 
 ## Status — applied 2026-10-04
 
+**Sign-in works.** Confirmed by the account holder following a real link from
+a real email, after the fix in `src/lib/auth-capture.ts`. What the site sends
+today is a sign-in _link_, not a code, and the screen asks for a link to match
+— see `src/lib/auth-mode.ts` for how to switch that round once step 5 is done.
+
 Steps 1, 3 and 4 are **done**, set through the Management API by
 `scripts/auth-config.mjs` and verified by reading the config back:
 
