@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, isSupabaseConfigured } from "./supabase";
+import { useToast } from "./toast";
 
 /**
  * Membership, and the gate in front of everything that needs it.
@@ -65,7 +66,7 @@ type AuthState = {
   setMode: (m: AuthMode) => void;
 };
 
-export type AuthMode = "signin" | "code" | "password" | "signup" | "reset" | "update";
+export type AuthMode = "signin" | "code" | "sent" | "password" | "signup" | "reset" | "update";
 
 export type SignUpInput = {
   email: string;
@@ -136,6 +137,12 @@ export function readableAuthError(message: string): string {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
+  /* Set by the listener below, read by the effect under it. The toast cannot
+   * be fired from inside the auth callback: that runs before this provider's
+   * own children have mounted on a cold load, so the toaster is not there to
+   * receive it yet. */
+  const [justSignedIn, setJustSignedIn] = useState(false);
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<GateReason>(null);
@@ -185,6 +192,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setMode("update");
           setOpen(true);
         }
+
+        /* ARRIVING FROM A SIGN-IN LINK, SAY SO.
+         *
+         * The link in the email lands on `/?confirmed=1`, Supabase exchanges
+         * the token before this fires, and the visitor was dropped on the
+         * home page silently — signed in, but with nothing on screen to say
+         * the thing they just clicked had worked. On a phone, where they
+         * have switched from the mail app and back, that reads as the link
+         * having done nothing.
+         *
+         * The query string is cleared with replaceState so a refresh, a
+         * bookmark or a shared URL does not carry a spent sign-in marker
+         * around, and so the message cannot fire twice. */
+        if (event === "SIGNED_IN" && window.location.search.includes("confirmed=1")) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("confirmed");
+          window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+          setJustSignedIn(true);
+        }
       });
       unsubscribe = () => sub.subscription.unsubscribe();
     })();
@@ -194,6 +220,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       unsubscribe?.();
     };
   }, []);
+
+  /* Announce the arrival once the toaster exists to hear it. `useToast`
+   * returns a no-op outside a provider rather than throwing, so this is safe
+   * even if the order of providers ever changes. */
+  useEffect(() => {
+    if (!justSignedIn) return;
+    setJustSignedIn(false);
+    toast.ok("You are signed in.");
+  }, [justSignedIn, toast]);
 
   /* Which sign-in methods the project actually has switched on.
    *

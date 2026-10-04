@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Modal } from "@/components/lb/Modal";
 import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
 import { useAuth, type AuthMode } from "@/lib/auth";
+import { EMAIL_DELIVERS } from "@/lib/auth-mode";
 
 /**
  * The login popup.
@@ -201,7 +202,10 @@ export function AuthModal() {
     try {
       /* ---- the default door: email, then a code ---- */
       if (mode === "signin") {
-        if (await requestCode()) setMode("code");
+        /* Straight to the screen that matches what the email will hold. A
+         * link template and a code box is a dead end — a field the visitor
+         * cannot fill from anything they were sent. */
+        if (await requestCode()) setMode(EMAIL_DELIVERS === "code" ? "code" : "sent");
         return;
       }
 
@@ -303,6 +307,7 @@ export function AuthModal() {
   const heading: Record<AuthMode, string> = {
     signin: "Sign in",
     code: "Check your email",
+    sent: "Check your email",
     password: "Sign in with a password",
     signup: "Become a member",
     reset: "Reset your password",
@@ -310,19 +315,23 @@ export function AuthModal() {
   };
 
   const standfirst =
-    mode === "code"
-      ? `We sent a ${CODE_LENGTH}-digit code to ${sentTo.current || "your inbox"}. Type it below, or press the link in the same email.`
-      : gate.reason
-        ? gate.reason
-        : mode === "signup"
-          ? "Members can cart, wishlist and order. It takes a minute."
-          : mode === "reset"
-            ? "We will email you a link to set a new one."
-            : mode === "update"
-              ? "Pick something you have not used here before. At least 8 characters."
-              : mode === "password"
-                ? "For accounts made before we moved to codes."
-                : "No password to remember. We email you a code.";
+    mode === "sent"
+      ? `We sent a sign-in link to ${sentTo.current || "your inbox"}. Open it on this device and you are in — there is nothing to type.`
+      : mode === "code"
+        ? `We sent a ${CODE_LENGTH}-digit code to ${sentTo.current || "your inbox"}. Type it below, or press the link in the same email.`
+        : gate.reason
+          ? gate.reason
+          : mode === "signup"
+            ? "Members can cart, wishlist and order. It takes a minute."
+            : mode === "reset"
+              ? "We will email you a link to set a new one."
+              : mode === "update"
+                ? "Pick something you have not used here before. At least 8 characters."
+                : mode === "password"
+                  ? "For accounts made before we moved to email sign-in."
+                  : EMAIL_DELIVERS === "code"
+                    ? "No password to remember. We email you a code."
+                    : "No password to remember. We email you a link.";
 
   return (
     <Modal open={gate.open} onClose={closeAuth} title={heading[mode]} standfirst={standfirst}>
@@ -382,7 +391,7 @@ export function AuthModal() {
           />
         ) : null}
 
-        {mode !== "update" && mode !== "code" ? (
+        {mode !== "update" && mode !== "code" && mode !== "sent" ? (
           <Field
             id="auth-email"
             label="Email"
@@ -454,32 +463,41 @@ export function AuthModal() {
 
         {notice ? <FormNotice tone={notice.tone}>{notice.text}</FormNotice> : null}
 
-        <SubmitButton
-          label={
-            mode === "signin"
-              ? "Email me a code"
-              : mode === "code"
-                ? "Sign in"
-                : mode === "password"
+        {/* No submit on the sent screen. There is nothing left to send: the
+         * email is already gone and the next move is in the visitor's inbox,
+         * not on this form. A button here would either do nothing or send a
+         * second email nobody asked for — and the resend below, with its
+         * cooldown, is the deliberate way to do that. */}
+        {mode === "sent" ? null : (
+          <SubmitButton
+            label={
+              mode === "signin"
+                ? EMAIL_DELIVERS === "code"
+                  ? "Email me a code"
+                  : "Email me a sign-in link"
+                : mode === "code"
                   ? "Sign in"
-                  : mode === "signup"
-                    ? "Create account"
-                    : mode === "update"
-                      ? "Save new password"
-                      : "Send link"
-          }
-          busyLabel={
-            mode === "code"
-              ? "Checking…"
-              : mode === "signup"
-                ? "Creating…"
-                : mode === "update"
-                  ? "Saving…"
-                  : "Sending…"
-          }
-          busy={busy}
-          disabled={!configured}
-        />
+                  : mode === "password"
+                    ? "Sign in"
+                    : mode === "signup"
+                      ? "Create account"
+                      : mode === "update"
+                        ? "Save new password"
+                        : "Send link"
+            }
+            busyLabel={
+              mode === "code"
+                ? "Checking…"
+                : mode === "signup"
+                  ? "Creating…"
+                  : mode === "update"
+                    ? "Saving…"
+                    : "Sending…"
+            }
+            busy={busy}
+            disabled={!configured}
+          />
+        )}
       </form>
 
       {/* The escape hatch from the one failure a password visitor can fix
@@ -499,7 +517,7 @@ export function AuthModal() {
         </div>
       ) : null}
 
-      {mode === "code" ? (
+      {mode === "code" || mode === "sent" ? (
         <div className="mt-8 space-y-3 border-t border-line pt-6">
           <p className="font-ui text-[13px] text-mute">
             Nothing yet?{" "}
@@ -524,7 +542,11 @@ export function AuthModal() {
         <div className="mt-8 space-y-3 border-t border-line pt-6">
           {mode === "signin" ? (
             <Switch
-              prompt="Made an account before we moved to codes?"
+              /* "before we moved to codes" was true only while the email
+               * carried a code. The email sends a link on the free tier, so
+               * this names the change rather than the mechanism and stays
+               * true whichever one is switched on. */
+              prompt="Made an account before we moved to email sign-in?"
               label="Use your password"
               onClick={() => setMode("password")}
             />
