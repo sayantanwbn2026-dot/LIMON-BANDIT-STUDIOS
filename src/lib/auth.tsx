@@ -327,9 +327,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * tenth is the database's problem, not the visitor's.
    *
    * Supabase sends a link or a code depending on the email template. This
-   * needs `{{ .Token }}` in the Magic Link template — see SHEET-SETUP; with
-   * the default template the person gets a link, which still signs them in
-   * but makes the code box on screen a lie.
+   * needs `{{ .Token }}` in the Magic Link template — the template, and
+   * every other dashboard setting the sign-in depends on, is written out in
+   * supabase/AUTH-SETUP.md. With the stock template the person gets a link,
+   * which still signs them in but makes the code box on screen a lie.
    */
   const sendEmailCode = useCallback(
     async (email: string, fullName?: string): Promise<AuthResult> => {
