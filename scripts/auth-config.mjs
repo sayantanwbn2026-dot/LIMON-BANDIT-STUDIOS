@@ -200,6 +200,38 @@ if (!apply) {
  * neighbour's rejection. It costs five extra round trips at human speed,
  * which is nothing against silently believing a setting was applied.
  */
+/* THE ALLOW LIST IS MERGED, NOT REPLACED.
+ *
+ * Supabase's Vercel integration writes to this list too — it had added four
+ * entries of its own by the time this ran, for
+ * `limon-bandit-studios-xexe1.vercel.app`, a hostname that answers 404. A
+ * plain overwrite would have deleted them, the integration would likely add
+ * them back on its next sync, and the two of us would quietly fight over the
+ * field for ever.
+ *
+ * So this unions: everything already there, plus everything we need, in that
+ * order. Wrong entries are harmless — an allow list is permission, not
+ * instruction, and a host nobody visits is never consulted — while a missing
+ * one is a visitor bounced off a sign-in link. Only ever adding is the safe
+ * asymmetry.
+ */
+const existing = String(before.uri_allow_list || "")
+  .split(",")
+  .map((x) => x.trim())
+  .filter(Boolean);
+const merged = [...new Set([...existing, ...REDIRECTS])];
+INTENT.uri_allow_list.value = merged.join(",");
+if (apply) {
+  const added = merged.filter((x) => !existing.includes(x));
+  if (added.length) {
+    console.log(`  Allow list: keeping ${existing.length}, adding ${added.length}:`);
+    for (const a of added) console.log(`      + ${a}`);
+  } else {
+    console.log("  Allow list: already contains everything needed.");
+  }
+  console.log("");
+}
+
 const refused = [];
 for (const [key, { value }] of Object.entries(INTENT)) {
   const res = await fetch(API, {
