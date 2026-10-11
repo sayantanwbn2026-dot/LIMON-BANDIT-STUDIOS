@@ -26,5 +26,6 @@ export const navItems: NavItem[] = [
   { label: "Shop", to: "/shop" },
   { label: "Crew", to: "/crew" },
   { label: "Journal", to: "/journal" },
+  { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
 ];

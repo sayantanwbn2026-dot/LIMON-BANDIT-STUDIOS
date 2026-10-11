@@ -7,7 +7,15 @@
  * without its copy is a type error rather than a silent inheritance of the
  * landing page's title.
  */
-export type ChapterKey = "home" | "rooms" | "label" | "shop" | "crew" | "journal" | "contact";
+export type ChapterKey =
+  | "home"
+  | "rooms"
+  | "label"
+  | "shop"
+  | "crew"
+  | "journal"
+  | "about"
+  | "contact";
 
 export type Chapter = {
   /** drafting index, e.g. "02" */
@@ -116,6 +124,22 @@ export const chapters: Chapter[] = [
   },
   {
     index: "07",
+    key: "about",
+    to: "/about",
+    name: "About",
+    heading: "Inside the house",
+    /* "INSIDE THE HOUSE" — six letters spread, two words fitted beneath,
+     * same construction as every other chapter so the page announces
+     * itself as part of the same building. */
+    poster: { spread: "Inside", word: "The House" },
+    standfirst:
+      "One room became four, then a label, then a shop. Here is who runs it and why it works the way it does.",
+    title: "About — The People Behind Limon Bandit | Kolkata",
+    description:
+      "Who runs Limon Bandit, how it started, and the people in the building. A music house in Hatibagan, Kolkata.",
+  },
+  {
+    index: "08",
     key: "contact",
     to: "/contact",
     name: "Contact",

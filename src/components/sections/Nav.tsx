@@ -184,14 +184,23 @@ export function Nav() {
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        /* keeps the six links out of the tab order while closed */
+        /* keeps the links out of the tab order while closed */
         inert={!open}
         className="lb-menu fixed inset-0 z-[9995] overflow-hidden bg-surface-deep"
-        style={{
-          clipPath: open ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
-          transition: "clip-path 0.7s var(--ease-in-out-quart)",
-          pointerEvents: open ? "auto" : "none",
-        }}
+        style={
+          {
+            /* The rows divide the viewport by this, so it has to be what is
+             * actually rendered. It was a literal 6 in the stylesheet, true
+             * until the About page made it 7 — at which point a seventh row
+             * divided the screen by six and the menu scrolled, which is the
+             * one thing that block exists to prevent. Passed from here so
+             * adding a link can never silently break the fit again. */
+            "--menu-count": menuLinks.length,
+            clipPath: open ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
+            transition: "clip-path 0.7s var(--ease-in-out-quart)",
+            pointerEvents: open ? "auto" : "none",
+          } as React.CSSProperties
+        }
       >
         <div className="flex h-[100svh] flex-col">
           <div className="lb-menu-header shell flex shrink-0 items-center justify-between">

@@ -1,4 +1,5 @@
 import { site, navItems } from "@/data/site";
+import { founder, team } from "@/data/about";
 import { chapters } from "@/data/routes";
 import { proofTicker, partners, testimonialTicker, ctaChecklist, metaChips } from "@/data/tickers";
 import { faq } from "@/data/faq";
@@ -27,6 +28,7 @@ import {
   shopSections,
   crewSections,
   journalSections,
+  aboutSections,
   contactSections,
 } from "@/data/sections";
 
@@ -390,6 +392,24 @@ export const seeds: Record<string, unknown> = {
   })),
 
   // ---- journal ----
+  "page.about.sections": aboutSections,
+  "page.about.founder": {
+    quote: founder.quote,
+    body1: founder.body[0] ?? "",
+    body2: founder.body[1] ?? "",
+    name: founder.name,
+    role: founder.role,
+    statValue: founder.statValue,
+    statLabel: founder.statLabel,
+    image: founder.image,
+    alt: founder.alt,
+  },
+  "page.about.team": team.map((m) => ({
+    name: m.name,
+    role: m.role,
+    note: m.note,
+    since: m.since,
+  })),
   "page.journal.sections": journalSections,
   "page.journal.beats": JOURNAL_BEATS_SEED,
   "page.journal.posts": posts.map((p) => ({

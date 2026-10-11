@@ -187,6 +187,22 @@ export const journalSections: SectionCopy[] = [
   },
 ];
 
+export const aboutSections: SectionCopy[] = [
+  {
+    id: "founder",
+    eyebrow: "Who's behind it",
+    heading: "One room, kept open late",
+    standfirst: "",
+  },
+  {
+    id: "team",
+    eyebrow: "The house",
+    heading: "Four people run this building",
+    standfirst:
+      "Not the freelance crew — they set their own rates and have their own page. These are the people who answer the phone.",
+  },
+];
+
 export const contactSections: SectionCopy[] = [
   {
     id: "form",

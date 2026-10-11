@@ -1354,20 +1354,35 @@
 }
 
 /* ---------------- site menu ----------------
- * Six links plus a header and footer zone must fit 100svh exactly, with
+ * The links plus a header and footer zone must fit 100svh exactly, with
  * no internal scrolling, down to a 667px-tall phone. Rows are sized from
  * the viewport rather than the type, and the type is derived back off the
  * row — 0.52 keeps cap-height clear of the 1px dividers (border-box, so
  * the dividers are already inside the row height).
+ *
+ * `--menu-count` IS THE NUMBER OF LINKS, and the Nav sets it from the list
+ * it is actually rendering. It was the literal 6, which was true until the
+ * About page made it 7: a seventh row then divided the screen by six and
+ * the menu scrolled, which is the one thing this whole block exists to
+ * prevent. A number derived from the content cannot go stale when the
+ * content changes; one typed into a stylesheet always can.
  * ------------------------------------------------------------------- */
 
 .lb-menu {
   --menu-header: var(--nav-h); /* mirrors the navbar, notch included */
   /* the home indicator sits inside the footer band, so the band grows by it
    * and pads its content back up — otherwise the address line renders under
-   * the gesture bar */
-  --menu-footer: calc(96px + env(safe-area-inset-bottom, 0px));
-  --menu-row: calc((100svh - var(--menu-header) - var(--menu-footer)) / 6);
+   * the gesture bar.
+   *
+   * 120, not 96. The address stack measures 119px at every phone width from
+   * 320 to 414 — three lines of address, then the phone, mail and handle —
+   * and it was being given 96. `.lb-menu` is `overflow: hidden`, so the
+   * surplus was not scrolled, it was CUT: the @handle line sat at 824px in
+   * an 812px viewport and simply was not there. Clipping is the failure mode
+   * that hides itself, which is why this stood. */
+  --menu-footer: calc(120px + env(safe-area-inset-bottom, 0px));
+  --menu-count: 6; /* fallback only — Nav overrides it inline */
+  --menu-row: calc((100svh - var(--menu-header) - var(--menu-footer)) / var(--menu-count));
   --menu-link: clamp(26px, min(5.2vw, calc(var(--menu-row) * 0.52)), 76px);
 }
 

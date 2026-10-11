@@ -93,7 +93,15 @@ export type Collection = {
 
 export type CollectionGroup = "global" | "page" | "commerce";
 
-export type PageKey = "home" | "rooms" | "label" | "shop" | "crew" | "journal" | "contact";
+export type PageKey =
+  | "home"
+  | "rooms"
+  | "label"
+  | "shop"
+  | "crew"
+  | "journal"
+  | "about"
+  | "contact";
 
 export const PAGES: { key: PageKey; label: string; path: string }[] = [
   { key: "home", label: "Home", path: "/" },
@@ -102,6 +110,7 @@ export const PAGES: { key: PageKey; label: string; path: string }[] = [
   { key: "shop", label: "Shop", path: "/shop" },
   { key: "crew", label: "Crew", path: "/crew" },
   { key: "journal", label: "Journal", path: "/journal" },
+  { key: "about", label: "About", path: "/about" },
   { key: "contact", label: "Contact", path: "/contact" },
 ];
 

@@ -654,6 +654,63 @@ const crewSections = sectionsFor(
   "Section headings",
   "The eyebrow, heading and supporting line above each block on the Crew page.",
 );
+/* ------------------------------------------------------------------ *
+ * ABOUT
+ * ------------------------------------------------------------------ */
+
+const founder: Collection = {
+  key: "page.about.founder",
+  title: "The founder",
+  description:
+    "The statement at the top of the About page. It is set as a quote at display scale, so write it as something a person said rather than as a paragraph about them.",
+  group: "page",
+  page: "about",
+  shape: "object",
+  fields: [
+    area("quote", "The quote", {
+      rows: 3,
+      max: 180,
+      required: true,
+      help: "Set very large. One sentence — two at the absolute most.",
+    }),
+    area("body1", "Supporting line 1", { rows: 3, max: 240 }),
+    area("body2", "Supporting line 2", { rows: 3, max: 240 }),
+    text("name", "Name", { required: true }),
+    text("role", "Role", { placeholder: "Founder & head engineer" }),
+    text("statValue", "Figure", { placeholder: "4.9", help: "A rating or a count. Optional." }),
+    text("statLabel", "What the figure counts", { placeholder: "230+ sessions" }),
+    image("image", "Portrait", 920, 1150, "Portrait. Crops to 4:5."),
+    text("alt", "Photo description", { help: "For screen readers and when the image fails." }),
+  ],
+};
+
+const team: Collection = {
+  key: "page.about.team",
+  title: "The team",
+  description:
+    "The people who run the building — not the freelance crew, who set their own rates and are listed on the Crew page. Keep this to people who answer the phone.",
+  group: "page",
+  page: "about",
+  shape: "list",
+  titleField: "name",
+  itemNoun: "person",
+  fields: [
+    text("name", "Name", { required: true }),
+    text("role", "Role", { required: true, placeholder: "Studio manager" }),
+    area("note", "One line", {
+      rows: 2,
+      max: 120,
+      help: "What they actually do here, not a job description.",
+    }),
+    text("since", "Since", { mono: true, placeholder: "2023", help: "Year they started." }),
+  ],
+};
+
+const aboutSections = sectionsFor(
+  "about",
+  "Section headings",
+  "The eyebrow, heading and supporting line above each block on the About page.",
+);
 const journalSections = sectionsFor(
   "journal",
   "Section headings",
@@ -1124,6 +1181,10 @@ export const collections: Collection[] = [
   crewSteps,
   // journal
   journalSections,
+  // about
+  aboutSections,
+  founder,
+  team,
   posts,
   journalBeats,
   // contact

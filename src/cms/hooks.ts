@@ -232,6 +232,24 @@ export function useFaqByTopic(topic: string): FaqItem[] {
   return useMemo(() => all.filter((f) => f.topic === topic), [all, topic]);
 }
 
+/* ---------------- about ---------------- */
+
+export type FounderDoc = {
+  quote: string;
+  body1: string;
+  body2: string;
+  name: string;
+  role: string;
+  statValue: string;
+  statLabel: string;
+  image: ImageKey | string;
+  alt: string;
+};
+export const useFounder = () => useDoc<FounderDoc>("page.about.founder");
+
+export type TeamDoc = { name: string; role: string; note: string; since: string };
+export const useTeam = () => useList<TeamDoc>("page.about.team");
+
 /* ---------------- home ---------------- */
 
 export type ServiceDoc = {
