@@ -1,7 +1,10 @@
 # Limon Bandit — handoff
 
 Read this first, then `AUDIT.md` (design constitution) and `PERF.md`
-(measured performance). `PASS-5.md` and `PASS-6.md` are the outstanding briefs.
+(measured performance). `PASS-5.md` and `PASS-6.md` are the earlier briefs;
+**`PASS-7.md` is the current one** — what is left to make the house fully
+operational, grouped by what it costs to leave undone and marked with who
+has to do each piece.
 
 ## Deploying
 
