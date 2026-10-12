@@ -9,6 +9,7 @@ import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
 import type { ProductDoc as Product } from "@/cms/hooks";
+import { useJustOn } from "@/lib/just-on";
 
 /**
  * One product.
@@ -53,6 +54,7 @@ export function ProductCard({
   const needsSize = Boolean(product.sizes?.length);
   const gone = product.stock <= 0;
   const saved = wishlist.has(product.id);
+  const justSaved = useJustOn(saved);
   const low = !gone && product.stock <= 10;
 
   const addToCart = (chosen: string | null) => {
@@ -121,7 +123,7 @@ export function ProductCard({
             <Heart
               size={15}
               fill={saved ? "currentColor" : "none"}
-              className={saved ? "text-acid-type" : ""}
+              className={`${saved ? "text-acid-type" : ""} ${justSaved ? "lb-pop" : ""}`}
             />
           </button>
 

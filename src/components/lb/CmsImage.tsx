@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Picture } from "./Picture";
 import { resolveImage } from "@/cms/media";
 import type { ImageKey } from "@/generated/images";
+import { fadeInOnLoad } from "@/lib/image-fade";
 
 /**
  * An image whose source is whatever the CMS holds.
@@ -68,6 +69,7 @@ export function CmsImage({
       decoding={priority ? "sync" : "async"}
       className={className}
       style={style}
+      ref={priority ? undefined : fadeInOnLoad}
     />
   );
 }

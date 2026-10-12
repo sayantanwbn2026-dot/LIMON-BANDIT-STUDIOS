@@ -1865,3 +1865,103 @@
     overflow: hidden;
   }
 }
+
+/* ---------------- finishing: arrival, progress, feedback ----------------
+ * Small things whose absence you feel without being able to name. Each one
+ * is an addition, none restyles anything that was already there, and none
+ * touches type.
+ * ------------------------------------------------------------------ */
+
+/* IMAGES ARRIVE. See lib/image-fade.ts for why this is a ref callback and
+ * why it can never strand an image.
+ *
+ * `!important` on the pending state, and only there: ProductCard sets an
+ * inline `opacity: 0.4` on sold-out photographs, and an inline style beats a
+ * class, so without it those would skip the fade and pop in like before.
+ *
+ * The arrival is an ANIMATION, not a transition. The product-card image
+ * already declares `transition-transform`, which sets `transition-property`
+ * to transform only — a base opacity transition would be silently overridden
+ * on exactly the images this is for. An animation composes with any
+ * transition list.
+ *
+ * `backwards` fill and a bare `from`: the end state is whatever the element
+ * would be anyway, so a sold-out card fades TO 0.4 rather than being forced
+ * to 1 by a `to` keyframe held forever. */
+img.lb-img-pending {
+  opacity: 0 !important;
+}
+img.lb-img-in {
+  animation: lb-img-in 0.7s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) backwards;
+}
+@keyframes lb-img-in {
+  from {
+    opacity: 0;
+  }
+}
+@media print {
+  img.lb-img-pending {
+    opacity: 1 !important;
+  }
+}
+
+/* READING PROGRESS. A long article has no sense of how far along you are, and
+ * a thin line along the top edge is the lightest possible answer.
+ *
+ * CSS only — no scroll listener, no state, nothing on the main thread. The
+ * animation's timeline IS the root scroller, so it tracks Lenis for free
+ * (Lenis drives the real scroll position). Where scroll-driven animation is
+ * not supported the bar is simply not drawn: a missing progress line costs
+ * nothing, a janky one would. Above the navbar's z-index so it reads as the
+ * edge of the screen, not a feature of the header. */
+.lb-read-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .lb-read-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 2px;
+    z-index: 9991;
+    background: var(--accent);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    pointer-events: none;
+    animation: lb-read-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes lb-read-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* THE HEART SAYS YES. A wishlist save used to change a colour and nothing
+ * else, which is the quietest possible response to a deliberate act. A short
+ * overshoot gives it a body. Applied for ~half a second by the component, not
+ * by `[aria-pressed="true"]`, so a signed-in visitor with five saved items
+ * does not watch five hearts pop at once every time a page loads. */
+.lb-pop {
+  animation: lb-pop 0.5s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+}
+@keyframes lb-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.38);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* A SCROLLBAR THAT BELONGS. color-scheme is already dark, so the browser
+ * draws a dark one; this just puts it on the site's own two greys instead of
+ * the OS's. Colours only — the width is left alone, because a thin scrollbar
+ * is a smaller drag target for exactly the people who use one. */
+html {
+  scrollbar-color: var(--line-strong) var(--surface-deep);
+}

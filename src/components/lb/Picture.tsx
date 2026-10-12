@@ -1,5 +1,6 @@
 import type { CSSProperties, ImgHTMLAttributes } from "react";
 import { images, type ImageKey } from "@/generated/images";
+import { fadeInOnLoad } from "@/lib/image-fade";
 
 const srcSet = (variants: readonly { w: number; url: string }[]) =>
   variants.map((v) => `${v.url} ${v.w}w`).join(", ");
@@ -56,6 +57,9 @@ export function Picture({
         decoding={priority ? "sync" : "async"}
         className={className}
         style={style}
+        /* Not for the priority image: it is the LCP and the preloader's
+         * choreography already covers its arrival. */
+        ref={priority ? undefined : fadeInOnLoad}
         {...rest}
       />
     </picture>

@@ -39,6 +39,13 @@ import { lockScroll, unlockScroll } from "@/lib/smooth";
 /** Enough to read as an array, few enough to write every frame cheaply. */
 const BARS = 34;
 
+/** The fade at the row's ends: 1 in the middle, 0.25 at the edges.
+ *  Pure + - * /, so server and browser compute the identical double. */
+function barOpacity(i: number): number {
+  const x = (2 * (i + 0.5)) / BARS - 1; // -1 … 1 across the row
+  return Number((0.25 + 0.75 * (1 - x * x)).toFixed(3));
+}
+
 /** How far the pointer's influence reaches, as a fraction of the width. */
 const REACH = 0.22;
 
@@ -296,8 +303,20 @@ export function Preloader() {
                   style={{
                     transform: "scaleY(1)",
                     /* Faded at the ends so the row reads as a meter rather
-                       than a solid block with hard edges. */
-                    opacity: 0.25 + 0.75 * Math.sin((Math.PI * (i + 0.5)) / BARS),
+                       than a solid block with hard edges.
+                       A PARABOLA, NOT `Math.sin`, and that is a correctness
+                       point rather than taste. This number is written into
+                       server-rendered markup and then recomputed in the
+                       browser, and the two must agree exactly or React
+                       reports a hydration mismatch it "won't patch up".
+                       IEEE-754 guarantees + - * / are bit-identical on every
+                       engine; it does NOT guarantee that of transcendental
+                       functions, and the dev server (Bun/JavaScriptCore) and
+                       the browser (V8) really do differ in the last digits of
+                       sin. The first version of this used sin and logged the
+                       mismatch on every cold load. Rounded to three places so
+                       the markup is tidy too. */
+                    opacity: barOpacity(i),
                   }}
                 />
               </span>

@@ -8,6 +8,7 @@ import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
 import type { ProductDoc as Product } from "@/cms/hooks";
+import { useJustOn } from "@/lib/just-on";
 
 /**
  * One product, in full.
@@ -53,6 +54,11 @@ export function ProductSheet({
     setAdded(false);
     setNudge(false);
   }, [product?.id]);
+
+  /* Before the early return, and null-safe: hooks cannot be skipped on some
+   * renders, and `product` is null whenever the sheet is closed. Scoped to the
+   * product so opening a saved item after an unsaved one is not read as a tap. */
+  const justSaved = useJustOn(product ? wishlist.has(product.id) : false, 500, product?.id);
 
   if (!product) return null;
 
@@ -253,7 +259,7 @@ export function ProductSheet({
           <Heart
             size={17}
             fill={saved ? "currentColor" : "none"}
-            className={saved ? "text-acid-type" : ""}
+            className={`${saved ? "text-acid-type" : ""} ${justSaved ? "lb-pop" : ""}`}
           />
         </button>
 

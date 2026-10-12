@@ -328,7 +328,25 @@ export function ShopCatalog() {
               /* Two columns on a phone. One column with a square photo made
                  each card ~630px tall; twenty of those is a 12,000px scroll
                  to see a shop that fits on one desk. */
-              <ul className="mt-6 grid grid-cols-2 gap-px border border-line bg-line lg:grid-cols-3">
+              /* REAL GAPS, NO FRAME.
+               *
+               * This was `gap-px border border-line bg-line` — the hairline
+               * grid, where a 1px gap over a line-coloured background draws
+               * the rules between square cells. That is exactly right for
+               * stat tiles and panels, and wrong here, because every product
+               * is a full `ui-card`: its own border, its own background, a
+               * 12px radius and an elevation. Stacked, the two systems
+               * disagreed at every seam — each card corner rounded away from
+               * its neighbour and exposed the grid colour behind it as a
+               * notch, and each divider was a card border plus a grid gap
+               * plus the next card's border, roughly 2.6px of line where the
+               * rest of the site draws one.
+               *
+               * Cards are objects and get air between them, the way the
+               * featured row and the product rail already do. It also lets
+               * the hover lift finally work: in a 1px frame a card that
+               * rises would have collided with its neighbours. */
+              <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-5">
                 {shown.map((p) => (
                   <ProductCard key={p.id} product={p} onOpen={openSheet} />
                 ))}

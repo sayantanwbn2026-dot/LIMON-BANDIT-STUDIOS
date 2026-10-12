@@ -60,6 +60,9 @@ export function JournalArticle({ entry }: { entry: Post }) {
      * the bar is transparent until it scrolls, so an alt surface run to
      * y=0 leaves its logotype invisible. Same reasoning as JournalHero. */
     <main id="main" className="relative w-full bg-surface-deep">
+      {/* Reading progress — CSS only, drawn where scroll-driven animation is
+          supported and absent where it is not. See .lb-read-progress. */}
+      <div className="lb-read-progress" aria-hidden="true" />
       <article className="relative w-full overflow-hidden bg-surface mt-[var(--nav-h)]">
         <GridRules tone="dark" />
         <MarginNotes index="06" name="Journal" tone="dark" />

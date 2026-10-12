@@ -24,6 +24,7 @@ import { ProductRail } from "./ProductRail";
 import { Reviews, Stars } from "./Reviews";
 import { useRatings } from "@/lib/reviews";
 import { useToast } from "@/lib/toast";
+import { useJustOn } from "@/lib/just-on";
 
 /**
  * One product, on its own page.
@@ -85,6 +86,10 @@ export function ProductPage({ product }: { product: Product }) {
   const needsSize = Boolean(product.sizes?.length);
   const gone = product.stock <= 0;
   const saved = wishlist.has(product.id);
+  /* The heart shows `saved && user`, so the pop follows what is DRAWN, not
+   * the raw flag: a signed-out visitor can never see a saved heart, so a pop
+   * on `saved` alone would celebrate something the screen does not show. */
+  const justSaved = useJustOn(Boolean(saved && user));
   const max = Math.min(product.stock, 20);
   const off =
     product.compareAt && product.compareAt > product.price
@@ -412,7 +417,10 @@ export function ProductPage({ product }: { product: Product }) {
                   }
                   className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
-                  <Heart size={15} className={saved && user ? "fill-acid text-acid" : ""} />
+                  <Heart
+                    size={15}
+                    className={`${saved && user ? "fill-acid text-acid" : ""} ${justSaved ? "lb-pop" : ""}`}
+                  />
                   {saved && user ? "Saved" : "Save for later"}
                 </button>
                 <button
