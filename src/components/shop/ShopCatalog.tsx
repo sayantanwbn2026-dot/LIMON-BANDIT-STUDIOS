@@ -248,8 +248,22 @@ export function ShopCatalog() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
-          {/* ---- filters: a column on a desktop ---- */}
-          <aside className="hidden lg:block">
+          {/* ---- filters: a sticky column on a desktop ----
+           *
+           * `self-start` is the load-bearing class, not `sticky`. A grid item
+           * stretches to its row by default, so the aside was already as tall
+           * as the entire product list — and an element that is as tall as its
+           * scroll container can never stick to anything. It has to shrink to
+           * its own content first.
+           *
+           * `max-h` + `overflow-y-auto` for the case this will eventually hit:
+           * enough sizes or price bands that the panel is taller than the
+           * viewport. Without it the bottom of the filters would be unreachable
+           * — stuck off-screen with the page scrolling past behind it. */}
+          <aside
+            className="hidden self-start lg:sticky lg:block lg:max-h-[calc(100svh-var(--nav-h)-48px)] lg:overflow-y-auto lg:overscroll-contain"
+            style={{ top: "calc(var(--nav-h) + 24px)" }}
+          >
             <h3 className="font-display text-[16px] font-extrabold uppercase tracking-[-0.01em] text-text">
               Narrow it
             </h3>
