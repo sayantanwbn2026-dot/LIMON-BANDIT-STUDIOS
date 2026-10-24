@@ -32,6 +32,8 @@ import { autoQuality, embedOf, sourcesOf, viewingNow, type Quality } from "@/lib
 import { resolveImage } from "@/cms/media";
 import { images, type ImageEntry } from "@/generated/images";
 import type { VideoDoc } from "@/cms/hooks";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The theatre — the label's films, full screen, at the quality the screen
@@ -100,6 +102,7 @@ const IDLE_MS = 2600;
 
 function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
   const film = films[index];
+  const w = useWords("player");
   const titleId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -314,9 +317,9 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
       v.volume = next;
       v.muted = next === 0;
       setSoundBlocked(false);
-      say(`Volume ${Math.round(next * 100)}%`);
+      say(fill(w.filmVolumeSaid, { percent: Math.round(next * 100) }));
     },
-    [say],
+    [say, w.filmVolumeSaid],
   );
 
   const toggleMute = useCallback(() => {
@@ -588,7 +591,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
           {!embed && waiting && !failed && !needsPress ? (
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
               <Loader2 size={34} className="animate-spin text-acid-type" aria-hidden="true" />
-              <span className="sr-only">Loading</span>
+              <span className="sr-only">{w.filmLoading}</span>
             </span>
           ) : null}
 
@@ -598,7 +601,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
               {failed ? (
                 <>
                   <p className="font-display text-[20px] font-extrabold uppercase tracking-[-0.02em]">
-                    This film didn&apos;t load
+                    {w.filmFailed}
                   </p>
                   {lower ? (
                     <button
@@ -606,10 +609,10 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                       onClick={() => setChoice(lower.q)}
                       className="flex h-11 items-center gap-2 border border-line bg-surface-deep/70 px-4 font-ui text-[12px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 hover:border-acid-type"
                     >
-                      Try {lower.label} · {lower.q}p
+                      {fill(w.filmTryLower, { quality: lower.label, height: lower.q })}
                     </button>
                   ) : (
-                    <p className="t-label text-mute">Check the file in the admin</p>
+                    <p className="t-label text-mute">{w.filmCheckAdmin}</p>
                   )}
                 </>
               ) : (
@@ -622,7 +625,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                       seekTo(0);
                       void startPlaying();
                     }}
-                    aria-label={ended ? "Watch again" : `Play ${film.title}`}
+                    aria-label={ended ? w.filmWatchAgain : fill(w.filmPlay, { title: film.title })}
                     className="flex h-[76px] w-[76px] items-center justify-center bg-acid text-accent-text transition-transform duration-300 hover:scale-105"
                   >
                     {ended ? (
@@ -697,10 +700,10 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
              * between films moves up here, beside the way out. */}
             {films.length > 1 && !embed ? (
               <>
-                <Ctrl label="Previous film" onClick={() => go(-1)} className="sm:hidden">
+                <Ctrl label={w.filmPrevious} onClick={() => go(-1)} className="sm:hidden">
                   <ArrowLeft size={16} />
                 </Ctrl>
-                <Ctrl label="Next film" onClick={() => go(1)} className="sm:hidden">
+                <Ctrl label={w.filmNext} onClick={() => go(1)} className="sm:hidden">
                   <ArrowRight size={16} />
                 </Ctrl>
               </>
@@ -710,7 +713,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                 {current.label} · {current.q}p
               </span>
             ) : null}
-            <Ctrl label="Close the film (Esc)" onClick={close}>
+            <Ctrl label={w.filmClose} onClick={close}>
               <X size={18} />
             </Ctrl>
           </div>
@@ -745,7 +748,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
               <div className="flex items-center gap-2">
                 <Ctrl
                   ref={showCentre ? undefined : playBtnRef}
-                  label={playing ? "Pause (K)" : "Play (K)"}
+                  label={playing ? w.filmPauseKey : w.filmPlayKey}
                   onClick={toggle}
                   accent
                 >
@@ -754,17 +757,13 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                 {films.length > 1 ? (
                   <>
                     <Ctrl
-                      label="Previous film (Shift+←)"
+                      label={w.filmPreviousKey}
                       onClick={() => go(-1)}
                       className="max-sm:hidden"
                     >
                       <ArrowLeft size={16} />
                     </Ctrl>
-                    <Ctrl
-                      label="Next film (Shift+→)"
-                      onClick={() => go(1)}
-                      className="max-sm:hidden"
-                    >
+                    <Ctrl label={w.filmNextKey} onClick={() => go(1)} className="max-sm:hidden">
                       <ArrowRight size={16} />
                     </Ctrl>
                   </>
@@ -775,7 +774,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Ctrl label={muted ? "Unmute (M)" : "Mute (M)"} onClick={toggleMute}>
+                <Ctrl label={muted ? w.filmUnmuteKey : w.filmMuteKey} onClick={toggleMute}>
                   {muted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 </Ctrl>
                 <input
@@ -785,7 +784,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                   step={0.05}
                   value={muted ? 0 : volume}
                   onChange={(e) => setVol(Number(e.target.value))}
-                  aria-label="Volume"
+                  aria-label={w.filmVolume}
                   className="hidden w-[96px] accent-[var(--accent)] pointer-fine:block"
                 />
 
@@ -800,14 +799,14 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                     onPick={(q) => {
                       setChoice(q);
                       setMenu(false);
-                      say(q === "auto" ? "Auto" : `${q}p`);
+                      say(q === "auto" ? w.filmQualityAuto : `${q}p`);
                     }}
                   />
                 ) : null}
 
                 {canPip ? (
                   <Ctrl
-                    label={pip ? "Leave picture in picture" : "Picture in picture"}
+                    label={pip ? w.filmPipLeave : w.filmPip}
                     onClick={togglePip}
                     className="max-sm:hidden"
                   >
@@ -815,7 +814,7 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
                   </Ctrl>
                 ) : null}
                 <Ctrl
-                  label={fullscreen ? "Leave fullscreen (F)" : "Fullscreen (F)"}
+                  label={fullscreen ? w.filmFullscreenLeave : w.filmFullscreen}
                   onClick={toggleFullscreen}
                 >
                   {fullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
@@ -828,10 +827,10 @@ function Theater({ films, index, origin, originOf, onIndex, onClose }: Props) {
        * between films. */
       films.length > 1 ? (
         <div className="absolute inset-x-0 bottom-0 z-[3] flex justify-center gap-2 pb-[calc(20px+env(safe-area-inset-bottom,0px))]">
-          <Ctrl label="Previous film" onClick={() => go(-1)}>
+          <Ctrl label={w.filmPrevious} onClick={() => go(-1)}>
             <ArrowLeft size={16} />
           </Ctrl>
-          <Ctrl label="Next film" onClick={() => go(1)}>
+          <Ctrl label={w.filmNext} onClick={() => go(1)}>
             <ArrowRight size={16} />
           </Ctrl>
         </div>
@@ -887,6 +886,7 @@ function Scrubber({
   buffered: number;
   onScrub: (t: number, done: boolean) => void;
 }) {
+  const w = useWords("player");
   const track = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<number | null>(null);
   const dragging = useRef(false);
@@ -904,7 +904,7 @@ function Scrubber({
       ref={track}
       role="slider"
       tabIndex={0}
-      aria-label="Seek"
+      aria-label={w.filmSeek}
       aria-valuemin={0}
       aria-valuemax={Math.round(duration)}
       aria-valuenow={Math.round(time)}
@@ -975,6 +975,7 @@ function QualityMenu({
   options: { q: Quality; label: string }[];
   onPick: (q: "auto" | Quality) => void;
 }) {
+  const w = useWords("player");
   const shown = options.find((o) => o.q === current);
   return (
     <div className="relative">
@@ -982,22 +983,22 @@ function QualityMenu({
         type="button"
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Quality"
+        aria-label={w.filmQuality}
         onClick={() => onOpen(!open)}
         className="flex h-11 items-center gap-2 border border-line bg-surface-deep/60 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-text backdrop-blur-sm transition-colors duration-300 hover:border-acid-type"
       >
-        {choice === "auto" ? <span className="text-mute">Auto</span> : null}
+        {choice === "auto" ? <span className="text-mute">{w.filmQualityAuto}</span> : null}
         <span className={shown?.q === 2160 ? "text-acid-type" : ""}>{shown?.label ?? "—"}</span>
       </button>
       {open ? (
         <div
           role="menu"
-          aria-label="Quality"
+          aria-label={w.filmQuality}
           className="ui-panel absolute bottom-[calc(100%+8px)] right-0 w-[230px] overflow-hidden border border-line bg-surface-deep"
         >
-          <p className="t-label border-b border-line px-4 py-3 text-mute">Quality</p>
+          <p className="t-label border-b border-line px-4 py-3 text-mute">{w.filmQuality}</p>
           <Item on={choice === "auto"} onClick={() => onPick("auto")} detail={autoLabel}>
-            Auto
+            {w.filmQualityAuto}
           </Item>
           {options.map((o) => (
             <Item

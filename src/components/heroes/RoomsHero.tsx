@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 import { useRooms } from "@/cms/hooks";
 
 /**
@@ -17,6 +17,7 @@ import { useRooms } from "@/cms/hooks";
 export function RoomsHero() {
   const rooms = useRooms();
   const c = useChapter("rooms");
+  const w = useWords("rooms");
 
   return (
     <HeroFrame
@@ -36,8 +37,8 @@ export function RoomsHero() {
             className="t-label flex items-baseline justify-between pb-4 text-mute"
             aria-hidden="true"
           >
-            <span>Room</span>
-            <span>From</span>
+            <span>{w.heroLedgerRoom}</span>
+            <span>{w.heroLedgerFrom}</span>
           </div>
           <ul className="border-t border-line">
             {rooms.map((r) => (
@@ -60,7 +61,7 @@ export function RoomsHero() {
               </li>
             ))}
           </ul>
-          <p className="t-label mt-5 text-mute">Engineer included on every rate</p>
+          <p className="t-label mt-5 text-mute">{w.heroEngineerNote}</p>
         </RiseIn>
       </div>
     </HeroFrame>

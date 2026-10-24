@@ -3,14 +3,16 @@ import { ArrowRight, AtSign, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { GridRules } from "@/components/lb/GridRules";
 import { Logotype } from "./Nav";
-import { useNavItems, useReleases, useSite, useSocialLink } from "@/cms/hooks";
+import { useNavItems, useReleases, useSite, useSocialLink, useWords } from "@/cms/hooks";
 import { HouseMascot } from "@/components/lb/HeroMascot";
 import { mailHref, mapsHref, telHref } from "@/lib/contact";
 import { ensureGsap, ScrollTrigger } from "@/lib/motion";
+import { fill } from "@/cms/words";
 
 export function Footer() {
   const releases = useReleases();
   const site = useSite();
+  const w = useWords("footer");
   const navItems = useNavItems();
   const instagram = useSocialLink("Instagram");
   const tel = telHref(site.phone);
@@ -34,7 +36,7 @@ export function Footer() {
               to="/contact"
               className="group mt-8 flex w-fit items-center gap-3 whitespace-nowrap border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
             >
-              <span className="t-eyebrow text-text">Let&apos;s collaborate</span>
+              <span className="t-eyebrow text-text">{w.cta}</span>
               <ArrowRight size={15} className="text-acid-type lb-arrow" />
             </Link>
           </div>
@@ -42,8 +44,8 @@ export function Footer() {
           {/* On a phone the links are a two-column grid ruled like the
            * menu, every row a full 44px target; from 768px they are the
            * plain stacked list they always were. */}
-          <nav aria-label="Footer navigation" data-reveal>
-            <h2 className="t-label text-mute">Navigation</h2>
+          <nav aria-label={w.navLabel} data-reveal>
+            <h2 className="t-label text-mute">{w.navHeading}</h2>
             <ul className="mt-6 grid grid-cols-2 gap-x-6 max-md:mt-4 md:block md:space-y-3">
               {navItems.map((n) => (
                 <li key={n.to} className="max-md:border-t max-md:border-line">
@@ -62,7 +64,7 @@ export function Footer() {
            * for one fact — who is on the label. Run on, they are two
            * lines, and every name still goes to the label page. */}
           <div data-reveal>
-            <h2 className="t-label text-mute">The roster</h2>
+            <h2 className="t-label text-mute">{w.rosterHeading}</h2>
             <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2 max-md:mt-4 md:block md:space-y-3">
               {releases.map((r) => (
                 <li key={r.artist} className="font-ui text-[14px] text-text">
@@ -79,7 +81,7 @@ export function Footer() {
            * printed as plain text, which on a phone meant copying a number
            * out by hand from the bottom of the page. */}
           <div data-reveal>
-            <h2 className="t-label text-mute">Studio</h2>
+            <h2 className="t-label text-mute">{w.studioHeading}</h2>
             <ul className="mt-6 space-y-3 font-ui text-[14px] text-text max-md:mt-4 max-md:space-y-0">
               <li>
                 <FootContact href={maps} external icon={<MapPin size={14} />}>
@@ -130,7 +132,7 @@ export function Footer() {
 
       <div className="relative z-[2] border-t border-line">
         <div className="shell flex flex-wrap items-center justify-between gap-4 py-6 font-ui text-[12px] text-mute">
-          <span>©2026 Limon Bandit. All rights reserved.</span>
+          <span>{fill(w.copyright, { year: new Date().getFullYear() })}</span>
           <span className="flex flex-wrap gap-x-6 gap-y-2">
             {/* Real policy pages now (/legal, CMS-edited). These used to be
              * two links to /contact labelled Terms and Privacy. */}
@@ -139,21 +141,21 @@ export function Footer() {
               params={{ slug: "terms" }}
               className="tap transition-colors duration-300 hover:text-text"
             >
-              Terms
+              {w.terms}
             </Link>
             <Link
               to="/legal/$slug"
               params={{ slug: "privacy" }}
               className="tap transition-colors duration-300 hover:text-text"
             >
-              Privacy
+              {w.privacy}
             </Link>
             <Link
               to="/legal/$slug"
               params={{ slug: "shipping-returns" }}
               className="tap transition-colors duration-300 hover:text-text"
             >
-              Shipping &amp; returns
+              {w.shippingReturns}
             </Link>
           </span>
         </div>

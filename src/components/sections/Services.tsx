@@ -7,7 +7,7 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import { useSection, useServices } from "@/cms/hooks";
+import { useSection, useServices, useWords } from "@/cms/hooks";
 
 /**
  * What we run — the four operations, as a projection room.
@@ -37,6 +37,7 @@ import { useSection, useServices } from "@/cms/hooks";
  */
 export function Services() {
   const copy = useSection("home", "services");
+  const w = useWords("home");
   const services = useServices();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -344,7 +345,7 @@ export function Services() {
                  * and stay on one line — the ledger reading survives, the
                  * ragged break does not. */}
                 <dl className="mt-5 border-t border-line pt-4">
-                  <dt className="t-label text-mute">Covers</dt>
+                  <dt className="t-label text-mute">{w.servicesCovers}</dt>
                   <dd className="mt-2 font-ui text-[12px] font-semibold uppercase tracking-[0.08em] text-text">
                     {s.tags.map((t, i) => (
                       <span key={t}>

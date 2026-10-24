@@ -4,6 +4,8 @@ import { useAuth } from "@/lib/auth";
 import { getSupabase } from "@/lib/supabase";
 import { useAllReviews, useRatings } from "@/lib/reviews";
 import { Button } from "@/components/lb/Button";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * What other people thought.
@@ -41,6 +43,7 @@ export function Stars({ value, size = 14 }: { value: number; size?: number }) {
 
 export function Reviews({ productId, productTitle }: { productId: string; productTitle: string }) {
   const { user, requireAuth } = useAuth();
+  const w = useWords("basket");
   const { rows, refresh } = useAllReviews();
 
   const mine = rows.filter((r) => r.product_id === productId);
@@ -66,10 +69,10 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (body.trim().length < 4) {
-      setNote("A sentence is enough, but it needs one.");
+      setNote(w.reviewsBodyMissing);
       return;
     }
-    requireAuth("Sign in to leave a review.", () => void save());
+    requireAuth(w.reviewsSignIn, () => void save());
   };
 
   const save = async () => {
@@ -80,12 +83,15 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
       const { data: sessionData } = (await supabase?.auth.getUser()) ?? { data: { user: null } };
       const me = sessionData.user;
       if (!supabase || !me) {
-        setNote("Sign in again — that session has expired.");
+        setNote(w.reviewsExpired);
         return;
       }
 
       const meta = me.user_metadata as { full_name?: string } | undefined;
-      const author = (meta?.full_name || me.email?.split("@")[0] || "Anonymous").slice(0, 60);
+      const author = (meta?.full_name || me.email?.split("@")[0] || w.reviewsAnonymous).slice(
+        0,
+        60,
+      );
 
       /* Upsert on (product_id, user_id): one review per person per product,
        * and pressing save twice edits rather than duplicating. */
@@ -107,7 +113,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
       }
       await refresh();
       setWriting(false);
-      setNote("Thank you — it is up.");
+      setNote(w.reviewsThanks);
     } finally {
       setBusy(false);
     }
@@ -115,7 +121,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
 
   const remove = async () => {
     if (!own) return;
-    if (!window.confirm("Delete your review?")) return;
+    if (!window.confirm(w.reviewsConfirmDelete)) return;
     setBusy(true);
     try {
       const supabase = await getSupabase();
@@ -135,14 +141,16 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
       <div className="shell relative z-[2]">
         <div className="flex flex-wrap items-baseline justify-between gap-4">
           <h2 className="font-display text-[22px] font-extrabold uppercase tracking-[-0.02em] text-text md:text-[28px]">
-            Reviews
+            {w.reviewsHeading}
           </h2>
           {aggregate.count > 0 ? (
             <p className="flex items-center gap-3 font-ui text-[14px] text-mute">
               <Stars value={aggregate.average} />
               <span className="tnum text-text">{aggregate.average.toFixed(1)} / 5</span>
               <span>
-                {aggregate.count} {aggregate.count === 1 ? "review" : "reviews"}
+                {fill(aggregate.count === 1 ? w.reviewsCountOne : w.reviewsCountMany, {
+                  count: aggregate.count,
+                })}
               </span>
             </p>
           ) : null}
@@ -150,8 +158,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
 
         {mine.length === 0 ? (
           <p className="mt-6 max-w-[60ch] font-ui text-[15px] leading-[1.6] text-mute">
-            Nobody has written about {productTitle} yet. If you have one, say what it is actually
-            like — the fit, the print, how it washed.
+            {fill(w.reviewsNone, { title: productTitle })}
           </p>
         ) : (
           <ul className="mt-8 border-t border-line">
@@ -164,7 +171,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
                   ) : null}
                   {r.verified ? (
                     <span className="t-label bg-acid px-2 py-[2px] text-accent-text">
-                      Verified purchase
+                      {w.reviewsVerified}
                     </span>
                   ) : null}
                 </div>
@@ -190,10 +197,10 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <button
               type="button"
-              onClick={() => requireAuth("Sign in to leave a review.", () => setWriting(true))}
+              onClick={() => requireAuth(w.reviewsSignIn, () => setWriting(true))}
               className="flex h-[48px] items-center border border-line-strong px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
             >
-              {own ? "Edit your review" : "Write a review"}
+              {own ? w.reviewsEdit : w.reviewsWrite}
             </button>
             {own ? (
               <button
@@ -202,7 +209,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
                 disabled={busy}
                 className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
               >
-                <Trash2 size={14} /> Delete yours
+                <Trash2 size={14} /> {w.reviewsDelete}
               </button>
             ) : null}
             {note ? <p className="font-ui text-[13px] text-acid-type">{note}</p> : null}
@@ -210,7 +217,7 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
         ) : (
           <form onSubmit={submit} className="ui-card mt-8 max-w-[560px] p-6">
             <fieldset>
-              <legend className="t-label text-mute">Your rating</legend>
+              <legend className="t-label text-mute">{w.reviewsRating}</legend>
               <div className="mt-3 flex gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
@@ -231,23 +238,23 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
             </fieldset>
 
             <label className="mt-6 block">
-              <span className="t-label text-mute">Headline</span>
+              <span className="t-label text-mute">{w.reviewsHeadline}</span>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value.slice(0, 80))}
-                placeholder="Optional"
+                placeholder={w.reviewsHeadlinePlaceholder}
                 className="ui-field mt-2 h-11 w-full px-3.5 font-ui text-[15px] text-text outline-none"
               />
             </label>
 
             <label className="mt-6 block">
-              <span className="t-label text-mute">What is it like?</span>
+              <span className="t-label text-mute">{w.reviewsBody}</span>
               <textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value.slice(0, 2000))}
                 rows={4}
                 required
-                placeholder="Fit, print, how it washed."
+                placeholder={w.reviewsBodyPlaceholder}
                 className="mt-2 w-full resize-y border border-line bg-transparent p-3 font-ui text-[15px] leading-[1.55] text-text outline-none focus:border-acid-type"
               />
             </label>
@@ -268,10 +275,10 @@ export function Reviews({ productId, productTitle }: { productId: string; produc
                 variant="primary"
                 size="md"
               >
-                {own ? "Save changes" : "Post review"}
+                {own ? w.reviewsSave : w.reviewsPost}
               </Button>
               <Button type="button" variant="ghost" size="md" onClick={() => setWriting(false)}>
-                Cancel
+                {w.reviewsCancel}
               </Button>
             </div>
           </form>

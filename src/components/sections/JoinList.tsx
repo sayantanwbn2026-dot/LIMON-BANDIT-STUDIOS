@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { getSupabase } from "@/lib/supabase";
-import { useSection } from "@/cms/hooks";
+import { useSection, useWords } from "@/cms/hooks";
 
 /**
  * The home page mailing list band.
@@ -23,6 +23,8 @@ import { useSection } from "@/cms/hooks";
  */
 export function JoinList() {
   const copy = useSection("home", "join");
+  const w = useWords("home");
+  const c = useWords("common");
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "done" | "bad">("idle");
   const [reason, setReason] = useState<string | null>(null);
@@ -40,7 +42,7 @@ export function JoinList() {
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setState("bad");
-      setReason("That address will not reach you — check it.");
+      setReason(c.emailInvalid);
       shake();
       return;
     }
@@ -53,7 +55,7 @@ export function JoinList() {
       /* No Supabase configured — the shop still runs, but there is nowhere
        * to write the address. Say so plainly instead of pretending. */
       setState("bad");
-      setReason("The list is not connected yet. Try again in a moment.");
+      setReason(w.joinOffline);
       return;
     }
 
@@ -67,7 +69,7 @@ export function JoinList() {
     if (error && error.code !== "23505") {
       console.error("list signup failed", error);
       setState("bad");
-      setReason("Could not save that just now. Try again in a moment.");
+      setReason(w.joinFailed);
       return;
     }
 
@@ -96,11 +98,9 @@ export function JoinList() {
             {done ? (
               <div className="border border-acid-type bg-surface-raised p-8">
                 <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
-                  On the list
+                  {w.joinDoneLabel}
                 </span>
-                <p className="mt-3 font-ui text-[15px] text-text">
-                  You are in. Next mail goes out with the following drop.
-                </p>
+                <p className="mt-3 font-ui text-[15px] text-text">{w.joinDoneLine}</p>
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate>
@@ -108,7 +108,7 @@ export function JoinList() {
                   htmlFor="join-email"
                   className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
                 >
-                  Email address
+                  {w.joinEmailLabel}
                 </label>
                 <div
                   ref={fieldRef}
@@ -129,14 +129,14 @@ export function JoinList() {
                     }}
                     aria-invalid={state === "bad"}
                     aria-describedby={reason ? "join-email-msg" : undefined}
-                    placeholder="you@somewhere.in"
+                    placeholder={c.emailPlaceholder}
                     disabled={busy}
                     className="h-[56px] w-full bg-transparent font-display text-[20px] font-bold uppercase tracking-[-0.01em] text-text outline-none placeholder:text-[color:var(--placeholder)] disabled:opacity-60 md:text-[28px]"
                   />
                   <button
                     type="submit"
                     disabled={busy}
-                    aria-label="Join the mailing list"
+                    aria-label={w.joinSubmitLabel}
                     className="flex h-[46px] w-[46px] shrink-0 items-center justify-center bg-acid transition-transform duration-300 hover:scale-[1.06] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <ArrowRight size={18} className="text-accent-text" />
@@ -150,7 +150,7 @@ export function JoinList() {
                     state === "bad" ? "text-acid-type" : "text-mute"
                   }`}
                 >
-                  {reason ?? "We mail once a month. Nothing else, ever."}
+                  {reason ?? w.joinNote}
                 </p>
               </form>
             )}

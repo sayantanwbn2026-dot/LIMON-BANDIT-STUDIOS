@@ -9,6 +9,8 @@ import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
 import type { ProductDoc as Product } from "@/cms/hooks";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * One product.
@@ -43,6 +45,7 @@ export function ProductCard({
   onOpen: (p: Product) => void;
 }) {
   const { requireAuth } = useAuth();
+  const w = useWords("product");
   const cart = useCart();
   const wishlist = useWishlist();
   const rating = useRatingMap().get(product.id);
@@ -56,7 +59,7 @@ export function ProductCard({
   const low = !gone && product.stock <= 10;
 
   const addToCart = (chosen: string | null) => {
-    requireAuth(`Sign in to add ${product.title} to your cart.`, () => {
+    requireAuth(fill(w.signInToAdd, { title: product.title }), () => {
       cart.add(product.id, chosen, 1);
       setAdded(true);
       window.setTimeout(() => setAdded(false), 1600);
@@ -85,7 +88,7 @@ export function ProductCard({
           <Link
             to="/shop/$id"
             params={{ id: product.id }}
-            aria-label={`View ${product.title}`}
+            aria-label={fill(w.cardView, { title: product.title })}
             className="block w-full overflow-hidden"
             style={{ aspectRatio: "4 / 5" }}
           >
@@ -108,14 +111,12 @@ export function ProductCard({
           <button
             type="button"
             onClick={() =>
-              requireAuth(`Sign in to save ${product.title} to your wishlist.`, () => {
+              requireAuth(fill(w.signInToSave, { title: product.title }), () => {
                 void wishlist.toggle(product.id);
               })
             }
             aria-pressed={saved}
-            aria-label={
-              saved ? `Remove ${product.title} from wishlist` : `Save ${product.title} to wishlist`
-            }
+            aria-label={fill(saved ? w.wishlistRemove : w.wishlistAdd, { title: product.title })}
             className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center bg-surface-deep text-mute transition-colors duration-300 hover:text-acid-type"
           >
             <Heart
@@ -127,7 +128,7 @@ export function ProductCard({
 
           {gone ? (
             <span className="pointer-events-none absolute bottom-0 right-0 bg-surface-deep px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
-              Sold out
+              {w.soldOut}
             </span>
           ) : low ? (
             <span className="tnum pointer-events-none absolute bottom-0 right-0 bg-acid px-2 py-1 font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-accent-text">
@@ -163,7 +164,7 @@ export function ProductCard({
 
           {needsSize && !gone ? (
             <fieldset className="mt-5 hidden sm:block">
-              <legend className="t-label text-mute">Size</legend>
+              <legend className="t-label text-mute">{w.size}</legend>
               <div className="mt-3 flex flex-wrap gap-2">
                 {product.sizes!.map((s) => (
                   <button
@@ -214,22 +215,24 @@ export function ProductCard({
               /* Same 44px box the Add button occupies, so a sold-out card
                  keeps its price on the baseline of the card beside it
                  instead of dropping it half a line. */
-              <span className="t-label flex h-11 shrink-0 items-center text-mute">Gone</span>
+              <span className="t-label flex h-11 shrink-0 items-center text-mute">
+                {w.cardGone}
+              </span>
             ) : (
               <button
                 type="button"
                 onClick={onCompactAdd}
                 aria-label={
                   needsSize && !size
-                    ? `Choose a size for ${product.title}`
-                    : `Add ${product.title} to cart`
+                    ? fill(w.cardChooseSize, { title: product.title })
+                    : fill(w.cardAdd, { title: product.title })
                 }
                 className="flex h-11 shrink-0 items-center justify-center gap-2 bg-acid px-0 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text transition-colors duration-300 hover:bg-acid-dim sm:px-5"
                 style={{ minWidth: 44 }}
               >
                 {added ? <Check size={15} /> : <Plus size={15} className="sm:hidden" />}
                 <span className="hidden sm:inline">
-                  {added ? "Added" : needsSize && !size ? "Pick a size" : "Add"}
+                  {added ? w.added : needsSize && !size ? w.cardPickSize : w.cardAddShort}
                 </span>
               </button>
             )}

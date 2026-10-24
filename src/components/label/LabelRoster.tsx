@@ -4,7 +4,8 @@ import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { usePlayer } from "@/lib/player";
-import { useReleases, useSection, useTracks } from "@/cms/hooks";
+import { useReleases, useSection, useTracks, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The roster as a drafting index rather than a wall of covers. Hovering or
@@ -14,6 +15,7 @@ import { useReleases, useSection, useTracks } from "@/cms/hooks";
  */
 export function LabelRoster() {
   const copy = useSection("label", "roster");
+  const w = useWords("label");
   const releases = useReleases();
   const [hover, setHover] = useState(0);
   const { play, track, playing } = usePlayer();
@@ -75,7 +77,7 @@ export function LabelRoster() {
                       <button
                         type="button"
                         onClick={() => play(t.id)}
-                        aria-label={`Play ${r.title} by ${r.artist}`}
+                        aria-label={fill(w.rosterPlay, { title: r.title, artist: r.artist })}
                         className="flex h-11 w-11 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                       >
                         <Play

@@ -1,6 +1,7 @@
 import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
 import { HOME_SECTIONS } from "./home-sections";
 import { seeds } from "./seeds";
+import { WORDS, WORD_DOCS, wordLabel, type WordArea } from "./words";
 
 /**
  * Everything on this site that a person is allowed to change.
@@ -1222,6 +1223,43 @@ const contact: Collection = {
 
 /* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------ *
+ * WORDING — generated from src/cms/words.ts
+ *
+ * One object document per area, one text field per string. The field list
+ * is read off the defaults rather than written out a second time, so a
+ * string added to words.ts is editable the moment it exists, and there is
+ * no way for the form and the site to disagree about which strings there
+ * are. The default goes in the help line, so an editor can always see what
+ * a field said before they changed it.
+ * ------------------------------------------------------------------ */
+
+function wordCollections(): Collection[] {
+  return (Object.keys(WORD_DOCS) as WordArea[]).map((a) => {
+    const d = WORD_DOCS[a];
+    return {
+      key: d.key,
+      title: d.title,
+      description: d.description,
+      group: d.group,
+      page: d.page,
+      shape: "object",
+      fields: Object.entries(WORDS[a] as Record<string, string>).map(([name, def]) =>
+        /* a key ending in "Image" holds a picture: a library key or an
+         * uploaded address, which the image picker understands */
+        name.endsWith("Image")
+          ? image(name, wordLabel(name), 1600, 2000, "Leave empty to use the committed picture.")
+          : def.length > 72
+            ? area(name, wordLabel(name), {
+                rows: 2,
+                help: `Default: “${def}”. Leave empty to use it.`,
+              })
+            : text(name, wordLabel(name), { help: `Default: “${def}”. Leave empty to use it.` }),
+      ),
+    } satisfies Collection;
+  });
+}
+
 export const collections: Collection[] = [
   // global
   site,
@@ -1280,6 +1318,8 @@ export const collections: Collection[] = [
   products,
   offers,
   shipping,
+  // the wording around all of it, one document per area
+  ...wordCollections(),
 ];
 
 export const byKey = new Map(collections.map((c) => [c.key, c]));

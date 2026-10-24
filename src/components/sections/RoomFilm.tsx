@@ -4,7 +4,7 @@ import { GridRules } from "@/components/lb/GridRules";
 import { MarginNotes, Eyebrow } from "@/components/lb/Section";
 import { images, type ImageEntry } from "@/generated/images";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import { useFilm, useSection } from "@/cms/hooks";
+import { useFilm, useSection, useWords } from "@/cms/hooks";
 
 /**
  * A night in Room A — the film, opening to full screen as you scroll.
@@ -50,6 +50,7 @@ const OPEN = "inset(0% 0% 0% 0%)";
 
 export function RoomFilm() {
   const copy = useSection("home", "film");
+  const w = useWords("home");
   const film = useFilm();
   const src = film.video?.trim() ?? "";
   const poster = posterUrl(film.poster ?? "");
@@ -172,7 +173,7 @@ export function RoomFilm() {
 
       <div
         ref={root}
-        aria-label="A night in Room A"
+        aria-label={w.filmLabel}
         /* Two viewports on a desktop: one to open in, one to watch through.
          * 1.4 on a phone. At 200vh this was 1,624px of scrolling on a 375px
          * screen — and with no film in the repository yet, all of it spent
@@ -217,7 +218,7 @@ export function RoomFilm() {
                 <button
                   type="button"
                   onClick={toggle}
-                  aria-label={playing ? "Pause the film" : "Play the film"}
+                  aria-label={playing ? w.filmPause : w.filmPlay}
                   className="flex h-12 w-12 items-center justify-center border border-line bg-surface-deep/70 text-text transition-colors duration-300 hover:border-acid-type"
                 >
                   {playing ? <Pause size={16} /> : <Play size={16} />}
@@ -225,7 +226,7 @@ export function RoomFilm() {
                 <button
                   type="button"
                   onClick={() => setMuted((m) => !m)}
-                  aria-label={muted ? "Unmute the film" : "Mute the film"}
+                  aria-label={muted ? w.filmUnmute : w.filmMute}
                   aria-pressed={!muted}
                   className="flex h-12 w-12 items-center justify-center border border-line bg-surface-deep/70 text-text transition-colors duration-300 hover:border-acid-type"
                 >

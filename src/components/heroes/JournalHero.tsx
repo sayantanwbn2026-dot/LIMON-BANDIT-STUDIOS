@@ -1,7 +1,8 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 import { usePosts } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * JOURNAL — the masthead.
@@ -18,6 +19,7 @@ import { usePosts } from "@/cms/hooks";
 export function JournalHero() {
   const posts = usePosts();
   const c = useChapter("journal");
+  const w = useWords("journal");
   const issue = String(posts.length).padStart(2, "0");
 
   /* The panel still starts below the navbar. That began as a fix for a
@@ -34,13 +36,13 @@ export function JournalHero() {
     >
       {/* running head */}
       <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-4">
-        <span className="t-label text-text">Limon Bandit Journal</span>
+        <span className="t-label text-text">{w.mastheadName}</span>
         <span className="t-label tnum text-mute">
-          Issue {issue}
+          {fill(w.mastheadIssue, { issue })}
           <span aria-hidden="true" className="px-3 text-acid-type">
             &middot;
           </span>
-          Kolkata
+          {w.mastheadCity}
         </span>
       </div>
 

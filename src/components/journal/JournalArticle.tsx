@@ -6,7 +6,7 @@ import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { RiseIn } from "@/components/lb/Reveal";
-import { usePosts, type PostDoc } from "@/cms/hooks";
+import { usePosts, type PostDoc, useWords } from "@/cms/hooks";
 
 type Post = PostDoc;
 
@@ -29,6 +29,8 @@ type Post = PostDoc;
  * is a column you can actually read down.
  */
 export function JournalArticle({ entry }: { entry: Post }) {
+  const w = useWords("journal");
+  const c = useWords("common");
   /* This page does not go through PageShell, so it has to declare its own
    * pole. Without it the fixed navbar stays primary — bone logotype on a
    * bone panel — and the site's navigation is simply not visible on every
@@ -67,11 +69,11 @@ export function JournalArticle({ entry }: { entry: Post }) {
         <MarginNotes index="06" name="Journal" tone="dark" />
 
         <header className="shell relative z-[2] pb-16 pt-[72px]">
-          <nav aria-label="Breadcrumb">
+          <nav aria-label={c.breadcrumb}>
             <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
               <li>
                 <Link to="/" className="tap transition-colors duration-300 hover:text-text">
-                  LMN&middot;BNDT
+                  {c.breadcrumbHome}
                 </Link>
               </li>
               <li aria-hidden="true" className="opacity-50">
@@ -79,7 +81,7 @@ export function JournalArticle({ entry }: { entry: Post }) {
               </li>
               <li>
                 <Link to="/journal" className="tap transition-colors duration-300 hover:text-text">
-                  Journal
+                  {w.articleBreadcrumbJournal}
                 </Link>
               </li>
               <li aria-hidden="true" className="opacity-50">
@@ -190,8 +192,10 @@ function Block({ block }: { block: Post["body"][number] }) {
 
 /** Previous and next entry, so an article is never a dead end. */
 function ArticleNav({ prev, next }: { prev: Post; next: Post }) {
+  const w = useWords("journal");
+  const c = useWords("common");
   return (
-    <nav aria-label="More entries" className="relative w-full bg-surface-deep">
+    <nav aria-label={w.articleMore} className="relative w-full bg-surface-deep">
       <GridRules tone="dark" />
       <div className="shell relative z-[2] grid grid-cols-1 gap-px md:grid-cols-2">
         <RiseIn>
@@ -205,7 +209,7 @@ function ArticleNav({ prev, next }: { prev: Post; next: Post }) {
                 size={14}
                 className="text-acid-type transition-transform duration-300 group-hover:-translate-x-1"
               />
-              Previous
+              {c.previous}
             </span>
             <span className="font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text md:text-[24px]">
               {prev.title}
@@ -220,7 +224,7 @@ function ArticleNav({ prev, next }: { prev: Post; next: Post }) {
             className="group flex h-full flex-col justify-between gap-8 py-12 md:items-end md:pl-10 md:text-right"
           >
             <span className="flex items-center gap-3 font-ui text-[11px] font-bold uppercase tracking-[0.16em] text-mute">
-              Next
+              {c.next}
               <ArrowRight size={14} className="text-acid-type lb-arrow" />
             </span>
             <span className="font-display text-[20px] font-extrabold uppercase leading-[1.1] tracking-[-0.02em] text-text md:text-[24px]">

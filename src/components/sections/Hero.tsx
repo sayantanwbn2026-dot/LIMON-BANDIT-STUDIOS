@@ -5,11 +5,10 @@ import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { afterPreloader, ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { HeroMascot } from "@/components/lb/HeroMascot";
-import { useHomeHero } from "@/cms/hooks";
+import { useHomeHero, useWords, useChapter } from "@/cms/hooks";
 
-const BANDIT = ["B", "A", "N", "D", "I", "T"];
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
-const staggerIndex = [0, 1, 2, 2, 1, 0];
+const fromEdge = (i: number, n: number) => Math.min(i, n - 1 - i);
 
 /**
  * Hero v4 — "The Scrubbed Poster".
@@ -41,8 +40,14 @@ export function Hero() {
   const limonRef = useRef<HTMLDivElement>(null);
   const stationsRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(220);
+  /* The poster reads the home row of Page titles & SEO — "LIMON" spread
+   * across the measure, "BANDIT" fitted under it — the same fields every
+   * chapter hero's lockup reads, so renaming the house is a CMS edit. */
+  const chapter = useChapter("home");
+  const spread = chapter.poster.spread.toUpperCase().split("");
+  const letters = chapter.poster.word.toUpperCase().split("");
 
-  /* ---- fitting routine: BANDIT spans the measure exactly ---- */
+  /* ---- fitting routine: the word spans the measure exactly ---- */
   useLayoutEffect(() => {
     const fit = () => {
       const word = wordRef.current;
@@ -68,10 +73,13 @@ export function Hero() {
       ro.disconnect();
       window.removeEventListener("resize", fit);
     };
-  }, []);
+  }, [chapter.poster.word]);
 
-  /* ---- entrance (one-shot) + the breathing light ---- */
-  useEffect(() => {
+  /* ---- entrance (one-shot) + the breathing light ----
+   * A layout effect, so the start states land before the first paint: on a
+   * client-side arrival there is no preloader over the page, and an effect
+   * that ran after paint showed the poster for a frame, then hid it. */
+  useLayoutEffect(() => {
     const el = root.current;
     if (!el) return;
     const gsap = ensureGsap();
@@ -292,8 +300,17 @@ export function Hero() {
                     className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
                   />
                   <span className="flex flex-1 justify-between px-3 font-ui text-[14px] font-bold uppercase text-mute">
-                    {"LIMON".split("").map((c, i) => (
-                      <span key={i} data-measure-side={i < 2 ? "left" : i > 2 ? "right" : "centre"}>
+                    {spread.map((c, i) => (
+                      <span
+                        key={i}
+                        data-measure-side={
+                          i < (spread.length - 1) / 2
+                            ? "left"
+                            : i > (spread.length - 1) / 2
+                              ? "right"
+                              : "centre"
+                        }
+                      >
                         {c}
                       </span>
                     ))}
@@ -303,7 +320,7 @@ export function Hero() {
                     className="neon block h-[8px] w-[8px] shrink-0 bg-acid"
                   />
                 </span>
-                <span className="sr-only">Limon Bandit</span>
+                <span className="sr-only">{chapter.heading}</span>
 
                 <span
                   ref={wordWrapRef}
@@ -321,7 +338,7 @@ export function Hero() {
                       lineHeight: 0.82,
                     }}
                   >
-                    {BANDIT.map((c, i) => (
+                    {letters.map((c, i) => (
                       <span
                         key={i}
                         data-hero-letter-box
@@ -330,7 +347,7 @@ export function Hero() {
                       >
                         <span
                           data-hero-letter
-                          data-order={staggerIndex[i]}
+                          data-order={fromEdge(i, letters.length)}
                           className="hero-wall inline-block"
                         >
                           {c}
@@ -425,8 +442,9 @@ export function Hero() {
  */
 function HeroCta() {
   const hero = useHomeHero();
+  const w = useWords("home");
   const to = hero.to || "/contact";
-  const label = hero.cta || "Book the room";
+  const label = hero.cta || w.heroCtaFallback;
   const external = /^https?:\/\//i.test(to);
 
   const shell =

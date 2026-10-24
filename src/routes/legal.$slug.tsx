@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { liveDocs, listFrom } from "@/cms/live";
 import { useLegal, type LegalDoc } from "@/cms/hooks";
-import { pageHead } from "@/lib/seo";
+import { pageHead, siteNameFrom } from "@/lib/seo";
 
 /**
  * /legal/terms, /legal/privacy, /legal/shipping-returns — and any other
@@ -16,8 +16,7 @@ export const Route = createFileRoute("/legal/$slug")({
     const docs = await liveDocs();
     const doc = listFrom<LegalDoc>(docs, "global.legal").find((d) => d.slug === params.slug);
     if (!doc) throw notFound();
-    const name = (docs["global.site"] as { name?: string } | undefined)?.name;
-    return { doc, siteName: name?.trim() || "Limon Bandit" };
+    return { doc, siteName: siteNameFrom(docs) };
   },
   head: ({ loaderData }) =>
     loaderData

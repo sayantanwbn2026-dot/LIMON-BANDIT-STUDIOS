@@ -1,14 +1,23 @@
 import { Check } from "lucide-react";
 import { Eyebrow } from "@/components/lb/Section";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
-import { useRooms, useSection, type RoomDoc } from "@/cms/hooks";
+import { useRooms, useSection, type RoomDoc, useWords } from "@/cms/hooks";
 
+type RoomsWords = ReturnType<typeof useWords<"rooms">>;
+
+/* `word` names the row's heading in the rooms wording. Gear reads the
+ * second spec line — guarded, because a room an editor added with one
+ * spec line used to take the whole table down. */
 const ROWS = [
-  { label: "Rate", get: (r: RoomDoc) => r.rate, numeric: true },
-  { label: "Capacity", get: (r: RoomDoc) => r.capacity, numeric: true },
-  { label: "Engineer", get: (r: RoomDoc) => (r.engineer ? "Included" : "—") },
-  { label: "Gear", get: (r: RoomDoc) => r.specs[1].v },
-  { label: "Best for", get: (r: RoomDoc) => r.bestFor },
+  { id: "rate", word: "railRate", get: (r: RoomDoc) => r.rate, numeric: true },
+  { id: "capacity", word: "railCapacity", get: (r: RoomDoc) => r.capacity, numeric: true },
+  {
+    id: "engineer",
+    word: "railEngineer",
+    get: (r: RoomDoc, w: RoomsWords) => (r.engineer ? w.railIncluded : "—"),
+  },
+  { id: "gear", word: "railGear", get: (r: RoomDoc) => r.specs?.[1]?.v ?? "—" },
+  { id: "best", word: "railBestFor", get: (r: RoomDoc) => r.bestFor },
 ] as const;
 
 /**
@@ -22,6 +31,7 @@ const ROWS = [
 export function RoomsRail() {
   const rooms = useRooms();
   const copy = useSection("rooms", "rail");
+  const w = useWords("rooms");
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
@@ -36,9 +46,7 @@ export function RoomsRail() {
         {/* desktop: one table, compared across */}
         <div className="mt-12 hidden overflow-x-auto md:block">
           <table className="w-full min-w-[720px] border-collapse text-left">
-            <caption className="sr-only">
-              The four rooms compared by rate, capacity, engineer, gear and best use
-            </caption>
+            <caption className="sr-only">{w.railCaption}</caption>
             <thead>
               <tr className="border-b border-line">
                 <th scope="col" className="t-label w-[140px] py-6 pr-6 font-semibold text-mute">
@@ -61,13 +69,13 @@ export function RoomsRail() {
             </thead>
             <tbody>
               {ROWS.map((row) => (
-                <tr key={row.label} data-reveal="fade" className="border-b border-line align-top">
+                <tr key={row.id} data-reveal="fade" className="border-b border-line align-top">
                   <th scope="row" className="t-label py-6 pr-6 font-semibold text-mute">
-                    {row.label}
+                    {w[row.word]}
                   </th>
                   {rooms.map((r) => {
-                    const v = row.get(r);
-                    const isRate = row.label === "Rate";
+                    const v = row.get(r, w);
+                    const isRate = row.id === "rate";
                     return (
                       <td
                         key={r.id}
@@ -75,10 +83,10 @@ export function RoomsRail() {
                           "numeric" in row && row.numeric ? "tnum" : ""
                         } ${isRate ? "font-bold uppercase tracking-[0.06em] text-acid-type" : "text-text"}`}
                       >
-                        {row.label === "Engineer" && r.engineer ? (
+                        {row.id === "engineer" && r.engineer ? (
                           <span className="inline-flex items-center gap-2">
                             <Check size={14} className="text-acid-type" />
-                            Included
+                            {w.railIncluded}
                           </span>
                         ) : (
                           v
@@ -106,16 +114,16 @@ export function RoomsRail() {
                 <p className="t-label mt-1 text-mute">{r.kind}</p>
                 <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3">
                   {ROWS.map((row) => (
-                    <div key={row.label} className="border-b border-line pb-2">
+                    <div key={row.id} className="border-b border-line pb-2">
                       <dt className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-mute">
-                        {row.label}
+                        {w[row.word]}
                       </dt>
                       <dd
                         className={`tnum mt-1 font-ui text-[13px] ${
-                          row.label === "Rate" ? "font-bold text-acid-type" : "text-text"
+                          row.id === "rate" ? "font-bold text-acid-type" : "text-text"
                         }`}
                       >
-                        {row.get(r)}
+                        {row.get(r, w)}
                       </dd>
                     </div>
                   ))}

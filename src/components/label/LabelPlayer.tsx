@@ -7,7 +7,8 @@ import { RoomDial } from "./RoomDial";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { clock, usePlayer } from "@/lib/player";
-import { useSection, useTracks } from "@/cms/hooks";
+import { useSection, useTracks, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The player. Not a decoration — it decodes the actual audio to draw its
@@ -15,6 +16,8 @@ import { useSection, useTracks } from "@/cms/hooks";
  */
 export function LabelPlayer() {
   const copy = useSection("label", "player");
+  const w = useWords("label");
+  const p = useWords("player");
   const tracks = useTracks();
   const { track, playing, time, duration, failed, play, toggle, seek, step, next, prev, cue } =
     usePlayer();
@@ -87,7 +90,7 @@ export function LabelPlayer() {
           <div>
             <CmsImage
               src={shown.cover}
-              alt={`Cover art for ${shown.title} by ${shown.artist}`}
+              alt={fill(w.playerCoverAlt, { title: shown.title, artist: shown.artist })}
               sizes="(max-width: 1023px) 100vw, 280px"
               className="ui-media chroma aspect-square w-full border border-line object-cover"
             />
@@ -99,7 +102,7 @@ export function LabelPlayer() {
 
           <div
             role="group"
-            aria-label={`Player — ${shown.title} by ${shown.artist}`}
+            aria-label={fill(w.playerRegion, { title: shown.title, artist: shown.artist })}
             tabIndex={0}
             onKeyDown={onKeyDown}
             className="flex flex-col justify-between outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid"
@@ -149,7 +152,7 @@ export function LabelPlayer() {
                 <button
                   type="button"
                   onClick={prev}
-                  aria-label="Previous track"
+                  aria-label={p.previousTrack}
                   className="flex h-12 w-12 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                 >
                   <SkipBack size={16} />
@@ -158,7 +161,7 @@ export function LabelPlayer() {
                 <button
                   type="button"
                   onClick={() => (isLive ? toggle() : play(shown.id))}
-                  aria-label={playing && isLive ? `Pause ${shown.title}` : `Play ${shown.title}`}
+                  aria-label={fill(playing && isLive ? p.pause : p.play, { title: shown.title })}
                   className="flex h-12 w-[120px] items-center justify-center gap-3 bg-acid transition-colors duration-300 hover:bg-acid-dim"
                 >
                   {playing && isLive ? (
@@ -167,14 +170,14 @@ export function LabelPlayer() {
                     <Play size={16} className="fill-accent-text text-accent-text" />
                   )}
                   <span className="font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                    {playing && isLive ? "Pause" : "Play"}
+                    {playing && isLive ? p.pauseShort : p.playShort}
                   </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={next}
-                  aria-label="Next track"
+                  aria-label={p.nextTrack}
                   className="flex h-12 w-12 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                 >
                   <SkipForward size={16} />
@@ -193,16 +196,14 @@ export function LabelPlayer() {
                * named keys nobody has, so they are dropped on a coarse
                * pointer; the failure line still shows everywhere. */}
               <p className={`t-label mt-4 text-mute ${failed ? "" : "pointer-coarse:hidden"}`}>
-                {failed ? "Preview unavailable" : "Space plays · ← → scrub 5s · Home and End jump"}
+                {failed ? p.previewUnavailable : w.playerKeys}
               </p>
 
               <RoomDial onWake={() => play(shown.id)} />
 
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <ShareAt id={shown.id} at={isLive ? time : 0} />
-                <span className="font-ui text-[12px] text-mute">
-                  Links carry the moment — whoever opens it lands on this bar.
-                </span>
+                <span className="font-ui text-[12px] text-mute">{w.shareNote}</span>
               </div>
             </div>
           </div>
@@ -262,6 +263,7 @@ export function LabelPlayer() {
  */
 function ShareAt({ id, at }: { id: string; at: number }) {
   const [done, setDone] = useState(false);
+  const w = useWords("label");
 
   const copy = async () => {
     const url = new URL(window.location.href);
@@ -284,7 +286,7 @@ function ShareAt({ id, at }: { id: string; at: number }) {
       className="inline-flex h-11 items-center gap-2 border border-line px-4 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type"
     >
       {done ? <Check size={14} className="text-acid-type" /> : <Link2 size={14} />}
-      {done ? "Link copied" : `Copy link at ${clock(at)}`}
+      {done ? w.shareCopied : fill(w.shareCopy, { time: clock(at) })}
     </button>
   );
 }

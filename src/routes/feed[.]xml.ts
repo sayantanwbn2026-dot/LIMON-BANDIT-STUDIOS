@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { liveDocs, listFrom } from "@/cms/live";
-import { siteOrigin } from "@/lib/seo";
+import { liveDocs, listFrom, docFrom } from "@/cms/live";
+import { siteOrigin, siteNameFrom } from "@/lib/seo";
 import type { PostDoc } from "@/cms/hooks";
+import { WORDS, fill, type Words } from "@/cms/words";
 
 /**
  * The journal as a feed, at /feed.xml.
@@ -32,8 +33,21 @@ export const Route = createFileRoute("/feed.xml")({
       GET: async () => {
         const docs = await liveDocs();
         const origin = siteOrigin();
-        const site = (docs["global.site"] ?? {}) as { name?: string; description?: string };
-        const name = site.name?.trim() || "Limon Bandit";
+        /* docFrom, not docs[key]: before anything has been saved the
+         * store is empty, and reading it raw gave the feed a generic name
+         * and description instead of the committed ones. */
+        const site = docFrom<{ name?: string; description?: string }>(docs, "global.site");
+        const name = siteNameFrom(docs);
+        const journal = listFrom<{ key?: string; description?: string }>(docs, "global.pages").find(
+          (p) => p?.key === "journal",
+        );
+        const system = {
+          ...WORDS.system,
+          ...docFrom<Partial<Words["system"]>>(docs, "global.words.system"),
+        };
+        const channelTitle = fill(system.feedTitle?.trim() || WORDS.system.feedTitle, { name });
+        const channelDescription =
+          journal?.description?.trim() || site.description?.trim() || channelTitle;
         const posts = listFrom<PostDoc>(docs, "page.journal.posts");
 
         const items = posts
@@ -59,9 +73,9 @@ export const Route = createFileRoute("/feed.xml")({
           `<?xml version="1.0" encoding="UTF-8"?>`,
           `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">`,
           `  <channel>`,
-          `    <title>${esc(name)} — Journal</title>`,
+          `    <title>${esc(channelTitle)}</title>`,
           `    <link>${esc(new URL("/journal", origin).href)}</link>`,
-          `    <description>${esc(site.description?.trim() || `Notes from ${name}.`)}</description>`,
+          `    <description>${esc(channelDescription)}</description>`,
           `    <language>en-IN</language>`,
           `    <atom:link href="${esc(new URL("/feed.xml", origin).href)}" rel="self" type="application/rss+xml" />`,
           items,

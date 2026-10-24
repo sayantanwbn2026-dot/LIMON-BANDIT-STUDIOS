@@ -1,6 +1,9 @@
 import { X } from "lucide-react";
 import { SORTS } from "@/data/shop";
 import { PRICE_BANDS, type Filters } from "@/lib/shop-filters";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
+import { bandLabel, sortLabel } from "@/lib/shop-words";
 
 /**
  * The filter panel, used twice: inline down the side on a desktop, and
@@ -24,13 +27,14 @@ export function FilterPanel({
   /** how many products each price band would show, from the unfiltered list */
   counts: Map<string, number>;
 }) {
+  const w = useWords("shop");
   const set = <K extends keyof Filters>(key: K, value: Filters[K]) =>
     onChange({ ...filters, [key]: value });
 
   return (
     <div className="space-y-8">
       <fieldset>
-        <legend className="t-label text-mute">Price</legend>
+        <legend className="t-label text-mute">{w.filterPrice}</legend>
         <ul className="mt-3 flex flex-wrap gap-2">
           {PRICE_BANDS.map((b) => {
             const n = counts.get(b.id) ?? 0;
@@ -48,7 +52,7 @@ export function FilterPanel({
                       : "border border-line text-mute hover:border-acid-type hover:text-text"
                   }`}
                 >
-                  {b.label}
+                  {bandLabel(w, b)}
                   <span className="tnum text-[10px] opacity-70">{n}</span>
                 </button>
               </li>
@@ -59,7 +63,7 @@ export function FilterPanel({
 
       {sizes.length ? (
         <fieldset>
-          <legend className="t-label text-mute">Size</legend>
+          <legend className="t-label text-mute">{w.filterSize}</legend>
           <ul className="mt-3 flex flex-wrap gap-2">
             {sizes.map((s) => {
               const on = filters.size === s;
@@ -91,11 +95,11 @@ export function FilterPanel({
           onChange={(e) => set("inStock", e.target.checked)}
           className="h-5 w-5 accent-[color:var(--accent)]"
         />
-        <span className="font-ui text-[14px] text-text">In stock only</span>
+        <span className="font-ui text-[14px] text-text">{w.filterInStockOnly}</span>
       </label>
 
       <fieldset>
-        <legend className="t-label text-mute">Sort</legend>
+        <legend className="t-label text-mute">{w.filterSort}</legend>
         <ul className="mt-3 space-y-2">
           {SORTS.map((s) => (
             <li key={s.id}>
@@ -107,7 +111,7 @@ export function FilterPanel({
                   onChange={() => set("sort", s.id)}
                   className="h-4 w-4 accent-[color:var(--accent)]"
                 />
-                <span className="font-ui text-[14px] text-text">{s.label}</span>
+                <span className="font-ui text-[14px] text-text">{sortLabel(w, s)}</span>
               </label>
             </li>
           ))}
@@ -131,6 +135,7 @@ export function ActiveFilters({
   onChange: (next: Filters) => void;
   onClearAll: () => void;
 }) {
+  const w = useWords("shop");
   const band = PRICE_BANDS.find((b) => b.id === filters.price);
   const chips: { key: string; label: string; clear: () => void }[] = [];
 
@@ -138,19 +143,19 @@ export function ActiveFilters({
   if (band)
     chips.push({
       key: "price",
-      label: band.label,
+      label: bandLabel(w, band),
       clear: () => onChange({ ...filters, price: null }),
     });
   if (filters.size)
     chips.push({
       key: "size",
-      label: `Size ${filters.size}`,
+      label: fill(w.chipSize, { size: filters.size }),
       clear: () => onChange({ ...filters, size: null }),
     });
   if (filters.inStock)
     chips.push({
       key: "stock",
-      label: "In stock",
+      label: w.chipInStock,
       clear: () => onChange({ ...filters, inStock: false }),
     });
 
@@ -167,7 +172,7 @@ export function ActiveFilters({
           >
             {c.label}
             <X size={13} aria-hidden="true" />
-            <span className="sr-only">Remove this filter</span>
+            <span className="sr-only">{w.chipRemove}</span>
           </button>
         </li>
       ))}
@@ -178,7 +183,7 @@ export function ActiveFilters({
             onClick={onClearAll}
             className="tap h-11 px-2 font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
           >
-            Clear all
+            {w.chipClearAll}
           </button>
         </li>
       ) : null}

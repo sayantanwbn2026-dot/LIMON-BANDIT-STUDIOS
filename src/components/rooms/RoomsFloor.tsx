@@ -7,8 +7,9 @@ import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
 import { type Room } from "@/data/rooms";
-import { useRooms, useSection, type RoomDoc } from "@/cms/hooks";
+import { useRooms, useSection, type RoomDoc, useWords } from "@/cms/hooks";
 import { rooms as roomGeometry } from "@/data/rooms";
+import { fill } from "@/cms/words";
 
 /**
  * The plan of the building, drawn rather than photographed.
@@ -131,6 +132,7 @@ function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number)
 type ChapterRoom = RoomDoc & Pick<Room, "crops">;
 
 function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean }) {
+  const w = useWords("rooms");
   return (
     <article
       id={`room-${r.id}`}
@@ -212,11 +214,15 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
        * the button goes full-width rather than sitting half-way across. */}
       <div className="ui-card mt-6 flex flex-col gap-4 border border-line bg-surface-raised p-5 md:mt-10 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-6 md:p-8">
         <div>
-          <span className="t-label text-mute">From</span>
+          <span className="t-label text-mute">{w.floorFrom}</span>
           <div className="tnum mt-2 font-display text-[28px] font-extrabold uppercase tracking-[-0.02em] text-acid-type">
             {r.rate}
           </div>
-          <p className="t-label mt-2 text-mute">Engineer included</p>
+          {/* Said only when it is true. It was printed on every room,
+           * including any an editor had marked as engineer-not-included. */}
+          <p className="t-label mt-2 text-mute">
+            {r.engineer === false ? w.floorEngineerExtra : w.floorEngineerIncluded}
+          </p>
         </div>
         <Link
           to="/contact"
@@ -229,7 +235,7 @@ function RoomChapter({ room: r, reverse }: { room: ChapterRoom; reverse: boolean
           className="group flex h-[56px] items-center justify-between gap-4 bg-acid px-6 transition-colors duration-300 hover:bg-acid-dim md:gap-6 md:px-8"
         >
           <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-            Book {r.name}
+            {fill(w.floorBook, { room: r.name })}
           </span>
           <ArrowRight size={16} className="text-accent-text lb-arrow" />
         </Link>

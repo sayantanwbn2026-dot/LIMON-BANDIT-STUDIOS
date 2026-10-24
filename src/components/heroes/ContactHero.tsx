@@ -3,7 +3,7 @@ import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 import { useSite, useSocialLink } from "@/cms/hooks";
 import { waNumber } from "@/lib/contact";
 
@@ -20,6 +20,7 @@ export function ContactHero() {
   const site = useSite();
   const instagram = useSocialLink("Instagram");
   const c = useChapter("contact");
+  const w = useWords("contact");
 
   return (
     <HeroFrame
@@ -31,15 +32,15 @@ export function ContactHero() {
           <p className="t-lead max-w-[44ch] text-mute">{c.standfirst}</p>
 
           <p className="t-label mt-12 text-mute">
-            Booking
+            {w.heroBooking}
             <span aria-hidden="true" className="px-3 text-acid-type">
               &middot;
             </span>
-            Demos
+            {w.heroDemos}
             <span aria-hidden="true" className="px-3 text-acid-type">
               &middot;
             </span>
-            Crew hire
+            {w.heroCrewHire}
           </p>
         </div>
 
@@ -52,18 +53,18 @@ export function ContactHero() {
             className="absolute left-0 top-0 block h-[22px] w-[22px] border-l-2 border-t-2 border-acid-type"
           />
 
-          <span className="t-label block text-mute">The house</span>
+          <span className="t-label block text-mute">{w.slipHeading}</span>
 
           <address className="mt-6 not-italic">
             <dl>
-              <SlipRow label="Address">
+              <SlipRow label={w.slipAddress}>
                 {site.address.map((l) => (
                   <span key={l} className="block">
                     {l}
                   </span>
                 ))}
               </SlipRow>
-              <SlipRow label="Phone">
+              <SlipRow label={w.slipPhone}>
                 <a
                   href={`tel:${site.phone.replace(/\s/g, "")}`}
                   className="tap tnum transition-colors duration-300 hover:text-acid-type"
@@ -77,18 +78,18 @@ export function ContactHero() {
                * digits only, with the country code — a ten-digit number is
                * assumed Indian, which is what every number on this site is. */}
               {waNumber(site.phone) ? (
-                <SlipRow label="WhatsApp">
+                <SlipRow label={w.slipWhatsapp}>
                   <a
                     href={`https://wa.me/${waNumber(site.phone)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="tap transition-colors duration-300 hover:text-acid-type"
                   >
-                    Message the studio
+                    {w.slipWhatsappLink}
                   </a>
                 </SlipRow>
               ) : null}
-              <SlipRow label="Email">
+              <SlipRow label={w.slipEmail}>
                 <a
                   href={`mailto:${site.email}`}
                   className="tap transition-colors duration-300 hover:text-acid-type"
@@ -97,7 +98,7 @@ export function ContactHero() {
                 </a>
               </SlipRow>
               {instagram ? (
-                <SlipRow label="Instagram">
+                <SlipRow label={w.slipInstagram}>
                   <a
                     href={instagram.url}
                     className="tap transition-colors duration-300 hover:text-acid-type"
@@ -111,7 +112,7 @@ export function ContactHero() {
 
           <div className="mt-6 flex items-center justify-between border-t border-line pt-6">
             <LocalTime className="text-mute" />
-            <span className="t-label text-acid-type">Open</span>
+            <span className="t-label text-acid-type">{w.slipOpen}</span>
           </div>
         </RiseIn>
       </div>

@@ -17,13 +17,20 @@ import { useAuth } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
-import { useOffers, useProducts, useShipping, type ProductDoc as Product } from "@/cms/hooks";
+import {
+  useOffers,
+  useProducts,
+  useShipping,
+  type ProductDoc as Product,
+  useWords,
+} from "@/cms/hooks";
 import { remember } from "@/lib/recent";
 import { ProductGallery } from "./ProductGallery";
 import { ProductRail } from "./ProductRail";
 import { Reviews, Stars } from "./Reviews";
 import { useRatings } from "@/lib/reviews";
 import { useToast } from "@/lib/toast";
+import { fill } from "@/cms/words";
 
 /**
  * One product, on its own page.
@@ -65,6 +72,8 @@ import { useToast } from "@/lib/toast";
  */
 export function ProductPage({ product }: { product: Product }) {
   const { requireAuth, user } = useAuth();
+  const w = useWords("product");
+  const c = useWords("common");
   const cart = useCart();
   const wishlist = useWishlist();
   const navigate = useNavigate();
@@ -144,11 +153,11 @@ export function ProductPage({ product }: { product: Product }) {
 
   const addToCart = () => {
     if (gone || askForSize()) return;
-    gated("Sign in to start a basket.", () => {
+    gated(w.signInToBasket, () => {
       cart.add(product.id, needsSize ? size : null, qty);
       setAdded(true);
-      toast.ok(`${product.title} is in your basket.`, {
-        label: "View",
+      toast.ok(fill(w.addedToast, { title: product.title }), {
+        label: w.addedToastAction,
         onClick: () => cart.setOpen(true),
       });
       window.setTimeout(() => setAdded(false), 4000);
@@ -157,7 +166,7 @@ export function ProductPage({ product }: { product: Product }) {
 
   const buyNow = () => {
     if (gone || askForSize()) return;
-    gated("Sign in to check out.", () => {
+    gated(w.signInToCheckout, () => {
       cart.add(product.id, needsSize ? size : null, qty);
       void navigate({ to: "/checkout" });
     });
@@ -165,14 +174,18 @@ export function ProductPage({ product }: { product: Product }) {
 
   const share = async () => {
     const url = window.location.href;
-    const data = { title: product.title, text: `${product.title} — ${inr(product.price)}`, url };
+    const data = {
+      title: product.title,
+      text: fill(w.shareText, { title: product.title, price: inr(product.price) }),
+      url,
+    };
     try {
       /* The native sheet where there is one (every phone), the clipboard
        * where there is not (most desktops). */
       if (navigator.share) await navigator.share(data);
       else {
         await navigator.clipboard.writeText(url);
-        toast.ok("Link copied.");
+        toast.ok(c.linkCopied);
       }
     } catch (e) {
       /* A cancelled share is not a failure and must not be reported as
@@ -181,7 +194,7 @@ export function ProductPage({ product }: { product: Product }) {
        * outright (permissions, an insecure context), and swallowing that
        * leaves someone pressing Share and getting silence forever. */
       if (e instanceof DOMException && e.name === "AbortError") return;
-      toast.error("Could not copy the link — your browser blocked it.");
+      toast.error(c.copyFailed);
     }
   };
 
@@ -244,12 +257,12 @@ export function ProductPage({ product }: { product: Product }) {
                     </span>
                     {/* The number people actually want: what they keep. */}
                     <span className="tnum font-ui text-[14px] font-semibold text-acid-type">
-                      Save {inr(product.compareAt - product.price)}
+                      {fill(w.save, { amount: inr(product.compareAt - product.price) })}
                     </span>
                   </>
                 ) : null}
               </div>
-              <p className="mt-1 font-ui text-[13px] text-mute">Taxes included</p>
+              <p className="mt-1 font-ui text-[13px] text-mute">{w.taxes}</p>
 
               <p className="mt-5 max-w-[52ch] font-ui text-[15px] leading-[1.6] text-mute">
                 {product.blurb}
@@ -258,11 +271,13 @@ export function ProductPage({ product }: { product: Product }) {
               {/* stock, said plainly */}
               <p className="mt-5 font-ui text-[13px]">
                 {gone ? (
-                  <span className="text-mute">Sold out — this run is finished.</span>
+                  <span className="text-mute">{w.soldOutLine}</span>
                 ) : product.stock <= 10 ? (
-                  <span className="text-acid-type">Only {product.stock} left of this run.</span>
+                  <span className="text-acid-type">
+                    {fill(w.fewLeft, { count: product.stock })}
+                  </span>
                 ) : (
-                  <span className="text-mute">In stock · {product.run}</span>
+                  <span className="text-mute">{fill(w.inStock, { run: product.run })}</span>
                 )}
               </p>
 
@@ -276,11 +291,11 @@ export function ProductPage({ product }: { product: Product }) {
                    * gap below grew to 16px so the two can never meet. */}
                   <div className="flex min-h-11 items-center justify-between gap-4">
                     <h2 className="t-label text-mute">
-                      Size{" "}
+                      {w.size}{" "}
                       {size ? (
                         <span className="text-text">· {size}</span>
                       ) : (
-                        <span className="text-mute opacity-70">· required</span>
+                        <span className="text-mute opacity-70">· {w.sizeRequired}</span>
                       )}
                     </h2>
                     <Link
@@ -288,7 +303,7 @@ export function ProductPage({ product }: { product: Product }) {
                       params={{ slug: "shipping-returns" }}
                       className="tap font-ui text-[12px] text-mute underline decoration-line underline-offset-4 hover:text-text"
                     >
-                      Size &amp; fit
+                      {w.sizeGuide}
                     </Link>
                   </div>
                   <ul className="mt-4 flex flex-wrap gap-2">
@@ -321,23 +336,19 @@ export function ProductPage({ product }: { product: Product }) {
                     aria-live="polite"
                     className={`mt-3 font-ui text-[13px] ${nudge ? "text-acid-type" : "text-mute"}`}
                   >
-                    {nudge
-                      ? "Pick a size first — then add it to the basket."
-                      : size
-                        ? `Size ${size} selected.`
-                        : "Pick a size to continue."}
+                    {nudge ? w.sizeNudge : size ? fill(w.sizeSelected, { size }) : w.sizePrompt}
                   </p>
                 </div>
               ) : null}
 
               {!gone ? (
                 <div className="mt-8 flex items-center gap-4">
-                  <h2 className="t-label text-mute">Quantity</h2>
+                  <h2 className="t-label text-mute">{w.quantity}</h2>
                   <div className="flex items-center border border-line">
                     <button
                       type="button"
                       onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      aria-label="One fewer"
+                      aria-label={c.oneFewer}
                       disabled={qty <= 1}
                       className="flex h-12 w-12 items-center justify-center text-text disabled:opacity-30"
                     >
@@ -349,7 +360,7 @@ export function ProductPage({ product }: { product: Product }) {
                     <button
                       type="button"
                       onClick={() => setQty((q) => Math.min(max, q + 1))}
-                      aria-label="One more"
+                      aria-label={c.oneMore}
                       disabled={qty >= max}
                       className="flex h-12 w-12 items-center justify-center text-text disabled:opacity-30"
                     >
@@ -358,7 +369,7 @@ export function ProductPage({ product }: { product: Product }) {
                   </div>
                   {qty >= max ? (
                     <p className="font-ui text-[12px] text-mute">
-                      {max === product.stock ? "That is the whole run." : "Twenty per order."}
+                      {max === product.stock ? w.wholeRun : w.perOrder}
                     </p>
                   ) : null}
                 </div>
@@ -387,7 +398,7 @@ export function ProductPage({ product }: { product: Product }) {
                   onClick={buyNow}
                   className="mt-8 lg:hidden"
                 >
-                  Buy now
+                  {w.buyNow}
                 </Button>
               ) : null}
 
@@ -396,9 +407,9 @@ export function ProductPage({ product }: { product: Product }) {
                * page as prose. */}
               {!product.digital ? (
                 <ul className="mt-6 grid grid-cols-3 gap-3 border-y border-line py-4">
-                  <Assurance icon={<Banknote size={15} />} label="Cash on delivery" />
-                  <Assurance icon={<RotateCcw size={15} />} label="7-day returns" />
-                  <Assurance icon={<Truck size={15} />} label="Ships in 48 hrs" />
+                  <Assurance icon={<Banknote size={15} />} label={w.assuranceCod} />
+                  <Assurance icon={<RotateCcw size={15} />} label={w.assuranceReturns} />
+                  <Assurance icon={<Truck size={15} />} label={w.assuranceShips} />
                 </ul>
               ) : null}
 
@@ -406,16 +417,16 @@ export function ProductPage({ product }: { product: Product }) {
                 <button
                   type="button"
                   onClick={() =>
-                    gated("Sign in to keep a wishlist.", () => {
+                    gated(w.signInToWishlist, () => {
                       const had = wishlist.has(product.id);
                       void wishlist.toggle(product.id);
-                      toast.ok(had ? "Removed from your list." : "Saved to your list.");
+                      toast.ok(had ? w.removedToast : w.savedToast);
                     })
                   }
                   className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
                   <Heart size={15} className={saved && user ? "fill-acid text-acid" : ""} />
-                  {saved && user ? "Saved" : "Save for later"}
+                  {saved && user ? w.saved : w.saveForLater}
                 </button>
                 <button
                   type="button"
@@ -423,7 +434,7 @@ export function ProductPage({ product }: { product: Product }) {
                   className="tap inline-flex items-center gap-2 font-ui text-[13px] text-mute transition-colors duration-300 hover:text-text"
                 >
                   <Share2 size={15} />
-                  Share
+                  {w.share}
                 </button>
               </div>
 
@@ -435,14 +446,14 @@ export function ProductPage({ product }: { product: Product }) {
 
               {offers.length ? (
                 <div className="ui-card mt-8 border border-line p-5">
-                  <h2 className="t-label text-mute">Offers</h2>
+                  <h2 className="t-label text-mute">{w.offers}</h2>
                   <ul className="mt-3 space-y-2">
                     {offers.slice(0, 3).map((o) => (
                       <li key={o.code} className="font-ui text-[14px] text-text">
                         <span className="tnum bg-acid px-2 py-[2px] font-bold text-accent-text">
                           {o.code}
                         </span>{" "}
-                        {o.label} — enter it at checkout.
+                        {fill(w.offerLine, { label: o.label })}
                       </li>
                     ))}
                   </ul>
@@ -453,31 +464,26 @@ export function ProductPage({ product }: { product: Product }) {
                * needs in order to decide, and a wall of it is what makes a
                * product page feel like a form. */}
               <div className="mt-8 border-t border-line">
-                <Disclosure title="Details" defaultOpen>
+                <Disclosure title={w.details} defaultOpen>
                   <dl>
-                    <Spec k="Run" v={product.run} />
-                    <Spec k="Kind" v={product.kind} />
+                    <Spec k={w.specRun} v={product.run} />
+                    <Spec k={w.specKind} v={product.kind} />
                     {product.department !== "unisex" ? (
-                      <Spec k="Cut" v={product.department} />
+                      <Spec k={w.specCut} v={product.department} />
                     ) : null}
-                    <Spec k="Catalogue" v={product.index} />
-                    <Spec
-                      k="Payment"
-                      v={product.digital ? "No delivery — digital" : "Cash on delivery"}
-                    />
+                    <Spec k={w.specCatalogue} v={product.index} />
+                    <Spec k={w.specPayment} v={product.digital ? w.payDigital : w.payCod} />
                   </dl>
                 </Disclosure>
-                <Disclosure title="Delivery & returns">
+                <Disclosure title={w.deliveryReturns}>
                   <p className="font-ui text-[14px] leading-[1.6] text-mute">
-                    {product.digital
-                      ? "Nothing ships. The file reaches you by email once the order is confirmed, and a digital item cannot be returned."
-                      : "Packed and sent from the building in Kolkata, usually within two working days. Unworn, tags on, seven days from the day it reaches you — tell us and we collect it."}{" "}
+                    {product.digital ? w.deliveryDigital : w.deliveryPhysical}{" "}
                     <Link
                       to="/legal/$slug"
                       params={{ slug: "shipping-returns" }}
                       className="tap text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
                     >
-                      Full terms
+                      {w.fullTerms}
                     </Link>
                   </p>
                 </Disclosure>
@@ -492,11 +498,7 @@ export function ProductPage({ product }: { product: Product }) {
       <Reviews productId={product.id} productTitle={product.title} />
 
       {related.length ? (
-        <ProductRail
-          title="More from the shop"
-          products={related}
-          standfirst="Same shelf, same building."
-        />
+        <ProductRail title={w.relatedTitle} products={related} standfirst={w.relatedStandfirst} />
       ) : null}
 
       {/* ---- the phone's buy bar ----
@@ -513,17 +515,17 @@ export function ProductPage({ product }: { product: Product }) {
             </p>
             <p className="truncate font-ui text-[12px] text-mute">
               {gone
-                ? "Sold out"
+                ? w.soldOut
                 : added
-                  ? "In your basket"
+                  ? w.barInBasket
                   : sizeMissing
-                    ? "Size needed"
+                    ? w.barSizeNeeded
                     : `${qty} × ${size ?? product.kind}`}
             </p>
           </div>
           {gone ? (
             <span className="flex h-[52px] shrink-0 items-center justify-center border border-line px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
-              Sold out
+              {w.soldOut}
             </span>
           ) : added ? (
             <button
@@ -531,7 +533,7 @@ export function ProductPage({ product }: { product: Product }) {
               onClick={() => cart.setOpen(true)}
               className="flex h-[52px] shrink-0 items-center justify-center gap-2 bg-acid px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text"
             >
-              <Check size={16} /> View basket
+              <Check size={16} /> {w.viewBasket}
             </button>
           ) : (
             <button
@@ -539,7 +541,7 @@ export function ProductPage({ product }: { product: Product }) {
               onClick={addToCart}
               className="flex h-[52px] shrink-0 items-center justify-center bg-acid px-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-opacity duration-300 active:opacity-80"
             >
-              Add to basket
+              {w.addToBasket}
             </button>
           )}
         </div>
@@ -573,15 +575,14 @@ function BuyButtons({
   onBuy: () => void;
   onViewCart: () => void;
 }) {
+  const w = useWords("product");
   if (gone) {
     return (
       <div className="flex flex-col gap-3">
         <span className="flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
-          Sold out
+          {w.soldOut}
         </span>
-        <p className="font-ui text-[13px] text-mute">
-          The run is finished. The list hears about the next one first.
-        </p>
+        <p className="font-ui text-[13px] text-mute">{w.soldOutNote}</p>
       </div>
     );
   }
@@ -589,15 +590,15 @@ function BuyButtons({
     <div className="flex flex-col gap-3">
       {added ? (
         <Button variant="primary" size="lg" full onClick={onViewCart}>
-          <Check size={16} /> In your basket — view it
+          <Check size={16} /> {w.inBasketView}
         </Button>
       ) : (
         <Button variant="primary" size="lg" full onClick={onAdd}>
-          Add to basket
+          {w.addToBasket}
         </Button>
       )}
       <Button variant="secondary" size="lg" full onClick={onBuy}>
-        Buy now
+        {w.buyNow}
       </Button>
     </div>
   );
@@ -655,12 +656,14 @@ function Spec({ k, v }: { k: string; v: string }) {
 }
 
 function Breadcrumb({ title }: { title: string }) {
+  const w = useWords("product");
+  const c = useWords("common");
   return (
-    <nav aria-label="Breadcrumb">
+    <nav aria-label={c.breadcrumb}>
       <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
         <li>
           <Link to="/" className="tap transition-colors duration-300 hover:text-text">
-            LMN&middot;BNDT
+            {c.breadcrumbHome}
           </Link>
         </li>
         <li aria-hidden="true" className="opacity-50">
@@ -668,7 +671,7 @@ function Breadcrumb({ title }: { title: string }) {
         </li>
         <li>
           <Link to="/shop" className="tap transition-colors duration-300 hover:text-text">
-            The drop
+            {w.breadcrumbShop}
           </Link>
         </li>
         <li aria-hidden="true" className="opacity-50">
@@ -701,6 +704,7 @@ function DeliveryEstimate({
   kolkata: number;
   india: number;
 }) {
+  const w = useWords("product");
   const [pin, setPin] = useState("");
   const [checked, setChecked] = useState<string | null>(null);
 
@@ -720,9 +724,7 @@ function DeliveryEstimate({
     return (
       <div className="ui-card mt-8 flex items-start gap-3 border border-line p-5">
         <Truck size={16} className="mt-[2px] shrink-0 text-acid-type" />
-        <p className="font-ui text-[14px] leading-[1.5] text-text">
-          Digital — nothing ships. The file reaches you by email after the order.
-        </p>
+        <p className="font-ui text-[14px] leading-[1.5] text-text">{w.estimateDigital}</p>
       </div>
     );
   }
@@ -735,7 +737,7 @@ function DeliveryEstimate({
   return (
     <div className="ui-card mt-8 border border-line p-5">
       <h2 className="t-label flex items-center gap-2 text-mute">
-        <Truck size={14} className="text-acid-type" /> Delivery
+        <Truck size={14} className="text-acid-type" /> {w.estimateHeading}
       </h2>
 
       <form
@@ -753,14 +755,14 @@ function DeliveryEstimate({
         className="mt-3 flex gap-2"
       >
         <label className="sr-only" htmlFor="pin">
-          Delivery PIN code
+          {w.estimatePinLabel}
         </label>
         <input
           id="pin"
           inputMode="numeric"
           value={pin}
           onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-          placeholder="PIN code"
+          placeholder={w.estimatePin}
           className="ui-field h-11 min-w-0 flex-1 px-3 font-ui text-[14px] text-text outline-none placeholder:text-[color:var(--placeholder)]"
         />
         <button
@@ -768,7 +770,7 @@ function DeliveryEstimate({
           disabled={!valid}
           className="h-11 shrink-0 border border-line-strong px-4 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-40"
         >
-          Check
+          {w.estimateCheck}
         </button>
       </form>
 
@@ -776,20 +778,21 @@ function DeliveryEstimate({
         <p className="mt-3 font-ui text-[14px] leading-[1.5] text-text">
           {local ? (
             <>
-              <span className="text-acid-type">2–4 working days</span> to {checked}. Delivery{" "}
-              {kolkata ? inr(kolkata) : "free"}, paid in cash when it arrives.
+              <span className="text-acid-type">{w.estimateLocalDays}</span>{" "}
+              {fill(w.estimateLine, {
+                pin: checked,
+                charge: kolkata ? inr(kolkata) : w.estimateFree,
+              })}
             </>
           ) : (
             <>
-              <span className="text-acid-type">5–9 working days</span> to {checked}. Delivery{" "}
-              {india ? inr(india) : "free"}, paid in cash when it arrives.
+              <span className="text-acid-type">{w.estimateIndiaDays}</span>{" "}
+              {fill(w.estimateLine, { pin: checked, charge: india ? inr(india) : w.estimateFree })}
             </>
           )}
         </p>
       ) : (
-        <p className="mt-3 font-ui text-[14px] text-mute">
-          Enter a PIN code for the window and the delivery charge.
-        </p>
+        <p className="mt-3 font-ui text-[14px] text-mute">{w.estimatePrompt}</p>
       )}
     </div>
   );

@@ -5,8 +5,9 @@ import { Modal } from "@/components/lb/Modal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { useCart } from "@/lib/cart";
 import { buttonClass } from "@/lib/button";
-import { useShipping } from "@/cms/hooks";
+import { useShipping, useWords } from "@/cms/hooks";
 import { inr } from "@/lib/money";
+import { fill } from "@/cms/words";
 
 /**
  * The basket, as a drawer.
@@ -37,6 +38,7 @@ import { inr } from "@/lib/money";
  */
 export function CartDrawer() {
   const cart = useCart();
+  const w = useWords("basket");
   const shipping = useShipping();
 
   /** The last line taken out, kept just long enough to put back. */
@@ -73,14 +75,25 @@ export function CartDrawer() {
   const undoStrip = undo ? (
     <div className="mb-6 flex items-center justify-between gap-4 border border-line bg-surface px-4 py-3">
       <p className="min-w-0 font-ui text-[13px] text-mute">
-        Removed <span className="text-text">{undo.title}</span>.
+        {fill(w.removedLine, { title: "\u0000" })
+          .split("\u0000")
+          .flatMap((part, i) =>
+            i === 0
+              ? [part]
+              : [
+                  <span key="t" className="text-text">
+                    {undo.title}
+                  </span>,
+                  part,
+                ],
+          )}
       </p>
       <button
         type="button"
         onClick={putBack}
         className="flex h-11 shrink-0 items-center gap-2 px-2 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-acid-type transition-opacity duration-300 hover:opacity-70"
       >
-        <Undo2 size={14} /> Undo
+        <Undo2 size={14} /> {w.undo}
       </button>
     </div>
   ) : null;
@@ -90,20 +103,17 @@ export function CartDrawer() {
       open={cart.open}
       onClose={() => cart.setOpen(false)}
       variant="drawer"
-      title="Your cart"
+      title={w.cartTitle}
       standfirst={
         cart.count === 0
-          ? "Nothing in it yet."
-          : `${cart.count} ${cart.count === 1 ? "item" : "items"}, held for you.`
+          ? w.cartEmpty
+          : fill(cart.count === 1 ? w.cartCountOne : w.cartCountMany, { count: cart.count })
       }
     >
       {cart.resolved.length === 0 ? (
         <div className="py-8">
           {undoStrip}
-          <p className="font-ui text-[15px] leading-[1.6] text-mute">
-            Records, discs, prints and the merch runs are all in the shop. Nothing is repressed, so
-            when a number is gone it stays gone.
-          </p>
+          <p className="font-ui text-[15px] leading-[1.6] text-mute">{w.cartEmptyBody}</p>
           <Link
             to="/shop"
             onClick={() => cart.setOpen(false)}
@@ -114,7 +124,7 @@ export function CartDrawer() {
               className: "mt-8",
             })}
           >
-            Go to the shop
+            {w.goToShop}
           </Link>
         </div>
       ) : (
@@ -134,15 +144,13 @@ export function CartDrawer() {
                     key={key}
                     className="flex items-center justify-between gap-4 border-b border-line py-5"
                   >
-                    <p className="font-ui text-[13px] text-mute">
-                      An item in your cart is no longer sold.
-                    </p>
+                    <p className="font-ui text-[13px] text-mute">{w.noLongerSold}</p>
                     <button
                       type="button"
                       onClick={() => cart.remove(line.productId, line.size)}
                       className="flex h-11 items-center px-2 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-acid-type"
                     >
-                      Remove
+                      {w.remove}
                     </button>
                   </li>
                 );
@@ -176,8 +184,8 @@ export function CartDrawer() {
                         <StepButton
                           label={
                             line.qty <= 1
-                              ? `Remove ${p.title} from your cart`
-                              : `Reduce quantity of ${p.title}`
+                              ? fill(w.removeItem, { title: p.title })
+                              : fill(w.reduceItem, { title: p.title })
                           }
                           onClick={() =>
                             line.qty <= 1
@@ -193,7 +201,7 @@ export function CartDrawer() {
                           {line.qty}
                         </span>
                         <StepButton
-                          label={`Increase quantity of ${p.title}`}
+                          label={fill(w.increaseItem, { title: p.title })}
                           disabled={capped}
                           onClick={() => cart.setQty(line.productId, line.size, line.qty + 1)}
                         >
@@ -216,7 +224,7 @@ export function CartDrawer() {
                   <button
                     type="button"
                     onClick={() => dropLine(line.productId, line.size, line.qty, p.title)}
-                    aria-label={`Remove ${p.title} from your cart`}
+                    aria-label={fill(w.removeItem, { title: p.title })}
                     className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-acid-type"
                   >
                     <Trash2 size={15} />
@@ -228,19 +236,19 @@ export function CartDrawer() {
 
           {!cart.allDigital ? (
             <fieldset className="mt-8">
-              <legend className="t-label text-mute">Where it is going</legend>
+              <legend className="t-label text-mute">{w.whereGoing}</legend>
               <div className="mt-4 flex gap-3">
                 <RegionChip
                   on={cart.region === "kolkata"}
                   onClick={() => cart.setRegion("kolkata")}
-                  label="Kolkata"
-                  note={shipping.kolkata ? inr(shipping.kolkata) : "Free"}
+                  label={w.regionKolkata}
+                  note={shipping.kolkata ? inr(shipping.kolkata) : w.free}
                 />
                 <RegionChip
                   on={cart.region === "india"}
                   onClick={() => cart.setRegion("india")}
-                  label="Rest of India"
-                  note={shipping.india ? inr(shipping.india) : "Free"}
+                  label={w.regionIndia}
+                  note={shipping.india ? inr(shipping.india) : w.free}
                 />
               </div>
             </fieldset>
@@ -252,23 +260,27 @@ export function CartDrawer() {
            * A basket with five things in it used to hide its own total. */}
           <div className="sticky bottom-0 -mx-6 -mb-6 mt-8 border-t border-line bg-surface-deep px-6 pb-6 pt-5 sm:-mx-8 sm:-mb-8 sm:px-8 sm:pb-8">
             <dl>
-              <Row k="Subtotal" v={inr(cart.subtotal)} />
+              <Row k={w.subtotal} v={inr(cart.subtotal)} />
               {cart.discount > 0 && cart.offer ? (
-                <Row k={`Discount (${cart.offer.code})`} v={`− ${inr(cart.discount)}`} accent />
+                <Row
+                  k={fill(w.discount, { code: cart.offer.code })}
+                  v={`− ${inr(cart.discount)}`}
+                  accent
+                />
               ) : null}
               <Row
-                k="Shipping"
+                k={w.shipping}
                 v={
                   cart.allDigital
-                    ? "None — digital"
+                    ? w.shippingDigital
                     : cart.shipping === 0
-                      ? "Free"
+                      ? w.free
                       : inr(cart.shipping)
                 }
               />
               <div className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
                 <dt className="font-display text-[16px] font-extrabold uppercase tracking-[-0.01em] text-text">
-                  Total
+                  {w.total}
                 </dt>
                 <dd className="tnum font-display text-[24px] font-extrabold tracking-[-0.02em] text-text">
                   {inr(cart.total)}
@@ -281,12 +293,10 @@ export function CartDrawer() {
               onClick={() => cart.setOpen(false)}
               className={buttonClass({ size: "lg", full: true, className: "mt-4" })}
             >
-              Checkout
+              {w.checkout}
             </Link>
 
-            <p className="t-label mt-3 text-mute">
-              Pay on delivery. We confirm stock by hand before anything is dispatched.
-            </p>
+            <p className="t-label mt-3 text-mute">{w.cartNote}</p>
           </div>
         </>
       )}

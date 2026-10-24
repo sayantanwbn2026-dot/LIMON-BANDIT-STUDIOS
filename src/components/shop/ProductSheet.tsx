@@ -8,6 +8,8 @@ import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { inr } from "@/lib/money";
 import type { ProductDoc as Product } from "@/cms/hooks";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * One product, in full.
@@ -35,6 +37,8 @@ export function ProductSheet({
   onClose: () => void;
 }) {
   const { requireAuth, user } = useAuth();
+  const w = useWords("product");
+  const c = useWords("common");
   const cart = useCart();
   const wishlist = useWishlist();
 
@@ -100,7 +104,7 @@ export function ProductSheet({
 
   const add = () => {
     if (askForSize()) return;
-    gated(`Sign in to add ${product.title} to your cart.`, () => {
+    gated(fill(w.signInToAdd, { title: product.title }), () => {
       cart.add(product.id, needsSize ? size : null, qty);
       if (!user) return;
       /* Back to one. The size is worth remembering if they reopen the same
@@ -162,9 +166,9 @@ export function ProductSheet({
           <dl className="mt-4 space-y-1.5">
             <Spec k="Run" v={product.run} />
             {gone ? (
-              <Spec k="Stock" v="Sold out" />
+              <Spec k={w.sheetStock} v={w.soldOut} />
             ) : product.stock <= 10 ? (
-              <Spec k="Left" v={`${product.stock}`} accent />
+              <Spec k={w.sheetLeft} v={`${product.stock}`} accent />
             ) : null}
           </dl>
         </div>
@@ -201,18 +205,18 @@ export function ProductSheet({
             aria-live="polite"
             className={`mt-3 font-ui text-[12px] ${nudge ? "text-acid-type" : "text-mute"}`}
           >
-            {nudge ? "Pick a size first." : size ? `Size ${size} selected.` : " "}
+            {nudge ? w.sheetSizeNudge : size ? fill(w.sizeSelected, { size }) : " "}
           </p>
         </fieldset>
       ) : null}
 
       {!gone ? (
         <div className="mt-7">
-          <span className="t-label text-mute">Quantity</span>
+          <span className="t-label text-mute">{w.quantity}</span>
           <div className="mt-3 flex items-center justify-between gap-4">
             <div className="flex items-center border border-line">
               <Step
-                label="One fewer"
+                label={c.oneFewer}
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                 disabled={qty <= 1}
               >
@@ -222,7 +226,7 @@ export function ProductSheet({
                 {qty}
               </span>
               <Step
-                label="One more"
+                label={c.oneMore}
                 onClick={() => setQty((q) => Math.min(max, q + 1))}
                 disabled={qty >= max}
               >
@@ -240,14 +244,12 @@ export function ProductSheet({
         <button
           type="button"
           onClick={() =>
-            gated(`Sign in to save ${product.title} to your wishlist.`, () => {
+            gated(fill(w.signInToSave, { title: product.title }), () => {
               void wishlist.toggle(product.id);
             })
           }
           aria-pressed={saved}
-          aria-label={
-            saved ? `Remove ${product.title} from wishlist` : `Save ${product.title} to wishlist`
-          }
+          aria-label={fill(saved ? w.wishlistRemove : w.wishlistAdd, { title: product.title })}
           className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-line text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
         >
           <Heart
@@ -259,20 +261,18 @@ export function ProductSheet({
 
         {gone ? (
           <span className="flex h-[56px] flex-1 items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-mute">
-            Sold out
+            {w.soldOut}
           </span>
         ) : (
           <Button variant="primary" size="lg" onClick={add} className="flex-1">
             {added ? <Check size={15} /> : null}
-            {added ? "Added" : "Add to cart"}
+            {added ? w.added : w.addToCart}
           </Button>
         )}
       </div>
 
       <p className="t-label mt-4 text-mute">
-        {product.digital
-          ? "Sent by email. No shipping, no wait."
-          : "Pay on delivery. Stock confirmed by hand before dispatch."}
+        {product.digital ? w.sheetDigitalNote : w.sheetPhysicalNote}
       </p>
     </Modal>
   );

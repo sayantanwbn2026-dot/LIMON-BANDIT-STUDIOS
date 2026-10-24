@@ -21,12 +21,35 @@ const vendor = (pkgs: string) => new RegExp(String.raw`[\\/]node_modules[\\/](?:
 const REACT = vendor("react|react-dom|scheduler");
 const MOTION = vendor("gsap|lenis");
 
+const WEEK = "public, max-age=604800, stale-while-revalidate=86400";
+const STATIC_CACHE = {
+  "/fonts/**": { headers: { "cache-control": "public, max-age=31536000, immutable" } },
+  "/img/**": { headers: { "cache-control": WEEK } },
+  "/video/**": { headers: { "cache-control": WEEK } },
+  "/audio/**": { headers: { "cache-control": WEEK } },
+};
+
+type LovableConfig = NonNullable<Parameters<typeof defineConfig>[0]>;
+
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  /* Cache rules for the files in public/, on whichever host builds this
+   * (on Vercel nitro writes them into the deployment's routing). The
+   * hashed bundles under /assets are already immutable; these are not
+   * hashed, so they get a week with revalidation rather than forever — a
+   * picture replaced under the same name still updates, and a visitor
+   * coming back does not download it again. Fonts never change under the
+   * same name, so they keep a year.
+   *
+   * The cast: the preset passes this object straight to nitro
+   * (`{ defaultPreset, ...userNitroOpts }` in its source), and nitro's
+   * options include routeRules; only the preset's declared type is
+   * narrower. */
+  nitro: { routeRules: STATIC_CACHE } as LovableConfig["nitro"],
   vite: {
     environments: {
       client: {

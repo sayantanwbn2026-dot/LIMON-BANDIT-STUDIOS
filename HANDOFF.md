@@ -8,27 +8,45 @@ has to do each piece.
 
 ## Deploying
 
-The build targets **Cloudflare Workers** (`cloudflare-module`, via the Lovable
-preset). Verified before launch on 2026-09-19 against a production build:
-every route 200 (unknown slugs 404), security headers on every response,
-first-load JS 165 KB gz (budget 180), no secrets in the client bundle or git
-history, anonymous database access refused for every private table.
+**Vercel (current).** Import the repo, leave the build command as
+`bun run build` (or `vite build`) and the output setting on its default.
+Nitro detects Vercel from the build environment and writes a
+`.vercel/output` deployment by itself — no `vercel.json`, no preset to set.
+Verified on 2026-10-24 with `VERCEL=1 vite build`: no build warnings
+(the browser bundle is split so no chunk passes Vite's 500 kB line), the
+server function serves every route, hashed `/assets` are cached for a year
+and `/img`, `/video`, `/audio` for a week (rules in `vite.config.ts`).
+Security headers come from `src/server.ts` on every response, on any host.
 
-Set these in the host's environment / secrets — they are **not** in the repo:
+**Cloudflare Workers** still works unchanged: with no host detected, the
+Lovable preset falls back to `cloudflare-module`.
 
-| Variable                        | Needed for                              | Notes                                        |
-| ------------------------------- | --------------------------------------- | -------------------------------------------- |
-| `VITE_SUPABASE_URL`             | everything                              | also compiled into the build; public         |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | everything                              | also compiled into the build; public         |
-| `SHEETS_WEBHOOK_URL`            | order + enquiry notifications           | Slack, Discord or Apps Script URL            |
-| `SHEETS_WEBHOOK_SECRET`         | the Apps Script option only             |                                              |
-| `SUPABASE_SERVICE_ROLE_KEY`     | stamping "notified" on enquiries/orders | optional; **never** give it a `VITE_` prefix |
+Set these in the host's environment (Vercel → Project → Settings →
+Environment Variables). They are **not** in the repo. The `VITE_` ones are
+compiled into the build, so a change to them needs a redeploy.
+
+| Variable                        | Needed for                              | Notes                                                 |
+| ------------------------------- | --------------------------------------- | ----------------------------------------------------- |
+| `VITE_SUPABASE_URL`             | everything                              | public; without it the site runs on committed content |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | everything                              | public                                                |
+| `VITE_AUTH_EMAIL_MODE`          | sign-in by code instead of link         | optional; `code` only after the email template change |
+| `SUPABASE_SERVICE_ROLE_KEY`     | stamping "notified" on enquiries/orders | optional; **never** give it a `VITE_` prefix          |
+| `SHEETS_WEBHOOK_URL`            | order + enquiry notifications           | Slack, Discord or Apps Script URL                     |
+| `SHEETS_WEBHOOK_SECRET`         | the Apps Script option only             |                                                       |
+| `RESEND_API_KEY`                | order emails to customers               | optional; until set, no email is promised or sent     |
+| `ORDER_FROM_EMAIL`              | the From line on those emails           | must be on a domain verified with Resend              |
 
 The admin-inbox policies are already applied to `limon-bandit-shop`
 (`vwuuwommxvqtgzlsndip`, ap-south-1) — see `supabase/migrations/`. Still to do:
 set Brand & contact → _Live website address_ to the real domain
 (canonical links, sitemap and share cards are built from it), and add that
 domain to Supabase → Authentication → URL configuration.
+
+**Everything a visitor reads is in the admin.** Section headings and content
+were already; the wording around them — buttons, labels, form messages,
+empty states, the 404 page — is now a _Wording_ form on each page and under
+Global / Commerce (generated from `src/cms/words.ts`). The hero mascot is
+Brand & contact → _Mascot_, with a per-page override in Page titles & SEO.
 
 ## Where things are
 

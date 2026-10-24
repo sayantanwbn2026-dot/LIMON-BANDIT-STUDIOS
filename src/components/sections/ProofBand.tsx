@@ -2,16 +2,17 @@ import { Ticker, TickerItem } from "@/components/lb/Ticker";
 import { GridRules } from "@/components/lb/GridRules";
 import { Star } from "lucide-react";
 import { Picture } from "@/components/lb/Picture";
-import { useTickers } from "@/cms/hooks";
+import { useTickers, useWords } from "@/cms/hooks";
 
 const avatars = ["release-01", "release-02", "release-03", "release-06"] as const;
 
 export function ProofBand() {
   const { partners, proofTicker } = useTickers();
+  const w = useWords("home");
   return (
-    <section className="relative w-full bg-surface-deep" aria-label="Studio facts and partners">
+    <section className="relative w-full bg-surface-deep" aria-label={w.proofLabel}>
       <GridRules tone="dark" />
-      <h2 className="sr-only">Studio facts and partners</h2>
+      <h2 className="sr-only">{w.proofLabel}</h2>
       <div className="relative z-[2]">
         <div className="flex h-[56px] items-center border-y border-line">
           <Ticker duration={45}>
@@ -50,7 +51,7 @@ export function ProofBand() {
               ))}
             </span>
           </div>
-          <span className="t-eyebrow text-mute">Trusted by 100+ artists</span>
+          <span className="t-eyebrow text-mute">{w.proofTrusted}</span>
         </div>
         {/* justify-between is right for one row and wrong for a wrapped one —
          * it strands the last line against the left edge with a hole beside

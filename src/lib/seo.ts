@@ -379,3 +379,21 @@ export function productJsonLd(p: {
     },
   };
 }
+
+/**
+ * The studio's name as it should read in a page title, a feed or an email.
+ *
+ * Brand & contact stores it in capitals because the logotype is set in
+ * capitals — but the logotype uppercases with CSS anyway, and in a browser
+ * tab or a search result "LIMON BANDIT" shouts. An all-caps name is title-
+ * cased here; anything an editor typed in mixed case is used as they typed
+ * it. Reads through `docFrom`, so an empty store gives the committed name
+ * rather than nothing.
+ */
+export function siteNameFrom(docs: Record<string, unknown>): string {
+  const raw = docFrom<{ name?: string }>(docs, "global.site").name?.trim() || "Limon Bandit";
+  if (raw !== raw.toUpperCase() || !/[A-Z]/.test(raw)) return raw;
+  return raw
+    .toLowerCase()
+    .replace(/(^|[\s\-—/])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase());
+}

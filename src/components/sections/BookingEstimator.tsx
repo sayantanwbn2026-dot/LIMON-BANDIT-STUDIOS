@@ -4,9 +4,10 @@ import { ArrowRight, Minus, Plus } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useRooms, useSection } from "@/cms/hooks";
+import { useRooms, useSection, useWords } from "@/cms/hooks";
 import { inr } from "@/lib/money";
 import { parseRate } from "@/lib/rates";
+import { fill } from "@/cms/words";
 
 /**
  * "What would a session actually cost?"
@@ -33,6 +34,8 @@ const MAX = { hour: 12, night: 7 } as const;
 
 export function BookingEstimator() {
   const copy = useSection("home", "rates");
+  const w = useWords("home");
+  const c = useWords("common");
   const rooms = useRooms();
   const [roomId, setRoomId] = useState<string | null>(null);
   const [count, setCount] = useState(3);
@@ -58,7 +61,7 @@ export function BookingEstimator() {
         </div>
         <div className="flex items-end md:col-span-1">
           <p className="section-lede font-ui text-[15px] leading-[1.5] text-mute">
-            Pick a room and a length. The number moves with you.
+            {w.estimatorLede}
           </p>
         </div>
       </div>
@@ -67,7 +70,7 @@ export function BookingEstimator() {
         {/* ---- the two questions ---- */}
         <div className="bg-surface p-6 sm:p-8">
           <fieldset>
-            <legend className="t-label text-mute">Which room</legend>
+            <legend className="t-label text-mute">{w.estimatorWhichRoom}</legend>
             <ul className="mt-4 grid grid-cols-2 gap-2">
               {rooms.map((r) => {
                 const on = r.id === room.id;
@@ -109,7 +112,7 @@ export function BookingEstimator() {
 
           <fieldset className="mt-8">
             <legend className="t-label text-mute">
-              {unit === "night" ? "How many nights" : "How many hours"}
+              {unit === "night" ? w.estimatorHowManyNights : w.estimatorHowManyHours}
             </legend>
             <div className="mt-4 flex items-center gap-4">
               <div className="flex items-center border border-line">
@@ -120,7 +123,7 @@ export function BookingEstimator() {
                    * from the same number and one of them was lost. */
                   onClick={() => setCount((c) => Math.max(min, Math.min(max, c) - 1))}
                   disabled={n <= min}
-                  aria-label="One fewer"
+                  aria-label={c.oneFewer}
                   className="flex h-12 w-12 items-center justify-center text-text disabled:opacity-30"
                 >
                   <Minus size={16} />
@@ -132,7 +135,7 @@ export function BookingEstimator() {
                   type="button"
                   onClick={() => setCount((c) => Math.min(max, Math.max(min, c) + 1))}
                   disabled={n >= max}
-                  aria-label="One more"
+                  aria-label={c.oneMore}
                   className="flex h-12 w-12 items-center justify-center text-text disabled:opacity-30"
                 >
                   <Plus size={16} />
@@ -144,14 +147,14 @@ export function BookingEstimator() {
                 max={max}
                 value={n}
                 onChange={(e) => setCount(Number(e.target.value))}
-                aria-label={unit === "night" ? "Nights" : "Hours"}
+                aria-label={unit === "night" ? w.estimatorNights : w.estimatorHours}
                 className="h-11 min-w-0 flex-1 accent-[color:var(--accent)]"
               />
             </div>
             <p className="mt-3 font-ui text-[13px] text-mute">
               {unit === "night"
-                ? "Sold by the night — in at 9, out when you are done."
-                : `Minimum ${MIN.hour} hours. ${room.engineer ? "Engineer included." : ""}`}
+                ? w.estimatorNightNote
+                : `${fill(w.estimatorHourNote, { hours: MIN.hour })} ${room.engineer ? w.estimatorEngineerIncluded : ""}`}
             </p>
           </fieldset>
         </div>
@@ -169,7 +172,7 @@ export function BookingEstimator() {
           </div>
 
           <div>
-            <p className="t-label text-mute">Estimate</p>
+            <p className="t-label text-mute">{w.estimatorEstimate}</p>
             <p
               aria-live="polite"
               className="tnum mt-2 font-display text-[42px] font-extrabold leading-none tracking-[-0.03em] text-text"
@@ -178,10 +181,15 @@ export function BookingEstimator() {
             </p>
             <p className="mt-2 font-ui text-[13px] text-mute">
               {total === null
-                ? "Ask us for this room's rate."
-                : `${room.name} · ${n} ${unit === "night" ? (n === 1 ? "night" : "nights") : "hours"}${
-                    room.engineer ? " · engineer included" : ""
-                  }`}
+                ? w.estimatorAskRate
+                : `${fill(
+                    unit === "night"
+                      ? n === 1
+                        ? w.estimatorSummaryNight
+                        : w.estimatorSummaryNights
+                      : w.estimatorSummaryHours,
+                    { room: room.name, count: n },
+                  )}${room.engineer ? w.estimatorSummaryEngineer : ""}`}
             </p>
 
             {/* The router serialises `search`, so the manual
@@ -193,13 +201,11 @@ export function BookingEstimator() {
               className="group mt-6 flex h-[56px] w-full items-center justify-between gap-4 bg-acid px-6 transition-opacity duration-300 hover:opacity-90"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                Ask for this slot
+                {w.estimatorCta}
               </span>
               <ArrowRight size={16} className="text-accent-text lb-arrow" />
             </Link>
-            <p className="t-label mt-4 text-mute">
-              An estimate, not an invoice — confirmed when we reply.
-            </p>
+            <p className="t-label mt-4 text-mute">{w.estimatorFinePrint}</p>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { isAttached, ROOMS, setRoom, type RoomId } from "@/lib/audio-graph";
+import { useWords } from "@/cms/hooks";
 
 const KEY = "lb-room";
 
@@ -24,7 +25,21 @@ const KEY = "lb-room";
  * It remembers the room in this browser, so somebody who prefers everything
  * through The Lockout is asked once.
  */
+/* Each modelled room's name and line, from the label wording. The
+ * acoustics stay in audio-graph; only the words were ever content. */
+const DIAL_WORDS = {
+  dry: ["dialDry", "dialDryNote"],
+  booth: ["dialBooth", "dialBoothNote"],
+  "room-a": ["dialRoomA", "dialRoomANote"],
+  lockout: ["dialLockout", "dialLockoutNote"],
+} as const;
+
 export function RoomDial({ onWake }: { onWake?: () => void }) {
+  const w = useWords("label");
+  const name = (id: RoomId, fallback: string) =>
+    id in DIAL_WORDS ? w[DIAL_WORDS[id as keyof typeof DIAL_WORDS][0]] : fallback;
+  const line = (id: RoomId, fallback: string) =>
+    id in DIAL_WORDS ? w[DIAL_WORDS[id as keyof typeof DIAL_WORDS][1]] : fallback;
   const [at, setAt] = useState<RoomId>("dry");
   const [ready, setReady] = useState(false);
 
@@ -77,14 +92,14 @@ export function RoomDial({ onWake }: { onWake?: () => void }) {
     <section aria-labelledby="room-dial" className="mt-8 border-t border-line pt-6" data-room={at}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <h4 id="room-dial" className="t-label text-mute">
-          Play it in the room
+          {w.dialHeading}
         </h4>
         <p className="font-ui text-[12px] text-mute">
-          {ready ? current.note : "Pick one and it starts there."}
+          {ready ? line(current.id, current.note) : w.dialPrompt}
         </p>
       </div>
 
-      <div role="group" aria-label="Which room to hear it in" className="mt-4 flex flex-wrap gap-2">
+      <div role="group" aria-label={w.dialGroupLabel} className="mt-4 flex flex-wrap gap-2">
         {ROOMS.map((r) => {
           const on = r.id === at;
           return (
@@ -99,16 +114,13 @@ export function RoomDial({ onWake }: { onWake?: () => void }) {
                   : "border border-line text-text hover:border-acid-type"
               }`}
             >
-              {r.label}
+              {name(r.id, r.label)}
             </button>
           );
         })}
       </div>
 
-      <p className="mt-3 font-ui text-[11px] leading-[1.5] text-mute">
-        Modelled rooms, not measured ones — convolution built from the shape of each space rather
-        than a recording of it. Book the real thing and hear the difference.
-      </p>
+      <p className="mt-3 font-ui text-[11px] leading-[1.5] text-mute">{w.dialFinePrint}</p>
     </section>
   );
 }

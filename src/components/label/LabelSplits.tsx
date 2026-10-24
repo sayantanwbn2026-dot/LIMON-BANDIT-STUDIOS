@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useSection, useSplits } from "@/cms/hooks";
+import { useFaqByTopic, useSection, useSplits, useWords } from "@/cms/hooks";
 
 /**
  * The deal, in three columns and no marketing language. If a split is worth
@@ -11,6 +11,7 @@ import { useFaqByTopic, useSection, useSplits } from "@/cms/hooks";
  */
 export function LabelSplits() {
   const copy = useSection("label", "splits");
+  const w = useWords("label");
   const SPLITS = useSplits();
   const faqItems = useFaqByTopic("label");
 
@@ -72,11 +73,10 @@ export function LabelSplits() {
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
           <div>
             <h3 className="font-display text-[24px] font-bold uppercase tracking-[-0.02em] text-text">
-              Send two tracks
+              {w.demoHeading}
             </h3>
             <p className="mt-4 max-w-[46ch] font-ui text-[16px] leading-[1.5] text-mute">
-              Two finished songs and a sentence about what you are building. We answer everyone,
-              including the no&apos;s, and we tell you why.
+              {w.demoBody}
             </p>
             <Link
               to="/contact"
@@ -84,14 +84,14 @@ export function LabelSplits() {
               className="group mt-8 flex h-[56px] w-fit items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
             >
               <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                Submit a demo
+                {w.demoCta}
               </span>
               <ArrowRight size={16} className="text-accent-text lb-arrow" />
             </Link>
           </div>
 
           <div>
-            <h3 className="t-label text-mute">Before you send</h3>
+            <h3 className="t-label text-mute">{w.demoFaqHeading}</h3>
             <div className="mt-6">
               <Accordion items={faqItems} />
             </div>

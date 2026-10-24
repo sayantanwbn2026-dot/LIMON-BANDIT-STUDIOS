@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { ensureGsap, prefersReducedMotion, hasNavigated } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
+import { useWords, useSite } from "@/cms/hooks";
 
 /**
  * THE CONSOLE POWERS UP.
@@ -45,11 +46,19 @@ const REACH = 0.22;
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const [n, setN] = useState(0);
-  const [gone, setGone] = useState(false);
+  /* Once per visit, not once per arrival at the home page. It lived in the
+   * home route, so every click on the logotype from another page replayed
+   * the whole power-up and held the page for two seconds — the single
+   * slowest thing about moving around the site. A client-side navigation
+   * starts it gone; only a hard load (where the server rendered it and
+   * hydration must match) plays it. */
+  const [gone, setGone] = useState(() => typeof window !== "undefined" && hasNavigated());
+  const site = useSite();
+  const w = useWords("home");
 
   useEffect(() => {
     const el = root.current;
-    if (!el) return;
+    if (!el) return; // started gone: nothing rendered, nothing to run
     const gsap = ensureGsap();
 
     if (!gsap || prefersReducedMotion()) {
@@ -255,14 +264,14 @@ export function Preloader() {
         {/* ---- the head ---- */}
         <div className="shell flex items-start justify-between pt-[clamp(24px,6vh,64px)]">
           <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-mute">
-            Limon Bandit
+            {site.name}
             <span aria-hidden="true" className="px-2 text-acid-type">
               /
             </span>
-            Kolkata
+            {w.preloaderCity}
           </span>
           <span className="font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-mute">
-            Est. 2021
+            {w.preloaderSince}
           </span>
         </div>
 

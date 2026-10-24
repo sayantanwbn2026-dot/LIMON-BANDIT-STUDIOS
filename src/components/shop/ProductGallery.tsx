@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { CmsImage } from "@/components/lb/CmsImage";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The product gallery.
@@ -34,6 +36,7 @@ import { CmsImage } from "@/components/lb/CmsImage";
  *   "which one am I looking at" never needs working out.
  */
 export function ProductGallery({ images, title }: { images: string[]; title: string }) {
+  const w = useWords("product");
   const [shot, setShot] = useState(0);
   const [zoom, setZoom] = useState(false);
   /** Where in the picture to magnify, as percentages. */
@@ -104,7 +107,7 @@ export function ProductGallery({ images, title }: { images: string[]; title: str
           onMouseMove={track}
           onMouseLeave={() => setZoom(false)}
           aria-pressed={zoom}
-          aria-label={zoom ? `Zoom out of ${title}` : `Zoom into ${title}`}
+          aria-label={fill(zoom ? w.galleryZoomOut : w.galleryZoomIn, { title })}
           className={`block w-full ${zoom ? "cursor-zoom-out" : "cursor-zoom-in"}`}
         >
           <CmsImage
@@ -152,7 +155,7 @@ export function ProductGallery({ images, title }: { images: string[]; title: str
               <button
                 type="button"
                 onClick={() => go(i)}
-                aria-label={`View ${i + 1} of ${count}`}
+                aria-label={fill(w.galleryView, { n: i + 1, count })}
                 aria-current={i === shot}
                 className={`block h-16 w-16 border transition-opacity duration-300 ${
                   i === shot
@@ -177,11 +180,12 @@ export function ProductGallery({ images, title }: { images: string[]; title: str
 
 /** A 44px reach target: always there on a touch screen, on hover otherwise. */
 function Arrow({ side, onClick }: { side: "left" | "right"; onClick: () => void }) {
+  const w = useWords("product");
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={side === "left" ? "Previous image" : "Next image"}
+      aria-label={side === "left" ? w.galleryPrevious : w.galleryNext}
       className={`absolute top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-line bg-surface-deep/85 text-text transition-opacity duration-300 hover:border-acid-type focus-visible:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 ${
         side === "left" ? "left-3" : "right-3"
       }`}

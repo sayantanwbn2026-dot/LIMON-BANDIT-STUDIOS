@@ -16,8 +16,10 @@ import {
   DEFAULT_SORT,
   type SortId,
 } from "@/data/shop";
-import { useProducts, useSection, type ProductDoc as Product } from "@/cms/hooks";
+import { useProducts, useSection, type ProductDoc as Product, useWords } from "@/cms/hooks";
 import { readRecent } from "@/lib/recent";
+import { fill } from "@/cms/words";
+import { categoryLabel, sortLabel } from "@/lib/shop-words";
 
 /**
  * The catalogue.
@@ -42,6 +44,7 @@ import { readRecent } from "@/lib/recent";
  */
 export function ShopCatalog() {
   const copy = useSection("shop", "catalogue");
+  const w = useWords("shop");
   const [category, setCategory] = useState<string>(DEFAULT_CATEGORY);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS(DEFAULT_SORT));
@@ -162,21 +165,21 @@ export function ShopCatalog() {
         <div className="ui-field mt-10 flex items-center gap-2 px-3 lg:mt-12 lg:max-w-[420px]">
           <Search size={16} className="shrink-0 text-mute" aria-hidden="true" />
           <label className="sr-only" htmlFor="shop-search">
-            Search the shop
+            {w.searchLabel}
           </label>
           <input
             id="shop-search"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Tee, hoodie, vinyl, an artist…"
+            placeholder={w.searchPlaceholder}
             className="h-12 min-w-0 flex-1 bg-transparent font-ui text-[15px] text-text outline-none placeholder:text-[color:var(--placeholder)]"
           />
           {query ? (
             <button
               type="button"
               onClick={() => setQuery("")}
-              aria-label="Clear the search"
+              aria-label={w.searchClear}
               className="-mr-1 flex h-11 w-11 shrink-0 items-center justify-center text-mute hover:text-text"
             >
               <X size={15} />
@@ -186,7 +189,7 @@ export function ShopCatalog() {
 
         {/* ---- categories ---- */}
         <div className="mt-6 border-y border-line py-4 lg:flex lg:items-center lg:justify-between lg:gap-8 lg:py-6">
-          <nav aria-label="Product categories" className="relative min-w-0">
+          <nav aria-label={w.categoriesLabel} className="relative min-w-0">
             {/* The strip bleeds through the shell's gutter on a phone so the
                 last chip runs to the screen edge — a chip that stops short
                 of the edge reads as the end of the list. */}
@@ -215,7 +218,7 @@ export function ShopCatalog() {
                       }`}
                     >
                       <span className="flex items-baseline gap-1.5 lg:gap-2">
-                        {c.label}
+                        {categoryLabel(w, c)}
                         <span className="tnum text-[10px] opacity-70">{n}</span>
                       </span>
                     </button>
@@ -249,7 +252,7 @@ export function ShopCatalog() {
             >
               {SORTS.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.label}
+                  {sortLabel(w, s)}
                 </option>
               ))}
             </select>
@@ -274,7 +277,7 @@ export function ShopCatalog() {
             style={{ top: "calc(var(--nav-h) + 24px)" }}
           >
             <h3 className="font-display text-[16px] font-extrabold uppercase tracking-[-0.01em] text-text">
-              Narrow it
+              {w.narrowIt}
             </h3>
             <div className="mt-6">
               <FilterPanel
@@ -289,9 +292,11 @@ export function ShopCatalog() {
           <div className="min-w-0">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p aria-live="polite" className="t-label text-mute">
-                {shown.length} {shown.length === 1 ? "item" : "items"}
-                {category !== DEFAULT_CATEGORY ? ` in ${active.label}` : ""}
-                {query.trim() ? ` for “${query.trim()}”` : ""}
+                {fill(shown.length === 1 ? w.countOne : w.countMany, { count: shown.length })}
+                {category !== DEFAULT_CATEGORY
+                  ? fill(w.countIn, { category: categoryLabel(w, active) })
+                  : ""}
+                {query.trim() ? fill(w.countFor, { query: query.trim() }) : ""}
               </p>
 
               {/* One button on a phone, because two rows of controls above a
@@ -302,13 +307,13 @@ export function ShopCatalog() {
                 className="flex h-11 items-center gap-2 border border-line px-3 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type lg:hidden"
               >
                 <SlidersHorizontal size={14} />
-                Filter &amp; sort
+                {w.filterButton}
               </button>
             </div>
 
             <ActiveFilters
               filters={filters}
-              categoryLabel={category === DEFAULT_CATEGORY ? null : active.label}
+              categoryLabel={category === DEFAULT_CATEGORY ? null : categoryLabel(w, active)}
               onClearCategory={() => setCategory(DEFAULT_CATEGORY)}
               onChange={setFilters}
               onClearAll={clearAll}
@@ -318,10 +323,9 @@ export function ShopCatalog() {
               <div className="mt-8 max-w-[52ch]">
                 <p className="font-ui text-[16px] leading-[1.6] text-mute">
                   {query.trim()
-                    ? `Nothing matches “${query.trim()}”.`
-                    : `Nothing in ${active.label} right now.`}{" "}
-                  The runs are small and they do not come back — try another category, or join the
-                  list and we will say when the next one drops.
+                    ? fill(w.noMatchQuery, { query: query.trim() })
+                    : fill(w.noMatchCategory, { category: categoryLabel(w, active) })}{" "}
+                  {w.noMatchBody}
                 </p>
                 {filtered ? (
                   <button
@@ -329,7 +333,7 @@ export function ShopCatalog() {
                     onClick={clearAll}
                     className="mt-5 flex h-11 items-center border border-line-strong px-5 font-ui text-[12px] font-bold uppercase tracking-[0.1em] text-text transition-colors duration-300 hover:border-acid-type"
                   >
-                    Show everything
+                    {w.showEverything}
                   </button>
                 ) : null}
               </div>
@@ -345,21 +349,14 @@ export function ShopCatalog() {
               </ul>
             )}
 
-            <p className="t-label mt-6 max-w-[56ch] text-mute lg:mt-8">
-              Pay on delivery. Orders go straight to the people who pack them, and we confirm stock
-              by hand before anything is dispatched.
-            </p>
+            <p className="t-label mt-6 max-w-[56ch] text-mute lg:mt-8">{w.catalogueNote}</p>
           </div>
         </div>
       </div>
 
       {recent.length > 1 ? (
         <div className="mt-16">
-          <ProductRail
-            title="You were looking at"
-            standfirst="Kept in this browser, nowhere else."
-            products={recent}
-          />
+          <ProductRail title={w.recentTitle} standfirst={w.recentStandfirst} products={recent} />
         </div>
       ) : null}
 
@@ -369,8 +366,10 @@ export function ShopCatalog() {
       <Modal
         open={panelOpen}
         onClose={() => setPanelOpen(false)}
-        title="Filter & sort"
-        standfirst={`${shown.length} ${shown.length === 1 ? "item" : "items"} match right now.`}
+        title={w.filterButton}
+        standfirst={fill(shown.length === 1 ? w.panelMatchOne : w.panelMatchMany, {
+          count: shown.length,
+        })}
         variant="sheet"
       >
         <FilterPanel filters={filters} onChange={setFilters} sizes={sizes} counts={priceCounts} />
@@ -380,14 +379,14 @@ export function ShopCatalog() {
             onClick={clearAll}
             className="flex h-[52px] flex-1 items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text"
           >
-            Clear
+            {w.panelClear}
           </button>
           <button
             type="button"
             onClick={() => setPanelOpen(false)}
             className="flex h-[52px] flex-1 items-center justify-center bg-acid font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text"
           >
-            Show {shown.length}
+            {fill(w.panelShow, { count: shown.length })}
           </button>
         </div>
       </Modal>

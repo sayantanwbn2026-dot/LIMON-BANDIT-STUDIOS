@@ -12,6 +12,8 @@ import { myOrders } from "@/lib/orders";
 import { useToast } from "@/lib/toast";
 import { inr } from "@/lib/money";
 import { pageHead } from "@/lib/seo";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The account dashboard.
@@ -45,6 +47,8 @@ export const Route = createFileRoute("/account")({
 
 function Account() {
   const { user, loading, openAuth, signOut } = useAuth();
+  const w = useWords("account");
+  const c = useWords("common");
   const wishlist = useWishlist();
   const toast = useToast();
 
@@ -81,7 +85,7 @@ function Account() {
     setBusy(true);
     try {
       const res = await saveProfile(user.id, { full_name: fullName, phone });
-      if (res.ok) toast.ok("Saved.");
+      if (res.ok) toast.ok(w.pageSaved);
       else toast.error(res.error);
     } finally {
       setBusy(false);
@@ -94,23 +98,23 @@ function Account() {
   return (
     <main id="main" className="relative w-full bg-surface-deep">
       <header className="shell relative z-[2] pb-10 pt-[120px]">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label={c.breadcrumb}>
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
-                LMN&middot;BNDT
+                {c.breadcrumbHome}
               </Link>
             </li>
             <li aria-hidden="true" className="opacity-50">
               /
             </li>
             <li aria-current="page" className="text-text">
-              Account
+              {w.pageCrumb}
             </li>
           </ol>
         </nav>
         <h1 data-page-h1 tabIndex={-1} className="t-h2 mt-8 max-w-[18ch] text-text outline-none">
-          Your account
+          {w.pageTitle}
         </h1>
         {user ? (
           <p className="mt-4 font-ui text-[14px] text-mute">
@@ -126,11 +130,9 @@ function Account() {
         <div className="shell relative z-[2]">
           {!user && !loading ? (
             <div className="max-w-[560px]">
-              <p className="font-ui text-[16px] leading-[1.6] text-mute">
-                Sign in and your details, orders and saved items live here.
-              </p>
+              <p className="font-ui text-[16px] leading-[1.6] text-mute">{w.pageSignedOut}</p>
               <div className="mt-10">
-                <Button onClick={() => openAuth("Sign in to see your account.")}>Sign in</Button>
+                <Button onClick={() => openAuth(w.pageSignInReason)}>{w.pageSignIn}</Button>
               </div>
             </div>
           ) : !user || !ready ? (
@@ -153,60 +155,61 @@ function Account() {
             <div className="grid grid-cols-1 gap-px border border-line bg-line lg:grid-cols-[1fr_360px]">
               {/* ---- the only thing that lives nowhere else ---- */}
               <div className="bg-surface-deep p-6 sm:p-8">
-                <h2 className="t-label text-mute">Your details</h2>
+                <h2 className="t-label text-mute">{w.pageDetails}</h2>
                 <p className="mt-3 max-w-[48ch] font-ui text-[14px] leading-[1.5] text-mute">
-                  These go on your next order, so you do not type them again at checkout.
+                  {w.pageDetailsNote}
                 </p>
 
                 <form onSubmit={onSave} noValidate className="mt-8 max-w-[420px] space-y-6">
                   <Field
                     id="account-name"
-                    label="Name"
+                    label={w.pageName}
                     value={fullName}
                     onChange={setFullName}
-                    placeholder="Who is ordering"
+                    placeholder={w.namePlaceholder}
                     autoComplete="name"
                   />
                   <Field
                     id="account-phone"
-                    label="Phone"
+                    label={w.phone}
                     type="tel"
                     inputMode="tel"
                     value={phone}
                     onChange={setPhone}
-                    placeholder="+91"
+                    placeholder={w.phonePlaceholder}
                     autoComplete="tel"
-                    hint="Optional. Logistics call this one when they are outside."
+                    hint={w.phoneHint}
                   />
                   {/* Email is shown in the header and not editable here.
                    * Changing it is a different operation with its own
                    * confirmation email, and a box that looks editable but
                    * silently does nothing is worse than no box. */}
                   <Button type="submit" loading={busy} loadingLabel="Saving…">
-                    Save details
+                    {w.pageSave}
                   </Button>
                 </form>
               </div>
 
               {/* ---- summaries that hand off rather than duplicate ---- */}
               <div className="bg-surface-deep p-6 sm:p-8">
-                <h2 className="t-label text-mute">Orders</h2>
+                <h2 className="t-label text-mute">{w.pageOrders}</h2>
                 {orders && orders.length > 0 ? (
                   <>
                     <p className="tnum mt-3 font-display text-[28px] font-extrabold tracking-[-0.02em] text-text">
                       {orders.length}
                     </p>
                     <p className="mt-1 font-ui text-[13px] text-mute">
-                      {inr(spent)} all time
+                      {fill(w.pageSpent, { amount: inr(spent) })}
                       {last ? (
                         <>
                           <span aria-hidden="true" className="px-2 text-line-strong">
                             &middot;
                           </span>
-                          last{" "}
-                          {new Date(last.created_at).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
+                          {fill(w.pageLast, {
+                            date: new Date(last.created_at).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                            }),
                           })}
                         </>
                       ) : null}
@@ -214,7 +217,7 @@ function Account() {
                   </>
                 ) : (
                   <p className="mt-3 font-ui text-[13px] leading-[1.5] text-mute">
-                    Nothing ordered yet.
+                    {w.pageNoOrders}
                   </p>
                 )}
                 <Link
@@ -222,15 +225,17 @@ function Account() {
                   className="mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.12em] text-text transition-colors duration-300 hover:text-acid-type"
                 >
                   <Package size={14} />
-                  <span className="wipe-underline">See your orders</span>
+                  <span className="wipe-underline">{w.pageSeeOrders}</span>
                 </Link>
 
-                <h2 className="t-label mt-10 border-t border-line pt-8 text-mute">Saved</h2>
+                <h2 className="t-label mt-10 border-t border-line pt-8 text-mute">
+                  {w.pageSaved2}
+                </h2>
                 <p className="tnum mt-3 font-display text-[28px] font-extrabold tracking-[-0.02em] text-text">
                   {wishlist.count}
                 </p>
                 <p className="mt-1 font-ui text-[13px] text-mute">
-                  {wishlist.count === 1 ? "item on your list" : "items on your list"}
+                  {wishlist.count === 1 ? w.pageSavedOne : w.pageSavedMany}
                 </p>
                 <button
                   type="button"
@@ -238,7 +243,7 @@ function Account() {
                   className="mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.12em] text-text transition-colors duration-300 hover:text-acid-type"
                 >
                   <Heart size={14} />
-                  <span className="wipe-underline">Open your wishlist</span>
+                  <span className="wipe-underline">{w.pageOpenWishlist}</span>
                 </button>
 
                 {/* Sign out lives at the bottom of the page as well as in the
@@ -247,7 +252,7 @@ function Account() {
                 <div className="mt-10 border-t border-line pt-8">
                   <Button variant="ghost" onClick={() => void signOut()}>
                     <LogOut size={14} />
-                    Sign out
+                    {w.pageSignOut}
                   </Button>
                 </div>
               </div>

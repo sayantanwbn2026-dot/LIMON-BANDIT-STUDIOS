@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger, markNavigated } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
-import { useChapters } from "@/cms/hooks";
+import { useChapters, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * Navigation between chapters: an acid rule sweeps the top of the viewport,
@@ -30,6 +31,9 @@ export function RouteTransition() {
   const chapters = useChapters();
   const chaptersRef = useRef(chapters);
   chaptersRef.current = chapters;
+  const words = useWords("common");
+  const wordsRef = useRef(words);
+  wordsRef.current = words;
 
   /* Recorded whatever the motion setting, so entrances elsewhere can tell a
    * client-side arrival from a hard load (see mayPlayEntrance). */
@@ -88,7 +92,9 @@ export function RouteTransition() {
      * updated asynchronously after this effect, so reading it here reports
      * the page the user just left. */
     const arrived = chaptersRef.current.find((c) => c.to === pathname);
-    setMessage(`${arrived?.title ?? "Page"} — loaded`);
+    setMessage(
+      fill(wordsRef.current.pageLoaded, { title: arrived?.title ?? wordsRef.current.pageFallback }),
+    );
 
     /* Focus after paint. Moving it inside this effect is too early: the
      * router commits the head and settles the tree immediately afterwards,

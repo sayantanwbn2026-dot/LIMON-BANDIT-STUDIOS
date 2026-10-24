@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 import { disciplines, disciplineNote } from "@/data/crew";
 import { useCrew } from "@/cms/hooks";
 
@@ -18,15 +18,23 @@ import { useCrew } from "@/cms/hooks";
  */
 export function CrewHero() {
   const c = useChapter("crew");
+  const w = useWords("crew");
+  /* each discipline's plural and its one-line remit, from the crew wording */
+  const roleWords: Record<string, [string, string]> = {
+    Director: [w.heroDirectors, w.heroDirectorsNote],
+    Engineer: [w.heroEngineers, w.heroEngineersNote],
+    "Cover artist": [w.heroCoverArtists, w.heroCoverArtistsNote],
+    Photographer: [w.heroPhotographers, w.heroPhotographersNote],
+  };
   /* Counts come from the CMS roster the directory below renders, so the
    * call sheet can never advertise more — or fewer — crew than it lists.
    * They used to come from the compiled roster, which an editor never
    * touches, so adding someone in the admin left the count behind. */
   const crew = useCrew();
   const roles = disciplines.map((d) => ({
-    role: d === "Cover artist" ? "Cover artists" : `${d}s`,
+    role: roleWords[d]?.[0] ?? d,
     count: String(crew.filter((m) => m.discipline === d).length).padStart(2, "0"),
-    note: disciplineNote[d],
+    note: roleWords[d]?.[1] ?? disciplineNote[d],
   }));
 
   return (
@@ -63,7 +71,7 @@ export function CrewHero() {
         </ul>
       </RiseIn>
 
-      <p className="t-label mt-6 text-mute">Vetted, rated, hired by the project</p>
+      <p className="t-label mt-6 text-mute">{w.heroNote}</p>
     </HeroFrame>
   );
 }

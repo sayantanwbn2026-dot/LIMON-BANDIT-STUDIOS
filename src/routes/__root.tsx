@@ -39,8 +39,11 @@ import { FlashOffer } from "@/components/shop/FlashOffer";
 import { AuthLanding } from "@/components/shop/AuthLanding";
 import { ContentProvider } from "@/cms/content";
 import { Toaster } from "@/components/lb/Toaster";
-import { liveDocs, primeDocs } from "@/cms/live";
+import { liveDocs, primeDocs, docFrom, listFrom } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
+import { useWords, type SiteDoc, type PageDoc } from "@/cms/hooks";
+import { fill, WORDS, type Words } from "@/cms/words";
+import { siteNameFrom } from "@/lib/seo";
 
 /**
  * The 404 and error screens.
@@ -52,6 +55,7 @@ import { Analytics } from "@/components/lb/Analytics";
  * language, quietly, on the pages a visitor sees when something is wrong.
  */
 function NotFoundComponent() {
+  const w = useWords("system");
   return (
     <main
       id="main"
@@ -62,7 +66,7 @@ function NotFoundComponent() {
         <span className="mb-8 flex items-center gap-3">
           <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
           <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
-            404 / Not Found
+            {w.notFoundLabel}
           </span>
         </span>
 
@@ -71,12 +75,11 @@ function NotFoundComponent() {
           data-page-h1
           tabIndex={-1}
         >
-          Wrong door.
+          {w.notFoundTitle}
         </h1>
 
         <p className="mt-8 max-w-[46ch] font-ui text-[16px] leading-[1.6] text-mute md:text-[18px]">
-          Nothing lives at this address. It may have been a link that has moved, or a page that
-          never was — either way, the way back is through here.
+          {w.notFoundBody}
         </p>
 
         <div className="mt-12 flex flex-wrap gap-3">
@@ -84,13 +87,13 @@ function NotFoundComponent() {
             to="/"
             className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
-            Home
+            {w.notFoundHome}
           </Link>
           <Link
             to="/shop"
             className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
-            The shop
+            {w.notFoundShop}
           </Link>
         </div>
       </div>
@@ -108,6 +111,7 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  const w = useWords("system");
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
@@ -122,7 +126,7 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
         <span className="mb-8 flex items-center gap-3">
           <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
           <span className="tnum font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
-            500 / Room's dark
+            {w.errorLabel}
           </span>
         </span>
 
@@ -131,12 +135,11 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
           data-page-h1
           tabIndex={-1}
         >
-          Something tripped.
+          {w.errorTitle}
         </h1>
 
         <p className="mt-8 max-w-[46ch] font-ui text-[16px] leading-[1.6] text-mute md:text-[18px]">
-          The page did not load. Refreshing usually clears it — if it keeps happening on the same
-          page, tell us and we will look at what broke.
+          {w.errorBody}
         </p>
 
         <div className="mt-12 flex flex-wrap gap-3">
@@ -148,13 +151,13 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
             }}
             className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
-            Try again
+            {w.errorRetry}
           </button>
           <a
             href="/"
             className="flex h-[56px] items-center justify-center border border-line px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
-            Home
+            {w.errorHome}
           </a>
         </div>
       </div>
@@ -163,70 +166,76 @@ function ErrorComponent({ error, reset }: { error: unknown; reset: () => void })
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      {
-        name: "viewport",
-        /* viewport-fit=cover is what makes env(safe-area-inset-*) resolve to
-         * anything but 0. Without it iOS letterboxes the page and the
-         * full-bleed surfaces stop short of the screen edge. */
-        content: "width=device-width, initial-scale=1, viewport-fit=cover",
-      },
-      { title: "Limon Bandit — Kolkata Music House" },
-      {
-        name: "description",
-        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
-      },
-      { name: "author", content: "Limon Bandit" },
-      /* overwritten per-theme by THEME_INIT_SCRIPT before first paint */
-      { name: "theme-color", content: "#050505" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "Limon Bandit — Kolkata Music House" },
-      { name: "twitter:title", content: "Limon Bandit — Kolkata Music House" },
-      {
-        property: "og:description",
-        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
-      },
-      {
-        name: "twitter:description",
-        content: "Four rooms, one label, and a merch line. Run out of a building in Kolkata.",
-      },
-    ],
-    links: [
-      /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two
+  /* The defaults every page starts from, before its own head overrides
+   * them — read from the CMS (Brand & contact, and the home row of Page
+   * titles & SEO) like every page's own, rather than typed in here. */
+  head: ({ loaderData }) => {
+    const docs = loaderData?.cms ?? {};
+    const site = docFrom<SiteDoc>(docs, "global.site");
+    const home = listFrom<PageDoc>(docs, "global.pages").find((p) => p?.key === "home");
+    const system = {
+      ...WORDS.system,
+      ...docFrom<Partial<Words["system"]>>(docs, "global.words.system"),
+    };
+    const name = siteNameFrom(docs);
+    const title = home?.title?.trim() || name;
+    const description = home?.description?.trim() || site.description;
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        {
+          name: "viewport",
+          /* viewport-fit=cover is what makes env(safe-area-inset-*) resolve to
+           * anything but 0. Without it iOS letterboxes the page and the
+           * full-bleed surfaces stop short of the screen edge. */
+          content: "width=device-width, initial-scale=1, viewport-fit=cover",
+        },
+        { title },
+        { name: "description", content: description },
+        { name: "author", content: name },
+        /* overwritten per-theme by THEME_INIT_SCRIPT before first paint */
+        { name: "theme-color", content: "#050505" },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { property: "og:title", content: title },
+        { name: "twitter:title", content: title },
+        { property: "og:description", content: description },
+        { name: "twitter:description", content: description },
+      ],
+      links: [
+        /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two
          faces that render above the fold — the hero wordmark and the corner
          stations. Preloading more would compete with the LCP image. */
-      {
-        rel: "preload",
-        href: "/fonts/sora-800.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "preload",
-        href: "/fonts/switzer-500.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      /* So a reader's browser or app can find the journal feed without
+        {
+          rel: "preload",
+          href: "/fonts/sora-800.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "preload",
+          href: "/fonts/switzer-500.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+        /* So a reader's browser or app can find the journal feed without
          being told it exists. */
-      {
-        rel: "alternate",
-        type: "application/rss+xml",
-        title: "Limon Bandit — Journal",
-        href: "/feed.xml",
-      },
-    ],
-  }),
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          title: fill(system.feedTitle || WORDS.system.feedTitle, { name }),
+          href: "/feed.xml",
+        },
+      ],
+    };
+  },
 
   /* Every CMS document, read once on the server and dehydrated with the
    * page (cms/live.ts). `staleTime: Infinity` so a client-side navigation

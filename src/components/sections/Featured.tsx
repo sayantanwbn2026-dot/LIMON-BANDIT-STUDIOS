@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useFeatured, useSection } from "@/cms/hooks";
+import { useFeatured, useSection, useWords } from "@/cms/hooks";
 
 /**
  * The three cards under the hero — the page's real front door.
@@ -74,6 +74,7 @@ export function Featured() {
 type Item = ReturnType<typeof useFeatured>[number];
 
 function FeatureCard({ item, rank }: { item: Item; rank: number }) {
+  const w = useWords("home");
   const to = (item.to ?? "").trim();
   const external = /^https?:\/\//i.test(to);
 
@@ -133,7 +134,7 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
          * the blurb is the minimum gap, since `mt-auto` collapses to zero
          * when a long blurb leaves no free space to absorb. */}
         <span className="mt-auto flex items-center gap-2 border-t border-line pt-4 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
-          <span className="wipe-underline">{item.cta || "Open"}</span>
+          <span className="wipe-underline">{item.cta || w.featuredOpen}</span>
           {external ? (
             <ArrowUpRight size={15} className="text-acid-type lb-arrow" />
           ) : (

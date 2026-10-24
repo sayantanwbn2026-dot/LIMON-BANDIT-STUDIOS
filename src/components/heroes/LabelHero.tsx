@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 
 /**
  * LABEL — the split, under the house lockup.
@@ -17,6 +17,7 @@ import { useChapter } from "@/cms/hooks";
  */
 export function LabelHero() {
   const c = useChapter("label");
+  const w = useWords("label");
 
   return (
     <HeroFrame
@@ -29,9 +30,9 @@ export function LabelHero() {
 
           <dl className="mt-12 flex flex-wrap gap-x-16 gap-y-6">
             {[
-              { k: "Paid", v: "Monthly" },
-              { k: "Rights", v: "Artist keeps" },
-              { k: "Streaming", v: "Own player" },
+              { k: w.heroTerm1Label, v: w.heroTerm1Value },
+              { k: w.heroTerm2Label, v: w.heroTerm2Value },
+              { k: w.heroTerm3Label, v: w.heroTerm3Value },
             ].map((s) => (
               <div key={s.k}>
                 <dt className="t-label text-mute">{s.k}</dt>
@@ -45,14 +46,14 @@ export function LabelHero() {
 
         <RiseIn delay={0.12} className="shrink-0">
           <div aria-hidden="true" className="flex items-center gap-4 md:gap-6">
-            <Figure value="70" caption="Artist" />
+            <Figure value={w.heroSplitArtist} caption={w.heroSplitArtistLabel} />
             <span
               className="font-display font-extrabold leading-none text-acid-type"
               style={{ fontSize: "clamp(44px, 6vw, 72px)" }}
             >
               /
             </span>
-            <Figure value="30" caption="House" />
+            <Figure value={w.heroSplitHouse} caption={w.heroSplitHouseLabel} />
           </div>
         </RiseIn>
       </div>

@@ -24,6 +24,11 @@ export function markNavigated() {
   navigated = true;
 }
 
+/** True once the visitor has moved between pages without a reload. */
+export function hasNavigated() {
+  return navigated;
+}
+
 /**
  * Whether an element that is mounting now may play an entrance.
  *

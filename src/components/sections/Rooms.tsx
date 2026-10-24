@@ -5,10 +5,11 @@ import { Eyebrow } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useRooms, useSection } from "@/cms/hooks";
+import { useRooms, useSection, useWords } from "@/cms/hooks";
 
 export function Rooms() {
   const copy = useSection("home", "rooms");
+  const w = useWords("home");
   const rooms = useRooms();
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -63,7 +64,7 @@ export function Rooms() {
             </Eyebrow>
             <h2 className="t-h2 mt-6 max-w-[16ch] text-text">{copy.heading}</h2>
           </div>
-          <GhostLink label="See availability" to="/rooms" className="text-mute" />
+          <GhostLink label={w.roomsSeeAvailability} to="/rooms" className="text-mute" />
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-12">
@@ -191,7 +192,7 @@ export function Rooms() {
                     <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
                       {r.rate}
                     </span>
-                    <GhostLink label="Book this room" to="/contact" className="text-text" />
+                    <GhostLink label={w.roomsBook} to="/contact" className="text-text" />
                   </div>
                 </article>
               ))}

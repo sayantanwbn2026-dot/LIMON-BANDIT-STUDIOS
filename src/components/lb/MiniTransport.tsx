@@ -1,6 +1,8 @@
 import { Pause, Play, SkipForward, X } from "lucide-react";
 import { CmsImage } from "./CmsImage";
 import { clock, usePlayer } from "@/lib/player";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The docked transport. Appears in the bottom rule the moment a track is
@@ -9,6 +11,7 @@ import { clock, usePlayer } from "@/lib/player";
  */
 export function MiniTransport() {
   const { track, playing, time, duration, failed, toggle, next, seek, stop } = usePlayer();
+  const w = useWords("player");
   if (!track) return null;
 
   const pct = duration > 0 ? (time / duration) * 100 : 0;
@@ -16,7 +19,7 @@ export function MiniTransport() {
   return (
     <div
       role="region"
-      aria-label="Now playing"
+      aria-label={w.nowPlaying}
       className="fixed inset-x-0 bottom-0 z-[9989] border-t border-line bg-surface-deep/95"
       style={{ backdropFilter: "blur(6px)" }}
     >
@@ -40,7 +43,7 @@ export function MiniTransport() {
         <button
           type="button"
           onClick={toggle}
-          aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`}
+          aria-label={fill(playing ? w.pause : w.play, { title: track.title })}
           className="flex h-10 w-10 shrink-0 items-center justify-center bg-acid transition-colors duration-300 hover:bg-acid-dim"
         >
           {playing ? (
@@ -55,7 +58,7 @@ export function MiniTransport() {
             {track.title}
           </div>
           <div className="truncate font-ui text-[11px] text-mute">
-            {failed ? "Preview unavailable" : track.artist}
+            {failed ? w.previewUnavailable : track.artist}
           </div>
         </div>
 
@@ -66,7 +69,7 @@ export function MiniTransport() {
         <button
           type="button"
           onClick={next}
-          aria-label="Next track"
+          aria-label={w.nextTrack}
           className="hidden h-10 w-10 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type sm:flex"
         >
           <SkipForward size={14} />
@@ -75,14 +78,14 @@ export function MiniTransport() {
         <button
           type="button"
           onClick={() => seek(0)}
-          aria-label="Restart track"
+          aria-label={w.restartTrack}
           className="sr-only"
         />
 
         <button
           type="button"
           onClick={stop}
-          aria-label="Close player"
+          aria-label={w.closePlayer}
           className="flex h-10 w-10 shrink-0 items-center justify-center border border-line text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
         >
           <X size={14} />

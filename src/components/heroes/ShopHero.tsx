@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 
 /**
  * SHOP — the run, under the house lockup.
@@ -19,6 +19,7 @@ import { useChapter } from "@/cms/hooks";
  */
 export function ShopHero() {
   const c = useChapter("shop");
+  const w = useWords("shop");
 
   return (
     <HeroFrame
@@ -33,7 +34,7 @@ export function ShopHero() {
        * each line, pointing at nothing. Below `sm`, where the four do not
        * fit on one line, the markers go and the facts sit as a short list. */}
       <RiseIn delay={0.1} className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
-        {["Run 04", "150 units", "Screen printed in Kolkata", "No restock"].map((t, i) => (
+        {[w.heroFact1, w.heroFact2, w.heroFact3, w.heroFact4].filter(Boolean).map((t, i) => (
           <span key={t} className="flex items-center gap-x-8 max-sm:w-full">
             {i > 0 ? (
               <span

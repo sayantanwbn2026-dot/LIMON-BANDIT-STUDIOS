@@ -4,10 +4,11 @@ import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { usePosts, useSection } from "@/cms/hooks";
+import { usePosts, useSection, useWords } from "@/cms/hooks";
 
 export function Journal() {
   const copy = useSection("home", "journal");
+  const w = useWords("home");
   const posts = usePosts();
   /* 160px bottom: the light chapter ends here and the page returns to dark. */
   return (
@@ -28,7 +29,7 @@ export function Journal() {
             className="group flex items-center gap-3 border border-line-strong px-6 py-4 transition-colors duration-300 hover:bg-text"
           >
             <span className="t-eyebrow text-text transition-colors duration-300 group-hover:text-surface-deep">
-              Read everything
+              {w.journalReadAll}
             </span>
             <ArrowRight
               size={15}

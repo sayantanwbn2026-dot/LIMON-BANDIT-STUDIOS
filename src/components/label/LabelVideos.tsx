@@ -7,8 +7,9 @@ import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { embedOf, sourcesOf } from "@/lib/video";
-import { useFeaturedVideos, useSection, type VideoDoc } from "@/cms/hooks";
+import { useFeaturedVideos, useSection, type VideoDoc, useWords } from "@/cms/hooks";
 import { VideoTheater } from "./VideoTheater";
+import { fill } from "@/cms/words";
 
 /**
  * Three to watch — the label's featured films, as cards.
@@ -202,6 +203,7 @@ function FilmCard({
   triggerRef: (n: HTMLButtonElement | null) => void;
   onOpen: () => void;
 }) {
+  const w = useWords("label");
   const sources = sourcesOf(film);
   const top = sources[0];
   /* the lightest encode makes the preview — it plays at card size */
@@ -323,7 +325,7 @@ function FilmCard({
             ref={triggerRef}
             type="button"
             onClick={onOpen}
-            aria-label={`Play ${film.title} by ${film.artist}`}
+            aria-label={fill(w.filmPlay, { title: film.title, artist: film.artist })}
             className="text-left uppercase outline-none after:absolute after:inset-0 after:z-[5] after:content-[''] focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-acid"
           >
             {film.title}
@@ -336,9 +338,7 @@ function FilmCard({
         </p>
 
         <span className="mt-auto flex items-center gap-2 border-t border-line pt-4 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
-          <span className="wipe-underline">
-            {top?.q === 2160 ? "Watch in 4K" : "Watch the film"}
-          </span>
+          <span className="wipe-underline">{top?.q === 2160 ? w.filmWatch4k : w.filmWatch}</span>
           <ArrowRight size={15} className="lb-arrow text-acid-type" />
         </span>
       </div>

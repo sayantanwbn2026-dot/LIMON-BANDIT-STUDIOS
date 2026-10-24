@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useDoc, useList } from "./content";
 import { seeds } from "./seeds";
 import type { PageKey } from "./schema";
@@ -6,6 +6,7 @@ import type { ImageKey } from "@/generated/images";
 import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
 import { isPlayable } from "@/lib/video";
 import { pickMascot, type Mascot } from "./mascot";
+import { WORDS, WORD_DOCS, type WordArea, type Words } from "./words";
 
 /**
  * The site's read API.
@@ -18,6 +19,41 @@ import { pickMascot, type Mascot } from "./mascot";
  * Every one falls back to committed seed data (see `content.tsx`), so none of
  * these can return empty and take a section down with it.
  */
+
+/* ---------------- wording ---------------- */
+
+/**
+ * The wording for one area of the site (see words.ts), with the committed
+ * default standing in for any string the stored document lacks or an
+ * editor has cleared — per string, so one emptied field cannot blank a
+ * button while the rest of the form is fine.
+ */
+export function useWords<A extends WordArea>(area: A): Words[A] {
+  const doc = useDoc<Record<string, unknown> | null>(WORD_DOCS[area].key);
+  return useMemo(() => {
+    const base = WORDS[area] as Record<string, string>;
+    const out: Record<string, string> = { ...base };
+    if (doc && typeof doc === "object") {
+      for (const k of Object.keys(base)) {
+        const v = (doc as Record<string, unknown>)[k];
+        if (typeof v === "string" && v.trim()) out[k] = v;
+      }
+    }
+    return out as Words[A];
+  }, [doc, area]);
+}
+
+/**
+ * The same wording, through a ref — for an effect that runs once (open the
+ * sign-in popup on arrival, seed a message box) and must read the current
+ * words without re-running every time the CMS document arrives.
+ */
+export function useWordsRef<A extends WordArea>(area: A): { readonly current: Words[A] } {
+  const w = useWords(area);
+  const ref = useRef(w);
+  ref.current = w;
+  return ref;
+}
 
 /* ---------------- global ---------------- */
 

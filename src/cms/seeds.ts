@@ -7,6 +7,7 @@ import { services } from "@/data/services";
 import { featured } from "@/data/featured";
 import { DEFAULT_HOME_ORDER } from "./home-sections";
 import { HOUSE_MASCOT, HOUSE_MASCOT_ALT } from "./mascot";
+import { WORDS, WORD_DOCS, type WordArea } from "./words";
 import { metrics } from "@/data/metrics";
 import { wall } from "@/data/wall";
 import { testimonials } from "@/data/testimonials";
@@ -436,4 +437,9 @@ export const seeds: Record<string, unknown> = {
   "page.contact.form": INTENTS.map((i) => ({ id: i.id, label: i.label })),
   "page.contact.hours": CONTACT_HOURS_SEED,
   "page.contact.travel": CONTACT_TRAVEL_SEED,
+
+  // ---- wording: one document per area of words.ts ----
+  ...Object.fromEntries(
+    (Object.keys(WORD_DOCS) as WordArea[]).map((a) => [WORD_DOCS[a].key, { ...WORDS[a] }]),
+  ),
 };

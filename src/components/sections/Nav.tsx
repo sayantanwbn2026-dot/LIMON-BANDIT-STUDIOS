@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { useNavItems, useSite, useSocialLink } from "@/cms/hooks";
+import { useNavItems, useSite, useSocialLink, useWords } from "@/cms/hooks";
 import { mailHref, mapsHref, telHref, waHref } from "@/lib/contact";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { useNavPole } from "@/lib/nav-pole";
 import { HouseMascot } from "@/components/lb/HeroMascot";
 import { ShopBar } from "@/components/shop/ShopBar";
+import { fill } from "@/cms/words";
 
+/** The studio name as set in Brand & contact, in the house's lettering. */
 export function Logotype({ size = 18 }: { size?: number }) {
+  const site = useSite();
   return (
     <span className="flex items-end">
       <span
         className="font-display font-extrabold uppercase leading-none tracking-[-0.04em]"
         style={{ fontSize: size }}
       >
-        Limon Bandit
+        {site.name}
       </span>
     </span>
   );
@@ -29,6 +32,7 @@ export function Logotype({ size = 18 }: { size?: number }) {
  */
 export function Nav() {
   const site = useSite();
+  const w = useWords("nav");
   const instagram = useSocialLink("Instagram");
   /* Home lives on the logotype, so the menu carries the rest. */
   const menuLinks = useNavItems().slice(1);
@@ -37,9 +41,9 @@ export function Nav() {
   const mail = mailHref(site.email);
   const maps = mapsHref(site.address);
   const actions = [
-    tel ? { label: "Call", href: tel, icon: Phone, external: false } : null,
-    wa ? { label: "WhatsApp", href: wa, icon: MessageCircle, external: true } : null,
-    mail ? { label: "Email", href: mail, icon: Mail, external: false } : null,
+    tel ? { label: w.call, href: tel, icon: Phone, external: false } : null,
+    wa ? { label: w.whatsapp, href: wa, icon: MessageCircle, external: true } : null,
+    mail ? { label: w.email, href: mail, icon: Mail, external: false } : null,
   ].filter((a) => a !== null);
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -160,7 +164,7 @@ export function Nav() {
         }}
       >
         <div className="shell flex h-full items-center justify-between">
-          <Link to="/" className="tap text-text" aria-label={`${site.name} home`}>
+          <Link to="/" className="tap text-text" aria-label={fill(w.homeLink, { name: site.name })}>
             <Logotype />
           </Link>
 
@@ -176,7 +180,7 @@ export function Nav() {
               type="button"
               onClick={() => setOpen(true)}
               aria-expanded={open}
-              aria-label="Open menu"
+              aria-label={w.openMenu}
               className="group flex h-11 w-11 flex-col items-center justify-center gap-[4px] border border-line transition-colors duration-300 hover:border-acid-type sm:h-12 sm:w-12"
             >
               {/* On hover the short middle bar reaches full width and the
@@ -194,7 +198,7 @@ export function Nav() {
         ref={menuRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Site menu"
+        aria-label={w.menuLabel}
         /* keeps the links out of the tab order while closed */
         inert={!open}
         className="lb-menu fixed inset-0 z-[9995] overflow-hidden bg-surface-deep"
@@ -225,15 +229,15 @@ export function Nav() {
                   setOpen(false);
                   triggerRef.current?.focus();
                 }}
-                aria-label="Close menu"
+                aria-label={w.closeMenuLabel}
                 className="t-label flex min-h-11 items-center border border-line px-4 text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
               >
-                Close
+                {w.closeMenu}
               </button>
             </div>
           </div>
 
-          <nav aria-label="Site" className="shell flex min-h-0 flex-1 flex-col">
+          <nav aria-label={w.menuListLabel} className="shell flex min-h-0 flex-1 flex-col">
             {menuLinks.map((item, i) => (
               <Link
                 key={item.to}
@@ -256,7 +260,7 @@ export function Nav() {
                   {item.label}
                 </span>
                 <span className="t-label tnum text-acid-type transition-colors duration-300 group-hover:text-text">
-                  <span className="hidden group-data-[status=active]:inline">You are here </span>
+                  <span className="hidden group-data-[status=active]:inline">{w.youAreHere} </span>
                   [0{i + 1}]
                 </span>
               </Link>

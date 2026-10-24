@@ -1,15 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, Clock, MapPin, Play } from "lucide-react";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { useWords } from "@/cms/hooks";
 
-const entries = [
-  { Icon: Check, title: "Session confirmed", sub: "Room A · Fri 22:00 → 06:00" },
-  { Icon: Clock, title: "Master in progress", sub: "Rusted Gold · rev 2 of 3" },
-  { Icon: Play, title: "Release is live", sub: "Terminus · streaming now" },
-  { Icon: MapPin, title: "Walk-in open", sub: "Room B · tonight after 23:00" },
-];
+/* The four lines it cycles through are the editor's (home wording, "Log 1"
+ * to "Log 4"); a line left empty drops out of the cycle. The icons stay
+ * with their slot. */
+const ICONS = [Check, Clock, Play, MapPin];
 
 export function LiveLog() {
+  const w = useWords("home");
+  const entries = [
+    { title: w.log1Title, sub: w.log1Line },
+    { title: w.log2Title, sub: w.log2Line },
+    { title: w.log3Title, sub: w.log3Line },
+    { title: w.log4Title, sub: w.log4Line },
+  ]
+    .map((e, n) => ({ ...e, Icon: ICONS[n] }))
+    .filter((e) => e.title.trim());
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -18,9 +26,9 @@ export function LiveLog() {
   useEffect(() => {
     reduced.current = prefersReducedMotion();
     if (reduced.current || paused) return;
-    const id = setInterval(() => setI((v) => (v + 1) % entries.length), 3500);
+    const id = setInterval(() => setI((v) => (v + 1) % Math.max(entries.length, 1)), 3500);
     return () => clearInterval(id);
-  }, [paused]);
+  }, [paused, entries.length]);
 
   useEffect(() => {
     const el = rowRef.current;
@@ -33,7 +41,8 @@ export function LiveLog() {
     return () => ctx.revert();
   }, [i]);
 
-  const { Icon, title, sub } = entries[i];
+  if (entries.length === 0) return null;
+  const { Icon, title, sub } = entries[i % entries.length];
 
   return (
     <div
@@ -44,10 +53,10 @@ export function LiveLog() {
       <div className="flex items-center gap-2">
         <span className="h-[7px] w-[7px] bg-acid pulse-dot" />
         <span className="font-ui text-[10px] font-bold uppercase tracking-[0.16em] text-text">
-          House log
+          {w.logHeading}
         </span>
         <span className="ml-auto font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
-          Live
+          {w.logLive}
         </span>
       </div>
       <div className="mt-4 h-[42px] overflow-hidden">
