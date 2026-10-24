@@ -56,7 +56,15 @@ export function Faq() {
            * to someone who had not yet read one answer — and spent 120px on
            * a mascot at 25% opacity. On a phone the same way out is a line
            * after the questions, below. */}
-          <div className="mt-10 hidden border border-alt-line p-8 md:block">
+          {/* In the label column this card was 147–183px wide, and p-8 left
+           * "Message us" 82px to sit in — it broke onto two lines with the
+           * arrow hanging off the second. Tighter padding fixes it on a
+           * tablet, where the label column is half the measure, and from xl,
+           * where the card also reaches 24px into the 40px gutter its cell
+           * keeps on the right (the heading still starts 32px clear). Between
+           * 1024 and 1279 the column is 165px and nothing fits, so the card
+           * steps aside for the full-width line the phone already uses. */}
+          <div className="mt-10 hidden border border-alt-line p-5 md:block lg:hidden xl:-mr-6 xl:block xl:p-6">
             <Picture
               src="limon-mascot"
               sizes="120px"
@@ -70,9 +78,9 @@ export function Faq() {
              * plain href tore the app down and booted it again. */}
             <Link
               to="/contact"
-              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface"
+              className="mt-6 flex h-12 w-full items-center justify-center gap-1.5 whitespace-nowrap bg-alt-text font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-alt-surface"
             >
-              Message us <ArrowRight size={14} />
+              Message us <ArrowRight size={14} className="shrink-0" />
             </Link>
           </div>
         </div>
@@ -127,7 +135,7 @@ export function Faq() {
 
           <Link
             to="/contact"
-            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden"
+            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden lg:flex xl:hidden"
           >
             Still stuck? Message us <ArrowRight size={14} />
           </Link>

@@ -35,7 +35,11 @@ export function LabelRoster() {
         </Eyebrow>
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
-        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_360px] lg:gap-12">
+        {/* minmax(0, 1fr), not 1fr. A bare `1fr` cannot shrink below its
+         * content's min-content width, and the truncated artist names count
+         * there at full length — so at 1024px the list took 579px of a 520px
+         * share and pushed the plate 11px off the right edge of the page. */}
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12">
           <ol className="border-t border-line">
             {releases.map((r, i) => {
               const t = trackForArtist(r.artist);

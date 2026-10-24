@@ -189,7 +189,10 @@ export function LabelPlayer() {
                 </span>
               </div>
 
-              <p className="t-label mt-4 text-mute">
+              {/* The keyboard hints are for a keyboard. On a touchscreen they
+               * named keys nobody has, so they are dropped on a coarse
+               * pointer; the failure line still shows everywhere. */}
+              <p className={`t-label mt-4 text-mute ${failed ? "" : "pointer-coarse:hidden"}`}>
                 {failed ? "Preview unavailable" : "Space plays · ← → scrub 5s · Home and End jump"}
               </p>
 

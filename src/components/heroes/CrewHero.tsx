@@ -41,17 +41,23 @@ export function CrewHero() {
       <RiseIn delay={0.1} className="mt-12 border-t border-line">
         <ul>
           {roles.map((r) => (
+            /* A grid on a phone, a ruled line from md. As a wrapping flex
+             * row each discipline broke differently with the length of its
+             * note: "Engineers" kept its note on the first line and pushed
+             * the count down alone, the others dropped the note and kept
+             * the count beside it. The grid pins the count to the name's
+             * line and the note under it, so all four rows share one shape. */
             <li
               key={r.role}
-              className="group flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-line py-6"
+              className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-2 border-b border-line py-6 md:flex md:flex-wrap"
             >
               <span className="font-display text-[24px] font-extrabold uppercase leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[34px]">
                 {r.role}
               </span>
-              <span className="t-label text-mute">{r.note}</span>
-              <span className="tnum ml-auto font-ui text-[12px] font-bold uppercase tracking-[0.18em] text-acid-type">
+              <span className="tnum col-start-2 row-start-1 font-ui text-[12px] font-bold uppercase tracking-[0.18em] text-acid-type md:order-3 md:ml-auto">
                 {r.count}
               </span>
+              <span className="t-label text-mute md:order-2">{r.note}</span>
             </li>
           ))}
         </ul>

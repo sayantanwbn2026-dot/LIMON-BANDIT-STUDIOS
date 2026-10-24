@@ -52,6 +52,11 @@ function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number)
           if (!r.plan) return null;
           const on = i === active;
           const { x, y, w, h } = r.plan;
+          /* A narrow room sets its name tighter. "THE BOOTH" at the house
+           * tracking is ~85 units wide and the booth is 76, so the name ran
+           * out through the wall — invisible against the dark ground the
+           * moment the room lit up acid, which left it reading "THE BOOT". */
+          const narrow = w < 110;
           return (
             <g
               key={r.id}
@@ -70,13 +75,13 @@ function FloorPlan({ active, onSelect }: { active: number; onSelect: (i: number)
                 style={{ transition: "fill 0.4s var(--ease-out-expo), stroke 0.4s" }}
               />
               <text
-                x={x + 10}
+                x={x + (narrow ? 7 : 10)}
                 y={y + 20}
                 className="font-ui"
                 style={{
-                  fontSize: 11,
+                  fontSize: narrow ? 10 : 11,
                   fontWeight: 700,
-                  letterSpacing: "0.14em",
+                  letterSpacing: narrow ? "0.04em" : "0.14em",
                   textTransform: "uppercase",
                   fill: on ? "var(--accent-text)" : "var(--mute)",
                   transition: "fill 0.4s var(--ease-out-expo)",

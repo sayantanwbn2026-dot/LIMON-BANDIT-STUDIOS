@@ -17,7 +17,7 @@ const LETTER_X = ["-4vw", "-2.5vw", "-1vw", "1vw", "2.5vw", "4vw"];
  * Hero v4 — "The Scrubbed Poster".
  *
  * At rest it is a still poster: nothing moves but the backlight's 7s
- * breathing and the clock. Scrolling plays a four-second scene, driven
+ * breathing and the clock. Scrolling plays a short scene, driven
  * entirely by scroll position, that ends by handing the page to the
  * proof ticker.
  *
@@ -186,28 +186,36 @@ export function Hero() {
       tl.to("[data-hero-station]", { y: -24, opacity: 0, duration: 0.7, stagger: 0.08 }, 2.2);
       tl.to(wordWrapRef.current, { opacity: 0.12, y: "6vh", duration: 1.0 }, 2.2);
       /* he leaves without growing — the exit is blur and fade only */
-      tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.8 }, 2.8);
+      tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.6 }, 2.6);
       /* the rule drops with the rest of the poster so phase 4 can raise it */
-      tl.to(ruleRef.current, { y: "8vh", duration: 0.8 }, 2.4);
+      tl.to(ruleRef.current, { y: "8vh", duration: 0.6 }, 2.2);
 
-      /* ---- phase 4 — the handover (3.2 → 4.0) ---- */
-      tl.to(glowWrapRef.current, { opacity: 0, duration: 0.6 }, 3.2);
-      tl.to(ruleRef.current, { y: 0, duration: 0.8, ease: "power4.out" }, 3.2);
+      /* ---- phase 4 — the handover (2.8 → 3.4) ----
+       * Overlapping phase 3 now, and 0.6 shorter. Run end to end, the two
+       * left the last fifth of the pin with nothing on screen but the
+       * ghosted wordmark: the crosshairs this phase ticks have been hidden
+       * since they were retired (see GridRules), so the tail of the scene
+       * animated something nobody could see while holding the page still
+       * for ~230px of scroll. The choreography is the same; the dead air
+       * is gone, and the pin below is shortened by the same proportion so
+       * every beat plays at the speed it did. */
+      tl.to(glowWrapRef.current, { opacity: 0, duration: 0.6 }, 2.8);
+      tl.to(ruleRef.current, { y: 0, duration: 0.6, ease: "power4.out" }, 2.8);
       /* five crosshairs tick to acid in sequence, then revert as the pin
        * releases — opacity on a dedicated acid layer, so it scrubs and
        * reverses cleanly and stays theme-agnostic */
-      /* Timed so the last crosshair reverts exactly on 4.0 — the revert
+      /* Timed so the last crosshair reverts exactly on 3.4 — the revert
        * must finish as the pin releases, not after it:
-       * 3.68 + (4 x 0.06 stagger) + 0.08 = 4.00 */
+       * 3.08 + (4 x 0.06 stagger) + 0.08 = 3.40 */
       tl.to(
         "[data-hero-rule] [data-crosshair-tick]",
         { opacity: 1, duration: 0.08, stagger: 0.06 },
-        3.32,
+        2.72,
       );
       tl.to(
         "[data-hero-rule] [data-crosshair-tick]",
         { opacity: 0, duration: 0.08, stagger: 0.06 },
-        3.68,
+        3.08,
       );
 
       const st = ScrollTrigger.create({
@@ -230,8 +238,12 @@ export function Hero() {
          * scrub is tighter for the same reason. Lenis already adds its own
          * lerp, and 0.75 on top of that meant the scene visibly trailed
          * the finger; 0.4 tracks closely enough to feel direct while still
-         * smoothing the wheel's steps. */
-        end: () => "+=" + window.innerHeight * 1.3,
+         * smoothing the wheel's steps.
+         *
+         * 1.1, down from 1.3, with the timeline: it is 3.4 units long now
+         * rather than 4.0, and 1.3 x 3.4 / 4.0 = 1.1 keeps each unit of
+         * the scene on the same length of scroll. */
+        end: () => "+=" + window.innerHeight * 1.1,
         scrub: 0.4,
         pin: true,
         anticipatePin: 1,

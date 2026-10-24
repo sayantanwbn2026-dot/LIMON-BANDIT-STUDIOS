@@ -201,14 +201,23 @@ export function ShopCatalog() {
                       onClick={() => setCategory(c.id)}
                       aria-pressed={on}
                       disabled={n === 0}
-                      className={`flex h-11 items-baseline gap-1.5 px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:gap-2 lg:py-2 lg:tracking-[0.14em] ${
+                      /* Centred in the box, baseline-aligned inside it. With
+                       * `items-baseline` on the 44px button itself the label
+                       * rode the top edge of every chip on a phone; the
+                       * baseline alignment belongs to the label and its
+                       * count, not to the label and its box. The active chip
+                       * carries a border in its own colour so it is exactly
+                       * the size of its neighbours. */
+                      className={`flex h-11 items-center px-3 font-ui text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-40 lg:h-auto lg:py-2 lg:tracking-[0.14em] ${
                         on
-                          ? "bg-acid text-accent-text"
+                          ? "border border-acid bg-acid text-accent-text"
                           : "border border-line text-mute hover:border-acid-type hover:text-text"
                       }`}
                     >
-                      {c.label}
-                      <span className="tnum text-[10px] opacity-70">{n}</span>
+                      <span className="flex items-baseline gap-1.5 lg:gap-2">
+                        {c.label}
+                        <span className="tnum text-[10px] opacity-70">{n}</span>
+                      </span>
                     </button>
                   </li>
                 );
@@ -332,6 +341,7 @@ export function ShopCatalog() {
                 {shown.map((p) => (
                   <ProductCard key={p.id} product={p} onOpen={openSheet} />
                 ))}
+                <GridFill count={shown.length} />
               </ul>
             )}
 
@@ -382,5 +392,32 @@ export function ShopCatalog() {
         </div>
       </Modal>
     </section>
+  );
+}
+
+/**
+ * Blank cells to square off the last row of the catalogue.
+ *
+ * The grid draws its hairlines with the `gap-px` + `bg-line` trick, so a
+ * short last row does not end — the `bg-line` behind the missing cards
+ * shows through as a solid grey block the size of a product. Twenty items
+ * in three columns left exactly that beside the last two cards. These are
+ * empty cells on the page's own ground: the ruling continues round them
+ * and the row reads as finished. Two columns below `lg`, three from it, so
+ * each cell knows which of the two layouts it is needed in.
+ */
+function GridFill({ count }: { count: number }) {
+  const phone = count % 2 === 0 ? 0 : 1;
+  const desk = (3 - (count % 3)) % 3;
+  return (
+    <>
+      {[0, 1].map((i) => {
+        const onPhone = i < phone;
+        const onDesk = i < desk;
+        if (!onPhone && !onDesk) return null;
+        const show = onPhone && onDesk ? "block" : onPhone ? "block lg:hidden" : "hidden lg:block";
+        return <li key={i} aria-hidden="true" className={`${show} bg-surface-deep`} />;
+      })}
+    </>
   );
 }
