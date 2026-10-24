@@ -81,7 +81,7 @@ export function CrewDirectory() {
 
         <ul className="mt-8 border-t border-line">
           {shown.map((m) => (
-            <li key={m.id} className="border-b border-line">
+            <li key={m.id} data-reveal className="border-b border-line">
               <article className="group grid grid-cols-1 gap-x-6 gap-y-4 py-8 md:grid-cols-12 md:items-baseline">
                 <div className="md:col-span-4">
                   <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">

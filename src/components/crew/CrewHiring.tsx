@@ -38,6 +38,7 @@ export function CrewHiring() {
           {TERMS.map((s, i) => (
             <div
               key={s.k}
+              data-reveal
               className={`border-b border-line py-10 lg:border-b-0 ${
                 i > 0 ? "lg:border-l lg:pl-10" : "lg:pr-10"
               } ${i === 1 ? "lg:pr-10" : ""}`}
@@ -59,7 +60,7 @@ export function CrewHiring() {
           <div>
             <ol className="border-t border-line">
               {STEPS.map((s) => (
-                <li key={s.k} className="flex gap-6 border-b border-line py-8">
+                <li key={s.k} data-reveal className="flex gap-6 border-b border-line py-8">
                   <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                     {s.k}
                   </span>

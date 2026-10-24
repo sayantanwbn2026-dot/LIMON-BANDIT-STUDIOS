@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
@@ -112,6 +113,7 @@ export function Roster() {
           </Link>
         ))}
       </div>
+      <RailMeter />
     </Section>
   );
 }

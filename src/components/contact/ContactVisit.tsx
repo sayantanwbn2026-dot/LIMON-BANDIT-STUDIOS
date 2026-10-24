@@ -44,6 +44,7 @@ export function ContactVisit() {
               {HOURS.map((h) => (
                 <div
                   key={h.k}
+                  data-reveal
                   className="flex items-baseline justify-between gap-4 border-b border-line py-4"
                 >
                   <dt className="font-ui text-[14px] font-semibold text-text">{h.k}</dt>
@@ -61,7 +62,7 @@ export function ContactVisit() {
             <h3 className="t-label text-mute">Getting there</h3>
             <dl className="mt-6 border-t border-line">
               {GETTING_THERE.map((g) => (
-                <div key={g.k} className="border-b border-line py-4">
+                <div key={g.k} data-reveal className="border-b border-line py-4">
                   <dt className="font-ui text-[14px] font-semibold text-text">{g.k}</dt>
                   <dd className="mt-2 max-w-[36ch] font-ui text-[14px] leading-[1.5] text-mute">
                     {g.d}

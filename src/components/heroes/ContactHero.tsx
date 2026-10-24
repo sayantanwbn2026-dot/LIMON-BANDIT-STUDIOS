@@ -5,6 +5,7 @@ import { RiseIn } from "@/components/lb/Reveal";
 import { LocalTime } from "@/components/lb/LocalTime";
 import { useChapter } from "@/cms/hooks";
 import { useSite, useSocialLink } from "@/cms/hooks";
+import { waNumber } from "@/lib/contact";
 
 /**
  * CONTACT — the dispatch slip, under the house lockup.
@@ -15,13 +16,6 @@ import { useSite, useSocialLink } from "@/cms/hooks";
  * address. The slip is real information rather than decoration, so every row
  * is a working link where a link makes sense.
  */
-/** Digits only, country code included. Empty when there is no usable number. */
-function waNumber(phone: string | undefined): string {
-  const digits = (phone ?? "").replace(/[^0-9]/g, "");
-  if (digits.length === 10) return `91${digits}`;
-  return digits.length >= 11 && digits.length <= 15 ? digits : "";
-}
-
 export function ContactHero() {
   const site = useSite();
   const instagram = useSocialLink("Instagram");

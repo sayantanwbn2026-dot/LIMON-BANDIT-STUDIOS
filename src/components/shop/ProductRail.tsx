@@ -34,7 +34,11 @@ export function ProductRail({
 
         <ul className="no-scrollbar mt-8 flex gap-4 overflow-x-auto pb-2 [scroll-snap-type:x_proximity]">
           {products.map((p) => (
-            <li key={p.id} className="w-[168px] shrink-0 [scroll-snap-align:start] sm:w-[200px]">
+            <li
+              key={p.id}
+              data-reveal
+              className="w-[168px] shrink-0 [scroll-snap-align:start] sm:w-[200px]"
+            >
               <Link
                 to="/shop/$id"
                 params={{ id: p.id }}

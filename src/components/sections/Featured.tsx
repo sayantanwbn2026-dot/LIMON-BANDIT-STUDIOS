@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Section, Eyebrow } from "@/components/lb/Section";
@@ -65,6 +66,7 @@ export function Featured() {
           </li>
         ))}
       </ul>
+      <RailMeter />
     </Section>
   );
 }

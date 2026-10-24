@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Accordion } from "@/components/lb/Accordion";
-import { Picture } from "@/components/lb/Picture";
+import { HouseMascot } from "@/components/lb/HeroMascot";
 import { useFaq, useHomeFaq, useSection } from "@/cms/hooks";
 
 /**
@@ -65,12 +65,7 @@ export function Faq() {
            * 1024 and 1279 the column is 165px and nothing fits, so the card
            * steps aside for the full-width line the phone already uses. */}
           <div className="mt-10 hidden border border-alt-line p-5 md:block lg:hidden xl:-mr-6 xl:block xl:p-6">
-            <Picture
-              src="limon-mascot"
-              sizes="120px"
-              alt=""
-              className="h-[120px] w-auto opacity-25"
-            />
+            <HouseMascot sizes="120px" className="h-[120px] w-auto opacity-25" />
             <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
               Still stuck?
             </div>

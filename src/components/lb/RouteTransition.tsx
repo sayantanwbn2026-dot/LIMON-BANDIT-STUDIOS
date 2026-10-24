@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useRouterState } from "@tanstack/react-router";
-import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
+import { ensureGsap, prefersReducedMotion, ScrollTrigger, markNavigated } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
 import { useChapters } from "@/cms/hooks";
 
@@ -30,6 +30,10 @@ export function RouteTransition() {
   const chapters = useChapters();
   const chaptersRef = useRef(chapters);
   chaptersRef.current = chapters;
+
+  /* Recorded whatever the motion setting, so entrances elsewhere can tell a
+   * client-side arrival from a hard load (see mayPlayEntrance). */
+  useEffect(() => router.subscribe("onBeforeNavigate", markNavigated), [router]);
 
   /* ---- outgoing: fade + wipe, before the new route commits ---- */
   useEffect(() => {

@@ -51,6 +51,7 @@ export function LabelSplits() {
           {SPLITS.map((s, i) => (
             <div
               key={s.k}
+              data-reveal
               className={`border-b border-line py-10 lg:border-b-0 ${
                 i > 0 ? "lg:border-l lg:pl-10" : "lg:pr-10"
               } ${i === 1 ? "lg:pr-10" : ""}`}

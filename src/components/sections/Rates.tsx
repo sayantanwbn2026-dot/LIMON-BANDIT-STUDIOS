@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
@@ -160,6 +161,7 @@ export function Rates() {
           );
         })}
       </ul>
+      <RailMeter />
     </Section>
   );
 }

@@ -227,6 +227,7 @@ export function Preloader() {
   return (
     <div
       ref={root}
+      data-preloader
       aria-hidden="true"
       className="fixed inset-0 z-[10000] overflow-hidden bg-surface-deep"
       style={{ clipPath: "inset(0 0 0% 0)" }}

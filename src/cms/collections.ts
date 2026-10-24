@@ -58,6 +58,16 @@ const site: Collection = {
       630,
       "Shown when the site is linked on WhatsApp, Instagram or X.",
     ),
+    image(
+      "mascot",
+      "Mascot",
+      1024,
+      1169,
+      "Stands in front of the big wordmark on every page's opening screen, and appears faintly in the menu and the footer. Use a cut-out on a transparent background (PNG or WebP), about this shape — taller than it is wide, with the figure's feet at the bottom edge. A page can swap in its own under Page titles & SEO.",
+    ),
+    text("mascotAlt", "Mascot description", {
+      help: "What the mascot looks like, in one line, for screen readers.",
+    }),
   ],
 };
 
@@ -130,7 +140,7 @@ const seo: Collection = {
   key: "global.pages",
   title: "Page titles & SEO",
   description:
-    "The heading, standfirst and search-engine text for each of the seven pages. This is what shows in Google.",
+    "The heading, standfirst, mascot and search-engine text for each page. The search-engine text is what shows in Google.",
   group: "global",
   shape: "list",
   titleField: "name",
@@ -157,6 +167,16 @@ const seo: Collection = {
       ],
     },
     area("standfirst", "Standfirst", { rows: 2, help: "The line under the heading." }),
+    image(
+      "mascot",
+      "Mascot on this page",
+      1024,
+      1169,
+      "Leave empty to use the house mascot from Brand & contact. Same rules: a transparent cut-out, taller than wide, feet at the bottom edge — he is placed exactly where the house mascot stands.",
+    ),
+    text("mascotAlt", "Mascot description", {
+      help: "Only needed when this page has its own mascot.",
+    }),
     text("title", "Search-engine title", {
       required: true,
       max: 65,

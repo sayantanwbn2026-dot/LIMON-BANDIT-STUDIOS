@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Play } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
@@ -171,6 +172,7 @@ export function LabelVideos() {
             </li>
           ))}
         </ul>
+        <RailMeter />
       </div>
 
       {open ? (

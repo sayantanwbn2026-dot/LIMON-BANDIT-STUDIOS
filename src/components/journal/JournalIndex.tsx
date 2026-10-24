@@ -85,7 +85,7 @@ export function JournalIndex() {
         {/* the rest, as an index */}
         <ul className="mt-12 border-t border-line">
           {rest.map((p, i) => (
-            <li key={p.title}>
+            <li key={p.title} data-reveal>
               <Link
                 to="/journal/$slug"
                 params={{ slug: p.slug }}

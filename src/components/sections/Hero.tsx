@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
-import { Picture } from "@/components/lb/Picture";
+import { HeroMascot } from "@/components/lb/HeroMascot";
 import { useHomeHero } from "@/cms/hooks";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
@@ -266,6 +266,26 @@ export function Hero() {
       };
     });
 
+    /* ---- phones and tablets: depth without the pin ----
+     * The scene above is a pinned, 1.1-viewport sequence, and holding a
+     * phone's page still for a screen of thumb travel reads as the site
+     * being stuck, so under 1024px there was nothing — the poster simply
+     * slid off like a picture. It now comes apart the way every chapter
+     * hero does (see HeroFrame): he leaves a little faster than the page,
+     * the wordmark behind him lags and dims. Two layers, two speeds,
+     * scrubbed to the scroll, nothing held. */
+    mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.4 },
+      });
+      if (limonRef.current) tl.to(limonRef.current, { yPercent: -14 }, 0);
+      if (wordWrapRef.current) {
+        tl.to(wordWrapRef.current, { y: () => el.offsetHeight * 0.22, opacity: 0.2 }, 0);
+      }
+      return () => tl.kill();
+    });
+
     /* Pin geometry depends on final layout: fonts swap, the mascot decodes,
      * and the preloader releases scroll — refresh after each. */
     const refresh = () => ScrollTrigger.refresh();
@@ -464,14 +484,7 @@ export function Hero() {
            * phone, and the old 45vw hint picked a source half the width it
            * now needs, which reads as a soft mascot at exactly the moment
            * he became the largest thing on the screen. */}
-          <Picture
-            src="limon-mascot"
-            alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
-            sizes="(max-width: 767px) 90vw, (max-width: 1023px) 360px, 660px"
-            priority
-            className="block h-full w-full object-contain"
-            style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
-          />
+          <HeroMascot chapter="home" />
         </div>
       </div>
 

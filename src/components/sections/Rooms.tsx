@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useEffect, useRef, useState } from "react";
 import { Section } from "@/components/lb/Section";
 import { Eyebrow } from "@/components/lb/Section";
@@ -107,91 +108,95 @@ export function Rooms() {
           {/* list — a swipe rail on phones (see .rail-mobile). Four rooms of
            * image, blurb and spec sheet stacked to 2,906px, the tallest
            * section left on the page, and the full detail lives on /rooms. */}
-          <div className="rail-mobile">
-            {rooms.map((r, i) => (
-              <article
-                key={r.id}
-                data-room-item
-                className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-7 md:first:border-t-0 md:first:pt-0"
-              >
-                {/* ONE EYEBROW, NOT TWO THINGS AT OPPOSITE ENDS.
-                 *
-                 * The index and the kind are the same rank — both 11px
-                 * labels qualifying the name below — so they belong to each
-                 * other, and `ml-auto` was throwing the kind to the far edge
-                 * of a 205px card. That left a hole across the middle of the
-                 * first line and read as two unrelated fragments floating
-                 * apart rather than as a label with two halves. Sitting
-                 * together at a 12px gap they read as one line: "01 LIVE
-                 * TRACKING", the number in acid and the kind in mute, which
-                 * is hierarchy carried by colour rather than by distance.
-                 *
-                 * `md:ml-auto` puts it back at the far end from the tablet
-                 * up, where the card is a full-width ruled row and the span
-                 * is the point: there the gap is structure, not a hole.
-                 *
-                 * The name still takes its own line on a phone — "ROOM A" at
-                 * 28px wants most of 205px — and rejoins the baseline row
-                 * at `md` via the order swap. */}
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:gap-x-4">
-                  <span className="order-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
-                    {r.index}
-                  </span>
-                  <span className="order-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute md:order-3 md:ml-auto">
-                    {r.kind}
-                  </span>
-                  <h3 className="order-3 w-full font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:order-2 md:w-auto md:text-[34px]">
-                    {r.name}
-                  </h3>
-                </div>
+          {/* wrapped so the meter sits under the rail, not a grid gap away */}
+          <div>
+            <div className="rail-mobile">
+              {rooms.map((r, i) => (
+                <article
+                  key={r.id}
+                  data-room-item
+                  className="border border-line p-5 md:border-x-0 md:border-b-0 md:px-0 md:py-7 md:first:border-t-0 md:first:pt-0"
+                >
+                  {/* ONE EYEBROW, NOT TWO THINGS AT OPPOSITE ENDS.
+                   *
+                   * The index and the kind are the same rank — both 11px
+                   * labels qualifying the name below — so they belong to each
+                   * other, and `ml-auto` was throwing the kind to the far edge
+                   * of a 205px card. That left a hole across the middle of the
+                   * first line and read as two unrelated fragments floating
+                   * apart rather than as a label with two halves. Sitting
+                   * together at a 12px gap they read as one line: "01 LIVE
+                   * TRACKING", the number in acid and the kind in mute, which
+                   * is hierarchy carried by colour rather than by distance.
+                   *
+                   * `md:ml-auto` puts it back at the far end from the tablet
+                   * up, where the card is a full-width ruled row and the span
+                   * is the point: there the gap is structure, not a hole.
+                   *
+                   * The name still takes its own line on a phone — "ROOM A" at
+                   * 28px wants most of 205px — and rejoins the baseline row
+                   * at `md` via the order swap. */}
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:gap-x-4">
+                    <span className="order-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] tnum text-acid-type">
+                      {r.index}
+                    </span>
+                    <span className="order-2 font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute md:order-3 md:ml-auto">
+                      {r.kind}
+                    </span>
+                    <h3 className="order-3 w-full font-display text-[28px] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-text md:order-2 md:w-auto md:text-[34px]">
+                      {r.name}
+                    </h3>
+                  </div>
 
-                {/* 12px under the name, not 16. The blurb belongs to the
-                 * heading above it, and an even gap on both sides of the
-                 * name made the three parts read as a list of equals.
-                 *
-                 * `pretty` keeps the clamped second line from ending on a
-                 * single orphaned word. */}
-                <p className="card-blurb mt-3 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute [text-wrap:pretty]">
-                  {r.blurb}
-                </p>
+                  {/* 12px under the name, not 16. The blurb belongs to the
+                   * heading above it, and an even gap on both sides of the
+                   * name made the three parts read as a list of equals.
+                   *
+                   * `pretty` keeps the clamped second line from ending on a
+                   * single orphaned word. */}
+                  <p className="card-blurb mt-3 max-w-[46ch] font-ui text-[15px] leading-[1.5] text-mute [text-wrap:pretty]">
+                    {r.blurb}
+                  </p>
 
-                {/* NO SPECS HERE.
-                 *
-                 * This was a full label/value sheet, then two of them on one
-                 * line, and it is now none. Each step was the same argument
-                 * carried further: the whole sheet already exists on /rooms,
-                 * which is where somebody comparing rooms is going anyway,
-                 * and a card in a rail is a door — it has to say what the
-                 * room IS and what it costs, not brief you on it.
-                 *
-                 * The two-spec version also could not survive the card it
-                 * lived in. "480 SQ FT - API 1608 - 16CH" in 205px wrapped
-                 * mid-list and left a separator dangling at the head of the
-                 * second line, so the one row meant to read as a quiet
-                 * caption was the most broken-looking thing on the card. */}
+                  {/* NO SPECS HERE.
+                   *
+                   * This was a full label/value sheet, then two of them on one
+                   * line, and it is now none. Each step was the same argument
+                   * carried further: the whole sheet already exists on /rooms,
+                   * which is where somebody comparing rooms is going anyway,
+                   * and a card in a rail is a door — it has to say what the
+                   * room IS and what it costs, not brief you on it.
+                   *
+                   * The two-spec version also could not survive the card it
+                   * lived in. "480 SQ FT - API 1608 - 16CH" in 205px wrapped
+                   * mid-list and left a separator dangling at the head of the
+                   * second line, so the one row meant to read as a quiet
+                   * caption was the most broken-looking thing on the card. */}
 
-                {/* THE ACTION ZONE IS DRAWN OFF, NOT JUST SPACED OFF.
-                 *
-                 * The price and the link used to follow the blurb on nothing
-                 * but a margin, so the card was four things in a column with
-                 * no statement about which belonged together. A hairline
-                 * above them says the top of the card describes the room and
-                 * the bottom of it transacts — the same rule the rest of the
-                 * site uses to separate a section from its furniture.
-                 *
-                 * They are stacked because they could not share 205px: the
-                 * price broke after the slash and the link broke before
-                 * "room", stranding its arrow on a line of its own. The rule
-                 * and the stacking both stop at `md`, where the card becomes
-                 * a full-width ruled row that already has its own edges. */}
-                <div className="mt-5 flex flex-col items-start gap-3 border-t border-line pt-4 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-4 md:border-t-0 md:pt-0">
-                  <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
-                    {r.rate}
-                  </span>
-                  <GhostLink label="Book this room" to="/contact" className="text-text" />
-                </div>
-              </article>
-            ))}
+                  {/* THE ACTION ZONE IS DRAWN OFF, NOT JUST SPACED OFF.
+                   *
+                   * The price and the link used to follow the blurb on nothing
+                   * but a margin, so the card was four things in a column with
+                   * no statement about which belonged together. A hairline
+                   * above them says the top of the card describes the room and
+                   * the bottom of it transacts — the same rule the rest of the
+                   * site uses to separate a section from its furniture.
+                   *
+                   * They are stacked because they could not share 205px: the
+                   * price broke after the slash and the link broke before
+                   * "room", stranding its arrow on a line of its own. The rule
+                   * and the stacking both stop at `md`, where the card becomes
+                   * a full-width ruled row that already has its own edges. */}
+                  <div className="mt-5 flex flex-col items-start gap-3 border-t border-line pt-4 md:mt-4 md:flex-row md:items-center md:justify-between md:gap-4 md:border-t-0 md:pt-0">
+                    <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] tnum text-acid-type">
+                      {r.rate}
+                    </span>
+                    <GhostLink label="Book this room" to="/contact" className="text-text" />
+                  </div>
+                </article>
+              ))}
+            </div>
+            <RailMeter />
           </div>
         </div>
       </div>

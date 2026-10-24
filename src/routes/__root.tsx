@@ -21,6 +21,8 @@ import { Cursor } from "@/components/lb/Cursor";
 import { SmoothScroll } from "@/components/lb/SmoothScroll";
 import { SkipLink } from "@/components/lb/SkipLink";
 import { SectionRule } from "@/components/lb/SectionRule";
+import { ScrollReveal } from "@/components/lb/ScrollReveal";
+import { ScrollProgress } from "@/components/lb/ScrollProgress";
 import { StageLight } from "@/components/lb/StageLight";
 import { GridRules } from "@/components/lb/GridRules";
 import { RouteTransition } from "@/components/lb/RouteTransition";
@@ -282,6 +284,8 @@ function SiteChrome() {
       <SkipLink />
       <SmoothScroll />
       <SectionRule />
+      <ScrollReveal />
+      <ScrollProgress />
       <StageLight />
       <Noise />
       <Cursor />

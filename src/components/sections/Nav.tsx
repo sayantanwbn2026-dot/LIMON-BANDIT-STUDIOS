@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useNavItems, useSite, useSocialLink } from "@/cms/hooks";
+import { mailHref, mapsHref, telHref, waHref } from "@/lib/contact";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
 import { useNavPole } from "@/lib/nav-pole";
-import { Picture } from "@/components/lb/Picture";
+import { HouseMascot } from "@/components/lb/HeroMascot";
 import { ShopBar } from "@/components/shop/ShopBar";
 
 export function Logotype({ size = 18 }: { size?: number }) {
@@ -30,6 +32,15 @@ export function Nav() {
   const instagram = useSocialLink("Instagram");
   /* Home lives on the logotype, so the menu carries the rest. */
   const menuLinks = useNavItems().slice(1);
+  const tel = telHref(site.phone);
+  const wa = waHref(site.phone);
+  const mail = mailHref(site.email);
+  const maps = mapsHref(site.address);
+  const actions = [
+    tel ? { label: "Call", href: tel, icon: Phone, external: false } : null,
+    wa ? { label: "WhatsApp", href: wa, icon: MessageCircle, external: true } : null,
+    mail ? { label: "Email", href: mail, icon: Mail, external: false } : null,
+  ].filter((a) => a !== null);
   const navRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -237,10 +248,15 @@ export function Nav() {
                     "opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo)",
                 }}
               >
-                <span className="lb-menu-link font-display font-extrabold uppercase tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4">
+                {/* The page you are on is set in acid. The router marks the
+                 * active link itself (`data-status`, plus aria-current for
+                 * screen readers), so a product page lights Shop and an
+                 * article lights Journal without a list of paths here. */}
+                <span className="lb-menu-link font-display font-extrabold uppercase tracking-[-0.04em] text-text transition-transform duration-300 group-hover:translate-x-4 group-data-[status=active]:text-acid-type">
                   {item.label}
                 </span>
                 <span className="t-label tnum text-acid-type transition-colors duration-300 group-hover:text-text">
+                  <span className="hidden group-data-[status=active]:inline">You are here </span>
                   [0{i + 1}]
                 </span>
               </Link>
@@ -254,28 +270,104 @@ export function Nav() {
                   <div key={l}>{l}</div>
                 ))}
               </div>
-              <div className="t-label space-y-1 text-mute">
-                <div>{site.phone}</div>
-                {instagram ? <div>{instagram.handle || instagram.platform}</div> : null}
+              {/* Links, not text. The number and the handle were printed
+               * here as plain words — the one place a visitor is looking
+               * for a way to reach the house, and none of it could be
+               * pressed. */}
+              <div className="t-label flex flex-col items-start gap-1 text-mute">
+                {tel ? (
+                  <a
+                    href={tel}
+                    className="tnum transition-colors duration-300 hover:text-acid-type"
+                  >
+                    {site.phone}
+                  </a>
+                ) : null}
+                {mail ? (
+                  <a href={mail} className="transition-colors duration-300 hover:text-acid-type">
+                    {site.email}
+                  </a>
+                ) : null}
+                {instagram ? (
+                  <a
+                    href={instagram.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors duration-300 hover:text-acid-type"
+                  >
+                    {instagram.handle || instagram.platform}
+                  </a>
+                ) : null}
               </div>
             </div>
 
             <div className="lb-menu-compact t-label w-full items-center gap-3 text-mute">
               <span className="truncate">{site.address.join(", ")}</span>
-              <span aria-hidden="true">·</span>
-              <span className="shrink-0">{site.phone}</span>
+              {tel ? (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <a
+                    href={tel}
+                    className="tnum shrink-0 transition-colors duration-300 hover:text-acid-type"
+                  >
+                    {site.phone}
+                  </a>
+                </>
+              ) : null}
               {instagram ? (
                 <>
                   <span aria-hidden="true">·</span>
-                  <span className="shrink-0">{instagram.handle || instagram.platform}</span>
+                  <a
+                    href={instagram.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 transition-colors duration-300 hover:text-acid-type"
+                  >
+                    {instagram.handle || instagram.platform}
+                  </a>
                 </>
               ) : null}
             </div>
 
-            <Picture
-              src="limon-mascot"
+            {/* Phones: the three ways to reach the house, as buttons a
+             * thumb can hit — 48px tall, the nav's own hairline squares
+             * stretched to thirds. Someone opening the menu on a phone is
+             * as likely to want to call as to browse, and a number set in
+             * 11px type was something to copy out by hand. */}
+            {actions.length > 0 ? (
+              <div className="lb-menu-actions w-full">
+                <div
+                  className="grid gap-2"
+                  style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
+                >
+                  {actions.map((a) => (
+                    <a
+                      key={a.label}
+                      href={a.href}
+                      {...(a.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                      className="flex h-12 min-w-0 items-center justify-center gap-2 border border-line font-ui text-[10px] font-bold uppercase tracking-[0.12em] text-text transition-colors duration-300 active:border-acid-type active:text-acid-type"
+                    >
+                      <a.icon size={14} aria-hidden="true" className="shrink-0 text-acid-type" />
+                      <span className="truncate">{a.label}</span>
+                    </a>
+                  ))}
+                </div>
+                {maps ? (
+                  <a
+                    href={maps}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="lb-menu-actions-addr t-label mt-3 flex items-center gap-2 text-mute transition-colors duration-300 active:text-acid-type"
+                  >
+                    <MapPin size={12} aria-hidden="true" className="shrink-0 text-acid-type" />
+                    <span className="truncate">{site.address.slice(0, 2).join(", ")}</span>
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+
+            <HouseMascot
               sizes="88px"
-              alt=""
               className="lb-menu-mascot pointer-events-none absolute bottom-0 right-[var(--page-margin)] w-auto opacity-15"
             />
           </div>

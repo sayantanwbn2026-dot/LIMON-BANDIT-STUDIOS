@@ -42,7 +42,7 @@ export function RoomsBooking() {
           <div>
             <ol className="border-t border-line">
               {STEPS.map((s) => (
-                <li key={s.k} className="flex gap-6 border-b border-line py-8">
+                <li key={s.k} data-reveal className="flex gap-6 border-b border-line py-8">
                   <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                     {s.k}
                   </span>

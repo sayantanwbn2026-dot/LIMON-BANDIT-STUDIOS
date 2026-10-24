@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/lb/Section";
@@ -60,6 +61,7 @@ export function Journal() {
           </RiseIn>
         ))}
       </div>
+      <RailMeter />
     </Section>
   );
 }

@@ -5,6 +5,7 @@ import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
 import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
 import { isPlayable } from "@/lib/video";
+import { pickMascot, type Mascot } from "./mascot";
 
 /**
  * The site's read API.
@@ -30,6 +31,9 @@ export type SiteDoc = {
   rating: string;
   url: string;
   ogImage: string;
+  /** the house mascot — see `pickMascot` */
+  mascot?: ImageKey | string;
+  mascotAlt?: string;
 };
 
 export const useSite = () => useDoc<SiteDoc>("global.site");
@@ -66,6 +70,9 @@ export type PageDoc = {
   heading: string;
   poster: { spread: string; word: string };
   standfirst: string;
+  /** this page's own hero mascot; empty means the house one */
+  mascot?: ImageKey | string;
+  mascotAlt?: string;
   title: string;
   description: string;
 };
@@ -134,6 +141,31 @@ export function useChapters(): Chapter[] {
       ),
     );
   }, [pages]);
+}
+
+/**
+ * The mascot on a chapter's hero: the page's own if it has one, the house
+ * mascot otherwise. Read from the raw page rows rather than `usePage`,
+ * which falls back to the first page for an unknown key — and the first
+ * page's mascot standing on another page's hero would be a quiet wrong
+ * answer rather than the house default.
+ */
+export function useHeroMascot(key: ChapterKey): Mascot {
+  const site = useSite();
+  const pages = useDoc<unknown>("global.pages");
+  return useMemo(() => {
+    const rows = Array.isArray(pages) ? (pages as PageDoc[]) : [];
+    return pickMascot(
+      rows.find((r) => r?.key === key),
+      site,
+    );
+  }, [site, pages, key]);
+}
+
+/** The house mascot alone — the menu, the footer, the help card. */
+export function useHouseMascot(): Mascot {
+  const site = useSite();
+  return useMemo(() => pickMascot(undefined, site), [site]);
 }
 
 export function useChapter(key: ChapterKey): Chapter {

@@ -6,6 +6,7 @@ import { faq } from "@/data/faq";
 import { services } from "@/data/services";
 import { featured } from "@/data/featured";
 import { DEFAULT_HOME_ORDER } from "./home-sections";
+import { HOUSE_MASCOT, HOUSE_MASCOT_ALT } from "./mascot";
 import { metrics } from "@/data/metrics";
 import { wall } from "@/data/wall";
 import { testimonials } from "@/data/testimonials";
@@ -242,6 +243,8 @@ export const seeds: Record<string, unknown> = {
     rating: site.rating,
     url: site.url,
     ogImage: site.ogImage,
+    mascot: HOUSE_MASCOT,
+    mascotAlt: HOUSE_MASCOT_ALT,
   },
   "global.social": SOCIAL_SEED,
   "global.nav": navItems.map((n) => ({ label: n.label, to: n.to })),
@@ -253,6 +256,8 @@ export const seeds: Record<string, unknown> = {
     heading: c.heading,
     poster: { spread: c.poster.spread, word: c.poster.word },
     standfirst: c.standfirst,
+    mascot: "",
+    mascotAlt: "",
     title: c.title,
     description: c.description,
   })),

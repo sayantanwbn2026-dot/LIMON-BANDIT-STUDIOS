@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import { BoundaryRule, GridRules, type Tone } from "./GridRules";
-import { Picture } from "./Picture";
+import { HeroMascot } from "./HeroMascot";
 import { MarginNotes } from "./Section";
 import { type ChapterKey } from "@/data/routes";
 import { useChapter } from "@/cms/hooks";
+import { afterPreloader, ensureGsap, mayPlayEntrance, prefersReducedMotion } from "@/lib/motion";
+import { getLenis } from "@/lib/smooth";
 
 /**
  * The chrome every page hero shares — drafting grid, margin notes and the
@@ -73,6 +75,115 @@ export function HeroFrame({
   children: ReactNode;
 }) {
   const c = useChapter(key);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const lockRef = useRef<HTMLDivElement>(null);
+  const limonRef = useRef<HTMLDivElement>(null);
+  const leanRef = useRef<HTMLDivElement>(null);
+  const footRef = useRef<HTMLDivElement>(null);
+  const footInRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const staged = Boolean(lockup);
+
+  /* ---- arrival: he steps up onto the stage as you come to the page ----
+   * On a client-side navigation only. The hidden state is set before
+   * paint, so he is never shown for a frame and then snatched away; on a
+   * hard load the server has already painted him, and hiding him to play
+   * him back in would be a flicker (see mayPlayEntrance). The same rise,
+   * ease and timing as the home hero's, so every chapter arrives the way
+   * the house does. */
+  useLayoutEffect(() => {
+    if (!staged) return;
+    const gsap = ensureGsap();
+    if (!gsap || prefersReducedMotion() || !mayPlayEntrance()) return;
+    const limon = limonRef.current;
+    const foot = footInRef.current;
+    const targets = [limon, foot].filter(Boolean);
+    if (targets.length === 0) return;
+    gsap.set(targets, { opacity: 0 });
+    const stop = afterPreloader(() => {
+      const tl = gsap.timeline();
+      if (limon) {
+        tl.fromTo(
+          limon,
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.0, ease: "expo.out", clearProps: "y" },
+          0.25,
+        );
+      }
+      if (foot) {
+        tl.fromTo(
+          foot,
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" },
+          0.6,
+        );
+      }
+    });
+    return () => {
+      stop();
+      gsap.killTweensOf(targets);
+      gsap.set(targets, { clearProps: "opacity,y" });
+    };
+  }, [staged]);
+
+  /* ---- depth: the stage comes apart as you leave it ----
+   * Scrubbed to the scroll, on every screen size. He is in front of the
+   * wordmark, so he leaves faster than the page does; the wordmark is
+   * behind him, so it lags and dims. That is the whole effect — two layers
+   * at two speeds — and it is what makes the poster read as a stage with
+   * depth rather than a flat picture of one. */
+  useEffect(() => {
+    if (!staged) return;
+    const stage = stageRef.current;
+    const gsap = ensureGsap();
+    if (!stage || !gsap) return;
+    const mm = gsap.matchMedia(stage);
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: stage, start: "top top", end: "bottom top", scrub: 0.4 },
+      });
+      if (limonRef.current) tl.to(limonRef.current, { yPercent: -14 }, 0);
+      if (lockRef.current) {
+        tl.to(lockRef.current, { y: () => stage.offsetHeight * 0.22, opacity: 0.2 }, 0);
+      }
+      if (footRef.current) tl.to(footRef.current, { opacity: 0, duration: 0.25 }, 0);
+    });
+    return () => mm.revert();
+  }, [staged]);
+
+  /* ---- lean: two layers against the pointer, desktop only ----
+   * Home's numbers exactly. On the inner layer, so it never fights the
+   * arrival or the scroll for the same property. */
+  useEffect(() => {
+    if (!staged) return;
+    const stage = stageRef.current;
+    const gsap = ensureGsap();
+    if (!stage || !gsap || prefersReducedMotion()) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const opts = { duration: 0.8, ease: "power3.out" };
+    const lx = lockRef.current ? gsap.quickTo(lockRef.current, "x", opts) : null;
+    const mx = leanRef.current ? gsap.quickTo(leanRef.current, "x", opts) : null;
+    const my = leanRef.current ? gsap.quickTo(leanRef.current, "y", opts) : null;
+    const onMove = (e: PointerEvent) => {
+      const r = stage.getBoundingClientRect();
+      const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      const ny = ((e.clientY - r.top) / r.height) * 2 - 1;
+      lx?.(nx * 5);
+      mx?.(nx * -8);
+      my?.(ny * -4);
+    };
+    stage.addEventListener("pointermove", onMove, { passive: true });
+    return () => stage.removeEventListener("pointermove", onMove);
+  }, [staged]);
+
+  const toBody = () => {
+    const el = bodyRef.current;
+    if (!el) return;
+    const lenis = getLenis();
+    if (lenis) lenis.scrollTo(el, { duration: 1.1 });
+    else el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  };
 
   return (
     <header
@@ -92,8 +203,10 @@ export function HeroFrame({
         /* One viewport, the same two values home's own hero section uses.
          * `height`, not `min-height`: the stage is a fixed stage, and
          * anything that wants to grow belongs in the band below it. */
-        <div className="relative" style={{ height: "100svh", minHeight: 680 }}>
-          <div className="shell relative z-[2] pt-[120px]">{lockup}</div>
+        <div ref={stageRef} className="relative" style={{ height: "100svh", minHeight: 680 }}>
+          <div ref={lockRef} className="shell relative z-[2] pt-[120px]">
+            {lockup}
+          </div>
 
           {mascot ? (
             /* Verbatim from the home hero — the same breakpoint ladder, the
@@ -107,21 +220,57 @@ export function HeroFrame({
              * the largest paint on the page, so he is the LCP, and `sizes`
              * has to track the box or the browser picks a source half the
              * width he needs and he arrives soft. */
-            <div className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] w-[92vw] max-w-[560px] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] md:w-[54vw] lg:h-[62vh] lg:w-[48vw] lg:max-w-[720px] 2xl:h-[68vh]">
-              <Picture
-                src="limon-mascot"
-                alt="Limon, the Limon Bandit mascot: a lemon in a bandana and leather jacket"
-                sizes="(max-width: 767px) 90vw, (max-width: 1023px) 360px, 660px"
-                priority
-                className="block h-full w-full object-contain"
-                style={{ filter: "saturate(0.92) drop-shadow(0 40px 80px var(--limon-shadow))" }}
-              />
+            <div
+              ref={limonRef}
+              className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] w-[92vw] max-w-[560px] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] md:w-[54vw] lg:h-[62vh] lg:w-[48vw] lg:max-w-[720px] 2xl:h-[68vh]"
+            >
+              <div ref={leanRef} className="h-full w-full">
+                <HeroMascot chapter={key} />
+              </div>
             </div>
           ) : null}
+
+          {/* The foot of the stage, phones only. Under 768px he stands
+           * 18svh clear of the bottom so his feet are not under the URL
+           * bar, and that band was left empty — the one screen on the page
+           * with nothing to tell a thumb what happens next. Home puts its
+           * button there; a chapter puts the way in: the same full-measure
+           * hairline row, the chapter's name, and the scroll cue, which
+           * takes you to the page underneath. The acid square is the
+           * poster's own end mark rather than the chapter number, which the
+           * menu counts differently. From 768px his feet are at 8svh and
+           * the band is too shallow to need anything. */}
+          <div
+            ref={footRef}
+            className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7] md:hidden"
+          >
+            <div ref={footInRef} className="shell">
+              <button
+                type="button"
+                onClick={toBody}
+                className="group fill-acid flex h-[56px] w-full items-center justify-between border border-line bg-transparent px-6 transition-colors duration-300"
+              >
+                <span className="flex items-baseline gap-3 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
+                  <span aria-hidden="true" className="block h-[8px] w-[8px] self-center bg-acid" />
+                  {c.name}
+                </span>
+                <span className="flex items-center gap-3 font-ui text-[11px] font-bold uppercase tracking-[0.16em] text-mute">
+                  Scroll
+                  <span
+                    aria-hidden="true"
+                    className="relative block h-5 w-px overflow-hidden bg-line"
+                  >
+                    <span className="scroll-cue absolute inset-0 block bg-acid" />
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       ) : null}
 
       <div
+        ref={bodyRef}
         className={`shell relative z-[2] ${
           bodyClassName ?? (lockup ? "pb-[96px] pt-[96px]" : "pb-[96px] pt-[120px]")
         }`}

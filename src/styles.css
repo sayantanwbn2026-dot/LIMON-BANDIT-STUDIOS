@@ -1321,9 +1321,11 @@
   .section-head.footer-cols {
     grid-template-columns: 1fr 1fr;
     column-gap: 24px;
+    row-gap: 40px;
   }
-  .section-head.footer-cols > :first-child,
-  .section-head.footer-cols > :last-child {
+  /* Every block full width now: the links are a two-column grid of their
+   * own and the roster runs on, so neither needs half the page to itself. */
+  .section-head.footer-cols > * {
     grid-column: 1 / -1;
   }
 }
@@ -1443,6 +1445,37 @@
   }
   .lb-menu-compact {
     display: flex;
+  }
+}
+
+/* Phones: the footer band is the Call / WhatsApp / Email row and one line
+ * of address, at any height. 100px holds a 48px row, the line under it and
+ * the padding; on a short phone the address goes and the row alone sits in
+ * 64px, which is still more than the old 44px line and buys back taps for
+ * it. These follow the max-height block on purpose, so a short phone gets
+ * the buttons rather than the one-line text the laptop fallback uses. */
+.lb-menu-actions {
+  display: none;
+}
+@media (max-width: 767px) {
+  .lb-menu {
+    --menu-footer: calc(100px + env(safe-area-inset-bottom, 0px));
+  }
+  .lb-menu-stack,
+  .lb-menu-mascot,
+  .lb-menu-compact {
+    display: none;
+  }
+  .lb-menu-actions {
+    display: block;
+  }
+}
+@media (max-width: 767px) and (max-height: 699px) {
+  .lb-menu {
+    --menu-footer: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+  .lb-menu-actions-addr {
+    display: none;
   }
 }
 

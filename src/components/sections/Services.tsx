@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
@@ -362,6 +363,7 @@ export function Services() {
           </li>
         ))}
       </ul>
+      <RailMeter />
     </Section>
   );
 }

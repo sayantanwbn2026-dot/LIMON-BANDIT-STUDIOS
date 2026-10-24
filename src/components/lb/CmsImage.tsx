@@ -64,7 +64,9 @@ export function CmsImage({
       alt={alt}
       width={width}
       height={height}
+      aria-hidden={alt === "" || undefined}
       loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       decoding={priority ? "sync" : "async"}
       className={className}
       style={style}

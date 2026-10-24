@@ -27,6 +27,8 @@ import { useOffers } from "@/cms/hooks";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SEEN_KEY = "lb-flash";
 const DELAY_MS = 25_000;
+/** how long the page has to be still before it counts as a pause */
+const PAUSE_MS = 1_200;
 
 export function FlashOffer() {
   const cart = useCart();
@@ -49,8 +51,24 @@ export function FlashOffer() {
       /* private mode — show it, but it may reappear next session */
     }
 
-    const t = window.setTimeout(() => {
-      /* Never over a checkout, and never over an open drawer.
+    /* Not on a clock alone. A timer fired the dialog at 25 seconds
+     * whatever the visitor was doing — mid-swipe through a rail, or on a
+     * phone still reading the first screen — and a dialog that lands under
+     * a moving thumb is dismissed before it is read. Now it also waits for
+     * someone who has scrolled at least a screen (they are reading, not
+     * bouncing) and has just stopped (they are looking at something, not
+     * travelling past it). Whichever comes last of the three opens it. */
+    const start = Date.now();
+    let deepest = window.scrollY;
+    let idle = 0;
+    let done = false;
+
+    const attempt = () => {
+      if (done) return;
+      if (Date.now() - start < DELAY_MS) return;
+      if (deepest < window.innerHeight) return;
+      /* Never over a checkout, never over an open drawer, never while
+       * someone is typing into a field.
        *
        * `:not([inert])` is load-bearing. The nav's site menu is a
        * `role="dialog"` that is always in the DOM and merely inerted while
@@ -58,16 +76,33 @@ export function FlashOffer() {
        * popup would never once appear. Only an open dialog is not inert. */
       if (window.location.pathname.startsWith("/checkout")) return;
       if (document.querySelector('[role="dialog"]:not([inert])')) return;
+      const active = document.activeElement;
+      if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) return;
 
+      done = true;
+      cleanup();
       try {
         window.localStorage.setItem(SEEN_KEY, "1");
       } catch {
         /* nothing to do */
       }
       setOpen(true);
-    }, DELAY_MS);
+    };
 
-    return () => window.clearTimeout(t);
+    const onScroll = () => {
+      deepest = Math.max(deepest, window.scrollY);
+      window.clearTimeout(idle);
+      idle = window.setTimeout(attempt, PAUSE_MS);
+    };
+
+    const t = window.setTimeout(attempt, DELAY_MS);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const cleanup = () => {
+      window.clearTimeout(t);
+      window.clearTimeout(idle);
+      window.removeEventListener("scroll", onScroll);
+    };
+    return cleanup;
   }, []);
 
   const onSubmit = async (e: FormEvent) => {
@@ -118,6 +153,10 @@ export function FlashOffer() {
     <Modal
       open={open}
       onClose={() => setOpen(false)}
+      /* A sheet: on a phone it rises from the bottom edge, where the thumb
+       * already is, instead of a box dropped over the middle of what they
+       * were reading. From 640px it is the centred dialog it always was. */
+      variant="sheet"
       title={code ? "Here it is" : offer.label}
       standfirst={
         code

@@ -61,7 +61,7 @@ export function RoomsRail() {
             </thead>
             <tbody>
               {ROWS.map((row) => (
-                <tr key={row.label} className="border-b border-line align-top">
+                <tr key={row.label} data-reveal="fade" className="border-b border-line align-top">
                   <th scope="row" className="t-label py-6 pr-6 font-semibold text-mute">
                     {row.label}
                   </th>
@@ -95,7 +95,7 @@ export function RoomsRail() {
         {/* mobile: the same content, stacked */}
         <ul className="mt-12 md:hidden">
           {rooms.map((r) => (
-            <li key={r.id} className="border-t border-line py-8">
+            <li key={r.id} data-reveal className="border-t border-line py-8">
               <a href={`#room-${r.id}`} className="block">
                 <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                   {r.index}

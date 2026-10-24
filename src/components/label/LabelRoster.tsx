@@ -45,7 +45,7 @@ export function LabelRoster() {
               const t = trackForArtist(r.artist);
               const isPlaying = t && track?.id === t.id && playing;
               return (
-                <li key={r.title}>
+                <li key={r.title} data-reveal>
                   <div
                     onMouseEnter={() => setHover(i)}
                     onFocus={() => setHover(i)}
