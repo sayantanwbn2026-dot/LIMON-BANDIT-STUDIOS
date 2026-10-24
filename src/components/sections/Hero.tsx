@@ -3,29 +3,28 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { GridRules, BoundaryRule } from "@/components/lb/GridRules";
 import { MarginNotes } from "@/components/lb/Section";
-import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
+import { afterPreloader, ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { HeroMascot } from "@/components/lb/HeroMascot";
 import { useHomeHero } from "@/cms/hooks";
 
 const BANDIT = ["B", "A", "N", "D", "I", "T"];
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
 const staggerIndex = [0, 1, 2, 2, 1, 0];
-/* phase 1 — the wall parts around the figure */
-const LETTER_X = ["-4vw", "-2.5vw", "-1vw", "1vw", "2.5vw", "4vw"];
 
 /**
  * Hero v4 — "The Scrubbed Poster".
  *
  * At rest it is a still poster: nothing moves but the backlight's 7s
- * breathing and the clock. Scrolling plays a short scene, driven
- * entirely by scroll position, that ends by handing the page to the
- * proof ticker.
+ * breathing. Limon moves exactly as every chapter hero's mascot does (see
+ * HeroFrame): he steps up once the preloader lifts, leaves the stage a
+ * little faster than the page as you scroll while the wordmark behind
+ * him lags and dims, and leans against the pointer on a desktop.
  *
- * Layering matters here. The pointer parallax and the scrubbed scene both
- * want to transform Limon and the lockup, so they are given separate
- * elements — parallax on the outer wrapper, scene on the inner. Likewise
- * the backlight's infinite breathing sits on a child of the element the
- * scene scales, so the two never write the same property.
+ * Layering matters here. The arrival, the scroll and the lean all want to
+ * transform Limon, so they are given separate elements — arrival and
+ * scroll on the outer wrapper, lean on the inner layer. Likewise the
+ * backlight's infinite breathing sits on a child of the element the
+ * entrance fades, so the two never write the same property.
  */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -40,7 +39,7 @@ export function Hero() {
   const medallionRef = useRef<HTMLSpanElement>(null);
   const limonWrapRef = useRef<HTMLDivElement>(null);
   const limonRef = useRef<HTMLDivElement>(null);
-  const ruleRef = useRef<HTMLDivElement>(null);
+  const stationsRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(220);
 
   /* ---- fitting routine: BANDIT spans the measure exactly ---- */
@@ -78,11 +77,20 @@ export function Hero() {
     const gsap = ensureGsap();
     if (!gsap || prefersReducedMotion()) return;
 
+    let stop = () => {};
     const ctx = gsap.context(() => {
       gsap.set(glowWrapRef.current, { xPercent: -50, yPercent: -50, opacity: 0.84 });
       gsap.set(medallionRef.current, { xPercent: -50, yPercent: -50 });
 
-      const tl = gsap.timeline({ delay: 0.1 });
+      /* Built paused and played once the preloader lifts — the chapter
+       * heroes' rule (see afterPreloader). It used to start on mount, under
+       * a preloader that stays up for several seconds, so the whole
+       * entrance — the letters, and Limon stepping up — had finished
+       * before anyone could see it. The start states apply as the timeline
+       * is built, while the preloader still covers the page, so nothing is
+       * shown and then taken away. */
+      const tl = gsap.timeline({ paused: true });
+      stop = afterPreloader(() => tl.play());
 
       tl.from(
         "[data-col-rule]",
@@ -92,7 +100,6 @@ export function Hero() {
           duration: 0.8,
           stagger: 0.05,
           ease: "power4.out",
-          immediateRender: false,
         },
         0.1,
       );
@@ -103,32 +110,17 @@ export function Hero() {
           yPercent: 105,
           duration: 0.9,
           ease: "expo.out",
-          immediateRender: false,
           stagger: { each: 0.055, from: "edges" },
         },
         0.2,
       );
 
-      tl.from(
-        "[data-hero-measure]",
-        { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false },
-        0.75,
-      );
-      tl.from(
-        glowWrapRef.current,
-        { opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false },
-        0.45,
-      );
-      tl.from(
-        limonWrapRef.current,
-        { y: 50, opacity: 0, duration: 1.0, ease: "expo.out", immediateRender: false },
-        0.6,
-      );
-      tl.from(
-        "[data-hero-station]",
-        { y: 16, opacity: 0, duration: 0.6, ease: "expo.out", immediateRender: false },
-        0.95,
-      );
+      tl.from("[data-hero-measure]", { opacity: 0, duration: 0.5, ease: "power2.out" }, 0.75);
+      tl.from(glowWrapRef.current, { opacity: 0, duration: 1.2, ease: "power2.out" }, 0.45);
+      /* Limon and the button on the chapter heroes' beats exactly: he rises
+       * 50px over a second from 0.25, the button follows at 0.6. */
+      tl.from(limonWrapRef.current, { y: 50, opacity: 0, duration: 1.0, ease: "expo.out" }, 0.25);
+      tl.from("[data-hero-station]", { y: 16, opacity: 0, duration: 0.6, ease: "expo.out" }, 0.6);
       /* The [data-hero-micro] tween that used to sit here is gone with the
        * elements it drove — the scroll cue and the clock/coordinates line
        * were removed from the bottom rule. GSAP does not fail on a selector
@@ -146,10 +138,23 @@ export function Hero() {
         delay: 1.8,
       });
     }, el);
-    return () => ctx.revert();
+    return () => {
+      stop();
+      ctx.revert();
+    };
   }, []);
 
-  /* ---- the scrubbed scene (desktop, motion-allowed only) ---- */
+  /* ---- depth: the stage comes apart as you leave it ----
+   * The chapter heroes' scroll, on every screen size (see HeroFrame). He is
+   * in front of the wordmark, so he leaves faster than the page does; the
+   * wordmark is behind him, so it lags and dims; the button fades as the
+   * poster goes. Scrubbed, nothing held.
+   *
+   * This replaces the pinned scene that used to run here on desktop — the
+   * wall of letters parting, Limon dropping and tilting, then blurring out
+   * while the page was held still for a screen. Every other chapter's
+   * mascot does the two-speed exit above, and the house's own hero now
+   * does the same thing rather than a different one. */
   useEffect(() => {
     const el = root.current;
     if (!el) return;
@@ -157,137 +162,20 @@ export function Hero() {
     if (!gsap) return;
 
     const mm = gsap.matchMedia(el);
-
-    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-      const letterBoxes = gsap.utils.toArray<HTMLElement>("[data-hero-letter-box]", el);
-      const willChange = [limonRef.current, ...letterBoxes].filter(Boolean) as HTMLElement[];
-
-      const tl = gsap.timeline({ paused: true, defaults: { ease: "power4.inOut" } });
-
-      /* ---- phase 1 — the wall opens (0.0 → 1.1) ---- */
-      tl.to(letterBoxes, { x: (i: number) => LETTER_X[i], duration: 1.1 }, 0);
-      tl.to(wordWrapRef.current, { opacity: 0.35, duration: 1.1 }, 0);
-      tl.to("[data-measure-side='left']", { x: "-6vw", opacity: 0, duration: 1.0 }, 0);
-      tl.to("[data-measure-side='right']", { x: "6vw", opacity: 0, duration: 1.0 }, 0);
-      tl.to("[data-measure-side='centre']", { opacity: 0, duration: 0.7 }, 0);
-
-      /* ---- phase 2 — the figure settles (0.9 → 2.4) ----
-       * He drops and tilts but never scales: the growth read as the image
-       * inflating rather than approaching, so it is gone. The light still
-       * collapses, which is what carries the depth now. */
-      tl.to(limonRef.current, { y: "4vh", rotate: -1.6, duration: 1.5 }, 0.9);
-      /* the light collapses onto him as he approaches camera */
-      tl.to(glowWrapRef.current, { scale: 0.57, opacity: 1, duration: 1.5 }, 0.9);
-      /* the scene's only acid event */
-      tl.to(medallionRef.current, { scale: 2, duration: 0.2, ease: "power2.out" }, 2.0);
-      tl.to(medallionRef.current, { scale: 1, duration: 0.2, ease: "power2.in" }, 2.2);
-
-      /* ---- phase 3 — the poster concedes (2.2 → 3.2) ---- */
-      tl.to("[data-hero-station]", { y: -24, opacity: 0, duration: 0.7, stagger: 0.08 }, 2.2);
-      tl.to(wordWrapRef.current, { opacity: 0.12, y: "6vh", duration: 1.0 }, 2.2);
-      /* he leaves without growing — the exit is blur and fade only */
-      tl.to(limonRef.current, { filter: "blur(6px)", opacity: 0, duration: 0.6 }, 2.6);
-      /* the rule drops with the rest of the poster so phase 4 can raise it */
-      tl.to(ruleRef.current, { y: "8vh", duration: 0.6 }, 2.2);
-
-      /* ---- phase 4 — the handover (2.8 → 3.4) ----
-       * Overlapping phase 3 now, and 0.6 shorter. Run end to end, the two
-       * left the last fifth of the pin with nothing on screen but the
-       * ghosted wordmark: the crosshairs this phase ticks have been hidden
-       * since they were retired (see GridRules), so the tail of the scene
-       * animated something nobody could see while holding the page still
-       * for ~230px of scroll. The choreography is the same; the dead air
-       * is gone, and the pin below is shortened by the same proportion so
-       * every beat plays at the speed it did. */
-      tl.to(glowWrapRef.current, { opacity: 0, duration: 0.6 }, 2.8);
-      tl.to(ruleRef.current, { y: 0, duration: 0.6, ease: "power4.out" }, 2.8);
-      /* five crosshairs tick to acid in sequence, then revert as the pin
-       * releases — opacity on a dedicated acid layer, so it scrubs and
-       * reverses cleanly and stays theme-agnostic */
-      /* Timed so the last crosshair reverts exactly on 3.4 — the revert
-       * must finish as the pin releases, not after it:
-       * 3.08 + (4 x 0.06 stagger) + 0.08 = 3.40 */
-      tl.to(
-        "[data-hero-rule] [data-crosshair-tick]",
-        { opacity: 1, duration: 0.08, stagger: 0.06 },
-        2.72,
-      );
-      tl.to(
-        "[data-hero-rule] [data-crosshair-tick]",
-        { opacity: 0, duration: 0.08, stagger: 0.06 },
-        3.08,
-      );
-
-      const st = ScrollTrigger.create({
-        animation: tl,
-        trigger: el,
-        start: "top top",
-        /* Function form, in px: ScrollTrigger does not parse `vh` inside an
-         * end string — "+=280vh" silently resolves to 280 *pixels*, which
-         * runs the whole scene in a third of a screen. Functions are
-         * re-evaluated on refresh, so this survives resize.
-         *
-         * 1.3 viewports, down from 2.8. At 2.8 the hero held the page for
-         * ~2500px — four or five trackpad gestures before the site would
-         * let you past the first screen, which reads as the site being
-         * slow rather than as a scene being played. The scene itself did
-         * not need the room: every phase is a fraction of the timeline, so
-         * halving the distance plays the same choreography twice as fast
-         * rather than truncating it.
-         *
-         * scrub is tighter for the same reason. Lenis already adds its own
-         * lerp, and 0.75 on top of that meant the scene visibly trailed
-         * the finger; 0.4 tracks closely enough to feel direct while still
-         * smoothing the wheel's steps.
-         *
-         * 1.1, down from 1.3, with the timeline: it is 3.4 units long now
-         * rather than 4.0, and 1.3 x 3.4 / 4.0 = 1.1 keeps each unit of
-         * the scene on the same length of scroll. */
-        end: () => "+=" + window.innerHeight * 1.1,
-        scrub: 0.4,
-        pin: true,
-        anticipatePin: 1,
-        /* re-resolve the vw/vh distances in the tweens on resize */
-        invalidateOnRefresh: true,
-        onToggle: (self) => {
-          gsap.set(willChange, { willChange: self.isActive ? "transform" : "auto" });
-        },
-      });
-
-      /* Dev-only handle: the scene is scroll-driven, so this is the only way
-       * to step it deterministically (and it is stripped from prod builds). */
-      if (import.meta.env.DEV) Object.assign(window, { __heroScene: { st, tl } });
-
-      return () => {
-        st.kill();
-        tl.kill();
-        gsap.set(willChange, { willChange: "auto" });
-        if (import.meta.env.DEV) Reflect.deleteProperty(window, "__heroScene");
-      };
-    });
-
-    /* ---- phones and tablets: depth without the pin ----
-     * The scene above is a pinned, 1.1-viewport sequence, and holding a
-     * phone's page still for a screen of thumb travel reads as the site
-     * being stuck, so under 1024px there was nothing — the poster simply
-     * slid off like a picture. It now comes apart the way every chapter
-     * hero does (see HeroFrame): he leaves a little faster than the page,
-     * the wordmark behind him lags and dims. Two layers, two speeds,
-     * scrubbed to the scroll, nothing held. */
-    mm.add("(max-width: 1023px) and (prefers-reduced-motion: no-preference)", () => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.4 },
       });
-      if (limonRef.current) tl.to(limonRef.current, { yPercent: -14 }, 0);
-      if (wordWrapRef.current) {
-        tl.to(wordWrapRef.current, { y: () => el.offsetHeight * 0.22, opacity: 0.2 }, 0);
+      if (limonWrapRef.current) tl.to(limonWrapRef.current, { yPercent: -14 }, 0);
+      if (lockupRef.current) {
+        tl.to(lockupRef.current, { y: () => el.offsetHeight * 0.22, opacity: 0.2 }, 0);
       }
-      return () => tl.kill();
+      if (stationsRef.current) tl.to(stationsRef.current, { opacity: 0, duration: 0.25 }, 0);
     });
 
-    /* Pin geometry depends on final layout: fonts swap, the mascot decodes,
-     * and the preloader releases scroll — refresh after each. */
+    /* Trigger positions depend on final layout: fonts swap, the mascot
+     * decodes, and the preloader releases scroll — refresh after each. */
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener("load", refresh);
     window.addEventListener("lb:loaded", refresh);
@@ -302,7 +190,7 @@ export function Hero() {
     };
   }, []);
 
-  /* ---- two-layer pointer parallax (outer wrappers only) ---- */
+  /* ---- two-layer pointer parallax ---- */
   useEffect(() => {
     const el = root.current;
     if (!el) return;
@@ -312,8 +200,10 @@ export function Hero() {
 
     const opts = { duration: 0.8, ease: "power3.out" };
     const lx = lockupRef.current ? gsap.quickTo(lockupRef.current, "x", opts) : null;
-    const mx = limonWrapRef.current ? gsap.quickTo(limonWrapRef.current, "x", opts) : null;
-    const my = limonWrapRef.current ? gsap.quickTo(limonWrapRef.current, "y", opts) : null;
+    /* On the inner layer, as on the chapter heroes, so the lean never
+     * fights the arrival or the scroll for the same property. */
+    const mx = limonRef.current ? gsap.quickTo(limonRef.current, "x", opts) : null;
+    const my = limonRef.current ? gsap.quickTo(limonRef.current, "y", opts) : null;
 
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
@@ -489,7 +379,10 @@ export function Hero() {
       </div>
 
       {/* ---------------- corner stations ---------------- */}
-      <div className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7]">
+      <div
+        ref={stationsRef}
+        className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7]"
+      >
         <div className="shell">
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-end">
             {/* bottom-right */}
@@ -505,7 +398,7 @@ export function Hero() {
       </div>
 
       {/* ---------------- bottom rule ---------------- */}
-      <div ref={ruleRef} data-hero-rule className="absolute inset-x-0 bottom-0 z-[8]">
+      <div data-hero-rule className="absolute inset-x-0 bottom-0 z-[8]">
         <BoundaryRule tone="dark" ticks className="bottom-0" />
       </div>
     </section>

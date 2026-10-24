@@ -106,7 +106,7 @@ export function HeroFrame({
         tl.fromTo(
           limon,
           { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1.0, ease: "expo.out", clearProps: "y" },
+          { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" },
           0.25,
         );
       }
