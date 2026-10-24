@@ -196,7 +196,11 @@ export function HeroFrame({
         lockup ? "" : "lg:min-h-[100svh]"
       } ${className ?? ""}`}
     >
-      <GridRules tone={tone} />
+      {/* With a poster stage, the quarters are drawn on the stage alone —
+       * the wordmark and the mascot are laid out on them — and the band
+       * underneath, which holds each chapter's ledger, slip or figures,
+       * keeps only the frame (see GridCols). */}
+      <GridRules tone={tone} cols={lockup ? "edges" : undefined} />
       <MarginNotes index={c.index} name={c.name} tone={tone} />
 
       {lockup ? (
@@ -204,6 +208,7 @@ export function HeroFrame({
          * `height`, not `min-height`: the stage is a fixed stage, and
          * anything that wants to grow belongs in the band below it. */
         <div ref={stageRef} className="relative" style={{ height: "100svh", minHeight: 680 }}>
+          <GridRules tone={tone} cols="inner" />
           <div ref={lockRef} className="shell relative z-[2] pt-[120px]">
             {lockup}
           </div>

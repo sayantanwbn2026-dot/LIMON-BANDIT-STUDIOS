@@ -188,7 +188,9 @@ export function ProductPage({ product }: { product: Product }) {
   return (
     <main id="main" className="relative w-full bg-surface-deep pt-[var(--nav-h)]">
       <section className="relative w-full">
-        <GridRules tone="dark" />
+        {/* frame only: the gallery, the spec rows and the article measure
+         * carry their own rules (see GridCols) */}
+        <GridRules tone="dark" cols="edges" />
 
         <div className="shell relative z-[2] pb-16 pt-10">
           <Breadcrumb title={product.title} />

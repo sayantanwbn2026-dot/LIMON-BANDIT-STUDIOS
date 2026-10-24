@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { setNavPole, type NavPole } from "@/lib/nav-pole";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { BoundaryRule, GridRules } from "./GridRules";
+import { BoundaryRule, GridColsProvider, GridRules } from "./GridRules";
 import { MarginNotes } from "./Section";
 import { type Chapter, type ChapterKey } from "@/data/routes";
 import { useChapter, useChapterNeighbours } from "@/cms/hooks";
@@ -38,7 +38,10 @@ export function PageShell({
     <main id="main" className="relative w-full bg-surface-deep">
       {hero ?? <DefaultHero chapter={key} />}
 
-      {children}
+      {/* Below the hero an inner page is ledgers and tables with rules of
+       * their own, so the drafting grid keeps only its frame there (see
+       * GridCols). The hero above and the doors below keep the full grid. */}
+      <GridColsProvider cols="edges">{children}</GridColsProvider>
 
       <ChapterNav current={key} />
     </main>

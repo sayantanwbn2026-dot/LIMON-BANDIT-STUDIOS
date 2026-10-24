@@ -61,7 +61,9 @@ export function JournalArticle({ entry }: { entry: Post }) {
      * y=0 leaves its logotype invisible. Same reasoning as JournalHero. */
     <main id="main" className="relative w-full bg-surface-deep">
       <article className="relative w-full overflow-hidden bg-surface mt-[var(--nav-h)]">
-        <GridRules tone="dark" />
+        {/* frame only: the gallery, the spec rows and the article measure
+         * carry their own rules (see GridCols) */}
+        <GridRules tone="dark" cols="edges" />
         <MarginNotes index="06" name="Journal" tone="dark" />
 
         <header className="shell relative z-[2] pb-16 pt-[72px]">
