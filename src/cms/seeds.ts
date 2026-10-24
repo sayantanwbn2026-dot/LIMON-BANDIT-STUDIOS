@@ -14,6 +14,7 @@ import { rooms } from "@/data/rooms";
 import { rates } from "@/data/rates";
 import { releases } from "@/data/releases";
 import { tracks } from "@/data/tracks";
+import { videos } from "@/data/videos";
 import { crew } from "@/data/crew";
 import { posts } from "@/data/journal";
 import { legal } from "@/data/legal";
@@ -341,6 +342,7 @@ export const seeds: Record<string, unknown> = {
   "page.label.sections": labelSections,
   "page.label.releases": releases.map((r) => ({ ...r })),
   "page.label.tracks": tracks.map((t) => ({ ...t })),
+  "page.label.videos": videos.map((v) => ({ ...v })),
   "page.label.splits": SPLITS_SEED,
 
   // ---- shop / commerce ----

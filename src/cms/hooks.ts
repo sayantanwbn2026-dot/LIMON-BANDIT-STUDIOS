@@ -4,6 +4,7 @@ import { seeds } from "./seeds";
 import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
 import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
+import { isPlayable } from "@/lib/video";
 
 /**
  * The site's read API.
@@ -387,6 +388,41 @@ export const useTracks = () => useList<TrackDoc>("page.label.tracks");
 
 export type SplitDoc = TermDoc;
 export const useSplits = () => useList<SplitDoc>("page.label.splits");
+
+export type VideoDoc = {
+  feature?: boolean;
+  title: string;
+  artist: string;
+  director?: string;
+  year?: string;
+  runtime?: string;
+  note?: string;
+  cover: ImageKey | string;
+  still?: ImageKey | string;
+  src2160?: string;
+  src1080?: string;
+  src720?: string;
+  embed?: string;
+};
+export const useVideos = () => useList<VideoDoc>("page.label.videos");
+
+/**
+ * The films on the label page: the first three ticked, in list order.
+ *
+ * A film with nothing to play is skipped even when ticked — a card that
+ * opens onto a black screen is worse than one card fewer. And unlike the
+ * home FAQ there is no fall back to "the top of the list" when nothing is
+ * ticked: unticking every film is how an editor takes the section down,
+ * so that has to work.
+ */
+export const FEATURED_VIDEO_LIMIT = 3;
+export function useFeaturedVideos(): VideoDoc[] {
+  const all = useVideos();
+  return useMemo(
+    () => all.filter((v) => v?.feature && isPlayable(v)).slice(0, FEATURED_VIDEO_LIMIT),
+    [all],
+  );
+}
 
 /* ---------------- shop ---------------- */
 

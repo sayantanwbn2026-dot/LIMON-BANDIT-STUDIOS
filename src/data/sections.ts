@@ -122,6 +122,13 @@ export const roomsSections: SectionCopy[] = [
 ];
 
 export const labelSections: SectionCopy[] = [
+  {
+    id: "videos",
+    eyebrow: "On screen",
+    heading: "Three to\nwatch",
+    standfirst:
+      "The films the house is proudest of right now. Each plays in up to 4K, full screen, with the sound up.",
+  },
   { id: "player", eyebrow: "Hear it", heading: "The roster, playing", standfirst: "" },
   { id: "roster", eyebrow: "Who we put out", heading: "The roster", standfirst: "" },
   {

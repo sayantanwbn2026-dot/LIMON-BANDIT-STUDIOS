@@ -564,6 +564,69 @@ const tracks: Collection = {
   ],
 };
 
+const videos: Collection = {
+  key: "page.label.videos",
+  title: "Music videos",
+  description:
+    "The films on the label page. Tick 'Feature' on the ones to show — the first three ticked, in this order, become the cards. Drag rows to change the order. A film needs a file or a YouTube/Vimeo link before it can be featured.",
+  group: "page",
+  page: "label",
+  shape: "list",
+  titleField: "title",
+  itemNoun: "video",
+  fields: [
+    {
+      kind: "boolean",
+      name: "feature",
+      label: "Feature on the label page",
+      help: "Top three ticked are shown.",
+    },
+    text("title", "Title", { required: true }),
+    text("artist", "Artist", { required: true }),
+    text("director", "Director", { placeholder: "Ishaan Roy" }),
+    text("year", "Year", { placeholder: "2026" }),
+    text("runtime", "Runtime", {
+      placeholder: "4:12",
+      help: "Shown on the card. Optional — the player reads the real length from the file.",
+    }),
+    area("note", "One line", {
+      rows: 2,
+      max: 120,
+      help: "Under the title in the player. Who shot it, where, how.",
+    }),
+    image("cover", "Card image", 1000, 1250, "Portrait 4:5. The card on the label page."),
+    image(
+      "still",
+      "Still frame",
+      1920,
+      1080,
+      "Landscape 16:9. Shown in the player before the film starts. Leave empty to use the card image.",
+    ),
+    text("src2160", "4K file (2160p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-2160.mp4",
+      help: "3840×2160 MP4 (H.264) or WebM — a link, or a file a developer placed in public/video.",
+    }),
+    text("src1080", "HD file (1080p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-1080.mp4",
+      help: "1920×1080. Optional, but it is what most phones and laptops will play.",
+    }),
+    text("src720", "Light file (720p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-720.mp4",
+      help: "1280×720. Optional — for slow connections.",
+    }),
+    {
+      kind: "url",
+      name: "embed",
+      label: "YouTube or Vimeo link",
+      placeholder: "https://www.youtube.com/watch?v=…",
+      help: "Used only when no files are set above. Both stream up to 4K in their own player.",
+    },
+  ],
+};
+
 const splits: Collection = {
   key: "page.label.splits",
   title: "The deal",
@@ -1168,6 +1231,7 @@ export const collections: Collection[] = [
   labelSections,
   releases,
   tracks,
+  videos,
   splits,
   // shop
   shopSections,
