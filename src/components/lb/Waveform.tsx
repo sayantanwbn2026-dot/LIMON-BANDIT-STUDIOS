@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useWords } from "@/cms/hooks";
 
 /** Decoded peaks per source, so switching tracks back and forth decodes once. */
 const cache = new Map<string, Float32Array>();
@@ -74,6 +75,7 @@ export function Waveform({
   height?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const w = useWords("player");
   const [peaks, setPeaks] = useState<Float32Array | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -139,7 +141,7 @@ export function Waveform({
         className={`flex items-center border border-line px-4 ${className ?? ""}`}
         style={{ height }}
       >
-        <span className="t-label text-mute">Preview unavailable</span>
+        <span className="t-label text-mute">{w.previewUnavailable}</span>
       </div>
     );
   }
@@ -152,7 +154,9 @@ export function Waveform({
     >
       <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
       {!peaks && (
-        <span className="t-label absolute inset-0 flex items-center text-mute">Reading track…</span>
+        <span className="t-label absolute inset-0 flex items-center text-mute">
+          {w.readingTrack}
+        </span>
       )}
     </div>
   );

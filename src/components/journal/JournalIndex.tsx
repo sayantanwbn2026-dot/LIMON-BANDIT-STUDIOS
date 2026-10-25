@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { usePosts, useSection } from "@/cms/hooks";
+import { usePosts, useSection, useWords } from "@/cms/hooks";
 
 /**
  * The index, still on the alt pole.
@@ -18,6 +18,7 @@ import { usePosts, useSection } from "@/cms/hooks";
  */
 export function JournalIndex() {
   const copy = useSection("journal", "index");
+  const w = useWords("journal");
   const posts = usePosts();
   const [lead, ...rest] = posts;
 
@@ -76,7 +77,7 @@ export function JournalIndex() {
               params={{ slug: lead.slug }}
               className="mt-8 inline-flex w-fit items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
             >
-              <span className="wipe-underline">Read the entry</span>
+              <span className="wipe-underline">{w.indexRead}</span>
               <ArrowUpRight size={14} className="text-acid-type" />
             </Link>
           </div>
@@ -85,7 +86,7 @@ export function JournalIndex() {
         {/* the rest, as an index */}
         <ul className="mt-12 border-t border-line">
           {rest.map((p, i) => (
-            <li key={p.title}>
+            <li key={p.title} data-reveal>
               <Link
                 to="/journal/$slug"
                 params={{ slug: p.slug }}
@@ -124,10 +125,6 @@ export function JournalIndex() {
             </li>
           ))}
         </ul>
-
-        <p className="t-label mt-8 max-w-[52ch] text-mute">
-          Individual entries are not written up yet — every link lands back on this index.
-        </p>
       </div>
     </section>
   );

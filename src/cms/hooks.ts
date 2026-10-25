@@ -1,9 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useDoc, useList } from "./content";
 import { seeds } from "./seeds";
 import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
 import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
+import { isPlayable } from "@/lib/video";
+import { pickMascot, type Mascot } from "./mascot";
+import { WORDS, WORD_DOCS, type WordArea, type Words } from "./words";
 
 /**
  * The site's read API.
@@ -17,6 +20,41 @@ import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/d
  * these can return empty and take a section down with it.
  */
 
+/* ---------------- wording ---------------- */
+
+/**
+ * The wording for one area of the site (see words.ts), with the committed
+ * default standing in for any string the stored document lacks or an
+ * editor has cleared — per string, so one emptied field cannot blank a
+ * button while the rest of the form is fine.
+ */
+export function useWords<A extends WordArea>(area: A): Words[A] {
+  const doc = useDoc<Record<string, unknown> | null>(WORD_DOCS[area].key);
+  return useMemo(() => {
+    const base = WORDS[area] as Record<string, string>;
+    const out: Record<string, string> = { ...base };
+    if (doc && typeof doc === "object") {
+      for (const k of Object.keys(base)) {
+        const v = (doc as Record<string, unknown>)[k];
+        if (typeof v === "string" && v.trim()) out[k] = v;
+      }
+    }
+    return out as Words[A];
+  }, [doc, area]);
+}
+
+/**
+ * The same wording, through a ref — for an effect that runs once (open the
+ * sign-in popup on arrival, seed a message box) and must read the current
+ * words without re-running every time the CMS document arrives.
+ */
+export function useWordsRef<A extends WordArea>(area: A): { readonly current: Words[A] } {
+  const w = useWords(area);
+  const ref = useRef(w);
+  ref.current = w;
+  return ref;
+}
+
 /* ---------------- global ---------------- */
 
 export type SiteDoc = {
@@ -29,6 +67,9 @@ export type SiteDoc = {
   rating: string;
   url: string;
   ogImage: string;
+  /** the house mascot — see `pickMascot` */
+  mascot?: ImageKey | string;
+  mascotAlt?: string;
 };
 
 export const useSite = () => useDoc<SiteDoc>("global.site");
@@ -65,6 +106,9 @@ export type PageDoc = {
   heading: string;
   poster: { spread: string; word: string };
   standfirst: string;
+  /** this page's own hero mascot; empty means the house one */
+  mascot?: ImageKey | string;
+  mascotAlt?: string;
   title: string;
   description: string;
 };
@@ -133,6 +177,31 @@ export function useChapters(): Chapter[] {
       ),
     );
   }, [pages]);
+}
+
+/**
+ * The mascot on a chapter's hero: the page's own if it has one, the house
+ * mascot otherwise. Read from the raw page rows rather than `usePage`,
+ * which falls back to the first page for an unknown key — and the first
+ * page's mascot standing on another page's hero would be a quiet wrong
+ * answer rather than the house default.
+ */
+export function useHeroMascot(key: ChapterKey): Mascot {
+  const site = useSite();
+  const pages = useDoc<unknown>("global.pages");
+  return useMemo(() => {
+    const rows = Array.isArray(pages) ? (pages as PageDoc[]) : [];
+    return pickMascot(
+      rows.find((r) => r?.key === key),
+      site,
+    );
+  }, [site, pages, key]);
+}
+
+/** The house mascot alone — the menu, the footer, the help card. */
+export function useHouseMascot(): Mascot {
+  const site = useSite();
+  return useMemo(() => pickMascot(undefined, site), [site]);
 }
 
 export function useChapter(key: ChapterKey): Chapter {
@@ -387,6 +456,41 @@ export const useTracks = () => useList<TrackDoc>("page.label.tracks");
 
 export type SplitDoc = TermDoc;
 export const useSplits = () => useList<SplitDoc>("page.label.splits");
+
+export type VideoDoc = {
+  feature?: boolean;
+  title: string;
+  artist: string;
+  director?: string;
+  year?: string;
+  runtime?: string;
+  note?: string;
+  cover: ImageKey | string;
+  still?: ImageKey | string;
+  src2160?: string;
+  src1080?: string;
+  src720?: string;
+  embed?: string;
+};
+export const useVideos = () => useList<VideoDoc>("page.label.videos");
+
+/**
+ * The films on the label page: the first three ticked, in list order.
+ *
+ * A film with nothing to play is skipped even when ticked — a card that
+ * opens onto a black screen is worse than one card fewer. And unlike the
+ * home FAQ there is no fall back to "the top of the list" when nothing is
+ * ticked: unticking every film is how an editor takes the section down,
+ * so that has to work.
+ */
+export const FEATURED_VIDEO_LIMIT = 3;
+export function useFeaturedVideos(): VideoDoc[] {
+  const all = useVideos();
+  return useMemo(
+    () => all.filter((v) => v?.feature && isPlayable(v)).slice(0, FEATURED_VIDEO_LIMIT),
+    [all],
+  );
+}
 
 /* ---------------- shop ---------------- */
 

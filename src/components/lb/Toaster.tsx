@@ -1,5 +1,6 @@
 import { Check, Info, TriangleAlert, X } from "lucide-react";
 import { useToast, type ToastTone } from "@/lib/toast";
+import { useWords } from "@/cms/hooks";
 
 /**
  * The stack itself.
@@ -22,6 +23,7 @@ const TONE: Record<ToastTone, { ring: string; ink: string; Icon: typeof Check }>
 
 export function Toaster() {
   const { toasts, dismiss } = useToast();
+  const w = useWords("common");
 
   return (
     <>
@@ -64,7 +66,7 @@ export function Toaster() {
               <button
                 type="button"
                 onClick={() => dismiss(t.id)}
-                aria-label="Dismiss"
+                aria-label={w.dismiss}
                 className="-my-3 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-text"
               >
                 <X size={14} />

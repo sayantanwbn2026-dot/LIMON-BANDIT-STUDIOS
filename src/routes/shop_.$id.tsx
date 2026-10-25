@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ProductPage } from "@/components/shop/ProductPage";
 import { liveDocs, listFrom } from "@/cms/live";
 import { useProducts, type ProductDoc } from "@/cms/hooks";
-import { pageHead, productJsonLd } from "@/lib/seo";
+import { pageHead, productJsonLd, siteNameFrom } from "@/lib/seo";
 
 /**
  * One product, at its own address.
@@ -16,8 +16,7 @@ export const Route = createFileRoute("/shop_/$id")({
     const docs = await liveDocs();
     const product = listFrom<ProductDoc>(docs, "commerce.products").find((p) => p.id === params.id);
     if (!product) throw notFound();
-    const name = (docs["global.site"] as { name?: string } | undefined)?.name;
-    return { product, siteName: name?.trim() || "Limon Bandit" };
+    return { product, siteName: siteNameFrom(docs) };
   },
   head: ({ loaderData }) =>
     loaderData

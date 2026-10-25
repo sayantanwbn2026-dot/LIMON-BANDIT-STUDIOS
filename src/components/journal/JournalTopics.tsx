@@ -39,6 +39,7 @@ export function JournalTopics() {
           {BEATS.map((b, i) => (
             <div
               key={b.category}
+              data-reveal
               className={`border-b border-line py-10 lg:border-b-0 ${
                 i > 0 ? "lg:border-l lg:pl-8" : "lg:pr-8"
               } ${i < 3 ? "lg:pr-8" : ""}`}

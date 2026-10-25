@@ -3,13 +3,14 @@ import { Link } from "@tanstack/react-router";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useCrewSteps, useCrewTerms, useFaqByTopic, useSection } from "@/cms/hooks";
+import { useCrewSteps, useCrewTerms, useFaqByTopic, useSection, useWords } from "@/cms/hooks";
 
 export function CrewHiring() {
   const faqItems = useFaqByTopic("crew");
   const STEPS = useCrewSteps();
   const TERMS = useCrewTerms();
   const copy = useSection("crew", "hiring");
+  const w = useWords("crew");
   return (
     <section className="relative w-full bg-surface py-[96px]">
       <GridRules tone="dark" />
@@ -38,6 +39,7 @@ export function CrewHiring() {
           {TERMS.map((s, i) => (
             <div
               key={s.k}
+              data-reveal
               className={`border-b border-line py-10 lg:border-b-0 ${
                 i > 0 ? "lg:border-l lg:pl-10" : "lg:pr-10"
               } ${i === 1 ? "lg:pr-10" : ""}`}
@@ -59,7 +61,7 @@ export function CrewHiring() {
           <div>
             <ol className="border-t border-line">
               {STEPS.map((s) => (
-                <li key={s.k} className="flex gap-6 border-b border-line py-8">
+                <li key={s.k} data-reveal className="flex gap-6 border-b border-line py-8">
                   <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                     {s.k}
                   </span>
@@ -82,7 +84,7 @@ export function CrewHiring() {
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  Hire the crew
+                  {w.hiringCta}
                 </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </Link>
@@ -91,13 +93,13 @@ export function CrewHiring() {
                 search={{ intent: "join-crew" }}
                 className="tap font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
-                or apply to join the list
+                {w.hiringJoin}
               </Link>
             </div>
           </div>
 
           <div>
-            <h3 className="t-label text-mute">Before you hire</h3>
+            <h3 className="t-label text-mute">{w.hiringFaqHeading}</h3>
             <div className="mt-6">
               <Accordion items={faqItems} />
             </div>

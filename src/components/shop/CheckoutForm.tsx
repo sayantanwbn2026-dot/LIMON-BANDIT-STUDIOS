@@ -11,8 +11,9 @@ import { useCart } from "@/lib/cart";
 import { getSupabase } from "@/lib/supabase";
 import { submitOrder, type PlacedOrder } from "@/lib/orders";
 import { findOffer } from "@/data/offers";
-import { useOffers } from "@/cms/hooks";
+import { useOffers, useWords, useWordsRef } from "@/cms/hooks";
 import { inr } from "@/lib/money";
+import { fill } from "@/cms/words";
 
 /**
  * Checkout.
@@ -36,6 +37,9 @@ type Errors = Partial<Record<FieldKey, string>>;
 
 export function CheckoutForm() {
   const offers = useOffers();
+  const w = useWords("checkout");
+  const wRef = useWordsRef("checkout");
+  const c = useWords("common");
   const { user, openAuth, loading } = useAuth();
   const cart = useCart();
 
@@ -44,8 +48,8 @@ export function CheckoutForm() {
   const [phone, setPhone] = useState("");
   const [addressLine1, setAddressLine1] = useState("");
   const [addressLine2, setAddressLine2] = useState("");
-  const [city, setCity] = useState("Kolkata");
-  const [region, setRegion] = useState("West Bengal");
+  const [city, setCity] = useState(w.defaultCity);
+  const [region, setRegion] = useState(w.defaultState);
   const [postcode, setPostcode] = useState("");
   const [note, setNote] = useState("");
   const [codeInput, setCodeInput] = useState("");
@@ -84,25 +88,25 @@ export function CheckoutForm() {
 
   useEffect(() => {
     if (loading || user) return;
-    openAuth("Sign in to check out. Your cart is waiting.");
-  }, [loading, user, openAuth]);
+    openAuth(wRef.current.signInPrompt);
+  }, [loading, user, openAuth, wRef]);
 
   const digital = cart.allDigital;
 
   const validate = (): Errors => {
     const e: Errors = {};
-    if (fullName.trim().length < 2) e.fullName = "Tell us who is receiving it.";
-    if (!EMAIL.test(email)) e.email = "That address will not reach you — check it.";
+    if (fullName.trim().length < 2) e.fullName = w.nameMissing;
+    if (!EMAIL.test(email)) e.email = c.emailInvalid;
     if (phone.trim().replace(/\D/g, "").length < 10) {
-      e.phone = "Ten digits, so the driver can call.";
+      e.phone = w.phoneInvalid;
     }
     /* A digital-only basket has nowhere to ship to, so the address is not
      * asked for and must not be validated. */
     if (!digital) {
-      if (addressLine1.trim().length < 4) e.addressLine1 = "Street and building.";
-      if (city.trim().length < 2) e.city = "Which city.";
-      if (region.trim().length < 2) e.region = "Which state.";
-      if (!PIN.test(postcode.trim())) e.postcode = "Six digits, Indian PIN.";
+      if (addressLine1.trim().length < 4) e.addressLine1 = w.addressMissing;
+      if (city.trim().length < 2) e.city = w.cityMissing;
+      if (region.trim().length < 2) e.region = w.stateMissing;
+      if (!PIN.test(postcode.trim())) e.postcode = w.pinInvalid;
     }
     return e;
   };
@@ -116,11 +120,11 @@ export function CheckoutForm() {
   const applyCode = () => {
     const found = findOffer(codeInput, offers);
     if (!found) {
-      setCodeNote("That code is not one of ours, or it has expired.");
+      setCodeNote(w.codeUnknown);
       return;
     }
     cart.applyOffer({ code: found.code, percent: found.percent });
-    setCodeNote(`${found.label} applied.`);
+    setCodeNote(fill(w.codeApplied, { label: found.label }));
     setCodeInput("");
   };
 
@@ -152,7 +156,7 @@ export function CheckoutForm() {
     const { data } = (await supabase?.auth.getSession()) ?? { data: { session: null } };
     const token = data.session?.access_token;
     if (!token) {
-      openAuth("Your session expired. Sign in again to finish the order.");
+      openAuth(w.sessionExpired);
       return;
     }
 
@@ -198,11 +202,7 @@ export function CheckoutForm() {
         }
       }
     } catch (e) {
-      setFailure(
-        e instanceof Error
-          ? e.message
-          : "The order did not go through. Nothing was charged — try again.",
-      );
+      setFailure(e instanceof Error ? e.message : w.failed);
     } finally {
       setBusy(false);
     }
@@ -214,16 +214,13 @@ export function CheckoutForm() {
 
   if (!loading && !user) {
     return (
-      <Stub
-        title="Members only"
-        body="Checkout is for members. The sign-in popup is open — or press below if you closed it."
-      >
+      <Stub title={w.membersTitle} body={w.membersBody}>
         <button
           type="button"
-          onClick={() => openAuth("Sign in to check out. Your cart is waiting.")}
+          onClick={() => openAuth(w.signInPrompt)}
           className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
-          Sign in
+          {w.signIn}
         </button>
       </Stub>
     );
@@ -231,12 +228,12 @@ export function CheckoutForm() {
 
   if (cart.resolved.length === 0) {
     return (
-      <Stub title="Your cart is empty" body="Nothing to check out. The shop is through here.">
+      <Stub title={w.emptyTitle} body={w.emptyBody}>
         <Link
           to="/shop"
           className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
         >
-          Go to the shop
+          {w.goToShop}
         </Link>
       </Stub>
     );
@@ -251,17 +248,15 @@ export function CheckoutForm() {
         <div className="section-head">
           <div className="md:col-span-1">
             <Eyebrow tone="dark" surface="bg-surface-deep">
-              Checkout
+              {w.eyebrow}
             </Eyebrow>
           </div>
           <div className="md:col-span-2">
-            <h2 className="t-h2 text-text">Where it goes</h2>
+            <h2 className="t-h2 text-text">{w.heading}</h2>
           </div>
           <div className="flex items-end md:col-span-1">
             <p className="font-ui text-[16px] leading-[1.5] text-mute">
-              {digital
-                ? "Digital only — no address needed. The files go to your email."
-                : "Pay the driver on delivery. We confirm stock before dispatch."}
+              {digital ? w.ledeDigital : w.ledePhysical}
             </p>
           </div>
         </div>
@@ -271,25 +266,25 @@ export function CheckoutForm() {
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <Field
                 id="co-fullName"
-                label="Full name"
+                label={w.fullName}
                 value={fullName}
                 onChange={setFullName}
                 onBlur={blur("fullName")}
                 error={err("fullName")}
-                placeholder="Who is receiving it"
+                placeholder={w.fullNamePlaceholder}
                 autoComplete="name"
                 required
               />
               <Field
                 id="co-phone"
-                label="Phone"
+                label={w.phone}
                 type="tel"
                 inputMode="tel"
                 value={phone}
                 onChange={setPhone}
                 onBlur={blur("phone")}
                 error={err("phone")}
-                placeholder="+91"
+                placeholder={w.phonePlaceholder}
                 autoComplete="tel"
                 required
               />
@@ -298,17 +293,17 @@ export function CheckoutForm() {
             <div className="mt-8">
               <Field
                 id="co-email"
-                label="Email"
+                label={c.emailLabel}
                 type="email"
                 inputMode="email"
                 value={email}
                 onChange={setEmail}
                 onBlur={blur("email")}
                 error={err("email")}
-                placeholder="you@somewhere.in"
+                placeholder={c.emailPlaceholder}
                 autoComplete="email"
                 required
-                hint={digital ? "The download link goes here." : undefined}
+                hint={digital ? w.emailHintDigital : undefined}
               />
             </div>
 
@@ -317,12 +312,12 @@ export function CheckoutForm() {
                 <div className="mt-8">
                   <Field
                     id="co-addressLine1"
-                    label="Address"
+                    label={w.address}
                     value={addressLine1}
                     onChange={setAddressLine1}
                     onBlur={blur("addressLine1")}
                     error={err("addressLine1")}
-                    placeholder="Street, building, flat"
+                    placeholder={w.addressPlaceholder}
                     autoComplete="address-line1"
                     required
                   />
@@ -330,10 +325,10 @@ export function CheckoutForm() {
                 <div className="mt-8">
                   <Field
                     id="co-addressLine2"
-                    label="Landmark"
+                    label={w.landmark}
                     value={addressLine2}
                     onChange={setAddressLine2}
-                    placeholder="Optional — what the driver should look for"
+                    placeholder={w.landmarkPlaceholder}
                     autoComplete="address-line2"
                   />
                 </div>
@@ -341,7 +336,7 @@ export function CheckoutForm() {
                 <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-3">
                   <Field
                     id="co-city"
-                    label="City"
+                    label={w.city}
                     value={city}
                     onChange={setCity}
                     onBlur={blur("city")}
@@ -351,7 +346,7 @@ export function CheckoutForm() {
                   />
                   <Field
                     id="co-region"
-                    label="State"
+                    label={w.state}
                     value={region}
                     onChange={setRegion}
                     onBlur={blur("region")}
@@ -361,13 +356,13 @@ export function CheckoutForm() {
                   />
                   <Field
                     id="co-postcode"
-                    label="PIN"
+                    label={w.pin}
                     inputMode="numeric"
                     value={postcode}
                     onChange={setPostcode}
                     onBlur={blur("postcode")}
                     error={err("postcode")}
-                    placeholder="700006"
+                    placeholder={w.pinPlaceholder}
                     autoComplete="postal-code"
                     required
                   />
@@ -380,7 +375,7 @@ export function CheckoutForm() {
                 htmlFor="co-note"
                 className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
               >
-                Anything we should know
+                {w.notes}
               </label>
               <div className="ui-field mt-2 px-3.5">
                 <textarea
@@ -388,7 +383,7 @@ export function CheckoutForm() {
                   rows={3}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Delivery window, gate code, a size you want swapped."
+                  placeholder={w.notesPlaceholder}
                   className="w-full resize-y bg-transparent py-3 font-ui text-[16px] leading-[1.5] text-text outline-none placeholder:text-[color:var(--placeholder)]"
                 />
               </div>
@@ -402,31 +397,28 @@ export function CheckoutForm() {
 
             <div className="mt-10">
               <SubmitButton
-                label={`Place order · ${inr(cart.total)}`}
-                busyLabel="Placing the order…"
+                label={fill(w.place, { total: inr(cart.total) })}
+                busyLabel={w.placing}
                 busy={busy}
                 full={false}
               />
-              <p className="t-label mt-4 max-w-[44ch] text-mute">
-                No card is taken here. The order goes to the people who pack it, and you pay on
-                delivery.
-              </p>
+              <p className="t-label mt-4 max-w-[44ch] text-mute">{w.noCard}</p>
               <p className="mt-3 max-w-[52ch] font-ui text-[13px] leading-[1.5] text-mute">
-                By placing the order you agree to our{" "}
+                {w.agree}{" "}
                 <Link
                   to="/legal/$slug"
                   params={{ slug: "terms" }}
                   className="text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
                 >
-                  terms
+                  {w.agreeTerms}
                 </Link>{" "}
-                and{" "}
+                {w.agreeAnd}{" "}
                 <Link
                   to="/legal/$slug"
                   params={{ slug: "shipping-returns" }}
                   className="text-text underline decoration-line underline-offset-4 hover:decoration-acid-type"
                 >
-                  shipping &amp; returns
+                  {w.agreeShipping}
                 </Link>
                 .
               </p>
@@ -435,7 +427,7 @@ export function CheckoutForm() {
 
           {/* ---- summary ---- */}
           <aside className="lg:sticky lg:top-[calc(var(--nav-h)+24px)] lg:self-start">
-            <h3 className="t-label text-mute">Your order</h3>
+            <h3 className="t-label text-mute">{w.summary}</h3>
 
             <ul className="mt-6 border-t border-line">
               {cart.resolved.map((l) =>
@@ -476,14 +468,14 @@ export function CheckoutForm() {
                 htmlFor="co-code"
                 className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
               >
-                Discount code
+                {w.code}
               </label>
               <div className="mt-3 flex gap-2">
                 <input
                   id="co-code"
                   value={codeInput}
                   onChange={(e) => setCodeInput(e.target.value)}
-                  placeholder={cart.offer ? cart.offer.code : "BANDIT10"}
+                  placeholder={cart.offer ? cart.offer.code : w.codePlaceholder}
                   className="ui-field h-11 min-w-0 flex-1 px-3 font-ui text-[14px] uppercase tracking-[0.08em] text-text outline-none placeholder:text-[color:var(--placeholder)]"
                 />
                 <button
@@ -491,7 +483,7 @@ export function CheckoutForm() {
                   onClick={applyCode}
                   className="shrink-0 border border-line px-4 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
                 >
-                  Apply
+                  {w.codeApply}
                 </button>
               </div>
               {codeNote ? (
@@ -502,21 +494,27 @@ export function CheckoutForm() {
             </div>
 
             <dl className="mt-6 border-t border-line pt-5">
-              <SummaryRow k="Subtotal" v={inr(cart.subtotal)} />
+              <SummaryRow k={w.subtotal} v={inr(cart.subtotal)} />
               {cart.discount > 0 && cart.offer ? (
                 <SummaryRow
-                  k={`Discount (${cart.offer.code})`}
+                  k={fill(w.discount, { code: cart.offer.code })}
                   v={`− ${inr(cart.discount)}`}
                   accent
                 />
               ) : null}
               <SummaryRow
-                k="Shipping"
-                v={digital ? "None" : cart.shipping === 0 ? "Free" : inr(cart.shipping)}
+                k={w.shipping}
+                v={
+                  digital
+                    ? w.shippingNone
+                    : cart.shipping === 0
+                      ? w.shippingFree
+                      : inr(cart.shipping)
+                }
               />
               <div className="mt-4 flex items-baseline justify-between border-t border-line pt-4">
                 <dt className="font-display text-[15px] font-extrabold uppercase tracking-[-0.01em] text-text">
-                  To pay on delivery
+                  {w.toPay}
                 </dt>
                 <dd className="tnum font-display text-[20px] font-extrabold tracking-[-0.02em] text-text">
                   {inr(cart.total)}
@@ -573,6 +571,7 @@ function Stub({
  * someone waiting on a parcel nobody has been told to pack.
  */
 function Confirmation({ order }: { order: PlacedOrder }) {
+  const w = useWords("checkout");
   return (
     <section className="relative w-full bg-surface-deep py-[96px]">
       <GridRules tone="dark" />
@@ -583,17 +582,17 @@ function Confirmation({ order }: { order: PlacedOrder }) {
           <Check size={22} />
         </span>
 
-        <h2 className="t-h2 mt-8 text-text">Order placed</h2>
+        <h2 className="t-h2 mt-8 text-text">{w.placedTitle}</h2>
 
         <dl className="mt-10 border-t border-line">
           <div className="flex items-baseline justify-between gap-4 border-b border-line py-5">
-            <dt className="t-label text-mute">Reference</dt>
+            <dt className="t-label text-mute">{w.placedReference}</dt>
             <dd className="tnum font-display text-[20px] font-extrabold tracking-[0.04em] text-acid-type">
               {order.reference}
             </dd>
           </div>
           <div className="flex items-baseline justify-between gap-4 border-b border-line py-5">
-            <dt className="t-label text-mute">To pay on delivery</dt>
+            <dt className="t-label text-mute">{w.toPay}</dt>
             <dd className="tnum font-display text-[20px] font-extrabold tracking-[-0.02em] text-text">
               {inr(order.total)}
             </dd>
@@ -605,15 +604,11 @@ function Confirmation({ order }: { order: PlacedOrder }) {
          * is set. Telling someone to watch their inbox for a message that
          * was never sent is how a good order becomes a support message. */}
         <p className="mt-8 font-ui text-[16px] leading-[1.6] text-mute">
-          {order.emailed
-            ? "A confirmation is on its way to your email, and we will write again when it ships. "
-            : "Keep the reference above — we will be in touch about delivery. "}
+          {order.emailed ? w.placedEmailed : w.placedNotEmailed}
         </p>
 
         <p className="mt-4 font-ui text-[16px] leading-[1.6] text-mute">
-          {order.sheetSynced
-            ? "It is on the logistics sheet. Someone confirms stock by hand, then it ships — three to six days across India, same day in Kolkata if we are passing."
-            : "Your order is saved and we can see it. It has not reached the logistics sheet yet, so we will move it across by hand — quote the reference above if you get in touch."}
+          {order.sheetSynced ? w.placedSynced : w.placedNotSynced}
         </p>
 
         <div className="mt-10 flex flex-wrap gap-4">
@@ -621,10 +616,10 @@ function Confirmation({ order }: { order: PlacedOrder }) {
             to="/orders"
             className="flex h-[56px] items-center gap-3 bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
           >
-            Your orders <ArrowRight size={16} />
+            {w.placedOrders} <ArrowRight size={16} />
           </Link>
           <Link to="/shop" className={buttonClass({ variant: "secondary", size: "lg" })}>
-            Back to the shop
+            {w.placedBack}
           </Link>
         </div>
       </div>

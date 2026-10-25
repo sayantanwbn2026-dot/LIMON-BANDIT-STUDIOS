@@ -5,7 +5,8 @@ import { WordReveal, RiseIn } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { Waveform } from "@/components/lb/Waveform";
 import { usePlayer } from "@/lib/player";
-import { useSection, useTracks } from "@/cms/hooks";
+import { useSection, useTracks, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * What's inside — the artefacts, not another list of the four operations.
@@ -24,6 +25,8 @@ import { useSection, useTracks } from "@/cms/hooks";
  */
 export function Bento() {
   const copy = useSection("home", "bento");
+  const w = useWords("home");
+  const p = useWords("player");
   const tracks = useTracks();
   const { track, playing, time, duration, play, toggle, seek } = usePlayer();
   const shown = track ?? tracks[0];
@@ -44,7 +47,7 @@ export function Bento() {
             to="/label"
             className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
-            <span className="wipe-underline">See everything</span>
+            <span className="wipe-underline">{w.bentoSeeAll}</span>
             <ArrowRight size={14} className="text-acid-type lb-arrow" />
           </Link>
         </div>
@@ -53,7 +56,7 @@ export function Bento() {
       <div className="mt-16 grid grid-cols-1 border-t border-line lg:grid-cols-12 lg:border-b">
         {/* the sound */}
         <RiseIn className="border-b border-line py-12 lg:col-span-6 lg:border-b-0 lg:pr-12">
-          <span className="t-label text-mute">The sound</span>
+          <span className="t-label text-mute">{w.bentoSoundLabel}</span>
 
           <div className="mt-8 flex items-center gap-5">
             <CmsImage
@@ -70,7 +73,7 @@ export function Bento() {
             </div>
             <button
               type="button"
-              aria-label={playing && isLive ? `Pause ${shown.title}` : `Play ${shown.title}`}
+              aria-label={fill(playing && isLive ? p.pause : p.play, { title: shown.title })}
               onClick={() => (isLive ? toggle() : play(shown.id))}
               className="flex h-12 w-12 shrink-0 items-center justify-center bg-acid transition-colors duration-300 hover:bg-acid-dim"
             >
@@ -99,44 +102,44 @@ export function Bento() {
           delay={0.08}
           className="border-b border-line py-12 lg:col-span-3 lg:border-b-0 lg:border-l lg:px-10"
         >
-          <span className="t-label text-mute">The drop</span>
+          <span className="t-label text-mute">{w.bentoDropLabel}</span>
           <CmsImage
-            src="merch-tee"
+            src={w.bentoDropImage}
             sizes="(max-width: 1023px) 100vw, 24vw"
-            alt="The house tee hanging against a concrete wall"
+            alt={w.bentoDropAlt}
             className="mt-8 aspect-[4/5] w-full object-cover chroma"
           />
           <div className="mt-6 font-display text-[16px] font-bold uppercase text-text">
-            House Tee — Black
+            {w.bentoDropTitle}
           </div>
-          <div className="tnum mt-2 font-ui text-[14px] text-mute">₹1,299</div>
+          <div className="tnum mt-2 font-ui text-[14px] text-mute">{w.bentoDropPrice}</div>
           <Link
             to="/shop"
             className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
-            <span className="wipe-underline">Shop the drop</span>
+            <span className="wipe-underline">{w.bentoDropCta}</span>
             <ArrowUpRight size={14} className="text-acid-type" />
           </Link>
         </RiseIn>
 
         {/* the room */}
         <RiseIn delay={0.16} className="py-12 lg:col-span-3 lg:border-l lg:border-line lg:pl-10">
-          <span className="t-label text-mute">The room</span>
+          <span className="t-label text-mute">{w.bentoRoomLabel}</span>
           <CmsImage
-            src="room-a"
+            src={w.bentoRoomImage}
             sizes="(max-width: 1023px) 100vw, 24vw"
-            alt="Room A set up for a live session"
+            alt={w.bentoRoomAlt}
             className="mt-8 aspect-[4/5] w-full object-cover chroma"
           />
           <div className="mt-6 font-display text-[16px] font-bold uppercase text-text">
-            Four rooms
+            {w.bentoRoomTitle}
           </div>
-          <div className="mt-2 font-ui text-[14px] text-mute">By the hour or the night</div>
+          <div className="mt-2 font-ui text-[14px] text-mute">{w.bentoRoomLine}</div>
           <Link
             to="/rooms"
             className="group mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
           >
-            <span className="wipe-underline">See the rooms</span>
+            <span className="wipe-underline">{w.bentoRoomCta}</span>
             <ArrowUpRight size={14} className="text-acid-type" />
           </Link>
         </RiseIn>
@@ -145,13 +148,13 @@ export function Bento() {
       {/* the roster, stated rather than illustrated */}
       <RiseIn className="flex flex-wrap items-baseline justify-between gap-x-10 gap-y-6 border-t border-line pt-12">
         <p className="max-w-[18ch] font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.03em] text-text md:text-[34px]">
-          Forty artists on the roster
+          {w.bentoRosterLine}
         </p>
         <Link
           to="/crew"
           className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
         >
-          <span className="wipe-underline">Hire the crew by the project</span>
+          <span className="wipe-underline">{w.bentoCrewCta}</span>
           <ArrowUpRight size={14} className="text-acid-type" />
         </Link>
       </RiseIn>

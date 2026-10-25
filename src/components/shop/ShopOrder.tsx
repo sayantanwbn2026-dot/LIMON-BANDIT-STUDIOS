@@ -2,14 +2,16 @@ import { ArrowRight } from "lucide-react";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useSection, useShipping, useSite } from "@/cms/hooks";
+import { useFaqByTopic, useSection, useShipping, useSite, useWords } from "@/cms/hooks";
 import { getLenis } from "@/lib/smooth";
 import { prefersReducedMotion } from "@/lib/motion";
 import { SHIPPING_SEED } from "@/cms/seeds";
+import { fill } from "@/cms/words";
 
 export function ShopOrder() {
   const faqItems = useFaqByTopic("shop");
   const copy = useSection("shop", "order");
+  const w = useWords("shop");
   /* These three rows were a duplicate hardcoded copy of commerce.shipping's
    * `notes`, which meant an editor could change the shipping table in the
    * CMS — the one checkout actually charges from — and this section would
@@ -80,7 +82,7 @@ export function ShopOrder() {
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  Back to the catalogue
+                  {w.orderBack}
                 </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </a>
@@ -88,13 +90,13 @@ export function ShopOrder() {
                 href={`mailto:${site.email}`}
                 className="tap font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
-                or email {site.email}
+                {fill(w.orderEmail, { email: site.email })}
               </a>
             </div>
           </div>
 
           <div>
-            <h3 className="t-label text-mute">Before you order</h3>
+            <h3 className="t-label text-mute">{w.orderFaqHeading}</h3>
             <div className="mt-6">
               <Accordion items={faqItems} />
             </div>

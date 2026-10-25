@@ -3,7 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
-import { useFaqByTopic, useRoomSteps, useSection, useSite } from "@/cms/hooks";
+import { useFaqByTopic, useRoomSteps, useSection, useSite, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
+import { telHref } from "@/lib/contact";
 
 /**
  * How a booking actually happens, and the three questions people ask before
@@ -14,6 +16,7 @@ export function RoomsBooking() {
   const faqItems = useFaqByTopic("booking");
   const STEPS = useRoomSteps();
   const copy = useSection("rooms", "booking");
+  const w = useWords("rooms");
   const site = useSite();
   return (
     <section className="relative w-full bg-surface py-[96px]">
@@ -42,7 +45,7 @@ export function RoomsBooking() {
           <div>
             <ol className="border-t border-line">
               {STEPS.map((s) => (
-                <li key={s.k} className="flex gap-6 border-b border-line py-8">
+                <li key={s.k} data-reveal className="flex gap-6 border-b border-line py-8">
                   <span className="tnum font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-acid-type">
                     {s.k}
                   </span>
@@ -65,26 +68,24 @@ export function RoomsBooking() {
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  Check availability
+                  {w.bookingCta}
                 </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </Link>
               <a
-                href={`tel:${site.phone.replace(/\s+/g, "")}`}
+                href={telHref(site.phone)}
                 className="tap tnum font-ui text-[13px] font-semibold text-mute transition-colors duration-300 hover:text-text"
               >
-                or call {site.phone}
+                {fill(w.bookingCall, { phone: site.phone })}
               </a>
             </div>
 
-            <p className="t-label mt-8 max-w-[46ch] text-mute">
-              Live availability is not wired up yet — send the dates and we confirm by hand.
-            </p>
+            <p className="t-label mt-8 max-w-[46ch] text-mute">{w.bookingNote}</p>
           </div>
 
           {/* the three booking questions */}
           <div>
-            <h3 className="t-label text-mute">Before you book</h3>
+            <h3 className="t-label text-mute">{w.bookingFaqHeading}</h3>
             <div className="mt-6">
               <Accordion items={faqItems} />
             </div>

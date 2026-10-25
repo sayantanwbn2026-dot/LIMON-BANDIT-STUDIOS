@@ -4,6 +4,8 @@ import { Heart, LogOut, Package, ShoppingBag, User, UserCog } from "lucide-react
 import { useAuth, displayName } from "@/lib/auth";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The account and basket cluster, sitting in the fixed navbar — which is what
@@ -20,6 +22,7 @@ import { useWishlist } from "@/lib/wishlist";
  */
 export function ShopBar() {
   const { user, loading, openAuth, signOut } = useAuth();
+  const w = useWords("basket");
   const cart = useCart();
   const wishlist = useWishlist();
   const [menu, setMenu] = useState(false);
@@ -46,7 +49,7 @@ export function ShopBar() {
       <button
         type="button"
         onClick={() => cart.setOpen(true)}
-        aria-label={`Cart, ${cart.count} ${cart.count === 1 ? "item" : "items"}`}
+        aria-label={fill(cart.count === 1 ? w.barCartOne : w.barCartMany, { count: cart.count })}
         className="relative flex h-11 w-11 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type sm:h-12 sm:w-12"
       >
         <ShoppingBag size={17} />
@@ -65,7 +68,7 @@ export function ShopBar() {
               onClick={() => setMenu((v) => !v)}
               aria-expanded={menu}
               aria-haspopup="menu"
-              aria-label={`Account menu for ${displayName(user)}`}
+              aria-label={fill(w.barAccountMenu, { name: displayName(user) })}
               className="flex h-11 min-w-11 items-center justify-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type sm:h-12 sm:px-3"
             >
               <span className="flex h-[18px] w-[18px] items-center justify-center bg-acid font-ui text-[10px] font-bold uppercase leading-none text-accent-text">
@@ -82,7 +85,7 @@ export function ShopBar() {
                 className="absolute right-0 top-[calc(100%+8px)] w-[220px] border border-line bg-surface-deep"
               >
                 <div className="border-b border-line px-4 py-3">
-                  <p className="t-label text-mute">Signed in as</p>
+                  <p className="t-label text-mute">{w.barSignedInAs}</p>
                   <p className="mt-1 truncate font-ui text-[13px] font-semibold text-text">
                     {user.email}
                   </p>
@@ -100,7 +103,7 @@ export function ShopBar() {
                   className="flex items-center gap-3 border-b border-line px-4 py-3 font-ui text-[12px] font-semibold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:bg-surface-raised hover:text-text"
                 >
                   <UserCog size={14} />
-                  Account
+                  {w.barAccount}
                 </Link>
 
                 <MenuButton
@@ -109,7 +112,7 @@ export function ShopBar() {
                     wishlist.setOpen(true);
                   }}
                   icon={<Heart size={14} />}
-                  label="Wishlist"
+                  label={w.barWishlist}
                   badge={wishlist.count > 0 ? String(wishlist.count) : undefined}
                 />
 
@@ -120,7 +123,7 @@ export function ShopBar() {
                   className="flex items-center gap-3 border-b border-line px-4 py-3 font-ui text-[12px] font-semibold uppercase tracking-[0.1em] text-mute transition-colors duration-300 hover:bg-surface-raised hover:text-text"
                 >
                   <Package size={14} />
-                  Orders
+                  {w.barOrders}
                 </Link>
 
                 <MenuButton
@@ -129,7 +132,7 @@ export function ShopBar() {
                     void signOut();
                   }}
                   icon={<LogOut size={14} />}
-                  label="Sign out"
+                  label={w.barSignOut}
                   last
                 />
               </div>
@@ -143,12 +146,12 @@ export function ShopBar() {
             /* aria-label is unconditional. Below `sm` the visible "Sign in"
              * text is hidden, and a bare user icon with no accessible name
              * reads as an unlabeled button to a screen reader. */
-            aria-label="Sign in"
+            aria-label={w.barSignIn}
             className="flex h-11 min-w-11 items-center justify-center gap-2 border border-line px-2.5 text-text transition-colors duration-300 hover:border-acid-type disabled:opacity-50 sm:h-12 sm:px-3"
           >
             <User size={16} aria-hidden="true" />
             <span className="hidden font-ui text-[11px] font-bold uppercase tracking-[0.12em] sm:inline">
-              Sign in
+              {w.barSignIn}
             </span>
           </button>
         )}

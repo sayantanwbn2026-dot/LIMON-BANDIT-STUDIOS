@@ -2,10 +2,10 @@ import { useEffect, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { setNavPole, type NavPole } from "@/lib/nav-pole";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { BoundaryRule, GridRules } from "./GridRules";
+import { BoundaryRule, GridColsProvider, GridRules } from "./GridRules";
 import { MarginNotes } from "./Section";
 import { type Chapter, type ChapterKey } from "@/data/routes";
-import { useChapter, useChapterNeighbours } from "@/cms/hooks";
+import { useChapter, useChapterNeighbours, useWords } from "@/cms/hooks";
 
 /**
  * The frame every inner route sits in: header band, breadcrumb, and the
@@ -38,7 +38,10 @@ export function PageShell({
     <main id="main" className="relative w-full bg-surface-deep">
       {hero ?? <DefaultHero chapter={key} />}
 
-      {children}
+      {/* Below the hero an inner page is ledgers and tables with rules of
+       * their own, so the drafting grid keeps only its frame there (see
+       * GridCols). The hero above and the doors below keep the full grid. */}
+      <GridColsProvider cols="edges">{children}</GridColsProvider>
 
       <ChapterNav current={key} />
     </main>
@@ -52,6 +55,7 @@ export function PageShell({
  */
 function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
   const c = useChapter(key);
+  const w = useWords("common");
 
   return (
     <header className="relative w-full overflow-hidden">
@@ -61,11 +65,11 @@ function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
       {/* 160px top: the band follows the fixed navbar, which is a chapter
           change in its own right. */}
       <div className="shell relative z-[2] pb-[96px] pt-[120px]">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label={w.breadcrumb}>
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
-                LMN&middot;BNDT
+                {w.breadcrumbHome}
               </Link>
             </li>
             <li aria-hidden="true" className="opacity-50">
@@ -92,9 +96,10 @@ function DefaultHero({ chapter: key }: { chapter: ChapterKey }) {
 /** Two half-width doors: the room you came from, and the next one along. */
 function ChapterNav({ current }: { current: ChapterKey }) {
   const { prev, next } = useChapterNeighbours(current);
+  const w = useWords("common");
 
   return (
-    <nav aria-label="Chapters" className="relative w-full border-t border-line bg-surface">
+    <nav aria-label={w.chapters} className="relative w-full border-t border-line bg-surface">
       <GridRules tone="dark" />
       <div className="shell relative z-[2] grid grid-cols-1 md:grid-cols-2">
         <ChapterPanel chapter={prev} direction="prev" />
@@ -106,6 +111,7 @@ function ChapterNav({ current }: { current: ChapterKey }) {
 
 function ChapterPanel({ chapter: c, direction }: { chapter: Chapter; direction: "prev" | "next" }) {
   const isNext = direction === "next";
+  const w = useWords("common");
   return (
     <Link
       to={c.to}
@@ -120,7 +126,7 @@ function ChapterPanel({ chapter: c, direction }: { chapter: Chapter; direction: 
             className="transition-transform duration-300 group-hover:-translate-x-1"
           />
         )}
-        {isNext ? "Next" : "Previous"}
+        {isNext ? w.next : w.previous}
         {isNext && <ArrowRight size={14} className="lb-arrow" />}
       </span>
 

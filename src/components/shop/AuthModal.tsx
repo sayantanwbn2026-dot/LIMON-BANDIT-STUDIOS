@@ -2,7 +2,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Modal } from "@/components/lb/Modal";
 import { Field, FormNotice, SubmitButton } from "@/components/lb/Field";
 import { useAuth, type AuthMode } from "@/lib/auth";
+import { setAuthWords } from "@/lib/auth-words";
 import { EMAIL_DELIVERS } from "@/lib/auth-mode";
+import { useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The login popup.
@@ -60,6 +63,9 @@ export function AuthModal() {
     googleEnabled,
     configured,
   } = useAuth();
+  const w = useWords("account");
+  const c = useWords("common");
+  setAuthWords(w);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -153,20 +159,20 @@ export function AuthModal() {
     /* "update" runs on a recovery session that already knows who the
      * visitor is, so it asks for a password and nothing else. */
     if (mode !== "update" && mode !== "code" && !EMAIL.test(email)) {
-      e.email = "That address will not reach you — check it.";
+      e.email = c.emailInvalid;
     }
     if (mode === "code" && code.replace(/\D/g, "").length !== CODE_LENGTH) {
-      e.code = `The code is ${CODE_LENGTH} digits.`;
+      e.code = fill(w.codeLength, { digits: CODE_LENGTH });
     }
     if (
       (mode === "password" || mode === "signup" || mode === "update") &&
       password.length < MIN_PASSWORD
     ) {
-      e.password = `At least ${MIN_PASSWORD} characters.`;
+      e.password = fill(w.passwordShort, { count: MIN_PASSWORD });
     }
     if (mode === "signup") {
-      if (fullName.trim().length < 2) e.fullName = "Tell us who you are.";
-      if (phone.trim() && phone.trim().length < 6) e.phone = "That number looks short.";
+      if (fullName.trim().length < 2) e.fullName = c.nameMissing;
+      if (phone.trim() && phone.trim().length < 6) e.phone = w.phoneShort;
     }
     return e;
   };
@@ -231,9 +237,7 @@ export function AuthModal() {
       if (mode === "reset") {
         const res = await resetPassword(email);
         setNotice(
-          res.ok
-            ? { tone: "good", text: "Check your inbox for a link to set a new password." }
-            : { tone: "bad", text: res.message },
+          res.ok ? { tone: "good", text: w.resetSent } : { tone: "bad", text: res.message },
         );
         return;
       }
@@ -244,7 +248,7 @@ export function AuthModal() {
           setNotice({ tone: "bad", text: res.message });
           return;
         }
-        setNotice({ tone: "good", text: "Password changed. You are signed in." });
+        setNotice({ tone: "good", text: w.passwordChanged });
         /* Long enough to read the confirmation, short enough not to
          * feel stuck in a dialog with nothing left to do. */
         window.setTimeout(closeAuth, 1400);
@@ -268,7 +272,7 @@ export function AuthModal() {
       if (res.needsConfirmation) {
         setNotice({
           tone: "good",
-          text: `Account made. Confirm it from the link we sent to ${email.trim()}, then sign in.`,
+          text: fill(w.accountMade, { email: email.trim() }),
         });
       }
     } finally {
@@ -282,7 +286,7 @@ export function AuthModal() {
     setNotice(null);
     try {
       if (await requestCode()) {
-        setNotice({ tone: "good", text: `Sent again to ${sentTo.current}.` });
+        setNotice({ tone: "good", text: fill(w.sentAgain, { email: sentTo.current }) });
       }
     } finally {
       setBusy(false);
@@ -295,7 +299,7 @@ export function AuthModal() {
       const res = await resendConfirmation(email);
       setNotice(
         res.ok
-          ? { tone: "good", text: `Sent again to ${email.trim()}. It can take a minute.` }
+          ? { tone: "good", text: fill(w.confirmationSentAgain, { email: email.trim() }) }
           : { tone: "bad", text: res.message },
       );
       if (res.ok) setCanResend(false);
@@ -305,33 +309,33 @@ export function AuthModal() {
   };
 
   const heading: Record<AuthMode, string> = {
-    signin: "Sign in",
-    code: "Check your email",
-    sent: "Check your email",
-    password: "Sign in with a password",
-    signup: "Become a member",
-    reset: "Reset your password",
-    update: "Choose a new password",
+    signin: w.titleSignIn,
+    code: w.titleCode,
+    sent: w.titleCode,
+    password: w.titlePassword,
+    signup: w.titleSignUp,
+    reset: w.titleReset,
+    update: w.titleUpdate,
   };
 
   const standfirst =
     mode === "sent"
-      ? `We sent a sign-in link to ${sentTo.current || "your inbox"}. Open it on this device and you are in — there is nothing to type.`
+      ? fill(w.sentLink, { email: sentTo.current || w.yourInbox })
       : mode === "code"
-        ? `We sent a ${CODE_LENGTH}-digit code to ${sentTo.current || "your inbox"}. Type it below, or press the link in the same email.`
+        ? fill(w.sentCode, { digits: CODE_LENGTH, email: sentTo.current || w.yourInbox })
         : gate.reason
           ? gate.reason
           : mode === "signup"
-            ? "Members can cart, wishlist and order. It takes a minute."
+            ? w.ledeSignUp
             : mode === "reset"
-              ? "We will email you a link to set a new one."
+              ? w.ledeReset
               : mode === "update"
-                ? "Pick something you have not used here before. At least 8 characters."
+                ? w.ledeUpdate
                 : mode === "password"
-                  ? "For accounts made before we moved to email sign-in."
+                  ? w.ledePassword
                   : EMAIL_DELIVERS === "code"
-                    ? "No password to remember. We email you a code."
-                    : "No password to remember. We email you a link.";
+                    ? w.ledeCode
+                    : w.ledeLink;
 
   return (
     <Modal open={gate.open} onClose={closeAuth} title={heading[mode]} standfirst={standfirst}>
@@ -367,11 +371,11 @@ export function AuthModal() {
             className="flex h-[52px] w-full items-center justify-center gap-3 border border-line-strong bg-transparent font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type disabled:cursor-wait disabled:opacity-60"
           >
             <GoogleMark />
-            Continue with Google
+            {w.google}
           </button>
           <div className="mt-8 flex items-center gap-4" aria-hidden="true">
             <span className="h-px flex-1 bg-line" />
-            <span className="t-label text-mute">or with email</span>
+            <span className="t-label text-mute">{w.orEmail}</span>
             <span className="h-px flex-1 bg-line" />
           </div>
         </div>
@@ -381,11 +385,11 @@ export function AuthModal() {
         {mode === "signup" ? (
           <Field
             id="auth-fullName"
-            label="Your name"
+            label={w.name}
             value={fullName}
             onChange={setFullName}
             error={errors.fullName}
-            placeholder="Who is ordering"
+            placeholder={w.namePlaceholder}
             autoComplete="name"
             required
           />
@@ -394,13 +398,13 @@ export function AuthModal() {
         {mode !== "update" && mode !== "code" && mode !== "sent" ? (
           <Field
             id="auth-email"
-            label="Email"
+            label={c.emailLabel}
             type="email"
             inputMode="email"
             value={email}
             onChange={setEmail}
             error={errors.email}
-            placeholder="you@somewhere.in"
+            placeholder={c.emailPlaceholder}
             autoComplete="email"
             required
           />
@@ -409,7 +413,7 @@ export function AuthModal() {
         {mode === "code" ? (
           <Field
             id="auth-code"
-            label="Your code"
+            label={w.code}
             inputMode="numeric"
             value={code}
             /* Digits only, because people paste them with spaces out of the
@@ -417,7 +421,7 @@ export function AuthModal() {
              * make the code wrong. */
             onChange={(v) => setCode(v.replace(/\D/g, "").slice(0, CODE_LENGTH))}
             error={errors.code}
-            placeholder="000000"
+            placeholder={w.codePlaceholder}
             autoComplete="one-time-code"
             required
             /* Not "good for an hour": the expiry is a dashboard setting and
@@ -426,19 +430,19 @@ export function AuthModal() {
              * anyway — the common failure is not an expired code, it is
              * someone pressing resend and then typing the FIRST email's
              * digits, which the server has already replaced. */
-            hint="Straight from the email. If you asked twice, use the newest one."
+            hint={w.codeHint}
           />
         ) : null}
 
         {mode === "password" || mode === "signup" || mode === "update" ? (
           <Field
             id="auth-password"
-            label={mode === "update" ? "New password" : "Password"}
+            label={mode === "update" ? w.newPassword : w.password}
             type="password"
             value={password}
             onChange={setPassword}
             error={errors.password}
-            placeholder="At least 8 characters"
+            placeholder={w.passwordPlaceholder}
             autoComplete={
               mode === "signup" || mode === "update" ? "new-password" : "current-password"
             }
@@ -449,15 +453,15 @@ export function AuthModal() {
         {mode === "signup" ? (
           <Field
             id="auth-phone"
-            label="Phone"
+            label={w.phone}
             type="tel"
             inputMode="tel"
             value={phone}
             onChange={setPhone}
             error={errors.phone}
-            placeholder="+91"
+            placeholder={w.phonePlaceholder}
             autoComplete="tel"
-            hint="Optional. Logistics call this one when they are outside."
+            hint={w.phoneHint}
           />
         ) : null}
 
@@ -473,26 +477,24 @@ export function AuthModal() {
             label={
               mode === "signin"
                 ? EMAIL_DELIVERS === "code"
-                  ? "Email me a code"
-                  : "Email me a sign-in link"
-                : mode === "code"
-                  ? "Sign in"
-                  : mode === "password"
-                    ? "Sign in"
-                    : mode === "signup"
-                      ? "Create account"
-                      : mode === "update"
-                        ? "Save new password"
-                        : "Send link"
+                  ? w.submitCode
+                  : w.submitLink
+                : mode === "code" || mode === "password"
+                  ? w.submitSignIn
+                  : mode === "signup"
+                    ? w.submitSignUp
+                    : mode === "update"
+                      ? w.submitUpdate
+                      : w.submitReset
             }
             busyLabel={
               mode === "code"
-                ? "Checking…"
+                ? w.busyChecking
                 : mode === "signup"
-                  ? "Creating…"
+                  ? w.busyCreating
                   : mode === "update"
-                    ? "Saving…"
-                    : "Sending…"
+                    ? w.busySaving
+                    : w.busySending
             }
             busy={busy}
             disabled={!configured}
@@ -512,7 +514,7 @@ export function AuthModal() {
             disabled={busy}
             className="t-label text-acid-type underline underline-offset-4 transition-opacity duration-300 hover:opacity-70 disabled:opacity-40"
           >
-            Send the confirmation email again
+            {w.resendConfirmation}
           </button>
         </div>
       ) : null}
@@ -520,7 +522,7 @@ export function AuthModal() {
       {mode === "code" || mode === "sent" ? (
         <div className="mt-8 space-y-3 border-t border-line pt-6">
           <p className="font-ui text-[13px] text-mute">
-            Nothing yet?{" "}
+            {w.nothingYet}{" "}
             <button
               type="button"
               onClick={onResendCode}
@@ -528,13 +530,13 @@ export function AuthModal() {
               className="font-semibold text-text transition-colors duration-300 hover:text-acid-type disabled:text-mute"
             >
               <span className={cooldown > 0 ? "" : "wipe-underline"}>
-                {cooldown > 0 ? `Send another in ${cooldown}s` : "Send another"}
+                {cooldown > 0 ? fill(w.sendAnotherIn, { seconds: cooldown }) : w.sendAnother}
               </span>
             </button>
           </p>
           <Switch
-            prompt="Wrong address?"
-            label="Use a different one"
+            prompt={w.wrongAddress}
+            label={w.useDifferent}
             onClick={() => setMode("signin")}
           />
         </div>
@@ -546,25 +548,25 @@ export function AuthModal() {
                * carried a code. The email sends a link on the free tier, so
                * this names the change rather than the mechanism and stays
                * true whichever one is switched on. */
-              prompt="Made an account before we moved to email sign-in?"
-              label="Use your password"
+              prompt={w.oldAccount}
+              label={w.usePassword}
               onClick={() => setMode("password")}
             />
           ) : mode === "password" ? (
             <>
               <Switch
-                prompt="Would rather not?"
-                label="Email me a code instead"
+                prompt={w.ratherNot}
+                label={w.codeInstead}
                 onClick={() => setMode("signin")}
               />
-              <Switch
-                prompt="Forgotten it?"
-                label="Reset your password"
-                onClick={() => setMode("reset")}
-              />
+              <Switch prompt={w.forgotten} label={w.resetLink} onClick={() => setMode("reset")} />
             </>
           ) : (
-            <Switch prompt="Already a member?" label="Sign in" onClick={() => setMode("signin")} />
+            <Switch
+              prompt={w.alreadyMember}
+              label={w.signInLink}
+              onClick={() => setMode("signin")}
+            />
           )}
         </div>
       )}

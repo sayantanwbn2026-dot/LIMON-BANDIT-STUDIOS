@@ -5,7 +5,7 @@ import { GridRules } from "@/components/lb/GridRules";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
-import { useSection, useTestimonials, useTickers } from "@/cms/hooks";
+import { useSection, useTestimonials, useTickers, useWords } from "@/cms/hooks";
 
 /**
  * The roster talks — one voice at a time.
@@ -39,6 +39,7 @@ const RULE = "rgba(0,0,0,0.22)";
 
 export function Testimonials() {
   const copy = useSection("home", "testimonials");
+  const w = useWords("home");
   const { testimonialTicker } = useTickers();
   const testimonials = useTestimonials();
 
@@ -75,7 +76,7 @@ export function Testimonials() {
               to="/label"
               className="group inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-accent-text"
             >
-              <span className="wipe-underline">See the roster</span>
+              <span className="wipe-underline">{w.testimonialsCta}</span>
               <ArrowRight size={14} className="lb-arrow" />
             </Link>
           </div>
@@ -90,7 +91,7 @@ export function Testimonials() {
             {/* who is talking. A horizontal strip on a phone, a column once
              * there is width — the same control either way. */}
             <ul
-              aria-label="The people quoted"
+              aria-label={w.testimonialsPeople}
               className="no-scrollbar -mx-6 flex gap-3 overflow-x-auto px-6 lg:mx-0 lg:flex-col lg:gap-2 lg:overflow-visible lg:px-0"
             >
               {testimonials.map((p, i) => {
@@ -188,10 +189,10 @@ export function Testimonials() {
               {count > 1 ? (
                 <div className="mt-4 flex items-center gap-4 lg:mt-6">
                   <div className="hidden items-center gap-4 lg:flex">
-                    <Step onClick={() => go(at - 1)} label="The previous quote">
+                    <Step onClick={() => go(at - 1)} label={w.testimonialsPrevious}>
                       <ChevronLeft size={16} />
                     </Step>
-                    <Step onClick={() => go(at + 1)} label="The next quote">
+                    <Step onClick={() => go(at + 1)} label={w.testimonialsNext}>
                       <ChevronRight size={16} />
                     </Step>
                   </div>

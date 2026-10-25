@@ -6,6 +6,8 @@ import { faq } from "@/data/faq";
 import { services } from "@/data/services";
 import { featured } from "@/data/featured";
 import { DEFAULT_HOME_ORDER } from "./home-sections";
+import { HOUSE_MASCOT, HOUSE_MASCOT_ALT } from "./mascot";
+import { WORDS, WORD_DOCS, type WordArea } from "./words";
 import { metrics } from "@/data/metrics";
 import { wall } from "@/data/wall";
 import { testimonials } from "@/data/testimonials";
@@ -14,6 +16,7 @@ import { rooms } from "@/data/rooms";
 import { rates } from "@/data/rates";
 import { releases } from "@/data/releases";
 import { tracks } from "@/data/tracks";
+import { videos } from "@/data/videos";
 import { crew } from "@/data/crew";
 import { posts } from "@/data/journal";
 import { legal } from "@/data/legal";
@@ -241,6 +244,8 @@ export const seeds: Record<string, unknown> = {
     rating: site.rating,
     url: site.url,
     ogImage: site.ogImage,
+    mascot: HOUSE_MASCOT,
+    mascotAlt: HOUSE_MASCOT_ALT,
   },
   "global.social": SOCIAL_SEED,
   "global.nav": navItems.map((n) => ({ label: n.label, to: n.to })),
@@ -252,6 +257,8 @@ export const seeds: Record<string, unknown> = {
     heading: c.heading,
     poster: { spread: c.poster.spread, word: c.poster.word },
     standfirst: c.standfirst,
+    mascot: "",
+    mascotAlt: "",
     title: c.title,
     description: c.description,
   })),
@@ -341,6 +348,7 @@ export const seeds: Record<string, unknown> = {
   "page.label.sections": labelSections,
   "page.label.releases": releases.map((r) => ({ ...r })),
   "page.label.tracks": tracks.map((t) => ({ ...t })),
+  "page.label.videos": videos.map((v) => ({ ...v })),
   "page.label.splits": SPLITS_SEED,
 
   // ---- shop / commerce ----
@@ -429,4 +437,9 @@ export const seeds: Record<string, unknown> = {
   "page.contact.form": INTENTS.map((i) => ({ id: i.id, label: i.label })),
   "page.contact.hours": CONTACT_HOURS_SEED,
   "page.contact.travel": CONTACT_TRAVEL_SEED,
+
+  // ---- wording: one document per area of words.ts ----
+  ...Object.fromEntries(
+    (Object.keys(WORD_DOCS) as WordArea[]).map((a) => [WORD_DOCS[a].key, { ...WORDS[a] }]),
+  ),
 };

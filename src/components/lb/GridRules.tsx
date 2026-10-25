@@ -1,3 +1,5 @@
+import { createContext, useContext, type ReactNode } from "react";
+
 export type Tone = "dark" | "light" | "acid";
 
 /* Acid is theme-independent, so its rules stay literal. The other two
@@ -31,19 +33,54 @@ const crosshairColor: Record<Tone, string> = {
  */
 const FADE = "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)";
 
-export function GridRules({ tone = "dark" }: { tone?: Tone }) {
+/**
+ * Which column rules a GridRules draws.
+ *
+ * `all` is the full drafting grid: the two edges and the quarters. It
+ * belongs where the content is laid out on those quarters or sits on
+ * opaque plates (the landing page's cards), so a rule either lands on an
+ * edge of the content or disappears behind it.
+ *
+ * `edges` keeps the frame and drops the quarters. Inner pages are ledgers,
+ * comparison tables, three-column term rows and forms — transparent cells
+ * with dividers of their own at thirds, halves and gutters — and a quarter
+ * rule running 20–120px beside one of those dividers is two lines where
+ * the eye expects one (measured: every inner page had them, the landing
+ * page none that showed). The frame still says "drawing"; the content's own
+ * rules do the rest.
+ *
+ * `inner` is the quarters alone, for a stage inside a frame that already
+ * draws the edges, so no edge is drawn twice.
+ */
+export type GridCols = "all" | "edges" | "inner";
+
+const GridColsContext = createContext<GridCols>("all");
+
+/** Sets the default for every GridRules below it; a `cols` prop still wins. */
+export function GridColsProvider({ cols, children }: { cols: GridCols; children: ReactNode }) {
+  return <GridColsContext.Provider value={cols}>{children}</GridColsContext.Provider>;
+}
+
+const EDGE = new Set([0, 100]);
+
+export function GridRules({ tone = "dark", cols }: { tone?: Tone; cols?: GridCols }) {
   const color = ruleColor[tone];
+  const inherited = useContext(GridColsContext);
+  const mode = cols ?? inherited;
+  const stops = [0, 25, 50, 75, 100].filter((left) =>
+    mode === "edges" ? EDGE.has(left) : mode === "inner" ? !EDGE.has(left) : true,
+  );
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
       <div className="shell-rules mx-auto h-full">
         <div className="relative h-full">
-          {[0, 25, 50, 75, 100].map((left, i) => (
+          {stops.map((left) => (
             <span
               key={left}
               data-col-rule
               className={
-                i === 1 || i === 3
+                left === 25 || left === 75
                   ? "absolute top-0 hidden h-full w-px origin-top md:block"
                   : "absolute top-0 h-full w-px origin-top"
               }

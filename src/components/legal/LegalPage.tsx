@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
-import { useLegal, type LegalDoc } from "@/cms/hooks";
+import { useLegal, type LegalDoc, useWords } from "@/cms/hooks";
 
 /**
  * Terms, privacy, shipping & returns.
@@ -15,6 +15,7 @@ import { useLegal, type LegalDoc } from "@/cms/hooks";
  */
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   const all = useLegal();
+  const w = useWords("common");
   const others = all.filter((d) => d.slug !== doc.slug);
   const updated = formatDate(doc.updated);
 
@@ -24,17 +25,17 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         <GridRules tone="dark" />
 
         <header className="shell relative z-[2] pb-14 pt-[72px]">
-          <nav aria-label="Breadcrumb">
+          <nav aria-label={w.breadcrumb}>
             <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
               <li>
                 <Link to="/" className="tap transition-colors duration-300 hover:text-text">
-                  LMN&middot;BNDT
+                  {w.breadcrumbHome}
                 </Link>
               </li>
               <li aria-hidden="true" className="opacity-50">
                 /
               </li>
-              <li>Legal</li>
+              <li>{w.legalCrumb}</li>
               <li aria-hidden="true" className="opacity-50">
                 /
               </li>
@@ -60,7 +61,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
 
           {updated ? (
             <p className="t-label tnum mt-8 border-t border-line pt-4 text-mute">
-              Last updated <time dateTime={doc.updated}>{updated}</time>
+              {w.legalUpdated} <time dateTime={doc.updated}>{updated}</time>
             </p>
           ) : null}
         </header>
@@ -77,10 +78,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
       </article>
 
       {others.length ? (
-        <nav
-          aria-label="Other policies"
-          className="relative w-full border-t border-line bg-surface"
-        >
+        <nav aria-label={w.legalOthers} className="relative w-full border-t border-line bg-surface">
           <ul className="shell grid grid-cols-1 md:grid-cols-2">
             {others.map((o, i) => (
               <li key={o.slug}>

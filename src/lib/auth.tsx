@@ -12,6 +12,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, isSupabaseConfigured } from "./supabase";
 import { arrivedFromLink } from "./auth-capture";
 import { useToast } from "./toast";
+import { readableAuthError } from "./auth-words";
 
 /**
  * Membership, and the gate in front of everything that needs it.
@@ -100,42 +101,6 @@ const NOT_CONFIGURED =
  * Anything unrecognised falls through unchanged. A raw message is worse
  * than a written one and much better than a confident wrong guess.
  */
-export function readableAuthError(message: string): string {
-  const m = message.toLowerCase();
-
-  if (m.includes("invalid login credentials")) {
-    return "That email and password do not match an account. Check both — or reset your password below.";
-  }
-  if (m.includes("email not confirmed") || m.includes("not confirmed")) {
-    return "This account is not confirmed yet. Open the link we emailed you — check spam — or send it again below.";
-  }
-  if (m.includes("already registered") || m.includes("already been registered")) {
-    return "There is already an account on that email. Sign in instead, or reset the password.";
-  }
-  if (m.includes("password should be at least") || m.includes("password is too short")) {
-    return "That password is too short. Use at least 8 characters.";
-  }
-  /* Supabase words its own throttle as "For security purposes, you can
-   * only request this after N seconds", which reads like a refusal
-   * rather than a wait. */
-  if (m.includes("for security purposes") || m.includes("rate limit") || m.includes("too many")) {
-    return "Too many attempts just now. Wait a minute and try again.";
-  }
-  if (m.includes("failed to fetch") || m.includes("networkerror") || m.includes("network")) {
-    return "Could not reach the server. Check your connection and try again.";
-  }
-  if (m.includes("invalid email") || (m.includes("email") && m.includes("invalid"))) {
-    return "That email address does not look right.";
-  }
-  if (m.includes("provider is not enabled") || m.includes("unsupported provider")) {
-    return "Google sign-in is not switched on yet. Use your email and password for now.";
-  }
-  if (m.includes("same password")) {
-    return "That is already your password. Pick a different one.";
-  }
-  return message;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   /* Set by the listener below, read by the effect under it. The toast cannot

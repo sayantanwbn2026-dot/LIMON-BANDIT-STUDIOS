@@ -3,8 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { Section } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Accordion } from "@/components/lb/Accordion";
-import { Picture } from "@/components/lb/Picture";
-import { useFaq, useHomeFaq, useSection } from "@/cms/hooks";
+import { HouseMascot } from "@/components/lb/HeroMascot";
+import { useFaq, useHomeFaq, useSection, useWords } from "@/cms/hooks";
 
 /**
  * The landing-page FAQ.
@@ -32,13 +32,14 @@ import { useFaq, useHomeFaq, useSection } from "@/cms/hooks";
 /* Where the rest of them live. Each topic in the Questions list is
  * answered in full on one of these. */
 const ELSEWHERE = [
-  { to: "/rooms", label: "Booking a room" },
-  { to: "/label", label: "The label" },
-  { to: "/shop", label: "Orders & returns" },
-  { to: "/crew", label: "Hiring the crew" },
+  { to: "/rooms", word: "faqLinkRooms" },
+  { to: "/label", word: "faqLinkLabel" },
+  { to: "/shop", word: "faqLinkShop" },
+  { to: "/crew", word: "faqLinkCrew" },
 ] as const;
 export function Faq() {
   const copy = useSection("home", "faq");
+  const w = useWords("home");
   const faq = useFaq();
   const shown = useHomeFaq();
   return (
@@ -56,23 +57,26 @@ export function Faq() {
            * to someone who had not yet read one answer — and spent 120px on
            * a mascot at 25% opacity. On a phone the same way out is a line
            * after the questions, below. */}
-          <div className="mt-10 hidden border border-alt-line p-8 md:block">
-            <Picture
-              src="limon-mascot"
-              sizes="120px"
-              alt=""
-              className="h-[120px] w-auto opacity-25"
-            />
+          {/* In the label column this card was 147–183px wide, and p-8 left
+           * "Message us" 82px to sit in — it broke onto two lines with the
+           * arrow hanging off the second. Tighter padding fixes it on a
+           * tablet, where the label column is half the measure, and from xl,
+           * where the card also reaches 24px into the 40px gutter its cell
+           * keeps on the right (the heading still starts 32px clear). Between
+           * 1024 and 1279 the column is 165px and nothing fits, so the card
+           * steps aside for the full-width line the phone already uses. */}
+          <div className="mt-10 hidden border border-alt-line p-5 md:block lg:hidden xl:-mr-6 xl:block xl:p-6">
+            <HouseMascot sizes="120px" className="h-[120px] w-auto opacity-25" />
             <div className="mt-6 font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-alt-text">
-              Still stuck?
+              {w.faqStuck}
             </div>
             {/* Router link, not an anchor: this is an in-app route and a
              * plain href tore the app down and booted it again. */}
             <Link
               to="/contact"
-              className="mt-6 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface"
+              className="mt-6 flex h-12 w-full items-center justify-center gap-1.5 whitespace-nowrap bg-alt-text font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-alt-surface"
             >
-              Message us <ArrowRight size={14} />
+              {w.faqMessageUs} <ArrowRight size={14} className="shrink-0" />
             </Link>
           </div>
         </div>
@@ -88,9 +92,7 @@ export function Faq() {
            * the same page. */}
           {faq.length > shown.length ? (
             <div className="mt-8 border-t border-alt-line pt-6">
-              <p className="font-ui text-[13px] text-alt-mute">
-                The rest are answered where they apply.
-              </p>
+              <p className="font-ui text-[13px] text-alt-mute">{w.faqElsewhere}</p>
               {/* A STACKED LIST ON A PHONE, A ROW ON A DESKTOP.
                *
                * This was one wrapped flex row at every width, and on a phone
@@ -116,7 +118,7 @@ export function Faq() {
                       to={e.to}
                       className="tap flex items-center gap-1.5 py-3 font-ui text-[13px] font-semibold text-alt-text transition-opacity duration-300 hover:opacity-70 sm:inline-flex sm:py-1"
                     >
-                      <span className="wipe-underline">{e.label}</span>
+                      <span className="wipe-underline">{w[e.word]}</span>
                       <ArrowRight size={13} className="text-alt-acid-type" />
                     </Link>
                   </li>
@@ -127,9 +129,9 @@ export function Faq() {
 
           <Link
             to="/contact"
-            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden"
+            className="mt-10 flex h-12 w-full items-center justify-center gap-2 bg-alt-text font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-alt-surface md:hidden lg:flex xl:hidden"
           >
-            Still stuck? Message us <ArrowRight size={14} />
+            {w.faqStuck} {w.faqMessageUs} <ArrowRight size={14} />
           </Link>
         </div>
       </div>

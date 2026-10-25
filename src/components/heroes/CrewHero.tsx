@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter } from "@/cms/hooks";
+import { useChapter, useWords } from "@/cms/hooks";
 import { disciplines, disciplineNote } from "@/data/crew";
 import { useCrew } from "@/cms/hooks";
 
@@ -18,15 +18,23 @@ import { useCrew } from "@/cms/hooks";
  */
 export function CrewHero() {
   const c = useChapter("crew");
+  const w = useWords("crew");
+  /* each discipline's plural and its one-line remit, from the crew wording */
+  const roleWords: Record<string, [string, string]> = {
+    Director: [w.heroDirectors, w.heroDirectorsNote],
+    Engineer: [w.heroEngineers, w.heroEngineersNote],
+    "Cover artist": [w.heroCoverArtists, w.heroCoverArtistsNote],
+    Photographer: [w.heroPhotographers, w.heroPhotographersNote],
+  };
   /* Counts come from the CMS roster the directory below renders, so the
    * call sheet can never advertise more — or fewer — crew than it lists.
    * They used to come from the compiled roster, which an editor never
    * touches, so adding someone in the admin left the count behind. */
   const crew = useCrew();
   const roles = disciplines.map((d) => ({
-    role: d === "Cover artist" ? "Cover artists" : `${d}s`,
+    role: roleWords[d]?.[0] ?? d,
     count: String(crew.filter((m) => m.discipline === d).length).padStart(2, "0"),
-    note: disciplineNote[d],
+    note: roleWords[d]?.[1] ?? disciplineNote[d],
   }));
 
   return (
@@ -41,23 +49,29 @@ export function CrewHero() {
       <RiseIn delay={0.1} className="mt-12 border-t border-line">
         <ul>
           {roles.map((r) => (
+            /* A grid on a phone, a ruled line from md. As a wrapping flex
+             * row each discipline broke differently with the length of its
+             * note: "Engineers" kept its note on the first line and pushed
+             * the count down alone, the others dropped the note and kept
+             * the count beside it. The grid pins the count to the name's
+             * line and the note under it, so all four rows share one shape. */
             <li
               key={r.role}
-              className="group flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b border-line py-6"
+              className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-2 border-b border-line py-6 md:flex md:flex-wrap"
             >
               <span className="font-display text-[24px] font-extrabold uppercase leading-none tracking-[-0.03em] text-text transition-transform duration-300 group-hover:translate-x-2 md:text-[34px]">
                 {r.role}
               </span>
-              <span className="t-label text-mute">{r.note}</span>
-              <span className="tnum ml-auto font-ui text-[12px] font-bold uppercase tracking-[0.18em] text-acid-type">
+              <span className="tnum col-start-2 row-start-1 font-ui text-[12px] font-bold uppercase tracking-[0.18em] text-acid-type md:order-3 md:ml-auto">
                 {r.count}
               </span>
+              <span className="t-label text-mute md:order-2">{r.note}</span>
             </li>
           ))}
         </ul>
       </RiseIn>
 
-      <p className="t-label mt-6 text-mute">Vetted, rated, hired by the project</p>
+      <p className="t-label mt-6 text-mute">{w.heroNote}</p>
     </HeroFrame>
   );
 }

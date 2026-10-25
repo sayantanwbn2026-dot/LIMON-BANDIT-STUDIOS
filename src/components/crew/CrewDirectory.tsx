@@ -4,7 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { disciplines, type Discipline } from "@/data/crew";
-import { useCrew, useSection } from "@/cms/hooks";
+import { useCrew, useSection, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The directory.
@@ -25,6 +26,7 @@ type Filter = Discipline | "All";
 
 export function CrewDirectory() {
   const copy = useSection("crew", "directory");
+  const w = useWords("crew");
   const crew = useCrew();
   const [filter, setFilter] = useState<Filter>("All");
   const filters: Filter[] = ["All", ...disciplines];
@@ -53,7 +55,11 @@ export function CrewDirectory() {
         </div>
 
         {/* discipline filter */}
-        <div className="mt-12 flex flex-wrap gap-3" role="group" aria-label="Filter by discipline">
+        <div
+          className="mt-12 flex flex-wrap gap-3"
+          role="group"
+          aria-label={w.directoryFilterLabel}
+        >
           {filters.map((f) => {
             const on = filter === f;
             return (
@@ -68,20 +74,22 @@ export function CrewDirectory() {
                     : "border border-line text-mute hover:border-acid-type hover:text-text"
                 }`}
               >
-                {f}
+                {f === "All" ? w.directoryAll : f}
               </button>
             );
           })}
         </div>
 
         <p aria-live="polite" className="t-label mt-6 text-mute">
-          <span className="tnum">{String(shown.length).padStart(2, "0")}</span> available
-          {filter === "All" ? " across four disciplines" : ` — ${filter}`}
+          {fill(filter === "All" ? w.directoryCountAll : w.directoryCountOne, {
+            count: String(shown.length).padStart(2, "0"),
+            discipline: filter,
+          })}
         </p>
 
         <ul className="mt-8 border-t border-line">
           {shown.map((m) => (
-            <li key={m.id} className="border-b border-line">
+            <li key={m.id} data-reveal className="border-b border-line">
               <article className="group grid grid-cols-1 gap-x-6 gap-y-4 py-8 md:grid-cols-12 md:items-baseline">
                 <div className="md:col-span-4">
                   <h3 className="font-display text-[20px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
@@ -116,7 +124,7 @@ export function CrewDirectory() {
                       search={{ intent: "crew", who: m.id }}
                       className="mt-4 inline-flex items-center gap-2 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text"
                     >
-                      <span className="wipe-underline">Hire</span>
+                      <span className="wipe-underline">{w.directoryHire}</span>
                       <ArrowUpRight size={14} className="text-acid-type" />
                     </Link>
                   ) : null}

@@ -4,17 +4,18 @@ import { GridRules } from "@/components/lb/GridRules";
 import { WordReveal } from "@/components/lb/Reveal";
 import { Ticker } from "@/components/lb/Ticker";
 import { LiveLog } from "@/components/lb/LiveLog";
-import { useSection, useSite, useTickers } from "@/cms/hooks";
-import { Picture } from "@/components/lb/Picture";
+import { useSection, useSite, useTickers, useWords } from "@/cms/hooks";
+import { CmsImage } from "@/components/lb/CmsImage";
 
 export function FinalCta() {
   const { ctaChecklist } = useTickers();
   const site = useSite();
   const copy = useSection("home", "finalcta");
+  const w = useWords("home");
   return (
     <section className="relative w-full overflow-hidden bg-surface-deep">
-      <Picture
-        src={"room-a"}
+      <CmsImage
+        src={w.closingImage}
         sizes="(max-width: 767px) 100vw, 62vw"
         alt=""
         className="pointer-events-none absolute right-0 top-0 h-full w-[62%] object-cover opacity-35 chroma"
@@ -46,8 +47,8 @@ export function FinalCta() {
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
             <div className="flex">
-              {(["release-01", "release-02", "release-06"] as const).map((a, i) => (
-                <Picture
+              {[w.closingFace1Image, w.closingFace2Image, w.closingFace3Image].map((a, i) => (
+                <CmsImage
                   key={i}
                   src={a}
                   sizes="(max-width: 767px) 100vw, 62vw"
@@ -59,9 +60,9 @@ export function FinalCta() {
             </div>
             <div>
               <div className="font-display text-[14px] font-bold uppercase text-text">
-                Rana, Kaalo &amp; Shona
+                {w.closingNames}
               </div>
-              <div className="font-ui text-[12px] text-mute">Booked the room this month.</div>
+              <div className="font-ui text-[12px] text-mute">{w.closingNamesLine}</div>
             </div>
           </div>
 
@@ -70,7 +71,7 @@ export function FinalCta() {
             className="group mt-10 flex h-[62px] w-full max-w-[320px] items-center justify-between bg-acid transition-colors duration-300 hover:bg-acid-dim"
           >
             <span className="pl-6 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-              Book the room
+              {w.closingCta}
             </span>
             <ArrowRight size={18} className="mr-6 text-accent-text lb-arrow" />
           </Link>

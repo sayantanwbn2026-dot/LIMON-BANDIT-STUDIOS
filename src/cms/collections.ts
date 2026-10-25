@@ -1,6 +1,7 @@
 import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
 import { HOME_SECTIONS } from "./home-sections";
 import { seeds } from "./seeds";
+import { WORDS, WORD_DOCS, wordLabel, type WordArea } from "./words";
 
 /**
  * Everything on this site that a person is allowed to change.
@@ -58,6 +59,16 @@ const site: Collection = {
       630,
       "Shown when the site is linked on WhatsApp, Instagram or X.",
     ),
+    image(
+      "mascot",
+      "Mascot",
+      1024,
+      1169,
+      "Stands in front of the big wordmark on every page's opening screen, and appears faintly in the menu and the footer. Use a cut-out on a transparent background (PNG or WebP), about this shape — taller than it is wide, with the figure's feet at the bottom edge. A page can swap in its own under Page titles & SEO.",
+    ),
+    text("mascotAlt", "Mascot description", {
+      help: "What the mascot looks like, in one line, for screen readers.",
+    }),
   ],
 };
 
@@ -130,7 +141,7 @@ const seo: Collection = {
   key: "global.pages",
   title: "Page titles & SEO",
   description:
-    "The heading, standfirst and search-engine text for each of the seven pages. This is what shows in Google.",
+    "The heading, standfirst, mascot and search-engine text for each page. The search-engine text is what shows in Google.",
   group: "global",
   shape: "list",
   titleField: "name",
@@ -157,6 +168,16 @@ const seo: Collection = {
       ],
     },
     area("standfirst", "Standfirst", { rows: 2, help: "The line under the heading." }),
+    image(
+      "mascot",
+      "Mascot on this page",
+      1024,
+      1169,
+      "Leave empty to use the house mascot from Brand & contact. Same rules: a transparent cut-out, taller than wide, feet at the bottom edge — he is placed exactly where the house mascot stands.",
+    ),
+    text("mascotAlt", "Mascot description", {
+      help: "Only needed when this page has its own mascot.",
+    }),
     text("title", "Search-engine title", {
       required: true,
       max: 65,
@@ -561,6 +582,69 @@ const tracks: Collection = {
       required: true,
       placeholder: "/audio/rusted-gold.wav",
     }),
+  ],
+};
+
+const videos: Collection = {
+  key: "page.label.videos",
+  title: "Music videos",
+  description:
+    "The films on the label page. Tick 'Feature' on the ones to show — the first three ticked, in this order, become the cards. Drag rows to change the order. A film needs a file or a YouTube/Vimeo link before it can be featured.",
+  group: "page",
+  page: "label",
+  shape: "list",
+  titleField: "title",
+  itemNoun: "video",
+  fields: [
+    {
+      kind: "boolean",
+      name: "feature",
+      label: "Feature on the label page",
+      help: "Top three ticked are shown.",
+    },
+    text("title", "Title", { required: true }),
+    text("artist", "Artist", { required: true }),
+    text("director", "Director", { placeholder: "Ishaan Roy" }),
+    text("year", "Year", { placeholder: "2026" }),
+    text("runtime", "Runtime", {
+      placeholder: "4:12",
+      help: "Shown on the card. Optional — the player reads the real length from the file.",
+    }),
+    area("note", "One line", {
+      rows: 2,
+      max: 120,
+      help: "Under the title in the player. Who shot it, where, how.",
+    }),
+    image("cover", "Card image", 1000, 1250, "Portrait 4:5. The card on the label page."),
+    image(
+      "still",
+      "Still frame",
+      1920,
+      1080,
+      "Landscape 16:9. Shown in the player before the film starts. Leave empty to use the card image.",
+    ),
+    text("src2160", "4K file (2160p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-2160.mp4",
+      help: "3840×2160 MP4 (H.264) or WebM — a link, or a file a developer placed in public/video.",
+    }),
+    text("src1080", "HD file (1080p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-1080.mp4",
+      help: "1920×1080. Optional, but it is what most phones and laptops will play.",
+    }),
+    text("src720", "Light file (720p)", {
+      mono: true,
+      placeholder: "/video/rusted-gold-720.mp4",
+      help: "1280×720. Optional — for slow connections.",
+    }),
+    {
+      kind: "url",
+      name: "embed",
+      label: "YouTube or Vimeo link",
+      placeholder: "https://www.youtube.com/watch?v=…",
+      help: "Used only when no files are set above. Both stream up to 4K in their own player.",
+    },
   ],
 };
 
@@ -1139,6 +1223,43 @@ const contact: Collection = {
 
 /* ------------------------------------------------------------------ */
 
+/* ------------------------------------------------------------------ *
+ * WORDING — generated from src/cms/words.ts
+ *
+ * One object document per area, one text field per string. The field list
+ * is read off the defaults rather than written out a second time, so a
+ * string added to words.ts is editable the moment it exists, and there is
+ * no way for the form and the site to disagree about which strings there
+ * are. The default goes in the help line, so an editor can always see what
+ * a field said before they changed it.
+ * ------------------------------------------------------------------ */
+
+function wordCollections(): Collection[] {
+  return (Object.keys(WORD_DOCS) as WordArea[]).map((a) => {
+    const d = WORD_DOCS[a];
+    return {
+      key: d.key,
+      title: d.title,
+      description: d.description,
+      group: d.group,
+      page: d.page,
+      shape: "object",
+      fields: Object.entries(WORDS[a] as Record<string, string>).map(([name, def]) =>
+        /* a key ending in "Image" holds a picture: a library key or an
+         * uploaded address, which the image picker understands */
+        name.endsWith("Image")
+          ? image(name, wordLabel(name), 1600, 2000, "Leave empty to use the committed picture.")
+          : def.length > 72
+            ? area(name, wordLabel(name), {
+                rows: 2,
+                help: `Default: “${def}”. Leave empty to use it.`,
+              })
+            : text(name, wordLabel(name), { help: `Default: “${def}”. Leave empty to use it.` }),
+      ),
+    } satisfies Collection;
+  });
+}
+
 export const collections: Collection[] = [
   // global
   site,
@@ -1168,6 +1289,7 @@ export const collections: Collection[] = [
   labelSections,
   releases,
   tracks,
+  videos,
   splits,
   // shop
   shopSections,
@@ -1196,6 +1318,8 @@ export const collections: Collection[] = [
   products,
   offers,
   shipping,
+  // the wording around all of it, one document per area
+  ...wordCollections(),
 ];
 
 export const byKey = new Map(collections.map((c) => [c.key, c]));

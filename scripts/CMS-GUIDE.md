@@ -122,6 +122,16 @@ H1, the big poster wordmark above it, the line under it, the short name used
 in breadcrumbs and the "next page" doors, and its search-engine title and
 description. Leave "Page id" and "Path" alone.
 
+**The mascot on every page's opening screen is under Global content → Brand &
+contact → _Mascot_.** Upload a new one there and it replaces him on every hero,
+in the menu and in the footer at once. To give one page its own mascot — Limon
+in headphones on Rooms, say — set _Mascot on this page_ on that page's row in
+Page titles & SEO; clear it and the page goes back to the house mascot. He is
+always placed in exactly the same spot, so use a cut-out on a transparent
+background (PNG or WebP), roughly 1024 × 1169, taller than wide, with his feet
+at the bottom edge of the image. Fill in the description field beside it: it is
+what a screen reader says instead of the picture.
+
 **Journal entries are pages the moment you save them.** A new entry gets its
 own address (`/journal/<web address>`), appears in the sitemap, and links to
 its neighbours. Deleting one makes its address a proper "not found".

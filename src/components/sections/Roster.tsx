@@ -1,3 +1,4 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
@@ -5,10 +6,11 @@ import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useReleases, useSection } from "@/cms/hooks";
+import { useReleases, useSection, useWords } from "@/cms/hooks";
 
 export function Roster() {
   const copy = useSection("home", "roster");
+  const w = useWords("home");
   const releases = useReleases();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -60,7 +62,7 @@ export function Roster() {
             to="/label"
             className="group flex items-center gap-3 border border-line px-6 py-4 transition-colors duration-300 hover:border-acid-type"
           >
-            <span className="t-eyebrow text-text">Hear the label</span>
+            <span className="t-eyebrow text-text">{w.rosterCta}</span>
             <ArrowRight size={15} className="text-acid-type lb-arrow" />
           </Link>
         </div>
@@ -112,6 +114,7 @@ export function Roster() {
           </Link>
         ))}
       </div>
+      <RailMeter />
     </Section>
   );
 }

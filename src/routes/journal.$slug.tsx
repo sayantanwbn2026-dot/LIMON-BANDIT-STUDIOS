@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { JournalArticle } from "@/components/journal/JournalArticle";
 import { liveDocs, listFrom } from "@/cms/live";
 import { usePost, type PostDoc } from "@/cms/hooks";
-import { articleJsonLd, pageHead } from "@/lib/seo";
+import { articleJsonLd, pageHead, siteNameFrom } from "@/lib/seo";
 
 /**
  * A journal entry.
@@ -20,8 +20,7 @@ export const Route = createFileRoute("/journal/$slug")({
     const docs = await liveDocs();
     const entry = listFrom<PostDoc>(docs, "page.journal.posts").find((p) => p.slug === params.slug);
     if (!entry) throw notFound();
-    const name = (docs["global.site"] as { name?: string } | undefined)?.name;
-    return { entry, siteName: name?.trim() || "Limon Bandit" };
+    return { entry, siteName: siteNameFrom(docs) };
   },
   head: ({ loaderData }) =>
     loaderData

@@ -2,7 +2,7 @@ import { Accordion } from "@/components/lb/Accordion";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { LocalTime } from "@/components/lb/LocalTime";
-import { useFaqByTopic, useHours, useSection, useSite, useTravel } from "@/cms/hooks";
+import { useFaqByTopic, useHours, useSection, useSite, useTravel, useWords } from "@/cms/hooks";
 
 /**
  * Finding the building, and when it is awake. The hours are the argument —
@@ -13,6 +13,7 @@ export function ContactVisit() {
   const HOURS = useHours();
   const GETTING_THERE = useTravel();
   const copy = useSection("contact", "visit");
+  const w = useWords("contact");
   const site = useSite();
   return (
     <section className="relative w-full bg-surface-deep py-[96px]">
@@ -39,11 +40,12 @@ export function ContactVisit() {
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-12">
           {/* hours */}
           <div>
-            <h3 className="t-label text-mute">Hours</h3>
+            <h3 className="t-label text-mute">{w.visitHours}</h3>
             <dl className="mt-6 border-t border-line">
               {HOURS.map((h) => (
                 <div
                   key={h.k}
+                  data-reveal
                   className="flex items-baseline justify-between gap-4 border-b border-line py-4"
                 >
                   <dt className="font-ui text-[14px] font-semibold text-text">{h.k}</dt>
@@ -58,10 +60,10 @@ export function ContactVisit() {
 
           {/* getting there */}
           <div>
-            <h3 className="t-label text-mute">Getting there</h3>
+            <h3 className="t-label text-mute">{w.visitGettingThere}</h3>
             <dl className="mt-6 border-t border-line">
               {GETTING_THERE.map((g) => (
-                <div key={g.k} className="border-b border-line py-4">
+                <div key={g.k} data-reveal className="border-b border-line py-4">
                   <dt className="font-ui text-[14px] font-semibold text-text">{g.k}</dt>
                   <dd className="mt-2 max-w-[36ch] font-ui text-[14px] leading-[1.5] text-mute">
                     {g.d}
@@ -85,7 +87,7 @@ export function ContactVisit() {
 
           {/* the questions everyone asks first */}
           <div>
-            <h3 className="t-label text-mute">Asked most</h3>
+            <h3 className="t-label text-mute">{w.visitAskedMost}</h3>
             <div className="mt-6">
               <Accordion items={faqItems} />
             </div>

@@ -6,6 +6,7 @@ import { myOrders } from "@/lib/orders";
 import { inr } from "@/lib/money";
 import { pageHead } from "@/lib/seo";
 import { SkeletonRows } from "@/components/lb/Skeleton";
+import { useWords, useWordsRef } from "@/cms/hooks";
 
 /**
  * Order history.
@@ -27,23 +28,27 @@ export const Route = createFileRoute("/orders")({
 
 type OrderRow = Awaited<ReturnType<typeof myOrders>>[number];
 
-const STATUS_NOTE: Record<string, string> = {
-  received: "With us. Stock is being confirmed by hand.",
-  confirmed: "Confirmed and queued to pack.",
-  packed: "Packed, waiting on the courier.",
-  shipped: "On its way.",
-  delivered: "Delivered.",
-  cancelled: "Cancelled.",
-};
+/* Each status's one-line explanation, from the account wording. */
+const STATUS_NOTE = {
+  received: "statusReceived",
+  confirmed: "statusConfirmed",
+  packed: "statusPacked",
+  shipped: "statusShipped",
+  delivered: "statusDelivered",
+  cancelled: "statusCancelled",
+} as const;
 
 function Orders() {
   const { user, loading, openAuth } = useAuth();
+  const w = useWords("account");
+  const wRef = useWordsRef("account");
+  const c = useWords("common");
   const [rows, setRows] = useState<OrderRow[] | null>(null);
 
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      openAuth("Sign in to see your orders.");
+      openAuth(wRef.current.ordersSignInReason);
       setRows([]);
       return;
     }
@@ -54,28 +59,28 @@ function Orders() {
     return () => {
       alive = false;
     };
-  }, [user, loading, openAuth]);
+  }, [user, loading, openAuth, wRef]);
 
   return (
     <main id="main" className="relative w-full bg-surface-deep">
       <header className="shell relative z-[2] pb-10 pt-[120px]">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label={c.breadcrumb}>
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
-                LMN&middot;BNDT
+                {c.breadcrumbHome}
               </Link>
             </li>
             <li aria-hidden="true" className="opacity-50">
               /
             </li>
             <li aria-current="page" className="text-text">
-              Orders
+              {w.ordersCrumb}
             </li>
           </ol>
         </nav>
         <h1 data-page-h1 tabIndex={-1} className="t-h2 mt-8 max-w-[18ch] text-text outline-none">
-          Your orders
+          {w.ordersTitle}
         </h1>
       </header>
 
@@ -86,14 +91,14 @@ function Orders() {
         <div className="shell relative z-[2]">
           {!user && !loading ? (
             <Empty
-              body="Sign in and anything you have ordered shows up here."
+              body={w.ordersSignedOut}
               cta={
                 <button
                   type="button"
-                  onClick={() => openAuth("Sign in to see your orders.")}
+                  onClick={() => openAuth(w.ordersSignInReason)}
                   className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
-                  Sign in
+                  {w.pageSignIn}
                 </button>
               }
             />
@@ -103,13 +108,13 @@ function Orders() {
             <SkeletonRows rows={3} label="your orders" />
           ) : rows.length === 0 ? (
             <Empty
-              body="Nothing ordered yet. The runs are small and they do not come back."
+              body={w.ordersEmpty}
               cta={
                 <Link
                   to="/shop"
                   className="flex h-[56px] items-center justify-center bg-acid px-8 font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text transition-colors duration-300 hover:bg-acid-dim"
                 >
-                  Go to the shop
+                  {w.ordersGoToShop}
                 </Link>
               }
             />
@@ -150,10 +155,12 @@ function Orders() {
                         {String(o.status)}
                       </span>
                       <span className="t-label text-mute">
-                        {STATUS_NOTE[String(o.status)] ?? ""}
+                        {String(o.status) in STATUS_NOTE
+                          ? w[STATUS_NOTE[String(o.status) as keyof typeof STATUS_NOTE]]
+                          : ""}
                       </span>
                       {o.payment_status === "pending" ? (
-                        <span className="t-label text-mute">Pay on delivery</span>
+                        <span className="t-label text-mute">{w.ordersPayOnDelivery}</span>
                       ) : null}
                     </div>
                   </li>

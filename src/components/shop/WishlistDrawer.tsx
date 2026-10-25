@@ -5,8 +5,9 @@ import { CmsImage } from "@/components/lb/CmsImage";
 import { useWishlist } from "@/lib/wishlist";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth";
-import { useProducts } from "@/cms/hooks";
+import { useProducts, useWords } from "@/cms/hooks";
 import { inr } from "@/lib/money";
+import { fill } from "@/cms/words";
 
 /**
  * The wishlist, as a drawer.
@@ -18,6 +19,8 @@ import { inr } from "@/lib/money";
  */
 export function WishlistDrawer() {
   const wishlist = useWishlist();
+  const w = useWords("basket");
+  const pw = useWords("product");
   const cart = useCart();
   const { requireAuth } = useAuth();
   const catalogue = useProducts();
@@ -31,25 +34,20 @@ export function WishlistDrawer() {
       open={wishlist.open}
       onClose={() => wishlist.setOpen(false)}
       variant="drawer"
-      title="Your wishlist"
+      title={w.wishlistTitle}
       standfirst={
-        items.length === 0
-          ? "Nothing saved yet."
-          : `${items.length} saved. Kept on your account, not this browser.`
+        items.length === 0 ? w.wishlistEmpty : fill(w.wishlistCount, { count: items.length })
       }
     >
       {items.length === 0 ? (
         <div className="py-8">
-          <p className="font-ui text-[15px] leading-[1.6] text-mute">
-            Press the heart on anything in the shop and it waits here — on whatever device you sign
-            in from next.
-          </p>
+          <p className="font-ui text-[15px] leading-[1.6] text-mute">{w.wishlistEmptyBody}</p>
           <Link
             to="/shop"
             onClick={() => wishlist.setOpen(false)}
             className="mt-8 flex h-[56px] items-center justify-center border border-line font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-text transition-colors duration-300 hover:border-acid-type"
           >
-            Go to the shop
+            {w.goToShop}
           </Link>
         </div>
       ) : (
@@ -84,7 +82,7 @@ export function WishlistDrawer() {
 
                   <div className="mt-3">
                     {gone ? (
-                      <span className="t-label text-mute">Sold out</span>
+                      <span className="t-label text-mute">{pw.soldOut}</span>
                     ) : needsSize ? (
                       <Link
                         to="/shop"
@@ -92,13 +90,13 @@ export function WishlistDrawer() {
                         onClick={() => wishlist.setOpen(false)}
                         className="t-label text-text"
                       >
-                        <span className="wipe-underline">Pick a size</span>
+                        <span className="wipe-underline">{w.wishlistPickSize}</span>
                       </Link>
                     ) : (
                       <button
                         type="button"
                         onClick={() =>
-                          requireAuth("Sign in to move this to your cart.", () => {
+                          requireAuth(w.wishlistSignIn, () => {
                             cart.add(p.id, null, 1);
                             void wishlist.remove(p.id);
                             wishlist.setOpen(false);
@@ -107,7 +105,7 @@ export function WishlistDrawer() {
                         }
                         className="t-label text-text"
                       >
-                        <span className="wipe-underline">Move to cart</span>
+                        <span className="wipe-underline">{w.wishlistMove}</span>
                       </button>
                     )}
                   </div>
@@ -116,7 +114,7 @@ export function WishlistDrawer() {
                 <button
                   type="button"
                   onClick={() => void wishlist.remove(p.id)}
-                  aria-label={`Remove ${p.title} from your wishlist`}
+                  aria-label={fill(w.wishlistRemove, { title: p.title })}
                   className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-acid-type"
                 >
                   <Trash2 size={15} />

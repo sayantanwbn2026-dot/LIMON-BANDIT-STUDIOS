@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { WordReveal } from "@/components/lb/Reveal";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useFounder, useSection } from "@/cms/hooks";
+import { useFounder, useSection, useWords } from "@/cms/hooks";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 
 /**
@@ -22,6 +22,7 @@ import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
  */
 export function Founder() {
   const copy = useSection("about", "founder");
+  const w = useWords("about");
   const f = useFounder();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -70,7 +71,7 @@ export function Founder() {
 
   return (
     <Section tone="dark" className="py-[96px]">
-      <h2 className="sr-only">{copy.heading || "Who's behind it"}</h2>
+      <h2 className="sr-only">{copy.heading || w.founderFallbackHeading}</h2>
 
       <div ref={ref} className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-x-10">
         {/* the portrait */}

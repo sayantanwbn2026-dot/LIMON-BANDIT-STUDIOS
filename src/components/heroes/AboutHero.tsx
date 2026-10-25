@@ -1,7 +1,7 @@
 import { HeroFrame } from "@/components/lb/PageHero";
 import { PosterLockup } from "@/components/lb/PosterLockup";
 import { RiseIn } from "@/components/lb/Reveal";
-import { useChapter, useMetrics, useTeam } from "@/cms/hooks";
+import { useChapter, useMetrics, useTeam, useWords } from "@/cms/hooks";
 
 /**
  * ABOUT — the house, counted.
@@ -17,6 +17,7 @@ import { useChapter, useMetrics, useTeam } from "@/cms/hooks";
  */
 export function AboutHero() {
   const c = useChapter("about");
+  const w = useWords("about");
   const team = useTeam();
   const metrics = useMetrics();
 
@@ -24,7 +25,7 @@ export function AboutHero() {
    * metric the row shortens rather than rendering a hole, which is why this
    * filters rather than indexes. */
   const figures = [
-    { value: String(team.length).padStart(2, "0"), label: "People in the building" },
+    { value: String(team.length).padStart(2, "0"), label: w.heroPeople },
     ...metrics.slice(0, 2).map((m) => ({ value: `${m.value}${m.unit ?? ""}`, label: m.label })),
   ].filter((f) => f.label);
 

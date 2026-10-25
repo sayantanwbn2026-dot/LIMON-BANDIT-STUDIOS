@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
+import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import type { Tone } from "./GridRules";
 
 /** Copies rendered before anything has been measured, and the floor after. */
@@ -102,11 +102,44 @@ export function Ticker({
         },
       });
 
-      const slow = () => gsap.to(tl, { timeScale: 0.25, duration: 0.4, overwrite: true });
-      const fast = () => gsap.to(tl, { timeScale: 1, duration: 0.4, overwrite: true });
+      /* The strip answers the scroll. A flick runs it faster, and it runs
+       * the way the page is going — scroll back up and it turns round —
+       * then it eases back to its own pace once you stop. Hover still
+       * slows it to a quarter for reading; that is the floor the scroll
+       * boost is a multiple of, so the two never fight over one value.
+       * Only while the strip is on screen: a ticker three screens away has
+       * nothing to react to. */
+      let pace = 1;
+      let dir = 1;
+      const settle = gsap.delayedCall(0.18, () => {
+        gsap.to(tl, { timeScale: dir * pace, duration: 1.1, ease: "power2.out", overwrite: true });
+      });
+      settle.pause();
+      const st = ScrollTrigger.create({
+        trigger: wrap,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => {
+          dir = self.direction;
+          const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 700, 4);
+          gsap.to(tl, { timeScale: dir * boost * pace, duration: 0.25, overwrite: true });
+          settle.restart(true);
+        },
+      });
+
+      const slow = () => {
+        pace = 0.25;
+        gsap.to(tl, { timeScale: dir * pace, duration: 0.4, overwrite: true });
+      };
+      const fast = () => {
+        pace = 1;
+        gsap.to(tl, { timeScale: dir * pace, duration: 0.4, overwrite: true });
+      };
       wrap.addEventListener("pointerenter", slow);
       wrap.addEventListener("pointerleave", fast);
       return () => {
+        st.kill();
+        settle.kill();
         wrap.removeEventListener("pointerenter", slow);
         wrap.removeEventListener("pointerleave", fast);
       };

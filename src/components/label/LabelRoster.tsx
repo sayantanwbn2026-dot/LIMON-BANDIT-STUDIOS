@@ -4,7 +4,8 @@ import { CmsImage } from "@/components/lb/CmsImage";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { usePlayer } from "@/lib/player";
-import { useReleases, useSection, useTracks } from "@/cms/hooks";
+import { useReleases, useSection, useTracks, useWords } from "@/cms/hooks";
+import { fill } from "@/cms/words";
 
 /**
  * The roster as a drafting index rather than a wall of covers. Hovering or
@@ -14,6 +15,7 @@ import { useReleases, useSection, useTracks } from "@/cms/hooks";
  */
 export function LabelRoster() {
   const copy = useSection("label", "roster");
+  const w = useWords("label");
   const releases = useReleases();
   const [hover, setHover] = useState(0);
   const { play, track, playing } = usePlayer();
@@ -35,13 +37,17 @@ export function LabelRoster() {
         </Eyebrow>
         <h2 className="t-h2 mt-6 max-w-[20ch] text-text">{copy.heading}</h2>
 
-        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_360px] lg:gap-12">
+        {/* minmax(0, 1fr), not 1fr. A bare `1fr` cannot shrink below its
+         * content's min-content width, and the truncated artist names count
+         * there at full length — so at 1024px the list took 579px of a 520px
+         * share and pushed the plate 11px off the right edge of the page. */}
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-12">
           <ol className="border-t border-line">
             {releases.map((r, i) => {
               const t = trackForArtist(r.artist);
               const isPlaying = t && track?.id === t.id && playing;
               return (
-                <li key={r.title}>
+                <li key={r.title} data-reveal>
                   <div
                     onMouseEnter={() => setHover(i)}
                     onFocus={() => setHover(i)}
@@ -71,7 +77,7 @@ export function LabelRoster() {
                       <button
                         type="button"
                         onClick={() => play(t.id)}
-                        aria-label={`Play ${r.title} by ${r.artist}`}
+                        aria-label={fill(w.rosterPlay, { title: r.title, artist: r.artist })}
                         className="flex h-11 w-11 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                       >
                         <Play

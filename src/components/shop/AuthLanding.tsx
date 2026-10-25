@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getLenis } from "@/lib/smooth";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useWords, useWordsRef } from "@/cms/hooks";
 
 /**
  * What happens when someone arrives back from an auth email.
@@ -63,12 +64,11 @@ function readArrival(): Arrival {
     return {
       kind: "error",
       expired,
-      message: expired
-        ? "That link has expired. Links are good for one use and a short window — send yourself a fresh one."
-        : /* Supabase's own description is underscore-separated; make it a
-           * sentence rather than showing machine text to a customer. */
-          description.replace(/\+/g, " ").replace(/_/g, " ") ||
-          "That link could not be used. Try signing in, or send yourself a new one.",
+      /* The wording is chosen where it is shown (see below), from the
+       * account wording; this keeps only Supabase's own description,
+       * which is underscore-separated — made a sentence rather than shown
+       * to a customer as machine text. */
+      message: expired ? "" : description.replace(/\+/g, " ").replace(/_/g, " "),
     };
   }
 
@@ -98,6 +98,9 @@ export function AuthLanding() {
   /* Initialiser, not an effect — see the note above about the race with
    * supabase-js clearing the fragment. */
   const [arrival] = useState<Arrival>(readArrival);
+  const w = useWords("account");
+  const wRef = useWordsRef("account");
+  const c = useWords("common");
   const [dismissed, setDismissed] = useState(false);
   const { openAuth } = useAuth();
 
@@ -141,7 +144,11 @@ export function AuthLanding() {
       /* An expired link lands on the email step, which sends a fresh code —
        * the shortest way back in. It used to open the sign-up form, which
        * told someone who already has an account to make another one. */
-      openAuth(arrival.message, "signin");
+      const words = wRef.current;
+      openAuth(
+        arrival.expired ? words.linkExpired : arrival.message || words.linkUnusable,
+        "signin",
+      );
     }
 
     return () => {
@@ -151,7 +158,7 @@ export function AuthLanding() {
       window.removeEventListener("touchstart", release);
       window.removeEventListener("keydown", release);
     };
-  }, [arrival, openAuth]);
+  }, [arrival, openAuth, wRef]);
 
   if (arrival.kind !== "confirmed" || dismissed) return null;
 
@@ -167,13 +174,11 @@ export function AuthLanding() {
         }}
       >
         <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
-        <p className="flex-1 font-ui text-[13px] leading-[1.45] text-text">
-          Email confirmed — your account is live. You can cart, wishlist and order now.
-        </p>
+        <p className="flex-1 font-ui text-[13px] leading-[1.45] text-text">{w.confirmedBanner}</p>
         <button
           type="button"
           onClick={() => setDismissed(true)}
-          aria-label="Dismiss"
+          aria-label={c.dismiss}
           className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center text-mute transition-colors duration-300 hover:text-text"
         >
           <X size={15} />

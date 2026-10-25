@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
+import { useWords } from "@/cms/hooks";
 
 /**
  * Every popup on the site: the login gate, the cart, the wishlist, the flash
@@ -71,6 +72,7 @@ export function Modal({
   const returnTo = useRef<HTMLElement | null>(null);
   const autoId = useId();
   const titleId = labelledBy ?? `modal-title-${autoId}`;
+  const w = useWords("common");
 
   useEffect(() => {
     if (!open) return;
@@ -157,7 +159,7 @@ export function Modal({
         >
           <button
             type="button"
-            aria-label="Close"
+            aria-label={w.close}
             tabIndex={-1}
             onClick={onClose}
             style={{ opacity: shown ? 1 : 0, transition: "opacity 280ms ease" }}
@@ -192,7 +194,7 @@ export function Modal({
                 type="button"
                 data-modal-close
                 onClick={onClose}
-                aria-label="Close"
+                aria-label={w.close}
                 className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center border border-line text-mute transition-colors duration-300 hover:border-acid-type hover:text-text"
               >
                 <X size={16} />

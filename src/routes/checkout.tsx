@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckoutForm } from "@/components/shop/CheckoutForm";
 import { pageHead } from "@/lib/seo";
+import { useWords } from "@/cms/hooks";
 
 /**
  * Checkout sits outside the seven-chapter loop on purpose.
@@ -23,14 +24,16 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function Checkout() {
+  const w = useWords("account");
+  const c = useWords("common");
   return (
     <main id="main" className="relative w-full bg-surface-deep">
       <header className="shell relative z-[2] pb-10 pt-[120px]">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label={c.breadcrumb}>
           <ol className="flex flex-wrap items-center gap-2 font-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-mute">
             <li>
               <Link to="/" className="transition-colors duration-300 hover:text-text">
-                LMN&middot;BNDT
+                {c.breadcrumbHome}
               </Link>
             </li>
             <li aria-hidden="true" className="opacity-50">
@@ -38,21 +41,21 @@ function Checkout() {
             </li>
             <li>
               <Link to="/shop" className="transition-colors duration-300 hover:text-text">
-                Shop
+                {w.checkoutCrumbShop}
               </Link>
             </li>
             <li aria-hidden="true" className="opacity-50">
               /
             </li>
             <li aria-current="page" className="text-text">
-              Checkout
+              {w.checkoutCrumb}
             </li>
           </ol>
         </nav>
 
         {/* focus lands here on navigation — see RouteTransition */}
         <h1 data-page-h1 tabIndex={-1} className="t-h2 mt-8 max-w-[18ch] text-text outline-none">
-          Checkout
+          {w.checkoutTitle}
         </h1>
       </header>
 

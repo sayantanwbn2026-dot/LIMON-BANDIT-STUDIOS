@@ -1,9 +1,10 @@
+import { RailMeter } from "@/components/lb/RailMeter";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Section, Eyebrow } from "@/components/lb/Section";
 import { RiseIn, WordReveal } from "@/components/lb/Reveal";
-import { useRates, useSection } from "@/cms/hooks";
+import { useRates, useSection, useWords } from "@/cms/hooks";
 
 type Mode = "hourly" | "package";
 
@@ -22,6 +23,7 @@ type Mode = "hourly" | "package";
  */
 export function Rates() {
   const copy = useSection("home", "rates");
+  const w = useWords("home");
   const rates = useRates();
   const [mode, setMode] = useState<Mode>("hourly");
 
@@ -58,7 +60,7 @@ export function Rates() {
          * thumb is half the track and moves by exactly its own width. */}
         <div
           role="radiogroup"
-          aria-label="Rate type"
+          aria-label={w.ratesToggleLabel}
           className="relative grid grid-cols-2 border border-line p-1"
         >
           <span
@@ -79,11 +81,11 @@ export function Rates() {
               className="t-eyebrow relative z-[1] px-7 py-3 transition-colors duration-300"
               style={{ color: mode === m ? "var(--accent-text)" : "var(--mute)" }}
             >
-              {m === "hourly" ? "Hourly" : "Package"}
+              {m === "hourly" ? w.ratesHourly : w.ratesPackage}
             </button>
           ))}
         </div>
-        <span className="t-label text-mute">Packages save twenty percent</span>
+        <span className="t-label text-mute">{w.ratesSaving}</span>
       </div>
 
       {/* Swipe rail of boxed plans on a phone (see .rail-mobile); ruled rows
@@ -160,6 +162,7 @@ export function Rates() {
           );
         })}
       </ul>
+      <RailMeter />
     </Section>
   );
 }

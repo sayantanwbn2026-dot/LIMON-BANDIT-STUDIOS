@@ -5,10 +5,11 @@ import { MarginNotes } from "@/components/lb/Section";
 import { GhostLink } from "@/components/lb/Buttons";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { CmsImage } from "@/components/lb/CmsImage";
-import { useDrops, useSection } from "@/cms/hooks";
+import { useDrops, useSection, useWords } from "@/cms/hooks";
 
 export function DropRail() {
   const copy = useSection("home", "drops");
+  const w = useWords("home");
   const drops = useDrops();
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -98,7 +99,7 @@ export function DropRail() {
             <Eyebrow tone="dark">{copy.eyebrow}</Eyebrow>
             <h2 className="t-h2 mt-6 max-w-[18ch] text-text">{copy.heading}</h2>
           </div>
-          <GhostLink label="Full catalogue" to="/label" className="text-mute" />
+          <GhostLink label={w.dropsCatalogue} to="/label" className="text-mute" />
         </div>
 
         <div className="mt-12 w-full overflow-hidden">
@@ -160,7 +161,7 @@ export function DropRail() {
 
         <div className="shell mt-12 flex items-center gap-5">
           <span className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute">
-            Drag / Scroll
+            {w.dropsDrag}
           </span>
           <span className="relative h-px flex-1 bg-line">
             <span

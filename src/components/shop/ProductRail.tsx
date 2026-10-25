@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { CmsImage } from "@/components/lb/CmsImage";
 import { inr } from "@/lib/money";
 import type { ProductDoc as Product } from "@/cms/hooks";
+import { useWords } from "@/cms/hooks";
 
 /**
  * A row of products you swipe — "more from the shop", "recently viewed".
@@ -20,6 +21,7 @@ export function ProductRail({
   standfirst?: string;
   products: Product[];
 }) {
+  const w = useWords("product");
   if (products.length === 0) return null;
 
   return (
@@ -34,7 +36,11 @@ export function ProductRail({
 
         <ul className="no-scrollbar mt-8 flex gap-4 overflow-x-auto pb-2 [scroll-snap-type:x_proximity]">
           {products.map((p) => (
-            <li key={p.id} className="w-[168px] shrink-0 [scroll-snap-align:start] sm:w-[200px]">
+            <li
+              key={p.id}
+              data-reveal
+              className="w-[168px] shrink-0 [scroll-snap-align:start] sm:w-[200px]"
+            >
               <Link
                 to="/shop/$id"
                 params={{ id: p.id }}
@@ -51,7 +57,9 @@ export function ProductRail({
                   <p className="truncate font-ui text-[12px] text-mute">{p.by}</p>
                   <p className="tnum mt-2 font-display text-[15px] font-extrabold tracking-[-0.01em] text-text">
                     {inr(p.price)}
-                    {p.stock <= 0 ? <span className="ml-2 t-label text-mute">Sold out</span> : null}
+                    {p.stock <= 0 ? (
+                      <span className="ml-2 t-label text-mute">{w.soldOut}</span>
+                    ) : null}
                   </p>
                 </div>
               </Link>

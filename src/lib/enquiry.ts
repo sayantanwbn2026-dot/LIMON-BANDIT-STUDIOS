@@ -87,24 +87,3 @@ export function readEnquiry(search: string): Enquiry {
 
   return { intent };
 }
-
-/**
- * The opening line we put in the message box when a subject is known.
- *
- * Prefilled rather than merely displayed, because the mail this form
- * composes is read by a person: "Room A" in a field they cannot see in
- * their inbox is worth less than a sentence in the body. Left editable —
- * it is a starting point, not a locked field.
- */
-export function openingLine(intent: IntentId, s: Subject): string {
-  switch (intent) {
-    case "booking":
-      return `I'd like to book ${s.title}${s.detail ? ` (${s.detail})` : ""}. `;
-    case "crew":
-      return `I'd like to hire ${s.title}${s.detail ? ` (${s.detail})` : ""}. `;
-    case "order":
-      return `I'd like to order ${s.title}${s.detail ? ` (${s.detail})` : ""}. `;
-    default:
-      return `About ${s.title}. `;
-  }
-}

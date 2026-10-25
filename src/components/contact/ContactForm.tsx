@@ -4,16 +4,10 @@ import { ArrowRight } from "lucide-react";
 import { BoundaryRule, GridRules } from "@/components/lb/GridRules";
 import { Eyebrow } from "@/components/lb/Section";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
-import { useSection, useSite } from "@/cms/hooks";
-import {
-  INTENTS,
-  DEFAULT_INTENT,
-  readEnquiry,
-  openingLine,
-  type IntentId,
-  type Subject,
-} from "@/lib/enquiry";
+import { useSection, useSite, useWords, useIntents, useWordsRef } from "@/cms/hooks";
+import { INTENTS, DEFAULT_INTENT, readEnquiry, type IntentId, type Subject } from "@/lib/enquiry";
 import { readableEnquiryIssue, submitEnquiry } from "@/lib/enquiries";
+import { fill, type Words } from "@/cms/words";
 
 /**
  * The one form.
@@ -32,8 +26,35 @@ type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** The line a message opens with when someone arrives from a room, a crew
+ * member or a product — the editor's wording, with the thing filled in. */
+function openingFor(w: Words["contact"], id: IntentId, s: Subject): string {
+  const t =
+    id === "booking"
+      ? w.formOpenBooking
+      : id === "crew"
+        ? w.formOpenCrew
+        : id === "order"
+          ? w.formOpenOrder
+          : w.formOpenOther;
+  return fill(t, { title: s.title, detail: s.detail ? ` (${s.detail})` : "" });
+}
+
 export function ContactForm() {
   const copy = useSection("contact", "form");
+  const w = useWords("contact");
+  const c = useWords("common");
+  /* The ids are fixed — links across the site carry ?intent=booking and the
+   * server files on them — but the label on each chip is the editor's,
+   * from Contact → the enquiry form list. It was read nowhere: the chips
+   * used the committed labels, so renaming one in the admin did nothing. */
+  const cmsIntents = useIntents();
+  const intentLabel = (id: IntentId) =>
+    cmsIntents.find((i) => i?.id === id)?.label?.trim() ||
+    INTENTS.find((i) => i.id === id)?.label ||
+    w.formEnquiry;
+  const wRef = useWordsRef("contact");
+
   const site = useSite();
   const [intent, setIntent] = useState<IntentId>(DEFAULT_INTENT);
   const [subject, setSubject] = useState<Subject | undefined>();
@@ -66,15 +87,15 @@ export function ContactForm() {
       setSubject(e.subject);
       /* Only ever seeds an untouched box — a remount must not overwrite
        * something half-typed. */
-      setMessage((m) => (m ? m : openingLine(e.intent, e.subject!)));
+      setMessage((m) => (m ? m : openingFor(wRef.current, e.intent, e.subject!)));
     }
-  }, []);
+  }, [wRef]);
 
   const validate = (): Errors => {
     const e: Errors = {};
-    if (!name.trim()) e.name = "Tell us who you are.";
-    if (!EMAIL.test(email)) e.email = "That address will not reach you — check it.";
-    if (message.trim().length < 12) e.message = "A sentence or two, so we can answer properly.";
+    if (!name.trim()) e.name = c.nameMissing;
+    if (!EMAIL.test(email)) e.email = c.emailInvalid;
+    if (message.trim().length < 12) e.message = w.formMessageShort;
     return e;
   };
 
@@ -93,7 +114,7 @@ export function ContactForm() {
    * is the honest fallback when the server cannot be reached — but it is no
    * longer what pressing Send does. */
   const openMailClient = () => {
-    const label = INTENTS.find((i) => i.id === intent)?.label ?? "Enquiry";
+    const label = intentLabel(intent);
     /* The subject line is what gets read in an inbox list, so the specific
      * thing goes in it — "[Book a room] Room A — Priya" beats a wall of
      * identical "[Book a room]" rows. */
@@ -121,7 +142,7 @@ export function ContactForm() {
 
     setBusy(true);
     try {
-      const label = INTENTS.find((i) => i.id === intent)?.label ?? "Enquiry";
+      const label = intentLabel(intent);
       const res = await submitEnquiry({
         data: {
           intent: label,
@@ -187,14 +208,14 @@ export function ContactForm() {
           <div role="status" className="mt-12 max-w-[760px] border-t border-line pt-10">
             <span className="flex items-center gap-3">
               <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-acid" />
-              <span className="t-label text-mute">Received</span>
+              <span className="t-label text-mute">{w.formReceived}</span>
             </span>
             <p className="mt-6 font-display text-[28px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
-              Thanks, {name.trim().split(" ")[0]}. It is with us.
+              {fill(w.formThanks, { name: name.trim().split(" ")[0] })}
             </p>
             <p className="mt-5 max-w-[52ch] font-ui text-[16px] leading-[1.6] text-mute">
-              A person reads every message and replies to {email.trim()}. If you need to chase it,
-              quote <span className="tnum font-semibold text-acid-type">{sent.reference}</span>.
+              {fill(w.formReply, { email: email.trim() })}{" "}
+              <span className="tnum font-semibold text-acid-type">{sent.reference}</span>.
             </p>
             <button
               type="button"
@@ -206,7 +227,7 @@ export function ContactForm() {
               }}
               className="t-label mt-8 text-text underline underline-offset-4 transition-colors duration-300 hover:text-acid-type"
             >
-              Send another
+              {w.formSendAnother}
             </button>
           </div>
         ) : (
@@ -247,7 +268,13 @@ export function ContactForm() {
                     className="overflow-hidden"
                   >
                     <div className="mb-12 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-y border-line py-5">
-                      <span className="t-label shrink-0 text-mute">{subject.kind}</span>
+                      <span className="t-label shrink-0 text-mute">
+                        {subject.kind === "Room"
+                          ? w.formSubjectRoom
+                          : subject.kind === "Item"
+                            ? w.formSubjectItem
+                            : subject.kind}
+                      </span>
                       <span className="font-display text-[18px] font-bold uppercase tracking-[-0.02em] text-text">
                         {subject.title}
                       </span>
@@ -261,7 +288,7 @@ export function ContactForm() {
                         onClick={() => setSubject(undefined)}
                         className="ml-auto font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-mute transition-colors duration-300 hover:text-text"
                       >
-                        <span className="wipe-underline">Clear</span>
+                        <span className="wipe-underline">{w.formClear}</span>
                       </button>
                     </div>
                   </motion.div>
@@ -270,7 +297,7 @@ export function ContactForm() {
             </MotionConfig>
 
             <fieldset>
-              <legend className="t-label text-mute">What is it about</legend>
+              <legend className="t-label text-mute">{w.formAbout}</legend>
               <div className="mt-5 flex flex-wrap gap-3">
                 {INTENTS.map((i) => {
                   const on = intent === i.id;
@@ -286,7 +313,7 @@ export function ContactForm() {
                           : "border border-line text-mute hover:border-acid-type hover:text-text"
                       }`}
                     >
-                      {i.label}
+                      {intentLabel(i.id)}
                     </button>
                   );
                 })}
@@ -296,23 +323,23 @@ export function ContactForm() {
             <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-2">
               <Field
                 id="contact-name"
-                label="Your name"
+                label={w.formName}
                 value={name}
                 onChange={setName}
                 onBlur={blur("name")}
                 error={err("name")}
-                placeholder="Who is asking"
+                placeholder={w.formNamePlaceholder}
                 autoComplete="name"
               />
               <Field
                 id="contact-email"
-                label="Email"
+                label={c.emailLabel}
                 type="email"
                 value={email}
                 onChange={setEmail}
                 onBlur={blur("email")}
                 error={err("email")}
-                placeholder="you@somewhere.in"
+                placeholder={c.emailPlaceholder}
                 autoComplete="email"
               />
             </div>
@@ -322,7 +349,7 @@ export function ContactForm() {
                 htmlFor="contact-message"
                 className="font-ui text-[10px] font-bold uppercase tracking-[0.18em] text-mute"
               >
-                The message
+                {w.formMessage}
               </label>
               <div
                 className={`mt-3 border-b lb-field-line transition-colors duration-300 focus-within:border-line-strong ${
@@ -337,7 +364,7 @@ export function ContactForm() {
                   onBlur={blur("message")}
                   aria-invalid={Boolean(err("message"))}
                   aria-describedby={err("message") ? "contact-message-error" : undefined}
-                  placeholder="Dates, the project, the budget you actually have."
+                  placeholder={w.formMessagePlaceholder}
                   className="ui-field w-full resize-y px-3.5 py-4 font-ui text-[16px] leading-[1.5] text-text outline-none placeholder:text-[color:var(--placeholder)]"
                 />
               </div>
@@ -355,7 +382,7 @@ export function ContactForm() {
                   onClick={openMailClient}
                   className="t-label mt-3 text-acid-type underline underline-offset-4"
                 >
-                  Send it from your own mail app instead
+                  {w.formUseMailApp}
                 </button>
               </div>
             ) : null}
@@ -368,18 +395,18 @@ export function ContactForm() {
                 className="group flex h-[56px] items-center justify-between gap-6 bg-acid px-8 transition-colors duration-300 hover:bg-acid-dim disabled:cursor-wait disabled:opacity-70"
               >
                 <span className="font-ui text-[13px] font-bold uppercase tracking-[0.14em] text-accent-text">
-                  {busy ? "Sending…" : "Send it"}
+                  {busy ? w.formSending : w.formSend}
                 </span>
                 <ArrowRight size={16} className="text-accent-text lb-arrow" />
               </button>
               <p className="t-label max-w-[40ch] text-mute">
-                A person reads every one.{" "}
+                {w.formPersonReads}{" "}
                 <button
                   type="button"
                   onClick={openMailClient}
                   className="tap text-text underline underline-offset-4 transition-colors duration-300 hover:text-acid-type"
                 >
-                  Or email {site.email}
+                  {fill(w.formOrEmail, { email: site.email })}
                 </button>
               </p>
             </div>
