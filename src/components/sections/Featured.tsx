@@ -21,8 +21,12 @@ import { useFeatured, useSection, useWords } from "@/cms/hooks";
  * the thing itself rather than a category: a room, one product, a release.
  *
  * WHAT MAKES THE CARD
- *   A photograph at 4:5, which is the shape everything else on this site is
- *   cut to, so the row agrees with the shop grid and the rooms ledger.
+ *   A 3:4 card, the same shape as the shop grid's, so the two rows agree.
+ *   The photograph takes whatever the words leave: the body is a fixed
+ *   stack (one-line eyebrow, one-line title, a two-line blurb, the call to
+ *   action), so it is the same height on all three cards and the pictures
+ *   above it line up. At 4:5 plus that body each card was 396 × 680 —
+ *   taller than the screen it was meant to open.
  *   The whole card is the link — Fitts's law applied to the largest target
  *   a page can offer — with a single visible focus ring, because three
  *   nested links per card is how a keyboard user ends up pressing Tab nine
@@ -80,12 +84,12 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
 
   const body = (
     <>
-      <div className="relative overflow-hidden">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <CmsImage
           src={item.image}
           alt={item.title}
           sizes="(max-width: 767px) 84vw, 33vw"
-          className="chroma aspect-[4/5] w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+          className="chroma absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
         />
 
         {/* The rank, so the row reads as a considered order rather than
@@ -104,36 +108,34 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col border-t border-line p-5">
-        {item.eyebrow ? <span className="t-label text-mute">{item.eyebrow}</span> : null}
+      {/* Every line here is always drawn, even when the CMS leaves it
+       * empty, and none can grow: that is what keeps this block one height
+       * across the row. */}
+      <div className="flex flex-col border-t border-line p-4 md:p-5">
+        <span className="t-label block truncate text-mute">{item.eyebrow || " "}</span>
 
-        <h3 className="mt-2 font-display text-[22px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text">
+        <h3
+          title={item.title}
+          className="mt-2 truncate font-display text-[22px] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-text"
+        >
           {item.title}
         </h3>
 
         {/* 12px under the title, 8 above it. An even gap on both sides made
          * the eyebrow, the title and the blurb read as three equals; the
-         * blurb belongs to the title, and the eyebrow labels it. */}
-        {item.blurb ? (
-          <p className="card-blurb mb-5 mt-3 font-ui text-[14px] leading-[1.5] text-mute [text-wrap:pretty]">
-            {item.blurb}
-          </p>
-        ) : null}
+         * blurb belongs to the title, and the eyebrow labels it.
+         * Lines held open whether the blurb fills them or not: one in the
+         * phone rail, where a 245px card cannot spend two on it and still
+         * show a picture, two from `md`. */}
+        <p className="mb-3 mt-2 line-clamp-1 min-h-[1.5em] font-ui text-[14px] leading-[1.5] text-mute [text-wrap:pretty] md:mb-4 md:mt-3 md:line-clamp-2 md:min-h-[3em]">
+          {item.blurb}
+        </p>
 
-        {/* `mt-auto` PINS THIS TO THE FLOOR OF THE CARD.
-         *
-         * The three cards in this rail already stretch to a common height,
-         * but the link sat wherever the blurb happened to end — measured at
-         * 24px apart across the three, so the row of calls to action was
-         * visibly crooked while the cards around them were square. Pushed
-         * to the bottom, they land on one line whatever the copy does.
-         *
-         * The hairline above it is the same device the room card uses: the
-         * top of a card describes the thing and the bottom of it acts, and
-         * a drawn edge says so where a margin only implies it. `mb-5` on
-         * the blurb is the minimum gap, since `mt-auto` collapses to zero
-         * when a long blurb leaves no free space to absorb. */}
-        <span className="mt-auto flex items-center gap-2 border-t border-line pt-4 font-ui text-[12px] font-bold uppercase tracking-[0.14em] text-text">
+        {/* The hairline above it is the same device the room card uses:
+         * the top of a card describes the thing and the bottom of it acts,
+         * and a drawn edge says so where a margin only implies it. With a
+         * fixed-height body it lands on one line across the row by itself. */}
+        <span className="flex items-center gap-2 border-t border-line pt-3 font-ui md:pt-4 text-[12px] font-bold uppercase tracking-[0.14em] text-text">
           <span className="wipe-underline">{item.cta || w.featuredOpen}</span>
           {external ? (
             <ArrowUpRight size={15} className="text-acid-type lb-arrow" />
@@ -146,7 +148,7 @@ function FeatureCard({ item, rank }: { item: Item; rank: number }) {
   );
 
   const shell =
-    "ui-card group flex h-full flex-col overflow-hidden text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid";
+    "ui-card group flex aspect-[3/4] flex-col overflow-hidden text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid";
 
   /* An address from another site opens in a new tab and says so in its
    * own label; everything else is an in-app navigation and must go

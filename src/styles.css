@@ -197,9 +197,12 @@
    * — with the ambient shadow only doing the work of separating a raised
    * plane from a lighter one beneath it. Which is why every level carries
    * --edge-hi and only the top two carry much blur. */
-  --r-control: 8px; /* buttons, inputs, chips — anything you press */
-  --r-surface: 12px; /* cards, panels, dialogs — anything you read */
-  --r-media: 10px; /* framed photographs */
+  /* 8 / 6 / 6, down from 12 / 10 / 8: at 12 the cards read soft against
+   * the hard grid rules around them. Each step keeps its order — what you
+   * press stays tighter than what you read. */
+  --r-control: 6px; /* buttons, inputs, chips — anything you press */
+  --r-surface: 8px; /* cards, panels, dialogs — anything you read */
+  --r-media: 6px; /* framed photographs */
 
   --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.055);
   --elev-1: 0 1px 2px rgba(0, 0, 0, 0.5), var(--edge-hi);
