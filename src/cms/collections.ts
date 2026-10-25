@@ -64,7 +64,7 @@ const site: Collection = {
       "Mascot",
       1024,
       1169,
-      "Stands in front of the big wordmark on every page's opening screen, and appears faintly in the menu and the footer. Use a cut-out on a transparent background (PNG or WebP), about this shape — taller than it is wide, with the figure's feet at the bottom edge. A page can swap in its own under Page titles & SEO.",
+      "Stands in front of the big wordmark on every page's opening screen, and appears faintly in the menu and the footer. Use a cut-out on a transparent background (PNG or WebP), about this shape — taller than it is wide, with the figure's feet at the bottom edge. Every mascot on the site, with a preview of how each one stands, is under Hero Mascot.",
     ),
     text("mascotAlt", "Mascot description", {
       help: "What the mascot looks like, in one line, for screen readers.",
@@ -173,7 +173,7 @@ const seo: Collection = {
       "Mascot on this page",
       1024,
       1169,
-      "Leave empty to use the house mascot from Brand & contact. Same rules: a transparent cut-out, taller than wide, feet at the bottom edge — he is placed exactly where the house mascot stands.",
+      "Leave empty to use the house mascot. Same rules: a transparent cut-out, taller than wide, feet at the bottom edge — he is placed exactly where the house mascot stands. Easier to set under Hero Mascot, which shows how he will stand.",
     ),
     text("mascotAlt", "Mascot description", {
       help: "Only needed when this page has its own mascot.",

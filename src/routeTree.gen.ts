@@ -28,6 +28,7 @@ import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminGlobalRouteImport } from './routes/admin.global'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminMascotsRouteImport } from './routes/admin.mascots'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
@@ -134,6 +135,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMascotsRoute = AdminMascotsRouteImport.update({
+  id: '/mascots',
+  path: '/mascots',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
   id: '/media',
   path: '/media',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/mascots': typeof AdminMascotsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/mascots': typeof AdminMascotsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/global': typeof AdminGlobalRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/mascots': typeof AdminMascotsRoute
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
+    | '/admin/mascots'
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
+    | '/admin/mascots'
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/global'
     | '/admin/login'
+    | '/admin/mascots'
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
@@ -529,6 +541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/mascots': {
+      id: '/admin/mascots'
+      path: '/mascots'
+      fullPath: '/admin/mascots'
+      preLoaderRoute: typeof AdminMascotsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/media': {
       id: '/admin/media'
       path: '/media'
@@ -607,6 +626,7 @@ interface AdminRouteChildren {
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminGlobalRoute: typeof AdminGlobalRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminMascotsRoute: typeof AdminMascotsRoute
   AdminMediaRoute: typeof AdminMediaRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminOwnershipRoute: typeof AdminOwnershipRoute
@@ -621,6 +641,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminGlobalRoute: AdminGlobalRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminMascotsRoute: AdminMascotsRoute,
   AdminMediaRoute: AdminMediaRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminOwnershipRoute: AdminOwnershipRoute,

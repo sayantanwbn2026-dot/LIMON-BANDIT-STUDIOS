@@ -31,6 +31,7 @@ on the list. An owner can add it under **Ownership**.
 | **Analytics**                                                | Visits, top pages, traffic over time                                                  |
 | **Pages** → Home, Rooms, Label, Shop, Crew, Journal, Contact | Everything that appears on that page                                                  |
 | **Global content**                                           | Contact details, menu, social links, tickers, FAQ, legal pages, page headings and SEO |
+| **Hero Mascot**                                              | The house mascot and each page's own, with how each one stands                        |
 | **Shop & pricing**                                           | Products, prices, stock, discount codes, delivery costs                               |
 | **Media**                                                    | Every image uploaded, and links you have added                                        |
 | **Ownership**                                                | Who can edit, and a history of every change                                           |
@@ -122,15 +123,28 @@ H1, the big poster wordmark above it, the line under it, the short name used
 in breadcrumbs and the "next page" doors, and its search-engine title and
 description. Leave "Page id" and "Path" alone.
 
-**The mascot on every page's opening screen is under Global content → Brand &
-contact → _Mascot_.** Upload a new one there and it replaces him on every hero,
-in the menu and in the footer at once. To give one page its own mascot — Limon
-in headphones on Rooms, say — set _Mascot on this page_ on that page's row in
-Page titles & SEO; clear it and the page goes back to the house mascot. He is
-always placed in exactly the same spot, so use a cut-out on a transparent
-background (PNG or WebP), roughly 1024 × 1169, taller than wide, with his feet
-at the bottom edge of the image. Fill in the description field beside it: it is
-what a screen reader says instead of the picture.
+**Every mascot is under Hero Mascot** in the left bar. The top slot is the
+house mascot: it stands on every page's opening screen and appears faintly in
+the menu, the footer and the "Still stuck?" card. Below it is one slot per page
+— Home, Rooms, Label, Shop, Crew, About, Contact — to give that page its own
+mascot (Limon in headphones on Rooms, say); leave a page empty and it uses the
+house mascot. Each slot shows how he will stand on a laptop and on a phone.
+
+He is always placed in exactly the same spot, so the file decides how he
+looks there. To stand exactly where Limon stands now:
+
+- **1024 × 1169 px** — a little taller than wide. Bigger at the same shape is
+  fine, e.g. 2048 × 2338.
+- **Transparent background** — PNG or WebP. A JPG shows as a box behind him.
+- **Cropped tight** — top of the head on the top edge, feet on the bottom
+  edge, no empty margin. The bottom edge is the floor he stands on.
+- **Centred** left to right.
+
+The screen checks an upload for the shape, a solid background, and empty space
+under the feet or over the head, and says so before you save. Fill in the
+description beside each one: it is what a screen reader says instead of the
+picture. (The same fields are also at Global content → Brand & contact and on
+each page's row in Page titles & SEO.)
 
 **Journal entries are pages the moment you save them.** A new entry gets its
 own address (`/journal/<web address>`), appears in the sitemap, and links to
