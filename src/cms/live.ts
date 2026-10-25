@@ -59,10 +59,7 @@ async function fetchDocs(): Promise<Docs | null> {
   }
 }
 
-/** Every stored document, cached. `{}` when the store cannot be reached. */
-export async function liveDocs(): Promise<Docs> {
-  const now = Date.now();
-  if (cache && now - cache.at < CACHE_MS) return cache.docs;
+function refresh(): Promise<Docs> {
   inflight ??= fetchDocs().then((docs) => {
     inflight = null;
     if (docs) cache = { at: Date.now(), docs };
@@ -71,6 +68,43 @@ export async function liveDocs(): Promise<Docs> {
     return docs ?? cache?.docs ?? {};
   });
   return inflight;
+}
+
+/**
+ * Every stored document, cached. `{}` when the store cannot be reached.
+ *
+ * IN THE BROWSER A STALE COPY IS ANSWERED AT ONCE, AND REFRESHED BEHIND IT.
+ * Every route's loader awaits this, so once the copy the page was served
+ * with passed thirty seconds, each click on a link waited on a round trip
+ * to the database before the next page was allowed to render — 150ms
+ * measured on a desk connection, up to the 1.5s timeout on a phone, all
+ * of it spent staring at the page being left. In the browser these
+ * documents only feed titles and existence checks (the page's content is
+ * `ContentProvider`'s), so last-known is the right answer to give now; the
+ * one question it can get wrong goes through `freshDocs` instead.
+ *
+ * The server keeps waiting: what it renders is what a crawler and a link
+ * preview see, and an editor's save should reach them within the window.
+ */
+export async function liveDocs(): Promise<Docs> {
+  const now = Date.now();
+  if (cache && now - cache.at < CACHE_MS) return cache.docs;
+  if (cache && typeof window !== "undefined") {
+    void refresh();
+    return cache.docs;
+  }
+  return refresh();
+}
+
+/**
+ * The documents no older than the cache window, waiting for a fetch if
+ * need be — for "does this page exist?". A copy from before a journal
+ * entry, a policy or a product was written cannot say it does not, so a
+ * route asks here before it answers "not found".
+ */
+export async function freshDocs(): Promise<Docs> {
+  if (cache && Date.now() - cache.at < CACHE_MS) return cache.docs;
+  return refresh();
 }
 
 /** The last documents fetched, synchronously — for `head`, which cannot await. */

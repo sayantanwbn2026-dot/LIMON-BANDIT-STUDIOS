@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { LegalPage } from "@/components/legal/LegalPage";
-import { liveDocs, listFrom } from "@/cms/live";
+import { freshDocs, liveDocs, listFrom, type Docs } from "@/cms/live";
 import { useLegal, type LegalDoc } from "@/cms/hooks";
 import { pageHead, siteNameFrom } from "@/lib/seo";
 
@@ -13,8 +13,12 @@ import { pageHead, siteNameFrom } from "@/lib/seo";
  */
 export const Route = createFileRoute("/legal/$slug")({
   loader: async ({ params }) => {
-    const docs = await liveDocs();
-    const doc = listFrom<LegalDoc>(docs, "global.legal").find((d) => d.slug === params.slug);
+    const find = (d: Docs) =>
+      listFrom<LegalDoc>(d, "global.legal").find((l) => l.slug === params.slug);
+    let docs = await liveDocs();
+    let doc = find(docs);
+    /* a cached copy cannot prove a page does not exist — see freshDocs */
+    if (!doc) doc = find((docs = await freshDocs()));
     if (!doc) throw notFound();
     return { doc, siteName: siteNameFrom(docs) };
   },

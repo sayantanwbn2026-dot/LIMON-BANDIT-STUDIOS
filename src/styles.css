@@ -570,14 +570,19 @@
  * tablet is held and tapped exactly like a phone. Only this invisible
  * layer moved — the footer's padding rule below stays phone-only, since
  * adding block padding changes layout and the tablet footer is laid out
- * differently. */
+ * differently.
+ *
+ * `.tap-area` is the same layer for a control that is already positioned —
+ * a button floated over a photograph is `absolute`, and `.tap` would knock
+ * it back into the flow with `position: relative`. */
 @media (pointer: coarse) {
   a:has(> .wipe-underline),
   .tap {
     position: relative;
   }
   a:has(> .wipe-underline)::before,
-  .tap::before {
+  .tap::before,
+  .tap-area::before {
     content: "";
     position: absolute;
     left: 50%;
@@ -1378,6 +1383,45 @@
   transform-origin: left center;
   opacity: 0;
   pointer-events: none;
+}
+
+/* The page change itself — see RouteTransition for when each state is set.
+ *
+ * Leaving: the page dims rather than vanishing. If the next one is ready
+ * in a few milliseconds the dim never visibly starts; if it is not, the
+ * visitor is still looking at a page, not at an empty frame.
+ *
+ * Arriving: the new <main> fades up and its first header rises 14px. Both
+ * are `backwards` fill, so the starting frame applies from the first paint
+ * and nothing remains on the element once they end. 0.48s and 0.72s on
+ * the same out-curve the site's reveals use: long enough to read as one
+ * movement, short enough that nobody waits on it — the page is readable
+ * within the first quarter of it. */
+@media (prefers-reduced-motion: no-preference) {
+  main[data-leaving] {
+    opacity: 0.55;
+    transition: opacity 0.22s ease-out;
+  }
+
+  html[data-route-enter] main:not([data-leaving]) {
+    animation: lb-page-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  html[data-route-enter] main:not([data-leaving]) > header:first-child {
+    animation: lb-page-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}
+
+@keyframes lb-page-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lb-page-rise {
+  from {
+    transform: translateY(14px);
+  }
 }
 
 /* ---------------- site menu ----------------

@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { JournalArticle } from "@/components/journal/JournalArticle";
-import { liveDocs, listFrom } from "@/cms/live";
+import { freshDocs, liveDocs, listFrom, type Docs } from "@/cms/live";
 import { usePost, type PostDoc } from "@/cms/hooks";
 import { articleJsonLd, pageHead, siteNameFrom } from "@/lib/seo";
 
@@ -17,8 +17,12 @@ export const Route = createFileRoute("/journal/$slug")({
    * server — it used to check the compiled list, which made every new
    * entry a 404 — and a deleted one is a real 404 rather than a stale page. */
   loader: async ({ params }) => {
-    const docs = await liveDocs();
-    const entry = listFrom<PostDoc>(docs, "page.journal.posts").find((p) => p.slug === params.slug);
+    const find = (d: Docs) =>
+      listFrom<PostDoc>(d, "page.journal.posts").find((p) => p.slug === params.slug);
+    let docs = await liveDocs();
+    let entry = find(docs);
+    /* a cached copy cannot prove an entry does not exist — see freshDocs */
+    if (!entry) entry = find((docs = await freshDocs()));
     if (!entry) throw notFound();
     return { entry, siteName: siteNameFrom(docs) };
   },

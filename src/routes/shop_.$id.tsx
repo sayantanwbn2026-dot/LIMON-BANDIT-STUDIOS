@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ProductPage } from "@/components/shop/ProductPage";
-import { liveDocs, listFrom } from "@/cms/live";
+import { freshDocs, liveDocs, listFrom, type Docs } from "@/cms/live";
 import { useProducts, type ProductDoc } from "@/cms/hooks";
 import { pageHead, productJsonLd, siteNameFrom } from "@/lib/seo";
 
@@ -13,8 +13,12 @@ import { pageHead, productJsonLd, siteNameFrom } from "@/lib/seo";
  */
 export const Route = createFileRoute("/shop_/$id")({
   loader: async ({ params }) => {
-    const docs = await liveDocs();
-    const product = listFrom<ProductDoc>(docs, "commerce.products").find((p) => p.id === params.id);
+    const find = (d: Docs) =>
+      listFrom<ProductDoc>(d, "commerce.products").find((p) => p.id === params.id);
+    let docs = await liveDocs();
+    let product = find(docs);
+    /* a cached copy cannot prove a product does not exist — see freshDocs */
+    if (!product) product = find((docs = await freshDocs()));
     if (!product) throw notFound();
     return { product, siteName: siteNameFrom(docs) };
   },

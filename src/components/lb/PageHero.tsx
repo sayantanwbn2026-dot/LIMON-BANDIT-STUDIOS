@@ -37,6 +37,16 @@ import { getLenis } from "@/lib/smooth";
  * `lg:min-h-[100svh]` floor, which is what the Journal masthead wants: it
  * is set as a newspaper front page and has no mascot.
  *
+ * `compact` is for a page people come to in order to do something — the
+ * shop. On a phone the full stage plus its band put the first product
+ * 1,814px down, more than two screens of brand before a single thing for
+ * sale. Compact keeps every part of the stage — wordmark, mascot standing
+ * in front of it, the drawn quarters — at two thirds of a screen, with him
+ * standing on the stage's floor, and drops the "Scroll" foot: the
+ * band's first lines now show under the stage, and they say "keep going"
+ * better than a button did. From 768px the stage is exactly the standard
+ * one.
+ *
  * Two contracts the rest of the app depends on and which must survive any
  * hero design: the element is a <header> (RouteTransition rises `main >
  * header` on arrival) and the heading inside carries `data-page-h1` with
@@ -52,6 +62,7 @@ export function HeroFrame({
   bodyClassName,
   lockup,
   mascot = true,
+  compact = false,
   children,
 }: {
   chapter: ChapterKey;
@@ -72,6 +83,8 @@ export function HeroFrame({
    * `lockup`, since the stage is what he is positioned against.
    */
   mascot?: boolean;
+  /** A shorter stage on phones, for a page whose content is the point. */
+  compact?: boolean;
   children: ReactNode;
 }) {
   const c = useChapter(key);
@@ -207,7 +220,14 @@ export function HeroFrame({
         /* One viewport, the same two values home's own hero section uses.
          * `height`, not `min-height`: the stage is a fixed stage, and
          * anything that wants to grow belongs in the band below it. */
-        <div ref={stageRef} className="relative" style={{ height: "100svh", minHeight: 680 }}>
+        <div
+          ref={stageRef}
+          className={`relative ${
+            compact
+              ? "h-[max(500px,66svh)] md:h-[100svh] md:min-h-[680px]"
+              : "h-[100svh] min-h-[680px]"
+          }`}
+        >
           <GridRules tone={tone} cols="inner" />
           <div ref={lockRef} className="shell relative z-[2] pt-[120px]">
             {lockup}
@@ -227,7 +247,11 @@ export function HeroFrame({
              * width he needs and he arrives soft. */
             <div
               ref={limonRef}
-              className="pointer-events-none absolute bottom-[18svh] left-1/2 z-[5] h-[52svh] w-[92vw] max-w-[560px] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] md:w-[54vw] lg:h-[62vh] lg:w-[48vw] lg:max-w-[720px] 2xl:h-[68vh]"
+              className={`pointer-events-none absolute left-1/2 z-[5] w-[92vw] max-w-[560px] -translate-x-1/2 md:bottom-[8svh] md:h-[54vh] md:w-[54vw] lg:h-[62vh] lg:w-[48vw] lg:max-w-[720px] 2xl:h-[68vh] ${
+                /* compact: on the stage's floor, sized to what is left
+                 * under the wordmark */
+                compact ? "bottom-0 h-[min(40svh,330px)]" : "bottom-[18svh] h-[52svh]"
+              }`}
             >
               <div ref={leanRef} className="h-full w-full">
                 <HeroMascot chapter={key} />
@@ -247,7 +271,9 @@ export function HeroFrame({
            * the band is too shallow to need anything. */}
           <div
             ref={footRef}
-            className="absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7] md:hidden"
+            className={`absolute inset-x-0 bottom-[calc(52px+env(safe-area-inset-bottom,0px))] z-[7] md:hidden ${
+              compact ? "hidden" : ""
+            }`}
           >
             <div ref={footInRef} className="shell">
               <button
@@ -277,7 +303,12 @@ export function HeroFrame({
       <div
         ref={bodyRef}
         className={`shell relative z-[2] ${
-          bodyClassName ?? (lockup ? "pb-[96px] pt-[96px]" : "pb-[96px] pt-[120px]")
+          bodyClassName ??
+          (lockup
+            ? compact
+              ? "pb-14 pt-10 md:pb-[96px] md:pt-[96px]"
+              : "pb-[96px] pt-[96px]"
+            : "pb-[96px] pt-[120px]")
         }`}
       >
         {children}

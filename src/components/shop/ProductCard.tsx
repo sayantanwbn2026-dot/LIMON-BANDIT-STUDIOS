@@ -16,13 +16,22 @@ import { fill } from "@/cms/words";
 /**
  * One product.
  *
- * THE CARD IS 3:4, AND THE PICTURE TAKES WHAT THE WORDS LEAVE.
+ * FROM `sm` THE CARD IS 3:4, AND THE PICTURE TAKES WHAT THE WORDS LEAVE.
  * It used to be a 4:5 photograph with the blurb, the size chips and the run
  * stacked underneath — 328 × 744 on a desk, more than twice as tall as wide,
  * so a row of three filled the screen and still ended below it. Now the
- * card holds one shape at every width and the body is three single lines: a
- * name, who made it, a price. The photograph is `flex-1`, so it fills
- * whatever the card has left over.
+ * card holds one shape and the body is three single lines: a name, who made
+ * it, a price. The photograph is `flex-1`, so it fills whatever the card has
+ * left over.
+ *
+ * ON A PHONE IT IS THE PICTURE THAT IS 3:4.
+ * Two columns leave a card 150px wide, and the same rule there left a
+ * 148 × 119 photograph with a 44px heart and a 44px add button on it —
+ * a quarter of the picture was controls, and the product was a thumbnail.
+ * So below `sm` the photograph keeps the shape and the words go under it:
+ * a two-line name, then the price with a 32px add button beside it, off
+ * the picture entirely. Both buttons are 32px to look at and 44px to the
+ * finger.
  *
  * Because every line in the body has a fixed height (the name is clamped,
  * the full title is in its `title` and on the product page), every body in
@@ -79,15 +88,18 @@ export function ProductCard({
     });
   };
 
+  const addLabel = needsSize
+    ? fill(w.cardChooseSize, { title: product.title })
+    : fill(w.cardAdd, { title: product.title });
+
   return (
     <li
       id={`product-${product.id}`}
       data-reveal
-      className="ui-card flex flex-col overflow-hidden"
-      style={{ aspectRatio: "3 / 4" }}
+      className="ui-card flex flex-col overflow-hidden sm:aspect-[3/4]"
     >
       <article className="group flex min-h-0 flex-1 flex-col">
-        <div className="relative min-h-0 flex-1">
+        <div className="relative aspect-[3/4] sm:aspect-auto sm:min-h-0 sm:flex-1">
           {/* The picture and the name go to the product's own page; the
            * quick-add stays on the grid. Someone who wants to look gets a
            * page they can share, someone who already knows gets one tap —
@@ -123,13 +135,19 @@ export function ProductCard({
             }
             aria-pressed={saved}
             aria-label={fill(saved ? w.wishlistRemove : w.wishlistAdd, { title: product.title })}
-            className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center bg-surface-deep text-mute transition-colors duration-300 hover:text-acid-type"
+            /* 44px to the finger, 32px to the eye on a phone: the button is
+             * the full square, the chip inside it is what is drawn. Tucked in
+             * the card's corner, a hit area grown past the button's edge
+             * would be clipped by the card. */
+            className="group/heart absolute right-0 top-0 flex h-11 w-11 items-start justify-end"
           >
-            <Heart
-              size={15}
-              fill={saved ? "currentColor" : "none"}
-              className={`${saved ? "text-acid-type" : ""} ${justSaved ? "lb-pop" : ""}`}
-            />
+            <span className="flex h-8 w-8 items-center justify-center rounded-[var(--r-control)] bg-surface-deep text-mute transition-colors duration-300 group-hover/heart:text-acid-type sm:h-11 sm:w-11">
+              <Heart
+                size={15}
+                fill={saved ? "currentColor" : "none"}
+                className={`h-3.5 w-3.5 sm:h-[15px] sm:w-[15px] ${saved ? "text-acid-type" : ""} ${justSaved ? "lb-pop" : ""}`}
+              />
+            </span>
           </button>
 
           {/* Stock reads on the left edge so it never sits under the add
@@ -145,27 +163,21 @@ export function ProductCard({
             </span>
           ) : null}
 
-          {/* ON THE PICTURE, NOT UNDER IT.
+          {/* ON THE PICTURE, NOT UNDER IT — from `sm`.
            * The price row used to be a second band under every card, 44px
            * of button beside the price. Floated into the photograph's corner
-           * it costs the card nothing, and it sits where the eye already
-           * is. A 44px square on a phone; the word joins it from `sm`. */}
+           * it costs the 3:4 card nothing, and it sits where the eye already
+           * is. On a phone it would cover the product, so it moves to the
+           * price row below instead. */}
           {gone ? null : (
             <button
               type="button"
               onClick={onAdd}
-              aria-label={
-                needsSize
-                  ? fill(w.cardChooseSize, { title: product.title })
-                  : fill(w.cardAdd, { title: product.title })
-              }
-              className="absolute bottom-2 right-2 flex h-11 shrink-0 items-center justify-center gap-2 bg-acid px-0 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text shadow-[var(--elev-2)] transition-colors duration-300 hover:bg-acid-dim sm:h-10 sm:px-4"
-              style={{ minWidth: 44 }}
+              aria-label={addLabel}
+              className="absolute bottom-2 right-2 hidden h-10 shrink-0 items-center justify-center gap-2 bg-acid px-4 font-ui text-[11px] font-bold uppercase tracking-[0.12em] text-accent-text shadow-[var(--elev-2)] transition-colors duration-300 hover:bg-acid-dim sm:flex"
             >
               {added ? <Check size={15} /> : <Plus size={15} />}
-              <span className="hidden sm:inline">
-                {added ? w.added : needsSize ? w.cardPickSize : w.cardAddShort}
-              </span>
+              {added ? w.added : needsSize ? w.cardPickSize : w.cardAddShort}
             </button>
           )}
         </div>
@@ -199,22 +211,34 @@ export function ProductCard({
             ) : null}
           </p>
 
-          <div className="mt-2 flex items-baseline gap-x-2 sm:mt-3">
-            <span
-              className={`tnum font-display text-[15px] font-extrabold leading-none tracking-[-0.02em] sm:text-[20px] ${
-                gone ? "text-mute line-through" : "text-text"
-              }`}
-            >
-              {inr(product.price)}
-            </span>
-            {product.compareAt ? (
-              <span className="tnum font-ui text-[11px] leading-none text-mute line-through sm:text-[12px]">
-                {inr(product.compareAt)}
+          <div className="mt-2 flex items-center gap-2 sm:mt-3">
+            <span className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
+              <span
+                className={`tnum font-display text-[15px] font-extrabold leading-none tracking-[-0.02em] sm:text-[20px] ${
+                  gone ? "text-mute line-through" : "text-text"
+                }`}
+              >
+                {inr(product.price)}
               </span>
-            ) : null}
+              {product.compareAt ? (
+                <span className="tnum font-ui text-[11px] leading-none text-mute line-through sm:text-[12px]">
+                  {inr(product.compareAt)}
+                </span>
+              ) : null}
+            </span>
             {gone ? (
               <span className="t-label ml-auto leading-none text-mute">{w.cardGone}</span>
-            ) : null}
+            ) : (
+              /* The phone's add button: beside the price, off the picture. */
+              <button
+                type="button"
+                onClick={onAdd}
+                aria-label={addLabel}
+                className="tap-area relative ml-auto flex h-8 w-8 shrink-0 items-center justify-center bg-acid text-accent-text transition-colors duration-300 hover:bg-acid-dim sm:hidden"
+              >
+                {added ? <Check size={14} /> : <Plus size={14} />}
+              </button>
+            )}
           </div>
         </div>
       </article>

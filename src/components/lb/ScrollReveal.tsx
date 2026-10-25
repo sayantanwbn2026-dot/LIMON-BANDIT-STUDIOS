@@ -11,6 +11,12 @@ import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
  * comes in as a sequence rather than a block. `data-reveal="fade"` for
  * things that should not move (table rows, mostly).
  *
+ * Section heads take part without being marked. Their cells — eyebrow,
+ * heading, standfirst — arrive as a short sequence, a smaller rise than a
+ * row, so every chapter opens its sections the way the front page does.
+ * Except where the heading is a `WordReveal`: that already brings itself
+ * in word by word, and a second movement on top of it is noise.
+ *
  * Mounted once beside SectionRule and built the same way, for the same
  * reasons spelled out there: ScrollTrigger rather than IntersectionObserver,
  * because the `[data-depth]` wrappers clip and IO reads a clipped ancestor
@@ -31,6 +37,9 @@ import { ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
  *
  *   Reduced motion: nothing is hidden and nothing moves.
  */
+/** Marked elements, and the cells of every section head but the footer's. */
+const TARGETS = "[data-reveal], .section-head:not(.footer-cols) > *";
+
 export function ScrollReveal() {
   const router = useRouter();
 
@@ -65,9 +74,12 @@ export function ScrollReveal() {
 
       const fold = window.innerHeight * 0.92;
       const fresh: HTMLElement[] = [];
-      document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+      document.querySelectorAll<HTMLElement>(TARGETS).forEach((el) => {
         if (seen.has(el)) return;
         seen.add(el);
+        if (!el.hasAttribute("data-reveal") && el.parentElement?.querySelector("[data-word]")) {
+          return; // a WordReveal head — see above
+        }
         const r = el.getBoundingClientRect();
         if (r.width === 0 && r.height === 0) return; // not laid out — leave it
         if (r.top < fold) return; // on screen, or already scrolled past
@@ -77,7 +89,8 @@ export function ScrollReveal() {
 
       gsap.set(fresh, {
         opacity: 0,
-        y: (_: number, el: HTMLElement) => (el.dataset.reveal === "fade" ? 0 : 28),
+        y: (_: number, el: HTMLElement) =>
+          el.dataset.reveal === "fade" ? 0 : el.hasAttribute("data-reveal") ? 28 : 16,
       });
       triggers.push(
         ...ScrollTrigger.batch(fresh, {
@@ -112,7 +125,7 @@ export function ScrollReveal() {
       mo.disconnect();
       triggers.forEach((t) => t.kill());
       document
-        .querySelectorAll<HTMLElement>("[data-reveal]")
+        .querySelectorAll<HTMLElement>(TARGETS)
         .forEach((el) => gsap.set(el, { clearProps: "opacity,transform" }));
     };
   }, [router]);

@@ -26,6 +26,7 @@ import { ScrollProgress } from "@/components/lb/ScrollProgress";
 import { StageLight } from "@/components/lb/StageLight";
 import { GridRules } from "@/components/lb/GridRules";
 import { RouteTransition } from "@/components/lb/RouteTransition";
+import { RoutePrefetch } from "@/components/lb/RoutePrefetch";
 import { MiniTransport } from "@/components/lb/MiniTransport";
 import { PlayerProvider } from "@/lib/player";
 import { AuthProvider } from "@/lib/auth";
@@ -299,6 +300,7 @@ function SiteChrome() {
       <Noise />
       <Cursor />
       <RouteTransition />
+      <RoutePrefetch />
       <Nav />
       <Outlet />
       <Footer />

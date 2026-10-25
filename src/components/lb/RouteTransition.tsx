@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useRouterState } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { ensureGsap, prefersReducedMotion, ScrollTrigger, markNavigated } from "@/lib/motion";
 import { getLenis } from "@/lib/smooth";
 import { useChapters, useWords } from "@/cms/hooks";
 import { fill } from "@/cms/words";
 
+/** How long the arrival in styles.css (`lb-page-in`, `lb-page-rise`) runs. */
+const ENTRANCE_MS = 720;
+
 /**
  * Navigation between chapters: an acid rule sweeps the top of the viewport,
- * the outgoing page fades, the incoming header band rises.
+ * the page being left dims, and the incoming page fades up while its header
+ * band rises a few pixels into place.
  *
  * It also does the three unglamorous things a client-side route change breaks
  * if nobody does them — reset the scroll position through the smooth
@@ -15,19 +19,35 @@ import { fill } from "@/cms/words";
  * focus so a keyboard or screen reader user is not stranded on a page they
  * have already left.
  *
- * The incoming half is driven by router *state* rather than a router event.
- * Events fire around the transition, not after the new tree has rendered, so
- * an event-based handler queries the DOM too early and focuses nothing —
- * which is exactly what happened first time round.
+ * EACH HALF IS TIED TO THE ROUTER EVENT THAT MEANS IT.
+ * This used to key the arrival on `location.pathname`, which changes the
+ * moment a link is pressed — 40ms in, while the new page was still loading
+ * (it mounted 230–650ms later). So the "incoming" fade played on the page
+ * being left, the old page jumped to the top before anything replaced it,
+ * and the new page then appeared with no entrance at all. Now:
+ *
+ *   onBeforeNavigate    the press. Dim what is on screen and sweep the rule
+ *                       — feedback that something is happening, which only
+ *                       registers if the next page is slow to arrive.
+ *   onBeforeRouteMount  the new page is about to render. Mark the document
+ *                       so the CSS hides the new <main> from its very first
+ *                       paint; hiding it from an effect instead lets one
+ *                       frame of it through at full strength, a flicker.
+ *   onRendered          it is in the DOM. Scroll to the top while it is
+ *                       still transparent, so the jump is never seen; focus
+ *                       its heading; let the CSS entrance run.
+ *
+ * The animation itself is CSS (opacity on <main>, a transform on its first
+ * header only), so it runs on the compositor and never depends on the GSAP
+ * ticker, and with `backwards` fill nothing is left on the element after it
+ * ends — a transform left on <main> would become the containing block for
+ * every pinned section inside it.
  */
 export function RouteTransition() {
   const router = useRouter();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const wipeRef = useRef<HTMLDivElement>(null);
-  const firstRender = useRef(true);
   const [message, setMessage] = useState("");
-  /* Read through a ref so a CMS refresh does not re-run the arrival effect
-   * (which would replay the transition on a page that did not change). */
+  /* Read through a ref so a CMS refresh does not re-subscribe mid-flight. */
   const chapters = useChapters();
   const chaptersRef = useRef(chapters);
   chaptersRef.current = chapters;
@@ -35,104 +55,112 @@ export function RouteTransition() {
   const wordsRef = useRef(words);
   wordsRef.current = words;
 
-  /* Recorded whatever the motion setting, so entrances elsewhere can tell a
-   * client-side arrival from a hard load (see mayPlayEntrance). */
-  useEffect(() => router.subscribe("onBeforeNavigate", markNavigated), [router]);
-
-  /* ---- outgoing: fade + wipe, before the new route commits ---- */
   useEffect(() => {
-    const gsap = ensureGsap();
-    if (!gsap || prefersReducedMotion()) return;
+    const root = document.documentElement;
+    /* the <main> on screen when the new page was about to mount; if it is
+     * still the one there afterwards (a persistent layout, an aborted
+     * navigation), there was no new page to bring in */
+    let leaving: Element | null = null;
+    let tEnd = 0;
+    const timers: number[] = [];
 
-    return router.subscribe("onBeforeNavigate", () => {
-      const main = document.querySelector("main");
-      if (main) gsap.to(main, { opacity: 0, duration: 0.18, ease: "power2.out", overwrite: true });
+    const offPress = router.subscribe("onBeforeNavigate", (e) => {
+      /* Recorded whatever the motion setting, so entrances elsewhere can tell
+       * a client-side arrival from a hard load (see mayPlayEntrance). */
+      markNavigated();
+      if (!e.fromLocation || !e.pathChanged || prefersReducedMotion()) return;
 
+      document.querySelector("main")?.setAttribute("data-leaving", "");
+
+      const gsap = ensureGsap();
       const el = wipeRef.current;
-      if (!el) return;
+      if (!gsap || !el) return;
       gsap.set(el, { scaleX: 0, transformOrigin: "left center", opacity: 1 });
       gsap
         .timeline()
-        .to(el, { scaleX: 1, duration: 0.21, ease: "power4.inOut" })
+        .to(el, { scaleX: 1, duration: 0.24, ease: "power3.inOut" })
         .set(el, { transformOrigin: "right center" })
-        .to(el, { scaleX: 0, duration: 0.21, ease: "power4.inOut" });
+        .to(el, { scaleX: 0, duration: 0.3, ease: "power3.inOut" });
     });
-  }, [router]);
 
-  /* ---- incoming: runs after the new route has rendered ---- */
-  useEffect(() => {
-    /* Skip the first pass: on a cold load the user asked for this page, and
-     * yanking focus to the heading would scroll them past the hero. */
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
+    const offMount = router.subscribe("onBeforeRouteMount", (e) => {
+      if (!e.fromLocation || !e.pathChanged) return;
+      leaving = document.querySelector("main");
+      if (prefersReducedMotion()) return;
+      window.clearTimeout(tEnd);
+      root.setAttribute("data-route-enter", "");
+    });
 
-    const gsap = ensureGsap();
-    const reduced = prefersReducedMotion();
+    const offRendered = router.subscribe("onRendered", (e) => {
+      /* Anything still dimmed is a page that was not replaced — a search or
+       * hash change, or a navigation that went nowhere. Put it back. */
+      document
+        .querySelectorAll("main[data-leaving]")
+        .forEach((m) => m.removeAttribute("data-leaving"));
+      if (!e.fromLocation || !e.pathChanged) return;
 
-    /* Through Lenis, not window.scrollTo — the smooth scroller owns the
-     * scroll position and would animate back to wherever it thinks it is. */
-    const lenis = getLenis();
-    if (lenis) lenis.scrollTo(0, { immediate: true });
-    else window.scrollTo(0, 0);
-
-    const main = document.querySelector<HTMLElement>("main");
-    if (main) {
-      if (gsap && !reduced) {
-        gsap.fromTo(main, { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power2.out" });
-        const header = main.querySelector("header");
-        if (header) gsap.fromTo(header, { y: 24 }, { y: 0, duration: 0.52, ease: "expo.out" });
-      } else {
-        main.style.opacity = "";
+      const main = document.querySelector<HTMLElement>("main");
+      if (!main || main === leaving) {
+        root.removeAttribute("data-route-enter");
+        leaving = null;
+        return;
       }
-    }
+      leaving = null;
+      tEnd = window.setTimeout(() => root.removeAttribute("data-route-enter"), ENTRANCE_MS);
 
-    /* Announce from the route table, not document.title — the head is
-     * updated asynchronously after this effect, so reading it here reports
-     * the page the user just left. */
-    const arrived = chaptersRef.current.find((c) => c.to === pathname);
-    setMessage(
-      fill(wordsRef.current.pageLoaded, { title: arrived?.title ?? wordsRef.current.pageFallback }),
-    );
+      /* Through Lenis, not window.scrollTo — the smooth scroller owns the
+       * scroll position and would animate back to wherever it thinks it is. */
+      const lenis = getLenis();
+      if (lenis) lenis.scrollTo(0, { immediate: true });
+      else window.scrollTo(0, 0);
 
-    /* Focus after paint. Moving it inside this effect is too early: the
-     * router commits the head and settles the tree immediately afterwards,
-     * and focus set before that lands on an element that is then replaced. */
-    /* Move focus once the router has finished committing the head and
-     * settling the tree — focus set synchronously here lands on an element
-     * that is replaced a moment later.
-     *
-     * Scheduled on BOTH a double rAF and a timer, whichever wins. rAF alone
-     * is not safe: it is paused whenever the page is not compositing (a
-     * background tab, or a hidden pane), and a keyboard user returning to
-     * such a tab would find focus stranded on <body>. `settle` is idempotent. */
-    let done = false;
-    let raf2 = 0;
-    const settle = () => {
-      if (done) return;
-      done = true;
-      const target =
-        document.querySelector<HTMLElement>("[data-page-h1]") ??
-        document.querySelector<HTMLElement>("main");
-      target?.focus({ preventScroll: true });
-      ScrollTrigger.refresh();
-    };
+      /* Announce from the route table, not document.title — the head is
+       * updated asynchronously, so reading it here can report the page the
+       * user just left. */
+      const arrived = chaptersRef.current.find((c) => c.to === e.toLocation.pathname);
+      setMessage(
+        fill(wordsRef.current.pageLoaded, {
+          title: arrived?.title ?? wordsRef.current.pageFallback,
+        }),
+      );
 
-    const raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(settle);
+      /* Move focus once the router has finished committing the head and
+       * settling the tree — focus set synchronously here can land on an
+       * element that is replaced a moment later.
+       *
+       * Scheduled on BOTH a double rAF and a timer, whichever wins. rAF alone
+       * is not safe: it is paused whenever the page is not compositing (a
+       * background tab, or a hidden pane), and a keyboard user returning to
+       * such a tab would find focus stranded on <body>. `settle` is
+       * idempotent. */
+      let done = false;
+      const settle = () => {
+        if (done) return;
+        done = true;
+        const target = document.querySelector<HTMLElement>("[data-page-h1]") ?? main;
+        target.focus({ preventScroll: true });
+        ScrollTrigger.refresh();
+      };
+      const raf = requestAnimationFrame(() => requestAnimationFrame(settle));
+      timers.push(
+        window.setTimeout(settle, 80),
+        /* again once the images have taken their space, and once the header
+         * has finished rising, so every trigger measures the final layout */
+        window.setTimeout(() => ScrollTrigger.refresh(), 400),
+        window.setTimeout(() => ScrollTrigger.refresh(), ENTRANCE_MS + 40),
+        window.setTimeout(() => cancelAnimationFrame(raf), 1000),
+      );
     });
-    const tSettle = window.setTimeout(settle, 80);
-    /* and again once the new route's images have taken up their space */
-    const tImages = window.setTimeout(() => ScrollTrigger.refresh(), 400);
 
     return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-      window.clearTimeout(tSettle);
-      window.clearTimeout(tImages);
+      offPress();
+      offMount();
+      offRendered();
+      window.clearTimeout(tEnd);
+      timers.forEach((t) => window.clearTimeout(t));
+      root.removeAttribute("data-route-enter");
     };
-  }, [pathname]);
+  }, [router]);
 
   return (
     <>

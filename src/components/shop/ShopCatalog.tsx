@@ -140,7 +140,12 @@ export function ShopCatalog() {
   };
 
   return (
-    <section id="catalogue" className="relative w-full bg-surface-deep py-20 lg:py-[96px]">
+    /* 56px above on a phone rather than 80: the hero above already ends on
+     * a drawn rule, and this is the gap between "the drop" and the drop. */
+    <section
+      id="catalogue"
+      className="relative w-full bg-surface-deep pb-20 pt-14 md:pt-20 lg:py-[96px]"
+    >
       <GridRules tone="dark" />
       <BoundaryRule tone="dark" className="top-0" />
 
@@ -162,7 +167,7 @@ export function ShopCatalog() {
         </div>
 
         {/* ---- search ---- */}
-        <div className="ui-field mt-10 flex items-center gap-2 px-3 lg:mt-12 lg:max-w-[420px]">
+        <div className="ui-field mt-8 flex items-center gap-2 px-3 md:mt-10 lg:mt-12 lg:max-w-[420px]">
           <Search size={16} className="shrink-0 text-mute" aria-hidden="true" />
           <label className="sr-only" htmlFor="shop-search">
             {w.searchLabel}

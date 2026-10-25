@@ -65,7 +65,7 @@ export function Featured() {
         style={{ ["--rail-h" as string]: "auto" }}
       >
         {items.slice(0, 4).map((item, i) => (
-          <li key={`${item.title}-${i}`}>
+          <li key={`${item.title}-${i}`} data-reveal>
             <FeatureCard item={item} rank={i + 1} />
           </li>
         ))}
