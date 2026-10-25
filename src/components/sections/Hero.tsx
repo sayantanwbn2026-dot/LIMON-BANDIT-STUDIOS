@@ -6,6 +6,7 @@ import { MarginNotes } from "@/components/lb/Section";
 import { afterPreloader, ensureGsap, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 import { HeroMascot } from "@/components/lb/HeroMascot";
 import { useHomeHero, useWords, useChapter } from "@/cms/hooks";
+import { fitWordToMeasure, type WordFit } from "@/lib/fit-word";
 
 /* outside-in stagger order for the entrance: B,T then A,I then N,D */
 const fromEdge = (i: number, n: number) => Math.min(i, n - 1 - i);
@@ -39,7 +40,7 @@ export function Hero() {
   const limonWrapRef = useRef<HTMLDivElement>(null);
   const limonRef = useRef<HTMLDivElement>(null);
   const stationsRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState(220);
+  const [fit, setFit] = useState<WordFit>({ size: 220, shift: 0 });
   /* The poster reads the home row of Page titles & SEO — "LIMON" spread
    * across the measure, "BANDIT" fitted under it — the same fields every
    * chapter hero's lockup reads, so renaming the house is a CMS edit. */
@@ -47,20 +48,19 @@ export function Hero() {
   const spread = chapter.poster.spread.toUpperCase().split("");
   const letters = chapter.poster.word.toUpperCase().split("");
 
-  /* ---- fitting routine: the word spans the measure exactly ---- */
+  /* ---- fitting routine: the word's strokes span the measure exactly ----
+   * By the ink, so the B's stem stands on the same line as the logo and
+   * the acid square — see fitWordToMeasure. `clipped` because each letter
+   * is masked in its own box for the entrance. */
   useLayoutEffect(() => {
     const fit = () => {
       const word = wordRef.current;
       const box = measureRef.current;
       if (!word || !box) return;
-      const target = box.clientWidth;
-      if (!target) return;
-      word.style.fontSize = "100px";
-      const w = word.getBoundingClientRect().width;
-      if (!w) return;
-      const next = (target / w) * 100;
-      word.style.fontSize = `${next}px`;
-      setSize(next);
+      const next = fitWordToMeasure(word, chapter.poster.word.toUpperCase(), box.clientWidth, {
+        clipped: true,
+      });
+      if (next) setFit(next);
     };
     fit();
     const ro = new ResizeObserver(fit);
@@ -332,9 +332,9 @@ export function Hero() {
                     ref={wordRef}
                     className="inline-block whitespace-nowrap font-display font-extrabold uppercase"
                     style={{
-                      fontSize: size,
+                      fontSize: fit.size,
                       letterSpacing: "-0.045em",
-                      marginRight: "-0.045em",
+                      marginLeft: `${fit.shift}em`,
                       lineHeight: 0.82,
                     }}
                   >

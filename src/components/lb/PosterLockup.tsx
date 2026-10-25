@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Tone } from "./GridRules";
+import { fitWordToMeasure, type WordFit } from "@/lib/fit-word";
 
 /**
  * The landing page's lockup, as a component every page can wear.
@@ -64,26 +65,22 @@ export function PosterLockup({
   /* wordRef must stay on the element carrying font-size — the routine
    * measures its intrinsic width at a known size and scales from there. */
   const wordRef = useRef<HTMLSpanElement>(null);
-  const [size, setSize] = useState(120);
+  const [fit, setFit] = useState<WordFit>({ size: 120, shift: 0 });
 
   /* Fit by measurement, not by a vw formula. The measure changes with the
    * page margin and the gutter, both of which step at breakpoints, and the
    * word's own width depends on which glyphs are in it — "DROP" and
-   * "SOMETHING" cannot share a coefficient. Measure at 100px, scale by the
-   * ratio, and the word lands flush to both rules at any width. */
+   * "SOMETHING" cannot share a coefficient. Measured by the ink rather than
+   * the box (see fitWordToMeasure), so the first and last strokes land on
+   * the rules — on the same line as the acid squares and the logo — rather
+   * than the glyphs' side bearings. */
   useLayoutEffect(() => {
     const fit = () => {
       const el = wordRef.current;
       const box = boxRef.current;
       if (!el || !box) return;
-      const target = box.clientWidth;
-      if (!target) return;
-      el.style.fontSize = "100px";
-      const w = el.getBoundingClientRect().width;
-      if (!w) return;
-      const next = (target / w) * 100;
-      el.style.fontSize = `${next}px`;
-      setSize(next);
+      const next = fitWordToMeasure(el, word.toUpperCase(), box.clientWidth);
+      if (next) setFit(next);
     };
 
     fit();
@@ -154,11 +151,10 @@ export function PosterLockup({
             ref={wordRef}
             className={`glitch ${t.fill} inline-block whitespace-nowrap font-display font-extrabold uppercase`}
             style={{
-              fontSize: size,
+              fontSize: fit.size,
               letterSpacing: "-0.045em",
-              /* the last glyph's right side bearing would otherwise push the
-               * word past the rule it is supposed to sit flush against */
-              marginRight: "-0.045em",
+              /* pulls the first stroke, not the glyph's origin, onto the rule */
+              marginLeft: `${fit.shift}em`,
               lineHeight: 0.82,
             }}
           >
