@@ -1,6 +1,7 @@
 import { chapter, type ChapterKey } from "@/data/routes";
 import { site } from "@/data/site";
-import { docFrom, lastDocs, liveDocs } from "@/cms/live";
+import { docFrom, lastDocs, listFrom, liveDocs } from "@/cms/live";
+import { HOME_FAQ_LIMIT } from "@/cms/hooks";
 import { images } from "@/generated/images";
 
 export type PageSeo = {
@@ -8,6 +9,13 @@ export type PageSeo = {
   description: string;
   /** absolute path, e.g. "/rooms" — canonicalised against site.url */
   path: string;
+  /**
+   * An absolute URL to treat as this page's real address, overriding the
+   * one built from `path`. Set from the CMS, and only for the rare page
+   * whose content also lives somewhere else; every other page is better
+   * off with the derived link, which cannot drift.
+   */
+  canonical?: string;
   ogType?: "website" | "article" | "product";
   image?: string;
   /**
@@ -75,6 +83,7 @@ export function pageHead({
   title,
   description,
   path,
+  canonical,
   ogType = "website",
   image,
   noindex,
@@ -82,6 +91,11 @@ export function pageHead({
 }: PageSeo) {
   const live = liveSite();
   const url = new URL(path, live.url).href;
+  /* An override only counts when it is a real absolute URL. A relative or
+   * half-typed value here would point every crawler at a page that does
+   * not exist — worse than the derived link it replaced — so anything
+   * unparseable is ignored rather than emitted. */
+  const canonicalUrl = canonical && /^https?:\/\//.test(canonical.trim()) ? canonical.trim() : url;
   const img = absoluteImage(image ?? live.ogImage, live.url);
   return {
     meta: [
@@ -91,7 +105,7 @@ export function pageHead({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: ogType },
-      { property: "og:url", content: url },
+      { property: "og:url", content: canonicalUrl },
       { property: "og:image", content: img },
       { property: "og:site_name", content: live.name },
       { name: "twitter:card", content: "summary_large_image" },
@@ -99,7 +113,7 @@ export function pageHead({
       { name: "twitter:description", content: description },
       { name: "twitter:image", content: img },
     ],
-    links: [{ rel: "canonical", href: url }],
+    links: [{ rel: "canonical", href: canonicalUrl }],
     scripts: jsonLd
       ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((block) => ({
           type: "application/ld+json",
@@ -146,7 +160,17 @@ export function chapterHead(key: ChapterKey) {
  * the shipped copy, never to a page with no title.
  * ------------------------------------------------------------------ */
 
-type SeoRow = { key: string; title: string; description: string; to: string };
+type SeoRow = {
+  key: string;
+  title: string;
+  description: string;
+  to: string;
+  ogImage?: string;
+  canonical?: string;
+  noindex?: boolean;
+  priority?: string;
+  changefreq?: string;
+};
 
 /* Reads the same cached store as the rest of the site (cms/live.ts), which
  * carries the timeout, the cache and the offline fallback this used to
@@ -183,6 +207,12 @@ export async function chapterSeo(key: ChapterKey): Promise<PageSeo> {
     title: row.title?.trim() || fallback.title,
     description: row.description?.trim() || fallback.description,
     path: row.to?.trim() || fallback.path,
+    /* The editor's three switches. Each is left undefined when empty so
+     * `pageHead` falls through to the house answer — the share image to
+     * the one in Brand & contact, the canonical to the derived URL. */
+    ...(row.ogImage?.trim() ? { image: row.ogImage.trim() } : {}),
+    ...(row.canonical?.trim() ? { canonical: row.canonical.trim() } : {}),
+    ...(row.noindex ? { noindex: true } : {}),
   };
 }
 
@@ -229,6 +259,150 @@ export function chapterHeadFrom(key: ChapterKey, data?: PageSeo) {
 }
 
 /* ------------------------------------------------------------------ *
+ * Search & sharing — the site-wide document
+ *
+ * Verification codes, the share-card handle, and the three facts that turn
+ * a LocalBusiness result into a place somebody can decide to visit: what
+ * it costs, when it is open, where it is. Every field is optional and
+ * every field is omitted rather than emitted empty — a blank verification
+ * tag fails verification, and a blank price range reads worse than none.
+ * ------------------------------------------------------------------ */
+
+export type SearchDoc = {
+  verifyGoogle?: string;
+  verifyBing?: string;
+  twitterSite?: string;
+  priceRange?: string;
+  geo?: { lat?: string; lng?: string };
+  hours?: { day?: string; opens?: string; closes?: string }[];
+  faqRich?: boolean;
+};
+
+function liveSearch(): SearchDoc {
+  return docFrom<SearchDoc>(lastDocs(), "global.search");
+}
+
+/** "@limonbandit", however the editor typed it — with or without the @. */
+function handle(raw: string | undefined): string | undefined {
+  const v = raw?.trim().replace(/^@+/, "");
+  return v ? `@${v}` : undefined;
+}
+
+/**
+ * The meta tags that belong to the site rather than to a page: the two
+ * search-console verification codes, and the account a share card credits.
+ *
+ * Emitted once, from the root head. A verification tag repeated on every
+ * page would still verify; it would also be an extra tag on every response
+ * for no gain.
+ */
+export function searchMeta(docs: Record<string, unknown>) {
+  const doc = docFrom<SearchDoc>(docs, "global.search");
+  const google = doc.verifyGoogle?.trim();
+  const bing = doc.verifyBing?.trim();
+  const account = handle(doc.twitterSite);
+  return [
+    ...(google ? [{ name: "google-site-verification", content: google }] : []),
+    ...(bing ? [{ name: "msvalidate.01", content: bing }] : []),
+    ...(account ? [{ name: "twitter:site", content: account }] : []),
+  ];
+}
+
+const DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+] as const;
+
+/* schema.org wants 24-hour "HH:MM". An editor typing "11am" or "11.00" is
+ * being helpful in the wrong format, so the common shapes are read; what
+ * is still unparseable is dropped, because a day published as midnight is
+ * a wrong answer and a day left out is only a missing one. */
+function clockTime(raw: string | undefined): string | undefined {
+  const v = raw?.trim().toLowerCase();
+  if (!v) return undefined;
+  const m = v.match(/^(\d{1,2})\s*[:.]?\s*(\d{2})?\s*(am|pm)?$/);
+  if (!m) return undefined;
+  let hour = Number(m[1]);
+  const minute = m[2] ?? "00";
+  if (hour > 23 || Number(minute) > 59) return undefined;
+  if (m[3] === "pm" && hour < 12) hour += 12;
+  if (m[3] === "am" && hour === 12) hour = 0;
+  return `${String(hour).padStart(2, "0")}:${minute}`;
+}
+
+function openingHours(doc: SearchDoc) {
+  const rows = (doc.hours ?? [])
+    .map((r) => ({
+      day: DAYS.find((d) => d.toLowerCase() === r.day?.trim().toLowerCase()),
+      opens: clockTime(r.opens),
+      closes: clockTime(r.closes),
+    }))
+    .filter((r) => r.day && r.opens && r.closes);
+  if (rows.length === 0) return undefined;
+  return rows.map((r) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: `https://schema.org/${r.day}`,
+    opens: r.opens,
+    closes: r.closes,
+  }));
+}
+
+function geoPoint(doc: SearchDoc) {
+  const lat = Number(doc.geo?.lat);
+  const lng = Number(doc.geo?.lng);
+  /* An empty field parses to NaN and a half-filled pair would put the
+   * studio in the Atlantic, so both have to be real numbers in range
+   * before either is published. */
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return undefined;
+  if (lat === 0 && lng === 0) return undefined;
+  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return undefined;
+  return { "@type": "GeoCoordinates", latitude: lat, longitude: lng };
+}
+
+/**
+ * The front page's questions, as a FAQPage block.
+ *
+ * Only the questions the page actually renders. Google's own rule is that
+ * the markup has to match what a visitor sees, and publishing the whole
+ * list while the section shows four is how a site loses the rich result
+ * altogether. Returns nothing when the editor has turned it off, or when
+ * there is nothing worth publishing.
+ */
+export function faqJsonLd(): object | undefined {
+  if (liveSearch().faqRich === false) return undefined;
+  const all = listFrom<{ question?: string; answer?: string; home?: boolean }>(
+    lastDocs(),
+    "global.faq",
+  );
+  const picked = all.filter((f) => f.home);
+  const shown = (picked.length > 0 ? picked : all)
+    .slice(0, HOME_FAQ_LIMIT)
+    .filter((f) => f.question?.trim() && f.answer?.trim());
+  if (shown.length === 0) return undefined;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: shown.map((f) => ({
+      "@type": "Question",
+      name: f.question!.trim(),
+      acceptedAnswer: { "@type": "Answer", text: f.answer!.trim() },
+    })),
+  };
+}
+
+/** The house, plus the FAQ when there is one — what the front page emits. */
+export function homeJsonLd(): object[] {
+  const faq = faqJsonLd();
+  return faq ? [houseJsonLd(), faq] : [houseJsonLd()];
+}
+
+/* ------------------------------------------------------------------ *
  * Structured data
  *
  * Built from the CMS documents the loaders already fetched (lastDocs), so
@@ -271,6 +445,7 @@ export function houseJsonLd() {
     "global.site",
   );
   const social = docs["global.social"];
+  const search = liveSearch();
   const live = liveSite();
 
   return {
@@ -284,6 +459,9 @@ export function houseJsonLd() {
     ...(site.phone ? { telephone: site.phone } : {}),
     ...(site.email ? { email: site.email } : {}),
     ...(postalAddress(site.address) ? { address: postalAddress(site.address) } : {}),
+    ...(search.priceRange?.trim() ? { priceRange: search.priceRange.trim() } : {}),
+    ...(geoPoint(search) ? { geo: geoPoint(search) } : {}),
+    ...(openingHours(search) ? { openingHoursSpecification: openingHours(search) } : {}),
     ...(Array.isArray(social) && social.length
       ? { sameAs: (social as { url?: string }[]).map((s) => s.url).filter(Boolean) }
       : {}),

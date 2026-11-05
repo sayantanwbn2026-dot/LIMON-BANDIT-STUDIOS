@@ -189,6 +189,119 @@ const seo: Collection = {
       max: 165,
       help: "Aim under 155 characters.",
     }),
+    image(
+      "ogImage",
+      "Share image for this page",
+      1200,
+      630,
+      "Shown when this page is linked on WhatsApp, Instagram or X. Empty uses the house image from Brand & contact — which is the right answer unless this page deserves its own card.",
+    ),
+    {
+      kind: "url",
+      name: "canonical",
+      label: "Canonical address",
+      placeholder: "https://limonbandit.com/rooms",
+      help: "Only when the same content also lives at another address and that one should win. Empty is correct for every page here — the site builds its own canonical link.",
+    },
+    {
+      kind: "boolean",
+      name: "noindex",
+      label: "Keep out of search engines",
+      help: "Hides the page from Google and drops it from the sitemap. The page still works for anyone with the link.",
+    },
+    choice("priority", "Sitemap priority", [
+      { value: "", label: "Leave to the site" },
+      { value: "1.0", label: "Highest — 1.0" },
+      { value: "0.8", label: "High — 0.8" },
+      { value: "0.6", label: "Normal — 0.6" },
+      { value: "0.4", label: "Low — 0.4" },
+      { value: "0.2", label: "Lowest — 0.2" },
+    ]),
+    choice("changefreq", "How often it changes", [
+      { value: "", label: "Leave to the site" },
+      { value: "daily", label: "Daily" },
+      { value: "weekly", label: "Weekly" },
+      { value: "monthly", label: "Monthly" },
+      { value: "yearly", label: "Yearly" },
+    ]),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
+ * SEARCH & SHARING
+ *
+ * The site-wide half of SEO: the codes that prove the domain to a search
+ * engine, the handle that shows on a share card, and the three facts —
+ * price range, hours, where it is on a map — that turn a LocalBusiness
+ * result from a name into a place somebody can decide to visit.
+ *
+ * None of it is decoration and none of it is guessable from the page, so
+ * it has to be asked for. All of it is optional: every field is left out
+ * of the markup when empty rather than emitted blank, because an empty
+ * verification tag is worse than none at all.
+ * ------------------------------------------------------------------ */
+
+const searchSharing: Collection = {
+  key: "global.search",
+  title: "Search & sharing",
+  description:
+    "Verification codes, the handle on share cards, and the facts Google needs to show the studio as a place with hours and a price.",
+  group: "global",
+  shape: "object",
+  fields: [
+    text("verifyGoogle", "Google Search Console code", {
+      mono: true,
+      placeholder: "vXyZ1234abcd…",
+      help: "From Search Console → Settings → Ownership verification → HTML tag. Paste only the content value, not the whole <meta> tag.",
+    }),
+    text("verifyBing", "Bing Webmaster code", {
+      mono: true,
+      help: "From Bing Webmaster Tools → the meta-tag option. The content value only.",
+    }),
+    text("twitterSite", "X / Twitter handle", {
+      placeholder: "@limonbandit",
+      help: "Named on every share card as the account that published the page.",
+    }),
+    text("priceRange", "Price range", {
+      placeholder: "₹₹",
+      help: 'What a session costs, roughly — "₹₹" or "₹1,200–₹3,000". Google shows it beside the studio in a local result.',
+    }),
+    {
+      kind: "group",
+      name: "geo",
+      label: "Map position",
+      fields: [
+        text("lat", "Latitude", { mono: true, placeholder: "22.5958" }),
+        text("lng", "Longitude", { mono: true, placeholder: "88.3698" }),
+      ],
+    },
+    {
+      kind: "list",
+      name: "hours",
+      label: "Opening hours",
+      titleField: "day",
+      itemNoun: "day",
+      fields: [
+        choice("day", "Day", [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
+        ]),
+        text("opens", "Opens", { mono: true, placeholder: "11:00" }),
+        text("closes", "Closes", { mono: true, placeholder: "23:00" }),
+      ],
+      help: "The machine-readable twin of the Contact page's opening hours. Those stay free text so a row can read “By arrangement”; these have to be real 24-hour times, because Google will print them. A day left out is a day the house is shut — and leaving the whole list empty says nothing rather than something wrong.",
+    },
+    {
+      kind: "boolean",
+      name: "faqRich",
+      label: "Offer the FAQ to Google as rich results",
+      help: "Publishes the questions under Global → FAQ as structured data, so they can appear expandable under the search result.",
+    },
   ],
 };
 
@@ -1266,6 +1379,7 @@ export const collections: Collection[] = [
   social,
   nav,
   seo,
+  searchSharing,
   tickers,
   faq,
   legal,

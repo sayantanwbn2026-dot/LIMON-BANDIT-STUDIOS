@@ -44,7 +44,7 @@ import { liveDocs, primeDocs, docFrom, listFrom } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
 import { useWords, type SiteDoc, type PageDoc } from "@/cms/hooks";
 import { fill, WORDS, type Words } from "@/cms/words";
-import { siteNameFrom } from "@/lib/seo";
+import { searchMeta, siteNameFrom } from "@/lib/seo";
 
 /**
  * The 404 and error screens.
@@ -202,6 +202,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "twitter:title", content: title },
         { property: "og:description", content: description },
         { name: "twitter:description", content: description },
+        /* Verification codes and the share-card account, from Search &
+         * sharing. Emitted here so they appear once per response rather
+         * than once per page head. */
+        ...searchMeta(docs),
       ],
       links: [
         /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two

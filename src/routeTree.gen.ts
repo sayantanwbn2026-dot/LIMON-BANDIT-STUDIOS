@@ -32,6 +32,7 @@ import { Route as AdminMascotsRouteImport } from './routes/admin.mascots'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminOwnershipRouteImport } from './routes/admin.ownership'
+import { Route as AdminSeoRouteImport } from './routes/admin.seo'
 import { Route as AdminShopRouteImport } from './routes/admin.shop'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -155,6 +156,11 @@ const AdminOwnershipRoute = AdminOwnershipRouteImport.update({
   path: '/ownership',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSeoRoute = AdminSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminShopRoute = AdminShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/admin/media': typeof AdminMediaRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/ownership': typeof AdminOwnershipRoute
+  '/admin/seo': typeof AdminSeoRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
+    | '/admin/seo'
     | '/admin/shop'
     | '/admin/subscribers'
     | '/journal/$slug'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
+    | '/admin/seo'
     | '/admin/shop'
     | '/admin/subscribers'
     | '/journal/$slug'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/orders'
     | '/admin/ownership'
+    | '/admin/seo'
     | '/admin/shop'
     | '/admin/subscribers'
     | '/journal/$slug'
@@ -569,6 +581,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOwnershipRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/seo': {
+      id: '/admin/seo'
+      path: '/seo'
+      fullPath: '/admin/seo'
+      preLoaderRoute: typeof AdminSeoRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/shop': {
       id: '/admin/shop'
       path: '/shop'
@@ -630,6 +649,7 @@ interface AdminRouteChildren {
   AdminMediaRoute: typeof AdminMediaRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminOwnershipRoute: typeof AdminOwnershipRoute
+  AdminSeoRoute: typeof AdminSeoRoute
   AdminShopRoute: typeof AdminShopRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -645,6 +665,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMediaRoute: AdminMediaRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminOwnershipRoute: AdminOwnershipRoute,
+  AdminSeoRoute: AdminSeoRoute,
   AdminShopRoute: AdminShopRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminIndexRoute: AdminIndexRoute,

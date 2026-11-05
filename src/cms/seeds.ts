@@ -262,6 +262,20 @@ export const seeds: Record<string, unknown> = {
     title: c.title,
     description: c.description,
   })),
+  /* Search & sharing ships empty on purpose: a verification code, a
+   * handle and a price range are facts about the business that only the
+   * owner has, and a guess printed into <head> is worse than silence.
+   * The one default is the FAQ, which is already written and already
+   * public — offering it to Google costs nothing and can only help. */
+  "global.search": {
+    verifyGoogle: "",
+    verifyBing: "",
+    twitterSite: "",
+    priceRange: "",
+    geo: { lat: "", lng: "" },
+    hours: [],
+    faqRich: true,
+  },
   "global.tickers": {
     proofTicker: [...proofTicker],
     partners: [...partners],

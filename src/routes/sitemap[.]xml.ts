@@ -4,6 +4,28 @@ import { liveDocs, listFrom } from "@/cms/live";
 import { siteOrigin } from "@/lib/seo";
 import type { LegalDoc, PostDoc, ProductDoc } from "@/cms/hooks";
 
+/** The SEO half of a row in Page titles & SEO. */
+type PageSeoRow = {
+  to?: string;
+  noindex?: boolean;
+  priority?: string;
+  changefreq?: string;
+};
+
+const FREQS = ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"] as const;
+type Freq = (typeof FREQS)[number];
+
+const asFreq = (v: string | undefined): Freq | undefined => FREQS.find((f) => f === v?.trim());
+
+/* A priority the protocol accepts: 0.0 to 1.0, one decimal. Anything else
+ * an editor managed to store is ignored rather than emitted, because a
+ * malformed <priority> invalidates the whole entry. */
+const asPriority = (v: string | undefined): string | undefined => {
+  const n = Number(v);
+  if (!v?.trim() || !Number.isFinite(n) || n < 0 || n > 1) return undefined;
+  return n.toFixed(1);
+};
+
 interface SitemapEntry {
   path: string;
   lastmod?: string;
@@ -35,7 +57,15 @@ export const Route = createFileRoute("/sitemap.xml")({
         const docs = await liveDocs();
         const origin = siteOrigin();
 
-        const entries: SitemapEntry[] = [
+        /* What the editor said about each chapter in Page titles & SEO:
+         * a page marked "keep out of search engines" is dropped from the
+         * sitemap entirely — listing a page you have asked Google not to
+         * index is a contradiction a crawler reports back at you — and a
+         * priority or frequency set there overrides the defaults below. */
+        const seoRows = listFrom<PageSeoRow>(docs, "global.pages");
+        const seoFor = (path: string) => seoRows.find((r) => r?.to?.trim() === path);
+
+        const chapters: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/rooms", changefreq: "monthly", priority: "0.8" },
           { path: "/label", changefreq: "monthly", priority: "0.8" },
@@ -43,6 +73,20 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/crew", changefreq: "monthly", priority: "0.7" },
           { path: "/journal", changefreq: "weekly", priority: "0.6" },
           { path: "/contact", changefreq: "yearly", priority: "0.5" },
+        ];
+
+        const entries: SitemapEntry[] = [
+          ...chapters.flatMap((entry) => {
+            const row = seoFor(entry.path);
+            if (row?.noindex) return [];
+            return [
+              {
+                ...entry,
+                changefreq: asFreq(row?.changefreq) ?? entry.changefreq,
+                priority: asPriority(row?.priority) ?? entry.priority,
+              },
+            ];
+          }),
           ...listFrom<PostDoc>(docs, "page.journal.posts").map((p) => ({
             path: `/journal/${p.slug}`,
             lastmod: isoDay(p.date),

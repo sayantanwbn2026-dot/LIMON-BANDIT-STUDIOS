@@ -21,10 +21,10 @@ import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
 import { useHomeOrder } from "@/cms/hooks";
 import { HOME_SECTIONS, type HomeSectionKey } from "@/cms/home-sections";
-import { chapterHeadFrom, chapterSeoWith, houseJsonLd } from "@/lib/seo";
+import { chapterHeadFrom, chapterSeoWith, homeJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  loader: () => chapterSeoWith("home", houseJsonLd),
+  loader: () => chapterSeoWith("home", homeJsonLd),
   head: ({ loaderData }) => chapterHeadFrom("home", loaderData),
   component: Index,
 });

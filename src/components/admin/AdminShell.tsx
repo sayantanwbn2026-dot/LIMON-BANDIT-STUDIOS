@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  Search,
   Inbox,
   Mail,
   Package,
@@ -87,6 +88,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
             <Group label="Site-wide">
               <Item to="/admin/global" icon={<Globe size={14} />} label="Global content" />
+              <Item to="/admin/seo" icon={<Search size={14} />} label="Search & sharing" />
               <Item to="/admin/mascots" icon={<PersonStanding size={14} />} label="Hero Mascot" />
               <Item to="/admin/shop" icon={<ShoppingBag size={14} />} label="Shop & pricing" />
               <Item to="/admin/media" icon={<Image size={14} />} label="Media" />
