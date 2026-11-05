@@ -153,7 +153,7 @@ export function LabelPlayer() {
                   type="button"
                   onClick={prev}
                   aria-label={p.previousTrack}
-                  className="flex h-12 w-12 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                 >
                   <SkipBack size={16} />
                 </button>
@@ -178,7 +178,7 @@ export function LabelPlayer() {
                   type="button"
                   onClick={next}
                   aria-label={p.nextTrack}
-                  className="flex h-12 w-12 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center border border-line text-text transition-colors duration-300 hover:border-acid-type"
                 >
                   <SkipForward size={16} />
                 </button>

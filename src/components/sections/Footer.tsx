@@ -68,7 +68,10 @@ export function Footer() {
             <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2 max-md:mt-4 md:block md:space-y-3">
               {releases.map((r) => (
                 <li key={r.artist} className="font-ui text-[14px] text-text">
-                  <Link to="/label" className="transition-colors duration-300 hover:text-acid-type">
+                  <Link
+                    to="/label"
+                    className="transition-colors duration-300 hover:text-acid-type max-md:flex max-md:min-h-11 max-md:items-center"
+                  >
                     {r.artist}
                   </Link>
                 </li>
