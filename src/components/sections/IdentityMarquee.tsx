@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Ticker } from "@/components/lb/Ticker";
-import { GridRules } from "@/components/lb/GridRules";
 import { ensureGsap, prefersReducedMotion } from "@/lib/motion";
 import { useTickers } from "@/cms/hooks";
 
@@ -42,9 +41,11 @@ export function IdentityMarquee() {
     return () => ctx.revert();
   }, []);
 
+  /* Same as the proof band, and for the same reason: the marquee IS the
+   * drawing here, and a rule crossing a 44–90px letterform is a scratch
+   * on it. */
   return (
     <section ref={ref} className="relative w-full bg-surface py-[96px]" aria-hidden="true">
-      <GridRules tone="dark" />
       <div className="relative z-[2]">
         {/* The shell wrapper is what gives the marquee its clip box. Ticker's
          * own root carries the overflow, and overflow clips at the padding

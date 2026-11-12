@@ -63,6 +63,27 @@ export function GridColsProvider({ cols, children }: { cols: GridCols; children:
 
 const EDGE = new Set([0, 100]);
 
+/**
+ * WHY ONLY THE EDGES ON A PHONE
+ *
+ * The two edge rules are drawn on the `shell-rules` box and the type lives
+ * inside `shell`, one gutter further in, so an edge rule cannot touch a
+ * word — the inset is the guarantee. The inner rules have no such promise:
+ * they land wherever 25, 50 and 75 per cent happen to fall.
+ *
+ * On a desktop that is survivable, because the content is laid out on those
+ * quarters. At 375px there are no columns for the centre rule to fall
+ * between, so it runs down the middle of the measure: counted on the front
+ * page, thirty-six separate runs of type had a rule crossing them — body
+ * copy, the address line, three headings, the word "things" struck through
+ * its own middle.
+ *
+ * It was quietened to 0.05 alpha rather than removed, which is the fix that
+ * admits the problem. A hairline you can only half-see crossing a sentence
+ * is still crossing the sentence. So below md the grid is the frame and
+ * nothing else, which is a smaller drawing rather than a worse one.
+ */
+
 export function GridRules({ tone = "dark", cols }: { tone?: Tone; cols?: GridCols }) {
   const color = ruleColor[tone];
   const inherited = useContext(GridColsContext);
@@ -80,9 +101,9 @@ export function GridRules({ tone = "dark", cols }: { tone?: Tone; cols?: GridCol
               key={left}
               data-col-rule
               className={
-                left === 25 || left === 75
-                  ? "absolute top-0 hidden h-full w-px origin-top md:block"
-                  : "absolute top-0 h-full w-px origin-top"
+                EDGE.has(left)
+                  ? "absolute top-0 h-full w-px origin-top"
+                  : "absolute top-0 hidden h-full w-px origin-top md:block"
               }
               style={{
                 left: `${left}%`,
@@ -146,7 +167,26 @@ export function Crosshair({ tone = "dark", active = false }: { tone?: Tone; acti
 
 /**
  * Full-bleed horizontal boundary rule with five crosshairs at the column
- * intersections. `active` ticks the crosshairs over to acid.
+ * intersections, and an acid charge that draws across it as you arrive.
+ *
+ * WHY THE CHARGE EXISTS
+ *
+ * `active` was already being computed — Section runs a ScrollTrigger over
+ * every section on the site to work out whether it is the one under the
+ * middle of the screen — and it was already being passed in here, where it
+ * ticked the crosshairs. The crosshairs are hidden (see Crosshair). So the
+ * site measured which section you were reading, on every scroll, and then
+ * drew nothing with the answer.
+ *
+ * This draws it, in the only vocabulary the page has: the boundary rule
+ * you have just crossed fills with acid from the left, and empties again
+ * when you leave. One property, one transform, no new element in the
+ * scroll path — and the line is the site's whole visual language, so the
+ * most interactive thing on the page is also the quietest.
+ *
+ * It is a transition rather than a scrubbed timeline on purpose. A scrub
+ * would tie the fill to the scroll position, which reads as a progress
+ * bar per section; the point here is arrival, not distance.
  */
 export function BoundaryRule({
   tone = "dark",
@@ -168,6 +208,20 @@ export function BoundaryRule({
       <span
         className="absolute left-0 right-0 top-0 block h-px"
         style={{ background: solidRuleColor[tone] }}
+      />
+      {/* The charge. Drawn over the rule at the same hairline weight, so an
+          inactive section is pixel-for-pixel what it was before. origin-left
+          and scaleX keep it on the compositor; `motion-reduce` drops it to
+          a plain fade, because a 600ms sweep across the full width of the
+          screen is exactly the kind of movement somebody asking for reduced
+          motion is asking not to see. */}
+      <span
+        className="absolute left-0 right-0 top-0 block h-px origin-left bg-acid motion-reduce:transition-opacity"
+        style={{
+          transform: `scaleX(${active ? 1 : 0})`,
+          opacity: active ? 1 : 0,
+          transition: "transform 0.7s var(--ease-out-expo), opacity 0.4s var(--ease-out-expo)",
+        }}
       />
       {ticks ? (
         <div className="absolute left-0 right-0 top-0 h-[9px]">

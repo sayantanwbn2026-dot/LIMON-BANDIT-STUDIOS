@@ -21,6 +21,7 @@ import { ScrollDepth } from "@/components/lb/ScrollDepth";
 import { Preloader } from "@/components/lb/Preloader";
 import { useHomeOrder } from "@/cms/hooks";
 import { HOME_SECTIONS, type HomeSectionKey } from "@/cms/home-sections";
+import { GridColsProvider } from "@/components/lb/GridRules";
 import { chapterHeadFrom, chapterSeoWith, homeJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -111,31 +112,48 @@ function Index() {
             an editor should be able to put in the middle of the page. */}
         <Hero />
 
-        {rows.map((row) => {
-          const entry = SECTIONS[row.section as HomeSectionKey];
-          if (!entry) return null;
+        {/* WHY THE SECTIONS BELOW THE HERO DRAW ONLY THE FRAME
+         *
+         * Every inner page already does this — PageShell wraps its children
+         * in the same provider — on the reasoning that a quarter rule
+         * running beside a divider the content drew for itself is two lines
+         * where the eye expects one. The front page was the exception, and
+         * the exception was never measured: at 1440 the quarter and centre
+         * rules crossed type in thirty-eight places, including four of the
+         * room blurbs and the heading over the releases.
+         *
+         * The hero stays outside the provider and keeps the full drafting
+         * grid. That is the one screen laid out on the quarters, with the
+         * wordmark fitted to them and nothing but structure to cross, so it
+         * is also the one screen where the grid is the subject rather than
+         * the paper. */}
+        <GridColsProvider cols="edges">
+          {rows.map((row) => {
+            const entry = SECTIONS[row.section as HomeSectionKey];
+            if (!entry) return null;
 
-          /* HIDDEN ON A PHONE IN CSS, NOT IN JAVASCRIPT.
-           *
-           * The obvious version of this reads the viewport width and returns
-           * null — and breaks the page, because the server has no viewport.
-           * It would render the full set, the client would render the short
-           * one, and React would find a different tree than the HTML it was
-           * given. `max-md:hidden` is decided by the stylesheet at paint
-           * time, so both sides render identically and the phone simply
-           * never pays for the section's height. */
-          const phone = row.phone !== false ? "" : "max-md:hidden";
+            /* HIDDEN ON A PHONE IN CSS, NOT IN JAVASCRIPT.
+             *
+             * The obvious version of this reads the viewport width and returns
+             * null — and breaks the page, because the server has no viewport.
+             * It would render the full set, the client would render the short
+             * one, and React would find a different tree than the HTML it was
+             * given. `max-md:hidden` is decided by the stylesheet at paint
+             * time, so both sides render identically and the phone simply
+             * never pays for the section's height. */
+            const phone = row.phone !== false ? "" : "max-md:hidden";
 
-          return entry.depth ? (
-            <ScrollDepth key={row.section} className={phone}>
-              {entry.render()}
-            </ScrollDepth>
-          ) : (
-            <div key={row.section} className={phone}>
-              {entry.render()}
-            </div>
-          );
-        })}
+            return entry.depth ? (
+              <ScrollDepth key={row.section} className={phone}>
+                {entry.render()}
+              </ScrollDepth>
+            ) : (
+              <div key={row.section} className={phone}>
+                {entry.render()}
+              </div>
+            );
+          })}
+        </GridColsProvider>
       </main>
     </>
   );

@@ -1,5 +1,4 @@
 import { Ticker, TickerItem } from "@/components/lb/Ticker";
-import { GridRules } from "@/components/lb/GridRules";
 import { Star } from "lucide-react";
 import { Picture } from "@/components/lb/Picture";
 import { useTickers, useWords } from "@/cms/hooks";
@@ -9,9 +8,11 @@ const avatars = ["release-01", "release-02", "release-03", "release-06"] as cons
 export function ProofBand() {
   const { partners, proofTicker } = useTickers();
   const w = useWords("home");
+  /* No column rules: the band is a strip of moving type bounded by its own
+   * rules top and bottom, and a vertical hairline through a line that is
+   * sliding past it reads as a fault in the type, not as structure. */
   return (
     <section className="relative w-full bg-surface-deep" aria-label={w.proofLabel}>
-      <GridRules tone="dark" />
       <h2 className="sr-only">{w.proofLabel}</h2>
       <div className="relative z-[2]">
         <div className="flex h-[56px] items-center border-y border-line">

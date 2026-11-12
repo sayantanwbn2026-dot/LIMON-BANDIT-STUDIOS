@@ -90,7 +90,10 @@ export function FinalCta() {
         </div>
       </div>
 
-      <div className="relative z-[2] flex h-12 items-center border-y border-line">
+      {/* Opaque, like the testimonial band below it: the strip sits over the
+          column rules, and without a ground of its own a hairline shows
+          through the moving labels. */}
+      <div className="relative z-[2] flex h-12 items-center border-y border-line bg-surface-deep">
         <Ticker duration={40}>
           {ctaChecklist.map((c) => (
             <span key={c} className="flex shrink-0 items-center gap-6 pr-6">
