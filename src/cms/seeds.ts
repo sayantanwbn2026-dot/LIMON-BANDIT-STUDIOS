@@ -262,6 +262,27 @@ export const seeds: Record<string, unknown> = {
     title: c.title,
     description: c.description,
   })),
+  /* The meter is the house's own opener, so it is what ships. The three
+   * video slots are empty and the site never asks for a file it has not
+   * been given — switching "What plays" to a video with no video chosen
+   * falls back to the meter rather than to a black screen. */
+  "global.preloader": {
+    mode: "meter",
+    desktop: "",
+    tablet: "",
+    mobile: "",
+    poster: "",
+    fit: "cover",
+  },
+  /* The colour ships empty, which means the shipped yellow — the same
+   * idiom every other "leave it alone" field on this site uses. The three
+   * effects ship as they are built. */
+  "global.look": {
+    accent: "",
+    grain: true,
+    cursor: true,
+    smooth: true,
+  },
   /* Search & sharing ships empty on purpose: a verification code, a
    * handle and a price range are facts about the business that only the
    * owner has, and a guess printed into <head> is worse than silence.

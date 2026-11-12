@@ -5,6 +5,8 @@ import type { PageKey } from "./schema";
 import type { ImageKey } from "@/generated/images";
 import { chapters as compiledChapters, type Chapter, type ChapterKey } from "@/data/routes";
 import { isPlayable } from "@/lib/video";
+import type { LookDoc } from "@/lib/look";
+import type { PreloaderDoc } from "@/lib/preloader";
 import { pickMascot, type Mascot } from "./mascot";
 import { WORDS, WORD_DOCS, type WordArea, type Words } from "./words";
 
@@ -94,6 +96,14 @@ export function useSocialLink(platform: string): SocialLink | null {
     [all, platform],
   );
 }
+
+/* Look & feel. The accent is read in the root head rather than here —
+ * a custom property has to be set before the first paint — but the three
+ * effects are mounts, and a mount is a React question. */
+export type { LookDoc };
+export type { PreloaderDoc };
+export const usePreloader = () => useDoc<PreloaderDoc>("global.preloader");
+export const useLook = () => useDoc<LookDoc>("global.look");
 
 export type NavItem = { label: string; to: string };
 export const useNavItems = () => useList<NavItem>("global.nav");

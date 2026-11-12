@@ -29,6 +29,118 @@ export const ACCEPTED = [
 ];
 export const ACCEPT_ATTR = ACCEPTED.join(",");
 
+/* ---------------- video ----------------
+ *
+ * One slot uses video: the opening sequence. It is the first thing a
+ * visitor downloads and the only thing between them and the site, so the
+ * rules here are tighter than for a picture and they are tight on purpose.
+ *
+ * MP4 (H.264) first, because it is the one format that plays everywhere
+ * without a second encode. WebM is accepted for anyone who prefers it.
+ * MOV is accepted because it is what a phone and a camera produce, and
+ * refusing the file an editor actually has is how a slot stays empty.
+ *
+ * The byte ceiling is 24 MB, but 24 MB is not the target: a 10-second
+ * opener wants to be 3–6 MB or it is still arriving when it should be
+ * leaving. The picker says so, loudly, above 8 MB.
+ */
+export const VIDEO_ACCEPTED = ["video/mp4", "video/webm", "video/quicktime"];
+export const VIDEO_ACCEPT_ATTR = VIDEO_ACCEPTED.join(",");
+export const VIDEO_MAX_BYTES = 24 * 1024 * 1024;
+/** Over this, the file is big enough to be the reason the site feels slow. */
+export const VIDEO_BUDGET_BYTES = 8 * 1024 * 1024;
+/** The hard ceiling on an opening sequence, in seconds. */
+export const VIDEO_MAX_SECONDS = 10;
+
+export type VideoProbe = { width: number; height: number; duration: number };
+
+/** Read a video's real size and length in the browser, before uploading. */
+export function probeVideo(file: File): Promise<VideoProbe | null> {
+  const url = URL.createObjectURL(file);
+  return probeVideoElement(url).finally(() => URL.revokeObjectURL(url));
+}
+
+/** Same, for a URL someone pasted. */
+export function probeVideoUrl(url: string): Promise<VideoProbe | null> {
+  return probeVideoElement(url, true);
+}
+
+function probeVideoElement(src: string, crossOrigin = false): Promise<VideoProbe | null> {
+  return new Promise((resolve) => {
+    const el = document.createElement("video");
+    if (crossOrigin) el.crossOrigin = "anonymous";
+    el.preload = "metadata";
+    el.muted = true;
+    /* Metadata only — the whole file is not needed to learn how long it is,
+     * and an editor on a phone tether should not pay for it twice. */
+    el.onloadedmetadata = () =>
+      resolve({
+        width: el.videoWidth,
+        height: el.videoHeight,
+        duration: Number.isFinite(el.duration) ? el.duration : 0,
+      });
+    el.onerror = () => resolve(null);
+    el.src = src;
+  });
+}
+
+/**
+ * Upload a video into the same public bucket as the pictures.
+ *
+ * `cms_media` has columns for width and height and none for duration, so
+ * the length is measured in the picker and reported there rather than
+ * stored. Nothing downstream needs it: the sequence is capped at ten
+ * seconds when it plays, whatever the file turns out to be.
+ */
+export async function uploadVideo(file: File): Promise<UploadResult> {
+  if (file.size > VIDEO_MAX_BYTES) {
+    return {
+      ok: false,
+      message: `That file is ${humanBytes(file.size)}. The limit is 24 MB, and an opening sequence really wants to be under 6 — export it smaller.`,
+    };
+  }
+  if (!VIDEO_ACCEPTED.includes(file.type)) {
+    return {
+      ok: false,
+      message: `${file.type || "That file type"} is not a video the site can play. Use MP4 (H.264), WebM or MOV.`,
+    };
+  }
+
+  const supabase = await getSupabase();
+  if (!supabase) return { ok: false, message: "Not connected to the database." };
+
+  const path = `cms/${safeName(file.name)}`;
+  const { error: upErr } = await supabase.storage
+    .from("media")
+    .upload(path, file, { cacheControl: "31536000", upsert: false, contentType: file.type });
+  if (upErr) return { ok: false, message: upErr.message };
+
+  const { data: pub } = supabase.storage.from("media").getPublicUrl(path);
+  const probe = await probeVideo(file);
+
+  const { data, error } = await supabase
+    .from("cms_media")
+    .insert({
+      url: pub.publicUrl,
+      kind: "upload",
+      storage_path: path,
+      filename: file.name,
+      mime: file.type,
+      bytes: file.size,
+      width: probe?.width ?? null,
+      height: probe?.height ?? null,
+      alt: "",
+    })
+    .select()
+    .single();
+
+  if (error || !data) {
+    await supabase.storage.from("media").remove([path]);
+    return { ok: false, message: error?.message ?? "Could not record the upload." };
+  }
+  return { ok: true, row: data as MediaRow };
+}
+
 export type ResolvedImage =
   | { kind: "none" }
   | { kind: "manifest"; key: ImageKey; width: number; height: number }

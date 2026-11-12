@@ -42,9 +42,11 @@ import { ContentProvider } from "@/cms/content";
 import { Toaster } from "@/components/lb/Toaster";
 import { liveDocs, primeDocs, docFrom, listFrom } from "@/cms/live";
 import { Analytics } from "@/components/lb/Analytics";
-import { useWords, type SiteDoc, type PageDoc } from "@/cms/hooks";
+import { useLook, useWords, type SiteDoc, type PageDoc } from "@/cms/hooks";
 import { fill, WORDS, type Words } from "@/cms/words";
 import { searchMeta, siteNameFrom } from "@/lib/seo";
+import { accentScript, type LookDoc } from "@/lib/look";
+import { videoOrigin, wantsVideo, type PreloaderDoc } from "@/lib/preloader";
 
 /**
  * The 404 and error screens.
@@ -179,6 +181,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ...docFrom<Partial<Words["system"]>>(docs, "global.words.system"),
     };
     const name = siteNameFrom(docs);
+    const accent = accentScript(docFrom<LookDoc>(docs, "global.look"));
+    /* The opening sequence is fetched from the storage bucket, which is a
+     * different host: preconnecting while the HTML is still parsing takes
+     * the DNS, TCP and TLS cost off the front of the one download that is
+     * blocking the visitor. Only when there is actually a film to fetch. */
+    const sequence = docFrom<PreloaderDoc>(docs, "global.preloader");
+    const sequenceOrigin = wantsVideo(sequence) ? videoOrigin(sequence) : null;
     const title = home?.title?.trim() || name;
     const description = home?.description?.trim() || site.description;
     return {
@@ -207,6 +216,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
          * than once per page head. */
         ...searchMeta(docs),
       ],
+      /* The house colour, set on documentElement before the first frame.
+       * It has to be a blocking script rather than a stylesheet rule: the
+       * value comes from the CMS, so it cannot be in the compiled sheet,
+       * and anything that runs after hydration paints the shipped yellow
+       * first and swaps it in front of the visitor. Emitted only when an
+       * editor has actually chosen a colour. */
+      scripts: accent ? [{ children: accent }] : undefined,
       links: [
         /* Fonts are self-hosted (see scripts/fonts.mjs). Preload only the two
          faces that render above the fold — the hero wordmark and the corner
@@ -229,6 +245,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           rel: "stylesheet",
           href: appCss,
         },
+        ...(sequenceOrigin
+          ? [{ rel: "preconnect", href: sequenceOrigin, crossOrigin: "anonymous" as const }]
+          : []),
         { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
         /* So a reader's browser or app can find the journal feed without
          being told it exists. */
@@ -293,16 +312,20 @@ function RootShell({ children }: { children: ReactNode }) {
  * needs a plain document that stays where it was put.
  */
 function SiteChrome() {
+  /* Three mounts an editor can turn off under Look & feel. Default on:
+   * an unseeded document and an unreachable database both have to leave
+   * the site as it was built, not strip it. */
+  const look = useLook();
   return (
     <>
       <SkipLink />
-      <SmoothScroll />
+      {look.smooth === false ? null : <SmoothScroll />}
       <SectionRule />
       <ScrollReveal />
       <ScrollProgress />
       <StageLight />
-      <Noise />
-      <Cursor />
+      {look.grain === false ? null : <Noise />}
+      {look.cursor === false ? null : <Cursor />}
       <RouteTransition />
       <RoutePrefetch />
       <Nav />

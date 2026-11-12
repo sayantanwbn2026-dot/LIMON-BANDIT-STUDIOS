@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ensureGsap, prefersReducedMotion, hasNavigated } from "@/lib/motion";
 import { lockScroll, unlockScroll } from "@/lib/smooth";
-import { useWords, useSite } from "@/cms/hooks";
+import { useWords, useSite, usePreloader } from "@/cms/hooks";
+import { PreloaderVideo } from "./PreloaderVideo";
+import { wantsVideo } from "@/lib/preloader";
 
 /**
  * THE CONSOLE POWERS UP.
@@ -50,7 +52,23 @@ function barOpacity(i: number): number {
 /** How far the pointer's influence reaches, as a fraction of the width. */
 const REACH = 0.22;
 
+/**
+ * Which opener runs — the editor's choice, resolved before anything else.
+ *
+ * Read from the CMS rather than branched on a prop, because this is the
+ * first element of the first paint and there is nobody above it to decide.
+ * "off" renders nothing at all; a video with no file falls back here, so
+ * the page can never open on a black screen waiting for something that was
+ * never uploaded.
+ */
 export function Preloader() {
+  const doc = usePreloader();
+  if (doc.mode === "off") return null;
+  if (wantsVideo(doc)) return <PreloaderVideo doc={doc} />;
+  return <PreloaderMeter />;
+}
+
+function PreloaderMeter() {
   const root = useRef<HTMLDivElement>(null);
   const [n, setN] = useState(0);
   /* Once per visit, not once per arrival at the home page. It lived in the

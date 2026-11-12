@@ -45,6 +45,20 @@ export type Field =
       /** e.g. "Square. Sits in a 3-up grid." */
       note?: string;
     })
+  /**
+   * A video file. Carries the resolution the slot is designed for, like
+   * `image`, plus the number of seconds past which the admin complains —
+   * a slot that plays a video always has a length it was designed around,
+   * and an editor cannot be expected to guess it.
+   */
+  | (Base & {
+      kind: "video";
+      width: number;
+      height: number;
+      /** the longest this slot should ever play */
+      seconds: number;
+      note?: string;
+    })
   /** repeatable plain strings — ticker lines, credits, feature bullets */
   | (Base & { kind: "stringList"; itemLabel?: string; placeholder?: string; max?: number })
   /** repeatable objects */
@@ -135,6 +149,15 @@ export const image = (
   note?: string,
 ): Field => ({ kind: "image", name, label, width, height, note });
 
+export const video = (
+  name: string,
+  label: string,
+  width: number,
+  height: number,
+  seconds: number,
+  note?: string,
+): Field => ({ kind: "video", name, label, width, height, seconds, note });
+
 export const choice = (name: string, label: string, options: string[] | SelectOption[]): Field => ({
   kind: "select",
   name,
@@ -161,6 +184,7 @@ export function blankValue(field: Field): unknown {
     case "group":
       return blankRecord(field.fields);
     case "image":
+    case "video":
       return "";
     default:
       return "";

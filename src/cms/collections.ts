@@ -1,4 +1,14 @@
-import { type Collection, type PageKey, text, area, num, image, choice, strings } from "./schema";
+import {
+  type Collection,
+  type PageKey,
+  text,
+  area,
+  num,
+  image,
+  video,
+  choice,
+  strings,
+} from "./schema";
 import { HOME_SECTIONS } from "./home-sections";
 import { seeds } from "./seeds";
 import { WORDS, WORD_DOCS, wordLabel, type WordArea } from "./words";
@@ -224,6 +234,126 @@ const seo: Collection = {
       { value: "monthly", label: "Monthly" },
       { value: "yearly", label: "Yearly" },
     ]),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
+ * OPENING SEQUENCE
+ *
+ * What plays before the site. The level meter is the house's own and the
+ * default; a video is the alternative, and it is three videos rather than
+ * one because a 16:9 film on a phone is a letterboxed strip with the
+ * subject cropped out of it.
+ *
+ * THE DEVICE IS CHOSEN BY THE BROWSER, NOT BY US. Each slot is published
+ * as a <source> with a media query on it, so the preload scanner picks the
+ * right file and starts downloading it before any JavaScript runs — and
+ * the other two are never requested. See lib/preloader.ts.
+ *
+ * TEN SECONDS IS A CEILING, NOT A LENGTH. A shorter film ends when it
+ * ends. A longer one is cut off, and the admin says so when it is chosen
+ * rather than leaving it to be discovered on the live site.
+ * ------------------------------------------------------------------ */
+
+const SEQ_SECONDS = 10;
+
+const preloader: Collection = {
+  key: "global.preloader",
+  title: "Opening sequence",
+  description:
+    "What plays before the site on a first visit: the built-in level meter, or a video of your own at up to ten seconds.",
+  group: "global",
+  shape: "object",
+  fields: [
+    choice("mode", "What plays", [
+      { value: "meter", label: "The level meter (built in)" },
+      { value: "video", label: "A video" },
+      { value: "off", label: "Nothing — go straight to the site" },
+    ]),
+    video(
+      "desktop",
+      "Desktop",
+      1920,
+      1080,
+      SEQ_SECONDS,
+      "16:9 landscape, 1920×1080. Shown from 1024px wide up — laptops, desktops and a tablet held sideways. This is also the fallback: a device with no file of its own gets this one.",
+    ),
+    video(
+      "tablet",
+      "Tablet",
+      1536,
+      2048,
+      SEQ_SECONDS,
+      "3:4 portrait, 1536×2048. Shown from 768px to 1023px. Leave it empty to use the desktop film here.",
+    ),
+    video(
+      "mobile",
+      "Phone",
+      1080,
+      1920,
+      SEQ_SECONDS,
+      "9:16 portrait, 1080×1920. Shown below 768px. This is the one worth cutting separately — a landscape film on a phone crops to a letterbox with the subject outside it.",
+    ),
+    image(
+      "poster",
+      "First frame",
+      1920,
+      1080,
+      "A still shown the instant the page opens, while the video is still arriving. A few KB against a few MB, so the screen is composed rather than black for the first moment. Use a frame from the film itself.",
+    ),
+    choice("fit", "How it fills the screen", [
+      { value: "cover", label: "Fill the screen — crops the edges" },
+      { value: "contain", label: "Fit the whole frame — bars at the sides" },
+    ]),
+  ],
+};
+
+/* ------------------------------------------------------------------ *
+ * LOOK & FEEL
+ *
+ * The house colour and the three effects that sit over the whole site.
+ *
+ * The colour is one field, not four: the ink that goes ON the accent and
+ * the dimmed shade of it are computed from whatever is chosen (see
+ * lib/look.ts), because the editor picking a navy accent is looking at
+ * the swatch, not at the black type that would land on it.
+ *
+ * The three switches are all for things a visitor might reasonably not
+ * want and an owner might reasonably turn off for a shoot or a demo. Each
+ * is honoured at the mount, so turning one off does not leave the work
+ * running invisibly.
+ * ------------------------------------------------------------------ */
+
+const look: Collection = {
+  key: "global.look",
+  title: "Look & feel",
+  description: "The house colour, and the grain, cursor and scrolling that sit over every page.",
+  group: "global",
+  shape: "object",
+  fields: [
+    text("accent", "House colour", {
+      mono: true,
+      placeholder: "#E9FF00",
+      help: "Every acid surface on the site: the lockup, the buttons, the dots, the focus ring. A hex value — #E9FF00 is the one it ships with, and an empty field means exactly that. The type that sits on top of it is worked out from whatever you pick, so a dark colour gets white type without you having to think about it.",
+    }),
+    {
+      kind: "boolean",
+      name: "grain",
+      label: "Film grain",
+      help: "The tooth over the dark planes. Off makes the site flatter and very slightly faster.",
+    },
+    {
+      kind: "boolean",
+      name: "cursor",
+      label: "Custom cursor",
+      help: "The drawn cursor on a mouse. Never shown on a touch screen either way.",
+    },
+    {
+      kind: "boolean",
+      name: "smooth",
+      label: "Smooth scrolling",
+      help: "The weighted, eased scroll. Off gives the browser's own, which some people much prefer — and which anyone who asks their system for reduced motion already gets.",
+    },
   ],
 };
 
@@ -1380,6 +1510,8 @@ export const collections: Collection[] = [
   nav,
   seo,
   searchSharing,
+  look,
+  preloader,
   tickers,
   faq,
   legal,

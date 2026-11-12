@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { ImagePicker } from "./ImagePicker";
+import { VideoPicker } from "./VideoPicker";
 import { blankRecord, blankValue, rowTitle, type Field } from "@/cms/schema";
 
 /**
@@ -126,6 +127,25 @@ export function FieldRenderer({
               onChange={onChange}
               width={field.width}
               height={field.height}
+              note={field.note}
+            />
+          </div>
+        </div>
+      );
+
+    case "video":
+      return (
+        <div>
+          <span className={labelCls}>{field.label}</span>
+          {field.help ? <p className="t-label mt-1 text-mute">{field.help}</p> : null}
+          <div className="mt-3">
+            <VideoPicker
+              label={field.label}
+              value={String(value ?? "")}
+              onChange={onChange}
+              width={field.width}
+              height={field.height}
+              seconds={field.seconds}
               note={field.note}
             />
           </div>
