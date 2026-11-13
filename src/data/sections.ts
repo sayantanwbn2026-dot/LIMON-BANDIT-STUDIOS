@@ -49,6 +49,12 @@ export const homeSections: SectionCopy[] = [
     standfirst: "",
   },
   {
+    id: "tees",
+    eyebrow: "On the rail",
+    heading: "The shirts, hanging",
+    standfirst: "Run your pointer along the rail. Press a shirt to lift it off and turn it over.",
+  },
+  {
     id: "film",
     eyebrow: "The film",
     heading: "A night in Room A",
@@ -141,6 +147,12 @@ export const labelSections: SectionCopy[] = [
 ];
 
 export const shopSections: SectionCopy[] = [
+  {
+    id: "tees",
+    eyebrow: "The rail",
+    heading: "Every tee in the run",
+    standfirst: "Brush along the rail to turn one to the front. Press it to see it properly.",
+  },
   {
     id: "catalogue",
     eyebrow: "In the shop",

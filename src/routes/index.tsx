@@ -8,6 +8,7 @@ import { Wall } from "@/components/sections/Wall";
 import { Process } from "@/components/sections/Process";
 import { Journal } from "@/components/sections/Journal";
 import { Rooms } from "@/components/sections/Rooms";
+import { TeeRail } from "@/components/sections/TeeRail";
 import { RoomFilm } from "@/components/sections/RoomFilm";
 import { Numbers } from "@/components/sections/Numbers";
 import { Roster } from "@/components/sections/Roster";
@@ -54,6 +55,11 @@ const SECTIONS: Record<HomeSectionKey, { render: () => React.ReactNode; depth: b
   services: { render: () => <Services />, depth: false },
   bento: { render: () => <Bento />, depth: true },
   rooms: { render: () => <Rooms />, depth: false },
+  /* No depth wrapper: the rail measures its own width with a ResizeObserver
+   * and lays the hangers out in pixels from it, and ScrollDepth transforms
+   * its subtree — which leaves the measurement correct and everything drawn
+   * from it subtly out of register. */
+  tees: { render: () => <TeeRail autoplay />, depth: false },
   film: { render: () => <RoomFilm />, depth: false },
   estimator: { render: () => <BookingEstimator />, depth: true },
   numbers: { render: () => <Numbers />, depth: true },
@@ -100,7 +106,33 @@ function Index() {
     phone: s.phone,
   }));
 
-  const rows = [...chosen, ...missing];
+  /* WHERE A NEW SECTION LANDS, AND WHY IT IS NOT THE END.
+   *
+   * Appending was the first version and it is wrong in a way that only
+   * shows up in production: the order document was saved before the section
+   * existed, so a section whose whole point is to sit after the rooms
+   * arrives underneath the closing call to action — on the live site, while
+   * a fresh database puts it exactly where it belongs. Two different pages
+   * from the same code is the worst kind of difference.
+   *
+   * So a section nobody has ordered yet is inserted after the nearest
+   * section ABOVE it in HOME_SECTIONS that the editor still has, which is
+   * the position it ships in expressed in terms of their order rather than
+   * ours. Dragging it somewhere else saves a row and this never runs again. */
+  const rows = [...chosen];
+  for (const row of missing) {
+    const shipped = HOME_SECTIONS.findIndex((s) => s.key === row.section);
+    let at = rows.length;
+    for (let i = shipped - 1; i >= 0; i--) {
+      const above = HOME_SECTIONS[i]?.key;
+      const found = rows.findIndex((r) => r.section === above);
+      if (found >= 0) {
+        at = found + 1;
+        break;
+      }
+    }
+    rows.splice(at, 0, row);
+  }
 
   return (
     <>

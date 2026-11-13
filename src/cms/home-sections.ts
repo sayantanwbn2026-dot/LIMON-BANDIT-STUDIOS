@@ -54,6 +54,7 @@ export type HomeSectionKey =
   | "services"
   | "bento"
   | "rooms"
+  | "tees"
   | "film"
   | "estimator"
   | "numbers"
@@ -74,6 +75,7 @@ export const HOME_SECTIONS: { key: HomeSectionKey; label: string; on: boolean; p
     { key: "services", label: "What we run — the four operations", on: false, phone: true },
     { key: "bento", label: "What's inside — track, tee, room", on: false, phone: true },
     { key: "rooms", label: "The rooms", on: true, phone: true },
+    { key: "tees", label: "The tee rail", on: true, phone: true },
     { key: "film", label: "The film (opens as you scroll)", on: true, phone: false },
     { key: "estimator", label: "What it costs — the rate estimator", on: false, phone: true },
     { key: "numbers", label: "Headline numbers", on: true, phone: false },
